@@ -1,0 +1,30 @@
+.sidebar_wrapper {
+  text-align: left;
+  width: 19%;
+  padding-left: 3%;
+  background-color: #1773bc;
+  color: #ffffff;
+  font-size: 16px;
+  padding-left: 20px;
+}
+
+.sidebar_elements {
+  padding-top: 2rem;
+  cursor: pointer;
+  display: flex;
+}
+
+#collapse_buttom {
+  padding-bottom: 8px;
+  cursor: pointer;
+}
+
+img {
+  padding-right: 8px;
+}
+
+#veersalogo {
+  padding-top: 2rem;
+  padding-left: 4rem;
+  padding-bottom: 2rem;
+}
