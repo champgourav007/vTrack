@@ -1,0 +1,8 @@
+.sidebar {
+  width: "16%";
+}
+
+.sidebar-dataTable-wrapper {
+  display: "flex";
+  flex-direction: "row";
+}

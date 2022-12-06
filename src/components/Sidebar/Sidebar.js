@@ -1,32 +1,34 @@
 import React from "react";
 import "./Sidebar.css";
-import DashboardImg from "../../static/svgs/Sidebar/Dashboard.svg";
-import projectAllocationImg from "../../static/svgs/Sidebar/Project Allocation.svg";
-import timeSheetImg from "../../static/svgs/Sidebar/TimeSheet.svg";
-import projectManagementImg from "../../static/svgs/Sidebar/Project Management.svg";
-import clientAdminImg from "../../static/svgs/Sidebar/Client Admin.svg";
-import projectAdminImg from "../../static/svgs/Sidebar/Project Admin.svg";
-import vendorAdminImg from "../../static/svgs/Sidebar/Vendor Admin.svg";
-import vendorSOWAdminImg from "../../static/svgs/Sidebar/Vendor SOW Admin.svg";
-import settingsImg from "../../static/svgs/Sidebar/Settings.svg";
-import logoutImg from "../../static/svgs/Sidebar/Logout.svg";
-import collapseImg from "../../static/svgs/Sidebar/Collapse Arrow.svg";
-import VeersaImg from "../../static/svgs/Sidebar/VeersaLogo.svg";
+import {
+  veersaLogo,
+  clientAdminImg,
+  collapseArrowImg,
+  dashboardImg,
+  logoutImg,
+  projectAdminImg,
+  projectAllocationImg,
+  projectManagementImg,
+  settingsImg,
+  timesheetImg,
+  vendorAdminImg,
+  vendorSowAdminImg,
+} from "../../common/icons";
 
-export default function Sidebar() {
+export default function Sidebar(props) {
   const headingArr = [
-    { name: "Dashboard", img: DashboardImg },
+    { name: "Dashboard", img: dashboardImg },
     { name: "Project Allocation", img: projectAllocationImg },
-    { name: "TimeSheet", img: timeSheetImg },
+    { name: "TimeSheet", img: timesheetImg },
     { name: "Project Management", img: projectManagementImg },
     { name: "Client Admin", img: clientAdminImg },
     { name: "Project Admin", img: projectAdminImg },
     { name: "Vendor Admin", img: vendorAdminImg },
-    { name: "Vendor SOW Admin", img: vendorSOWAdminImg },
+    { name: "Vendor SOW Admin", img: vendorSowAdminImg },
   ];
   return (
     <>
-      <img src={VeersaImg} id="veersalogo" />
+      <img src={veersaLogo} id="veersalogo" />
       <div
         className="sidebar_wrapper"
         style={{ paddingBottom: "26px", borderBottomStyle: "solid" }}
@@ -34,7 +36,11 @@ export default function Sidebar() {
         <div>
           {headingArr.map((heading, index) => {
             return (
-              <div className="sidebar_elements">
+              <div
+                className="sidebar_elements"
+                onClick={() => props.changePage(heading.name)}
+                key={index}
+              >
                 <img src={heading.img} />
                 {heading.name}
               </div>
@@ -53,7 +59,7 @@ export default function Sidebar() {
             Logout
           </div>
           <div className="sidebar_elements" id="collapse_buttom">
-            <img src={collapseImg} />
+            <img src={collapseArrowImg} />
           </div>
         </div>
       </div>
