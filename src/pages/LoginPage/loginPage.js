@@ -2,7 +2,7 @@ import { veersaLogo } from "../../common/icons";
 import { useAzureADAuth } from "../../config/use-azure-ad";
 import "./loginPage.css";
 
-function LoginPage() {
+export const LoginPage = () => {
   const { loginAzureADPopup } = useAzureADAuth();
 
   const handleLogin = () => {

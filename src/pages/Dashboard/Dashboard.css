@@ -6,3 +6,19 @@
   display: "flex";
   flex-direction: "row";
 }
+
+.mainDiv {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+
+.sidebarContainer {
+  width: 16%;
+  height: 100%;
+}
+
+.rightDiv {
+  width: 84%;
+}

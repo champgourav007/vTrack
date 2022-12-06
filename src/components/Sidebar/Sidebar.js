@@ -2,67 +2,51 @@ import React from "react";
 import "./Sidebar.css";
 import {
   veersaLogo,
-  clientAdminImg,
   collapseArrowImg,
-  dashboardImg,
   logoutImg,
-  projectAdminImg,
-  projectAllocationImg,
-  projectManagementImg,
   settingsImg,
-  timesheetImg,
-  vendorAdminImg,
-  vendorSowAdminImg,
 } from "../../common/icons";
+import { useAzureADAuth } from "../../config/use-azure-ad";
+import { ModuleList } from "../../mock-data/Sidebar";
 
 export default function Sidebar(props) {
-  const headingArr = [
-    { name: "Dashboard", img: dashboardImg },
-    { name: "Project Allocation", img: projectAllocationImg },
-    { name: "TimeSheet", img: timesheetImg },
-    { name: "Project Management", img: projectManagementImg },
-    { name: "Client Admin", img: clientAdminImg },
-    { name: "Project Admin", img: projectAdminImg },
-    { name: "Vendor Admin", img: vendorAdminImg },
-    { name: "Vendor SOW Admin", img: vendorSowAdminImg },
-  ];
+  const { logoutAzureAD } = useAzureADAuth();
+
+  const signOutHandler = () => {
+    logoutAzureAD();
+  };
+
   return (
-    <>
-      <img src={veersaLogo} id="veersalogo" />
-      <div
-        className="sidebar_wrapper"
-        style={{ paddingBottom: "26px", borderBottomStyle: "solid" }}
-      >
-        <div>
-          {headingArr.map((heading, index) => {
-            return (
-              <div
-                className="sidebar_elements"
-                onClick={() => props.changePage(heading.name)}
-                key={index}
-              >
-                <img src={heading.img} />
-                {heading.name}
-              </div>
-            );
-          })}
+    <div className="sidebarOuterContainer">
+      <div className="veersaLogo">
+        <img src={veersaLogo} id="veersalogo" alt="" />
+      </div>
+      <div className="sidebarWrapper">
+        { ModuleList.map((module, index) => {
+          return (
+            <div 
+              key={index}
+              className="sidebarItems"
+              onClick={() => props.changePage(module.name)}
+            >
+              <img className="itemImage" src={module.img} alt=""/>
+              <div className="itemName">{module.name}</div>
+            </div>
+          )
+        })}
+        <div className="divider" />
+        <div className="sidebarItems">
+          <img className="itemImage" src={settingsImg} alt=""/>
+          <div className="itemName">Settings</div>
+        </div>
+        <div className="sidebarItems" onClick={() => signOutHandler()}>
+          <img className="itemImage" src={logoutImg} alt=""/>
+          <div className="itemName">Logout</div>
+        </div>
+        <div className="arrowIcon" id="collapse_buttom">
+          <img src={collapseArrowImg} alt=""/>
         </div>
       </div>
-      <div className="sidebar_wrapper">
-        <div>
-          <div className="sidebar_elements">
-            <img src={settingsImg} />
-            Settings
-          </div>
-          <div className="sidebar_elements">
-            <img src={logoutImg} />
-            Logout
-          </div>
-          <div className="sidebar_elements" id="collapse_buttom">
-            <img src={collapseArrowImg} />
-          </div>
-        </div>
-      </div>
-    </>
+    </div>
   );
 }

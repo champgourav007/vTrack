@@ -2,22 +2,25 @@ import React from "react";
 import { useState } from "react";
 import DataTable from "../../components/DataTable/DataTable";
 import Sidebar from "../../components/Sidebar/Sidebar";
+import "./dashboard.css";
 
-export default function Dashboard() {
+export const Dashboard = () => {
   const [headingName, setHeadingName] = useState("");
+
   const changePage = (headingName) => {
     setHeadingName(headingName);
   };
+
   return (
     <>
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <div style={{ width: "16%" }}>
+      <div className="mainDiv">
+        <div className="sidebarContainer">
           <Sidebar changePage={changePage} />
         </div>
-        <div>
+        <div className="rightDiv">
           <DataTable headingName={headingName} />
         </div>
       </div>
     </>
   );
-}
+};

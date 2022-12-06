@@ -1,34 +1,61 @@
-.sidebar_wrapper {
-  text-align: left;
-  padding-left: 3%;
-  background-color: #1773bc;
-  color: #ffffff;
-  font-size: 16px;
-  padding-left: 20px;
-}
-
-.sidebar_elements {
-  padding-top: 2rem;
-  cursor: pointer;
+.sidebarOuterContainer {
   display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
 }
 
-.sidebar_elements:hover {
-  background-color: white;
+.veersaLogo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 6rem;
+}
+
+.sidebarWrapper {
+  padding: 1rem 0;
+  background-color: #1773bc;
+}
+
+.sidebarItems {
+  display: flex;
+  flex-direction: row;
+  padding: 1rem 0;
+  color: #FFFFFF;
+}
+
+.itemImage {
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-left: 1.5rem;
+  margin-right: 1rem;
+}
+
+.itemName {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.25rem;
+}
+
+.arrowIcon {
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-left: 1.5rem;
+  margin-right: 1rem;
+  padding: 1rem 0;
+}
+
+.sidebarItems:hover {
+  display: flex;
+  flex-direction: row;
+  padding: 1rem 0;
+  background-color: #FFFFFF;
   color: #1773bc;
 }
 
-#collapse_buttom {
-  padding-bottom: 8px;
-  cursor: pointer;
-}
-
-img {
-  padding-right: 8px;
-}
-
-#veersalogo {
-  padding-top: 2rem;
-  padding-left: 4rem;
-  padding-bottom: 2rem;
+.divider {
+  margin: 1rem 0;
+  border: 0.1rem solid #FFFFFF;
 }
