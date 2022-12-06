@@ -1,6 +1,6 @@
 import "./Login.css";
 import { useMsal } from "@azure/msal-react";
-import { loginRequest } from "../config/authConfig";
+import { loginRequest } from "../../config/authConfig";
 
 function Login() {
   const { instance } = useMsal();

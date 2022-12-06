@@ -14,6 +14,16 @@ import collapseImg from "../../static/svgs/Sidebar/Collapse Arrow.svg";
 import VeersaImg from "../../static/svgs/Sidebar/VeersaLogo.svg";
 
 export default function Sidebar() {
+  const headingArr = [
+    { name: "Dashboard", img: DashboardImg },
+    { name: "Project Allocation", img: projectAllocationImg },
+    { name: "TimeSheet", img: timeSheetImg },
+    { name: "Project Management", img: projectManagementImg },
+    { name: "Client Admin", img: clientAdminImg },
+    { name: "Project Admin", img: projectAdminImg },
+    { name: "Vendor Admin", img: vendorAdminImg },
+    { name: "Vendor SOW Admin", img: vendorSOWAdminImg },
+  ];
   return (
     <>
       <img src={VeersaImg} id="veersalogo" />
@@ -22,38 +32,14 @@ export default function Sidebar() {
         style={{ paddingBottom: "26px", borderBottomStyle: "solid" }}
       >
         <div>
-          <div className="sidebar_elements">
-            <img src={DashboardImg} />
-            Dashboard
-          </div>
-          <div className="sidebar_elements">
-            <img src={projectAllocationImg} />
-            Project Allocation
-          </div>
-          <div className="sidebar_elements">
-            <img src={timeSheetImg} />
-            TimeSheet
-          </div>
-          <div className="sidebar_elements">
-            <img src={projectManagementImg} />
-            Project Management
-          </div>
-          <div className="sidebar_elements">
-            <img src={clientAdminImg} />
-            Client Admin
-          </div>
-          <div className="sidebar_elements">
-            <img src={projectAdminImg} />
-            Project Admin
-          </div>
-          <div className="sidebar_elements">
-            <img src={vendorAdminImg} />
-            Vendor Admin
-          </div>
-          <div className="sidebar_elements">
-            <img src={vendorSOWAdminImg} />
-            Vendor SOW Admin
-          </div>
+          {headingArr.map((heading, index) => {
+            return (
+              <div className="sidebar_elements">
+                <img src={heading.img} />
+                {heading.name}
+              </div>
+            );
+          })}
         </div>
       </div>
       <div className="sidebar_wrapper">

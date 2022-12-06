@@ -14,6 +14,11 @@
   display: flex;
 }
 
+.sidebar_elements:hover {
+  background-color: white;
+  color: #1773bc;
+}
+
 #collapse_buttom {
   padding-bottom: 8px;
   cursor: pointer;
