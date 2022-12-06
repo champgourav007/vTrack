@@ -1,0 +1,16 @@
+/* .MuiDataGrid-columnHeaders {
+  background-color: #1773bc0d;
+}
+
+.MuiDataGrid-columnHeaderTitle {
+  overflow-wrap: break-word;
+}
+
+.MuiDataGrid-columnHeader {
+  color: #1773bc;
+} */
+
+.MuiTableRow-root th {
+  background-color: #1773bc0d;
+  color: #1773bc;
+}

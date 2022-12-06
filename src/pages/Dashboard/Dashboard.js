@@ -14,7 +14,7 @@ export default function Dashboard() {
         <div style={{ width: "16%" }}>
           <Sidebar changePage={changePage} />
         </div>
-        <div>
+        <div style={{ width: "76%" }}>
           <DataTable headingName={headingName} />
         </div>
       </div>

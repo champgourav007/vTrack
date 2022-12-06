@@ -10,6 +10,7 @@ import settingsImg from "./settings.svg";
 import timesheetImg from "./time-sheet.svg";
 import vendorAdminImg from "./vendor-admin.svg";
 import vendorSowAdminImg from "./vendor-sow-admin.svg";
+import TableArrows from "./TableArrows.svg";
 
 export {
   veersaLogo,
@@ -24,4 +25,5 @@ export {
   timesheetImg,
   vendorAdminImg,
   vendorSowAdminImg,
+  TableArrows,
 };
