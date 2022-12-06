@@ -1,19 +1,14 @@
-import { useMsal } from "@azure/msal-react";
 import { veersaLogo } from "../../common/icons";
-import { loginRequest } from "../../config/authConfig";
+import { useAzureADAuth } from "../../config/use-azure-ad";
 import "./loginPage.css";
 
 function LoginPage() {
-  const { instance } = useMsal();
+  const { loginAzureADPopup } = useAzureADAuth();
 
-  const handleLogin = (loginType) => {
-    console.log(process.env.REACT_APP_CLIENT_ID);
-    if (loginType === "popup") {
-      instance.loginPopup(loginRequest).catch((e) => {
-        console.log(e);
-      });
-    }
+  const handleLogin = () => {
+    loginAzureADPopup();
   };
+
   return (
     <div className="loginPage"> 
       <div className="leftDiv">
@@ -27,7 +22,7 @@ function LoginPage() {
       </div>
       <div className="rightDiv">
         <img src={veersaLogo} alt=""/>
-        <button className="loginBtn" onClick={() => handleLogin("popup")}>Log in</button>
+        <button className="loginBtn" onClick={() => handleLogin()}>Log in</button>
       </div>
     </div>
   );
