@@ -11,6 +11,7 @@ import timesheetImg from "./time-sheet.svg";
 import vendorAdminImg from "./vendor-admin.svg";
 import vendorSowAdminImg from "./vendor-sow-admin.svg";
 import filterIcon from './filter-icon.svg';
+import TableArrows from "./TableArrows.svg";
 
 export {
   veersaLogo,
@@ -25,5 +26,6 @@ export {
   timesheetImg,
   vendorAdminImg,
   vendorSowAdminImg,
-  filterIcon
+  filterIcon,
+  TableArrows,
 };

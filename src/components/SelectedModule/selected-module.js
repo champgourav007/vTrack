@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { filterIcon } from "../../common/icons";
-import './selected-module.css'
+import './selected-module.css';
+import { DataTable } from './../DataTable/DataTable';
+
 
 export const SelectedModule = ({headingName}) => {
   const [ isEdit, setIsEdit ] = useState(false);
@@ -22,6 +24,7 @@ export const SelectedModule = ({headingName}) => {
           <div className="btnText">Add</div>
           </button>
         </div>
+        <DataTable headingName={headingName} />
       </div>
     </div>
   );
