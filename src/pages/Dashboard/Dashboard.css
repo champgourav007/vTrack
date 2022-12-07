@@ -21,4 +21,7 @@
 
 .rightDiv {
   width: 84%;
+  height: 100%;
+  padding: 1.875rem;
+  background-color: #F5F5F5;
 }

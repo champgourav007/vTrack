@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
 
-export default function DataTable({ headingName }) {
+export const DataTable = ({ headingName }) => {
   return <div>{headingName}</div>;
-}
+};

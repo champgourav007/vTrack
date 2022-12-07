@@ -1,0 +1,105 @@
+.mainContainer {
+  margin: 1.875rem;
+  width: 100%;
+  height: 100%;
+}
+
+.heading {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1.75rem;
+  line-height: 2.125rem;
+  color: #1773BC;
+  margin-bottom: 2rem;
+}
+
+.tableDiv {
+  background-color: #FFFFFF;
+  padding: 1.5rem;
+}
+
+.searchHeader {
+  display: flex;
+  gap: 1rem;
+}
+
+.searchBox {
+  width: 23rem;
+  height: 3rem;
+  padding: 0.75rem;
+  background: #FFFFFF;
+  border: 0.0625rem solid #9CC9EC;
+  border-radius: 0.625rem;
+}
+
+.searchBox::placeholder {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+
+  color: #5F5F5F;
+}
+
+.filterBtn {
+  box-sizing: border-box;
+  background: #FFFFFF;
+  border: 0.0625rem solid #DDDDDD;
+  border-radius: 0.625rem;
+  margin-left: auto;
+  height: 3rem;
+  width: 6.875rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.filterIcon {
+  width: 1.5rem;
+  height: 1.125rem;
+  margin-right: 0.5rem;
+}
+
+.btnText {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.25rem;
+  color: #FFFFFF;;
+}
+
+.disableBtnText {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.25rem;
+  color: #193F4B;
+}
+
+.editBtn {
+  width: 11.5rem;
+  height: 3rem;
+  background: #1773BC;
+  border: 0.0625rem solid #1773BC;
+  border-radius: 0.625rem;
+}
+
+.disableEditBtn {
+  width: 11.5rem;
+  height: 3rem;
+  background: #FAFAFA;
+  border: 0.0625rem solid #FAFAFA;
+  border-radius: 0.625rem;
+}
+
+.addBtn {
+  height: 3rem;
+  width: 6.875rem;
+  background: #1773BC;
+  border: 0.0625rem solid #1773BC;
+  border-radius: 0.625rem;
+}
