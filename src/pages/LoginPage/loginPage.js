@@ -1,13 +1,21 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { veersaLogo } from "../../common/icons";
 import { useAzureADAuth } from "../../config/use-azure-ad";
 import "./loginPage.css";
 
 export const LoginPage = () => {
   const { loginAzureADPopup } = useAzureADAuth();
+  const navigate = useNavigate()
 
   const handleLogin = () => {
     loginAzureADPopup();
   };
+
+  useEffect(() => {
+    let User = sessionStorage.getItem("userInformation");
+    if (User != null) navigate("/dashboard");
+  }, []);
 
   return (
     <div className="loginPage">
@@ -27,11 +35,13 @@ export const LoginPage = () => {
         </div>
       </div>
       <div className="rightDiv">
-        <img src={veersaLogo} alt=""/>
-        <button className="loginBtn" onClick={() => handleLogin()}>Log in</button>
+        <img src={veersaLogo} alt="" />
+        <button className="loginBtn" onClick={() => handleLogin()}>
+          Log in
+        </button>
       </div>
     </div>
   );
-}
+};
 
 export default LoginPage;
