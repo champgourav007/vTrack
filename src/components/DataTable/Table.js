@@ -15,7 +15,7 @@ import Checkbox from "@mui/material/Checkbox";
 export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [ selectedRows, setSelectedRows ] = React.useState([]);
+  const [selectedRows, setSelectedRows] = React.useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -29,14 +29,12 @@ export default function StickyHeadTable() {
   const handleClick = (row) => {
     let idx = -1;
     if (selectedRows && selectedRows.length) {
-      idx = selectedRows.findIndex(selRow => 
-        selRow.Id === row.Id);
+      idx = selectedRows.findIndex((selRow) => selRow.Id === row.Id);
     }
     if (idx === -1) {
-      setSelectedRows([ ...selectedRows, row ]);
-    }
-    else {
-      let selRows = [ ...selectedRows ];
+      setSelectedRows([...selectedRows, row]);
+    } else {
+      let selRows = [...selectedRows];
       selRows.splice(idx, 1);
       setSelectedRows(selRows);
     }
@@ -45,39 +43,37 @@ export default function StickyHeadTable() {
   const selectOrDeSelectAll = () => {
     if (selectedRows && selectedRows.length) {
       setSelectedRows([]);
-    }
-    else {
-      setSelectedRows([ ...rows ]);
+    } else {
+      setSelectedRows([...rows]);
     }
   };
 
   const checkSelectedOrNot = (row) => {
     let idx = -1;
     if (selectedRows && selectedRows.length) {
-      idx = selectedRows.findIndex(selRow => row.Id === selRow.Id);
+      idx = selectedRows.findIndex((selRow) => row.Id === selRow.Id);
     }
     if (idx === -1) {
       return false;
-    }
-    else {
+    } else {
       return true;
     }
-  }
+  };
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 440 }}>
-        <Table aria-label="sticky table">
+        <Table aria-label="sticky table" size="small">
           <TableHead>
             <TableRow>
               <TableCell
                 sx={{
-                  backgroundColor: '#1773bc0d',
-                  color: '#1773bc',
+                  backgroundColor: "#1773bc0d",
+                  color: "#1773bc",
                   fontWeight: 700,
                 }}
               >
-                <Checkbox 
+                <Checkbox
                   checked={selectedRows.length === rows.length}
                   onClick={() => selectOrDeSelectAll()}
                 />
@@ -88,13 +84,13 @@ export default function StickyHeadTable() {
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
                   sx={{
-                    backgroundColor: '#1773bc0d',
-                    color: '#1773bc',
+                    backgroundColor: "#1773bc0d",
+                    color: "#1773bc",
                     fontWeight: 700,
                   }}
                 >
                   {column.label}
-                  <img src={TableArrows} alt=""/>
+                  <img src={TableArrows} alt="" />
                 </TableCell>
               ))}
             </TableRow>
@@ -111,7 +107,7 @@ export default function StickyHeadTable() {
                     key={row.rowIdx}
                   >
                     <TableCell>
-                      <Checkbox 
+                      <Checkbox
                         checked={checkSelectedOrNot(row)}
                         onClick={() => handleClick(row)}
                       />
