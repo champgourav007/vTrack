@@ -15,6 +15,16 @@ export const loginRequest = {
   scopes: ["User.Read"],
 };
 
+export const logoutRequest = (instance) => {
+  const userInfo = JSON.parse(sessionStorage.getItem('userInformation'));
+  const homeAccountId = userInfo.account.homeAccountId;
+  return {     
+    account: instance.getAccountByHomeId(homeAccountId),     
+    mainWindowRedirectUri: "your_app_main_window_redirect_uri",     
+    postLogoutRedirectUri: "your_app_logout_redirect_uri",   
+  }
+};
+
 // Add the endpoints here for Microsoft Graph API services you'd like to use.
 export const graphConfig = {
   graphMeEndpoint: "Enter_the_Graph_Endpoint_Here/v1.0/me",
