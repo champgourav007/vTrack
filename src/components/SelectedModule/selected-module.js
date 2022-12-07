@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { filterIcon } from "../../common/icons";
 import './selected-module.css';
 import { DataTable } from './../DataTable/DataTable';
+import TopBar from "../TopBar/TopBar"
 
 
 export const SelectedModule = ({headingName}) => {
@@ -9,6 +10,7 @@ export const SelectedModule = ({headingName}) => {
 
   return (
     <div className="mainContainer">
+      <TopBar />
       <div className="heading">{headingName}</div>
       <div className="tableDiv">
         <div className="searchHeader">

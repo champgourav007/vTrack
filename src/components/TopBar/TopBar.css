@@ -1,0 +1,88 @@
+.logoText {
+  width: 6.9375rem;
+  height: 2.437rem;
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 2.437rem;
+}
+.textOne {
+  color: #1773bc;
+}
+.textTwo {
+  color: #6e6f74;
+}
+.topbar-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.topbar-left {
+  display: flex;
+  gap: 1.0625rem;
+  align-items: baseline;
+}
+
+.topbar-right {
+  display: flex;
+  gap: 1.2rem;
+}
+.mainText {
+  width: 25.625rem;
+  height: 1.5rem;
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  color: #6e6f74;
+}
+.rectangle {
+  box-sizing: border-box;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  border: 0.0625rem solid #f5f6f8;
+  border-radius: 0.625rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.rectangle-wrapper {
+  display: flex;
+  gap: 0.2rem;
+}
+.image {
+  border-radius: 50%;
+}
+
+.user-wrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.user-name {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.25rem;
+  color: #1773bc;
+}
+
+.user-role {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 300;
+  font-size: 0.875rem;
+  line-height: 1.0625rem;
+  color: #4f4f4f;
+}
+
+.dropDownArrow {
+  align-self: baseline;
+  margin-top: 0.3rem;
+}
