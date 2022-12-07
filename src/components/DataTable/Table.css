@@ -1,16 +1,34 @@
-/* .MuiDataGrid-columnHeaders {
-  background-color: #1773bc0d;
-}
-
-.MuiDataGrid-columnHeaderTitle {
-  overflow-wrap: break-word;
-}
-
-.MuiDataGrid-columnHeader {
-  color: #1773bc;
-} */
-
 .MuiTableRow-root th {
   background-color: #1773bc0d;
   color: #1773bc;
+  font-weight: 700;
 }
+
+.MuiPaper-root ::-webkit-scrollbar {
+  width: 10px;
+}
+
+.MuiPaper-root ::-webkit-scrollbar-track {
+  background: FFFFFF;
+}
+
+.MuiPaper-root ::-webkit-scrollbar-thumb {
+  background: #1773bc;
+  border-radius: 2rem;
+}
+
+.css-jtlhu6-MuiTablePagination-root {
+  border: none;
+}
+
+div .MuiTablePagination-selectIcon {
+  color: #1773bc;
+}
+
+.MuiTablePagination-actions .css-zylse7-MuiButtonBase-root-MuiIconButton-root {
+  color: #1773bc;
+}
+
+/* .MuiPaper-root ::-webkit-scrollbar-thumb:hover {
+  background: pink;
+} */

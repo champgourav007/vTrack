@@ -17,11 +17,7 @@ export const Dashboard = () => {
         <div className="sidebarContainer">
           <Sidebar changePage={changePage} />
         </div>
-<<<<<<< HEAD
-        <div style={{ width: "76%" }}>
-=======
         <div className="rightDiv">
->>>>>>> a9c9ea7dfcf48b9e312ac345a65958199616ed57
           <DataTable headingName={headingName} />
         </div>
       </div>

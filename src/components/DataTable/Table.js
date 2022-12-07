@@ -7,10 +7,10 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import { rows, columns } from "../../mock_data/TableData";
+import { rows, columns } from "../../mock-data/TableData";
 import "./Table.css";
 import { TableArrows } from "../../common/icons";
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox from "@mui/material/Checkbox";
 
 export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
@@ -31,6 +31,7 @@ export default function StickyHeadTable() {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
+              <Checkbox color="primary" />
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
@@ -54,6 +55,7 @@ export default function StickyHeadTable() {
                     tabIndex={-1}
                     key={row.rowIdx}
                   >
+                    <Checkbox color="primary" />
                     {columns.map((col) => {
                       return <TableCell key={col.id}>{row[col.id]}</TableCell>;
                     })}
