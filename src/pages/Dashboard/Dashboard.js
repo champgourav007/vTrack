@@ -26,7 +26,6 @@ export const Dashboard = () => {
         </div>
         <div className="rightDiv">
           <SelectedModule headingName={headingName}/>
-          {/* <DataTable headingName={headingName} /> */}
         </div>
       </div>
     </>

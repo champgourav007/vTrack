@@ -18,10 +18,11 @@ export default function Sidebar(props) {
 
   return (
     <div className="sidebarOuterContainer">
-      <div className="veersaLogo">
-        <img src={veersaLogo} id="veersalogo" alt="" />
+      <div className="veersaLogoContainer">
+        <img className="veersaLogo" src={veersaLogo} id="veersalogo" alt="" />
       </div>
       <div className="sidebarWrapper">
+        <div className="topItems">
         { ModuleList.map((module, index) => {
           return (
             <div 
@@ -34,17 +35,20 @@ export default function Sidebar(props) {
             </div>
           )
         })}
-        <div className="divider" />
-        <div className="sidebarItems">
-          <img className="itemImage" src={settingsImg} alt=""/>
-          <div className="itemName">Settings</div>
         </div>
-        <div className="sidebarItems" onClick={() => signOutHandler()}>
-          <img className="itemImage" src={logoutImg} alt=""/>
-          <div className="itemName">Logout</div>
-        </div>
-        <div className="arrowIcon" id="collapse_buttom">
-          <img src={collapseArrowImg} alt=""/>
+        <div className="bottomItems">
+          <div className="divider" />
+          <div className="sidebarItems">
+            <img className="itemImage" src={settingsImg} alt=""/>
+            <div className="itemName">Settings</div>
+          </div>
+          <div className="sidebarItems" onClick={() => signOutHandler()}>
+            <img className="itemImage" src={logoutImg} alt=""/>
+            <div className="itemName">Logout</div>
+          </div>
+          <div className="arrowIcon" id="collapse_buttom">
+            <img src={collapseArrowImg} alt=""/>
+          </div>
         </div>
       </div>
     </div>

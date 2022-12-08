@@ -5,16 +5,26 @@
   height: 100%;
 }
 
-.veersaLogo {
+.veersaLogoContainer {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 6rem;
+  height: 10%;
+  background-color: #FFFFFF;
+}
+
+.veersaLogo {
+  width: 20%;
+  height: 43%
 }
 
 .sidebarWrapper {
   padding: 1rem 0;
   background-color: #1773bc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 90%;
 }
 
 .sidebarItems {
