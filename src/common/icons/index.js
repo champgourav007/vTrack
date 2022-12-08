@@ -24,7 +24,7 @@ import projectManagementBlueIcon from "./project-management-blue.svg";
 import timeSheetBlueIcon from "./timesheet-blue.svg";
 import vendorAdminBlueIcon from "./vendor-admin-blue.svg";
 import vendorSowAdminBlueIcon from "./vendor-sow-admin-blue.svg";
-
+import veersaLogoCollapse from './veersa-logo-collapse.svg'
 export {
   veersaLogo,
   clientAdminImg,
@@ -51,5 +51,6 @@ export {
   projectManagementBlueIcon,
   timeSheetBlueIcon,
   vendorAdminBlueIcon,
-  vendorSowAdminBlueIcon
+  vendorSowAdminBlueIcon,
+  veersaLogoCollapse
 };

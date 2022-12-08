@@ -11,12 +11,12 @@ import "./common/fonts/Montserrat/static/Montserrat-Medium.ttf";
 
 function App() {
   return (
-    <BrowserRouter>
+     <BrowserRouter>
       <Routes>
         <Route path={dashboardURL} element={<Dashboard />}></Route>
         <Route path={indexURL} element={<LoginPage />}></Route>
       </Routes>
-    </BrowserRouter>
+    </BrowserRouter> 
   );
 }
 

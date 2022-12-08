@@ -34,6 +34,14 @@
   color: #FFFFFF;
 }
 
+.sidebarItemsSelected {
+  display: flex;
+  flex-direction: row;
+  padding: 1rem 0;
+  color: #1773bc;
+  background-color: #FFFFFF;
+}
+
 .itemImage {
   width: 1.125rem;
   height: 1.125rem;
@@ -68,4 +76,11 @@
 .divider {
   margin: 1rem 0;
   border: 0.1rem solid #FFFFFF;
+}
+.veersaLogoContainer-collapse{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10%;
+  background-color: #1773bc;
 }

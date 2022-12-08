@@ -12,7 +12,7 @@ export const Dashboard = () => {
   const changePage = (headingName) => {
     setHeadingName(headingName);
   };
-
+  
   useEffect(() => {
     let User = sessionStorage.getItem("userInformation");
     if (User==null) navigate("/");
