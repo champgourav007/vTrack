@@ -13,11 +13,12 @@ import {
   projectManagementBlueIcon,
   timeSheetBlueIcon,
   vendorAdminBlueIcon,
-  vendorSowAdminBlueIcon  
+  vendorSowAdminBlueIcon,  
+  dashboardBlueIcon
 } from "../common/icons";
 
 export const ModuleList = [
-  { id: "1", name: "Dashboard", img: dashboardImg, imgHover:dashboardImg },
+  { id: "1", name: "Dashboard", img: dashboardImg, imgHover:dashboardBlueIcon },
   { id: "2", name: "Project Allocation", img: projectAllocationImg, imgHover:projectAllocationBlueIcon },
   { id: "3", name: "TimeSheet", img: timesheetImg, imgHover:timeSheetBlueIcon },
   { id: "4", name: "Project Management", img: projectManagementImg, imgHover:projectManagementBlueIcon },

@@ -14,6 +14,10 @@
   height: 100vh;
 }
 
+.sidebarContainer{
+  background-color: #1773bc;
+}
+
 .rightDiv {
   width: 100%;
   padding: 1.875rem;

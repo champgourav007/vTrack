@@ -1,6 +1,7 @@
 import veersaLogo from "./veersa-logo.svg";
 import clientAdminImg from "./client-admin.svg";
 import collapseArrowImg from "./collapse-arrow.svg";
+import openArrowImg from './open-sidebar.svg';
 import dashboardImg from "./dashboard.svg";
 import logoutImg from "./logout.svg";
 import projectAdminImg from "./project-admin.svg";
@@ -25,6 +26,9 @@ import timeSheetBlueIcon from "./timesheet-blue.svg";
 import vendorAdminBlueIcon from "./vendor-admin-blue.svg";
 import vendorSowAdminBlueIcon from "./vendor-sow-admin-blue.svg";
 import veersaLogoCollapse from './veersa-logo-collapse.svg'
+import logoutBlueIcon from './logout-blue-icon.svg';
+import settingBlueIcon from './settings-blue-icon.svg';
+import dashboardBlueIcon from './dashboard-blue-icon.svg';
 export {
   veersaLogo,
   clientAdminImg,
@@ -52,5 +56,9 @@ export {
   timeSheetBlueIcon,
   vendorAdminBlueIcon,
   vendorSowAdminBlueIcon,
-  veersaLogoCollapse
+  veersaLogoCollapse,
+  openArrowImg,
+  settingBlueIcon,
+  logoutBlueIcon,
+  dashboardBlueIcon
 };
