@@ -106,3 +106,21 @@
   border: 0.0625rem solid #1773bc;
   border-radius: 0.625rem;
 }
+
+.disableAddButton{
+    height: 3rem;
+    width: 6.875rem;
+    border-radius: 0.625rem;
+    background: #fafafa;
+    border: 0.0625rem solid #fafafa;
+    border-radius: 0.625rem;
+}
+
+.disableAddButtonText{
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.25rem;
+  color: #193f4b;
+}
