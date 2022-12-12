@@ -1,8 +1,19 @@
-import React from "react";
-import { bellIcon, message, UserTemp, dropDownArrow } from "../../common/icons";
+import React, { useEffect } from "react";
+import { bellIcon, message, dropDownArrow, UserTemp } from "../../common/icons";
 import "./TopBar.css";
 import props from "../../mock-data/TopBarMock";
-function TopBar() {
+import { useDispatch } from "react-redux";
+import { getUserDetails } from "../../redux/actions";
+export const TopBar = () => {
+  const dispatch = useDispatch();
+  // const { userData } = useSelector(({ USER }) =>
+  //   USER);
+
+  useEffect(() => {
+    dispatch(getUserDetails());
+  }, []);
+
+
   return (
     <div className="topbar-wrapper">
       <div className="topbar-left">
@@ -23,7 +34,7 @@ function TopBar() {
         </div>
         <div className="user-wrapper">
           <div>
-            <img alt="" className="image" src={UserTemp} />
+          <img alt="" className="image" src={`data:image/jpeg;base64,${UserTemp}`} />
           </div>
           <div>
             <div className="user-name">
@@ -37,5 +48,3 @@ function TopBar() {
     </div>
   );
 }
-
-export default TopBar;

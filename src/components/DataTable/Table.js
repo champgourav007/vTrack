@@ -22,9 +22,8 @@ import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { Button } from "@mui/material";
-// import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { useDispatch } from "react-redux";
+import { getClientAdminData } from "../../redux/actions/client-admin";
 
 export default function StickyHeadTable({isAddButtonClicked}) {
   const [page, setPage] = React.useState(0);
@@ -42,6 +41,7 @@ export default function StickyHeadTable({isAddButtonClicked}) {
   const addButtonClicked = (event) => {
     setRowToBeAdded(true);
   }
+  const dispatch = useDispatch();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -264,6 +264,9 @@ export default function StickyHeadTable({isAddButtonClicked}) {
         </TableCell>;
     }
   };
+  React.useEffect(() => {
+    dispatch(getClientAdminData({ pageNo: 1, pageSize: 10 }));
+  }, []);
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
