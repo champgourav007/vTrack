@@ -11,11 +11,14 @@ import { rows, columns } from "../../mock-data/TableData";
 import "./Table.css";
 import { TableArrows } from "../../common/icons";
 import Checkbox from "@mui/material/Checkbox";
+import { useDispatch } from "react-redux";
+import { getClientAdminData } from "../../redux/actions/client-admin";
 
 export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const dispatch = useDispatch();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -59,6 +62,10 @@ export default function StickyHeadTable() {
       return true;
     }
   };
+
+  React.useEffect(() => {
+    dispatch(getClientAdminData({ pageNo: 1, pageSize: 10 }));
+  }, []);
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>

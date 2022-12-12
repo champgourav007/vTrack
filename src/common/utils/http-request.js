@@ -1,21 +1,20 @@
 import axios from 'axios';
 import { v4 } from 'uuid';
 
-import { ACCESS_TOKEN } from '@constants';
-import { HttpMethod } from '@enums';
-
 import { getLocalStorageItem } from './local-storage';
+import { ACCESS_TOKEN } from '../constants/local-storage-keys';
+import { HttpMethod } from '../constants/http-requests';
 
 export const httpRequest = async (
   options,
-  isSubscriptionKey = true
+  isSubscriptionKey = false
 ) => {
   try {
     const isMethodGet = options.method === HttpMethod.GET;
 
     const accessToken = getLocalStorageItem(ACCESS_TOKEN);
     const authorization = accessToken ? `Bearer ${accessToken}` : '';
-    const isOcpApimTrace = (window?.env?.OCP_APIM_TRACE || '').toLowerCase() === 'true';
+    const isOcpApimTrace = false;
     const headers = {
       'x-correlation-id': v4(),
       ...(isOcpApimTrace && { 'Ocp-Apim-Trace': 'True' }),

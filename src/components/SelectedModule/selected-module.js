@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { filterIcon } from "../../common/icons";
 import './selected-module.css';
 import { DataTable } from './../DataTable/DataTable';
-import TopBar from "../TopBar/TopBar"
+import { TopBar } from "../TopBar/TopBar"
 
 
 export const SelectedModule = ({headingName}) => {
