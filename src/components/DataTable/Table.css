@@ -23,6 +23,23 @@ div .MuiTablePagination-selectIcon {
   color: #1773bc;
 }
 
+.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root{
+  height: 2.1rem;
+}
+
+.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root{
+  height: 2.1rem;
+}
+
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root{
+  top:-0.5rem !important;
+}
+
 /* .MuiPaper-root ::-webkit-scrollbar-thumb:hover {
   background: pink;
 } */
+
+.attachmentContainer{
+  display: flex;
+  align-items: center;
+}

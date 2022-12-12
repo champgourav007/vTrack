@@ -19,7 +19,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from "@mui/x-date-pickers";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import { Button } from "@mui/material";
 // import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 // import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -108,12 +110,13 @@ export default function StickyHeadTable({isAddButtonClicked}) {
     
     switch (col) {
       case "ClientName":
-        return <TableCell key={col}><TextField
-                    id="outlined-required"
-                    label="Name"
-                    placeholder=""
-                  />
-                </TableCell>;
+        return <TableCell key={col}>
+              <TextField
+                id="outlined-required"
+                label="Name"
+                placeholder=""
+              />
+          </TableCell>;
         break;
         
       case "ClientLocation":
@@ -236,10 +239,13 @@ export default function StickyHeadTable({isAddButtonClicked}) {
         case "MsaAttachment":
           return(
                 <TableCell key={col}>
-                  <IconButton color="primary" aria-label="upload picture" component="label">
-                          <input hidden accept="*" type="file" />
-                          <AttachFileIcon />
+                  <div className="attachmentContainer">
+                    <IconButton color="primary" aria-label="upload picture" component="label">
+                            <input hidden accept="*" type="file" />
+                            <AttachFileIcon />
                     </IconButton>
+                    <AddIcon />
+                  </div>
                 </TableCell>
                 )
           break;
@@ -309,6 +315,9 @@ export default function StickyHeadTable({isAddButtonClicked}) {
                             return createInputField(col.id);
                         })
                     }
+                    {/* <TableCell>
+                      
+                    </TableCell> */}
                 </TableRow>
               )
             }
