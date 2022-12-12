@@ -259,36 +259,6 @@ export default function StickyHeadTable({isAddButtonClicked}) {
     }
   };
 
-  const createFormTable = () => {
-    return columns.map((col) => {
-      <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={col.id}
-                  >
-                    
-                    <TableCell>
-                      <Checkbox
-                        // checked={checkSelectedOrNot()}
-                        // onClick={() => handleClick(row)}
-                      />
-                    </TableCell>
-                    {/* {
-                    columns.map((col) => {
-                      return createInputField(col);
-                    })} */}
-                    <TableCell key={col.id}><TextField
-          required
-          id="outlined-required"
-          label="Required"
-          defaultValue="Hello World"
-        />
-        </TableCell>;
-                  </TableRow>
-    })
-  }
-
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 480 }}>
