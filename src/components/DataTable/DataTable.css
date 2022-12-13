@@ -1,2 +1,65 @@
-.table-wrapper {
+#new_row {
+  height: 6rem;
+}
+
+.MuiTableContainer-root ::-webkit-scrollbar,
+.MuiPaper-root ::-webkit-scrollbar {
+  width: 0.625rem !important;
+}
+
+.MuiTableContainer-root ::-webkit-scrollbar-track,
+.MuiPaper-root ::-webkit-scrollbar-track {
+  background: FFFFFF;
+}
+
+.MuiTableContainer-root ::-webkit-scrollbar-thumb,
+.MuiPaper-root ::-webkit-scrollbar-thumb {
+  background: #1773bc;
+  border-radius: 2rem;
+}
+
+.css-jtlhu6-MuiTablePagination-root {
+  border: none;
+}
+
+div .MuiTablePagination-selectIcon {
+  color: #1773bc;
+}
+
+.MuiTablePagination-actions .css-zylse7-MuiButtonBase-root-MuiIconButton-root {
+  color: #1773bc;
+}
+
+td.css-dsuxgy-MuiTableCell-root {
+  padding: 0 0.375rem !important;
+  font-family: "Montserrat";
+  font-size: 1rem;
+  line-height: 1.0625rem;
+  font-weight: 600;
+  color: #000000;
+}
+
+th.css-1g0973d-MuiTableCell-root {
+  padding: 0 0.375rem !important;
+  font-family: "Montserrat";
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.25rem;
+  color: #1773bc;
+}
+.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
+  height: 3rem;
+}
+
+.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
+  height: 3rem;
+}
+
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
+  top: -0.5rem !important;
+}
+
+.attachmentContainer {
+  display: flex;
+  align-items: center;
 }

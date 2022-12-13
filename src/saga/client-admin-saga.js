@@ -8,15 +8,19 @@ import {
   getClientAdminData,
   setClientAdminData,
 } from "../redux/actions";
-import { store } from "../redux/store";
 
 function* workerClientAdminSaga({ payload }) {
   try {
-    const clientAdminDetails = yield call(getClientAdminDetails, payload.pageNo, payload.pageSize);
+    const clientAdminDetails = yield call(getClientAdminDetails, payload.pageNo, payload.pageSize, payload.sortDir);
     yield put(setClientAdminData(clientAdminDetails));
   } catch(err) {
     console.log(err);
   }
+}
+
+function* workerSaveClientAdminSaga({ payload }) {
+  yield call(postClientAdminDetails, payload.data);
+  yield put(getClientAdminData({ pageNo: 1, pageSize: 10 }));
 }
 
 export function* clientAdminSaga() {
@@ -26,14 +30,10 @@ export function* clientAdminSaga() {
   );
 }
 
-function* workerSaveClientAdminSaga({ payload }) {
-  yield call(postClientAdminDetails, payload.data);
-  yield put(getClientAdminData({ pageNo: 1, pageSize: 10 }));
-}
-
 export function* saveClientAdminSaga() {
   yield takeLatest(
     ClientAdminType.SAVE_CLIENT_ADMIN_DATA,
     workerSaveClientAdminSaga
   );
 }
+
