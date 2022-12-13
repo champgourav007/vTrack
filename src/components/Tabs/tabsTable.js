@@ -6,8 +6,14 @@ import { DataTable } from "../DataTable/DataTable";
 export const TabsTable = (props) => {
   const [isEdit, setIsEdit] = useState(false);
   const [isAddButtonClicked, setIsAddButtonClicked] = useState(false);
+  const [isEditButtonClicked, setIsEditButtonClicked] = useState(false);
   const addNewRow = (isTrue) => {
     setIsAddButtonClicked(isTrue);
+  };
+
+  const editHandler = () => {
+    // setIsAddButtonClicked(true);
+    setIsEditButtonClicked(true);
   };
 
   return (
@@ -25,7 +31,10 @@ export const TabsTable = (props) => {
             setIsEdit(!isEdit);
           }}
         >
-          <div className={isEdit ? "btnText" : "disableBtnText"}>
+          <div
+            className={isEdit ? "btnText" : "disableBtnText"}
+            onClick={() => editHandler()}
+          >
             Edit Selected
           </div>
         </button>
@@ -44,6 +53,9 @@ export const TabsTable = (props) => {
       <DataTable
         isAddButtonClicked={isAddButtonClicked}
         setIsAddButtonClicked={setIsAddButtonClicked}
+        setIsEdit={setIsEdit}
+        isEditButtonClicked={isEditButtonClicked}
+        setIsEditButtonClicked={setIsEditButtonClicked}
       />
     </div>
   );
