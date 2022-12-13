@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { filterIcon } from "../../common/icons";
 import './selected-module.css';
-import { DataTable } from './../DataTable/DataTable';
-import { TopBar } from "../TopBar/TopBar"
+import TopBar from "../TopBar/TopBar"
+import TabsComponent from "../Tabs/tabs";
 
 
 export const SelectedModule = ({headingName}) => {
@@ -14,7 +13,9 @@ export const SelectedModule = ({headingName}) => {
   }
 
   return (
+    
     <div className="mainContainer">
+      {console.log(headingName)}
       <TopBar />
       <div className="heading">{headingName}</div>
       <div className="tableDiv">
@@ -33,6 +34,7 @@ export const SelectedModule = ({headingName}) => {
         </div>
         <DataTable headingName={headingName} isAddButtonClicked={isAddButtonClicked}/>
       </div>
+      <TabsComponent headingName = {headingName}/> 
     </div>
   );
 };
