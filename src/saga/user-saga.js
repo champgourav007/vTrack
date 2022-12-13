@@ -3,10 +3,14 @@ import { getUserDetails } from "../http/requests/user";
 import { setUserDetails, UserType } from "../redux/actions";
 
 function* workerUserSaga() {
-  const userDetails = yield call(getUserDetails);
-  yield put(setUserDetails(userDetails));
+  try {
+    const userDetails = yield call(getUserDetails);
+    yield put(setUserDetails(userDetails));
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 export function* userSaga() {
-  yield takeLatest(UserType.GET_USER_DETAILS, workerUserSaga); 
+  yield takeLatest(UserType.GET_USER_DETAILS, workerUserSaga);
 }

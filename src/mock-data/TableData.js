@@ -1,44 +1,44 @@
 export const columns = [
-    { id: "ClientName", label: "Client Name", minWidth: 100 },
-    { id: "ClientLocation", label: "Client Location", minWidth: 80 },
+    { id: "clientName", label: "Client Name", minWidth: 100 },
+    { id: "location", label: "Client Location", minWidth: 80 },
     {
-      id: "Currency",
+      id: "currency",
       label: "Currency",
       minWidth: 80,
     },
     {
-      id: "MsaStartDate",
+      id: "msaStartDate",
       label: "MSA Start Date",
       minWidth: 100,
     },
     {
-      id: "MsaEndDate",
+      id: "msaEndDate",
       label: "MSA End Date",
       minWidth: 110,
     },
     {
-      id: "VeersaBusinessOwner",
+      id: "businessOwner",
       label: "Veersa Business Owner",
       minWidth: 100,
     },
     {
-      id: "PaymentTerms",
+      id: "paymentTerms",
       label: "Payment Terms",
       minWidth: 80,
     },
     {
-      id: "VeersaDeliveryOfficer",
+      id: "deliveryOfficer",
       label: "Veersa Delivery Officer",
       minWidth: 100,
     },
     {
-      id: "MsaAttachment",
+      id: "msaDoc",
       label: "MSA Attachment",
       minWidth: 80,
     },
   ];
   
-  function createData(
+  export function createData(
     Id,
     ClientName,
     ClientLocation,
