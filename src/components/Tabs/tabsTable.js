@@ -5,6 +5,11 @@ import { DataTable } from '../DataTable/DataTable';
 
 function TabsTable(props){
     const [ isEdit, setIsEdit ] = useState(false);
+    const [isAddButtonClicked, setIsAddButtonClicked] = useState(false);
+    const addNewRow = (isTrue) => {
+        setIsAddButtonClicked(isTrue)
+    }
+
     return (
         <div className="tableDiv">
             <div className="searchHeader">
@@ -16,11 +21,11 @@ function TabsTable(props){
                 <button disable={!isEdit} className={isEdit ? "editBtn" : "disableEditBtn"} onClick={() => { setIsEdit(!isEdit) }}>
                     <div className={isEdit ? "btnText" : "disableBtnText"}>Edit Selected</div>
                 </button>
-                <button className="addBtn">
-                    <div className="btnText">Add</div>
+                <button  disabled={isAddButtonClicked} className={isAddButtonClicked ? "disableAddButton" : "addBtn"} onClick={() => addNewRow(true)}>
+                    <div className={ isAddButtonClicked ? "disableAddButtonText" : "btnText"}>Add</div>
                 </button>
             </div>
-            <DataTable headingName={props.headingName} />
+            <DataTable headingName={props.headingName} isAddButtonClicked={isAddButtonClicked}/>
         </div>
     );
 }
