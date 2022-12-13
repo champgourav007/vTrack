@@ -50,15 +50,15 @@
 }
 
 .itemImage {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .itemName {
   font-family: 'Montserrat';
   font-style: normal;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.25rem;
   line-height: 1.25rem;
   margin-left: 1rem;
 }

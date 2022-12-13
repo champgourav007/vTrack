@@ -33,7 +33,7 @@ import {
 import { useEffect } from "react";
 import { useState } from "react";
 
-export default function StickyHeadTable({ isAddButtonClicked }) {
+export default function StickyHeadTable({ isAddButtonClicked, setIsAddButtonClicked }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [selectedRows, setSelectedRows] = React.useState([]);
@@ -70,6 +70,7 @@ export default function StickyHeadTable({ isAddButtonClicked }) {
   const saveDataHandler = () => {
     console.log(newRowAdded);
     dispatch(saveClientAdminData(newRowAdded));
+    setIsAddButtonClicked(false);
   };
   useEffect(() => {
     if (clientAdminData) {
@@ -100,7 +101,7 @@ export default function StickyHeadTable({ isAddButtonClicked }) {
   const handleClick = (row) => {
     let idx = -1;
     if (selectedRows && selectedRows.length) {
-      idx = selectedRows.findIndex((selRow) => selRow.Id === row.Id);
+      idx = selectedRows.findIndex((selRow) => selRow.clientId === row.clientId);
     }
     if (idx === -1) {
       setSelectedRows([...selectedRows, row]);
@@ -122,7 +123,7 @@ export default function StickyHeadTable({ isAddButtonClicked }) {
   const checkSelectedOrNot = (row) => {
     let idx = -1;
     if (selectedRows && selectedRows.length) {
-      idx = selectedRows.findIndex((selRow) => row.Id === selRow.Id);
+      idx = selectedRows.findIndex((selRow) => row.clientId === selRow.clientId);
     }
     if (idx === -1) {
       return false;
@@ -349,7 +350,7 @@ export default function StickyHeadTable({ isAddButtonClicked }) {
   }, []);
 
   return (
-    <Paper  sx={{ width: "100%", overflow: "hidden" }}>
+    <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer>
         <Table aria-label="sticky table" size="small">
           <TableHead>
@@ -387,7 +388,7 @@ export default function StickyHeadTable({ isAddButtonClicked }) {
           </TableHead>
           <TableBody>
             {isAddButtonClicked && (
-              <TableRow>
+              <TableRow id="new_row">
                 <TableCell>
                   <Checkbox
                     checked="true"

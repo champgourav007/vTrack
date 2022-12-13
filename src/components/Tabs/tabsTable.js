@@ -25,7 +25,7 @@ function TabsTable(props){
                     <div className={ isAddButtonClicked ? "disableAddButtonText" : "btnText"}>Add</div>
                 </button>
             </div>
-            <DataTable headingName={props.headingName} isAddButtonClicked={isAddButtonClicked}/>
+            <DataTable headingName={props.headingName} isAddButtonClicked={isAddButtonClicked} setIsAddButtonClicked={setIsAddButtonClicked}/>
         </div>
     );
 }

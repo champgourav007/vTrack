@@ -1,12 +1,19 @@
-.MuiTableContainer-root ::-webkit-scrollbar, .MuiPaper-root ::-webkit-scrollbar {
+#new_row {
+  height: 6rem;
+}
+
+.MuiTableContainer-root ::-webkit-scrollbar,
+.MuiPaper-root ::-webkit-scrollbar {
   width: 0.625rem !important;
 }
 
-.MuiTableContainer-root ::-webkit-scrollbar-track, .MuiPaper-root ::-webkit-scrollbar-track {
+.MuiTableContainer-root ::-webkit-scrollbar-track,
+.MuiPaper-root ::-webkit-scrollbar-track {
   background: FFFFFF;
 }
 
-.MuiTableContainer-root ::-webkit-scrollbar-thumb, .MuiPaper-root ::-webkit-scrollbar-thumb {
+.MuiTableContainer-root ::-webkit-scrollbar-thumb,
+.MuiPaper-root ::-webkit-scrollbar-thumb {
   background: #1773bc;
   border-radius: 2rem;
 }
@@ -26,9 +33,9 @@ div .MuiTablePagination-selectIcon {
 td.css-dsuxgy-MuiTableCell-root {
   padding: 0 0.375rem !important;
   font-family: "Montserrat";
-  font-size: 0.875rem;
+  font-size: 1rem;
   line-height: 1.0625rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #000000;
 }
 
@@ -36,23 +43,23 @@ th.css-1g0973d-MuiTableCell-root {
   padding: 0 0.375rem !important;
   font-family: "Montserrat";
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.25rem;
   line-height: 1.25rem;
-  color: #1773BC;
+  color: #1773bc;
 }
-.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root{
-  height: 2.1rem;
-}
-
-.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root{
-  height: 2.1rem;
+.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
+  height: 3rem;
 }
 
-.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root{
-  top:-0.5rem !important;
+.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
+  height: 3rem;
 }
 
-.attachmentContainer{
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
+  top: -0.5rem !important;
+}
+
+.attachmentContainer {
   display: flex;
   align-items: center;
 }
