@@ -9,13 +9,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 10%;
+  height: 6rem;
   background-color: #FFFFFF;
 }
 
 .veersaLogo {
-  width: 20%;
-  height: 43%
+  width: 3.25rem;
+  height: 2.5625rem;
+}
+
+.veersaLogo-collapse {
+  width: 2.5rem;
+  height: 1.8125rem;
 }
 
 .sidebarWrapper {
@@ -30,14 +35,14 @@
 .sidebarItems {
   display: flex;
   flex-direction: row;
-  padding: 1rem 0;
+  padding: 1.25rem 1.5rem;
   color: #FFFFFF;
 }
 
 .sidebarItemsSelected {
   display: flex;
   flex-direction: row;
-  padding: 1rem 0;
+  padding: 1.25rem 1.5rem;
   color: #1773bc;
   background-color: #FFFFFF;
 }
@@ -45,8 +50,6 @@
 .itemImage {
   width: 1.125rem;
   height: 1.125rem;
-  margin-left: 1.5rem;
-  margin-right: 1rem;
 }
 
 .itemName {
@@ -55,6 +58,7 @@
   font-weight: 700;
   font-size: 1rem;
   line-height: 1.25rem;
+  margin-left: 1rem;
 }
 
 .arrowIcon {
@@ -68,18 +72,19 @@
 .sidebarItems:hover {
   display: flex;
   flex-direction: row;
-  padding: 1rem 0;
+  padding: 1.25rem 1.5rem;
   background-color: #FFFFFF;
   color: #1773bc;
 }
 
 .divider {
   border: 0.1rem solid #FFFFFF;
+  margin-bottom: 1rem;
 }
 .veersaLogoContainer-collapse{
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 10%;
+  height: 6rem;
   background-color: #1773bc;
 }

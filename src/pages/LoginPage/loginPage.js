@@ -26,8 +26,8 @@ export const LoginPage = () => {
             <br />
             VTrack
           </div>
-          <div className="subheading1">Nice to see you again</div>
-          <div className="subheading2">
+          <div className="subHeading1">Nice to see you again</div>
+          <div className="subHeading2">
             One stop shop for project
             <br />
             management

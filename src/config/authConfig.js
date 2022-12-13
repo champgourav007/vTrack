@@ -11,7 +11,7 @@ export const msalConfig = {
 };
 
 export const loginRequest = {
-  scopes: ["User.Read"],
+  scopes: ["api://9f053c48-5633-4c1f-842c-ded8c193843b/Default.All"],
 };
 
 export const logoutRequest = (instance) => {

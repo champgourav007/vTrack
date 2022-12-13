@@ -19,7 +19,7 @@
 }
 
 .rightDiv {
-  width: 100%;
   padding: 1.875rem;
   background-color: #F5F5F5;
+  flex: 1;
 }

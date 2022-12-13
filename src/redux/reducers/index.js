@@ -4,6 +4,7 @@ import { combineReducers } from 'redux';
 import { Namespaces } from '../namespaces';
 import { clientAdminReducer } from './client-admin';
 import { localeReducer } from './locale';
+import { uiReducer } from './ui';
 import { userReducer } from './user';
 
 export const rootReducer = combineReducers({
@@ -11,4 +12,5 @@ export const rootReducer = combineReducers({
   [Namespaces.LOCALE]: localeReducer,
   [Namespaces.CLIENT_ADMIN]: clientAdminReducer,
   [Namespaces.USER]: userReducer,
+  [Namespaces.UI]: uiReducer,
 });
