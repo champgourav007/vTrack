@@ -37,6 +37,7 @@
   flex-direction: row;
   padding: 1.25rem 1.5rem;
   color: #FFFFFF;
+  cursor: pointer;
 }
 
 .sidebarItemsSelected {
@@ -45,6 +46,7 @@
   padding: 1.25rem 1.5rem;
   color: #1773bc;
   background-color: #FFFFFF;
+  cursor: pointer;
 }
 
 .itemImage {
@@ -67,6 +69,7 @@
   margin-left: 1.5rem;
   margin-right: 1rem;
   padding: 1rem 0;
+  cursor:pointer;
 }
 
 .sidebarItems:hover {

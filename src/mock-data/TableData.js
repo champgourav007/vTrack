@@ -234,4 +234,32 @@ export const columns = [
       "Attachment"
     ),
   ];
+
+
+  export const currencies = [
+    "USD",
+    "INR",
+    "EU",
+    "EUR"
+  ]
+
+  export const locations = [
+    "US",
+    "UK"
+  ]
+
+  export const businessOwners = [
+    "Sudeb Mandal",
+    "Rahul Gupta",
+    "Vipul Taneja"
+  ]
   
+  export const paymentTerms = [
+    "consectetur",
+    "consectetur"
+  ]
+
+  export const deliveryOfficers = [
+    "Rahul Gupta",
+    "Vipul Taneja"
+  ]

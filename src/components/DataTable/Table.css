@@ -40,3 +40,19 @@ th.css-1g0973d-MuiTableCell-root {
   line-height: 1.25rem;
   color: #1773BC;
 }
+.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root{
+  height: 2.1rem;
+}
+
+.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root{
+  height: 2.1rem;
+}
+
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root{
+  top:-0.5rem !important;
+}
+
+.attachmentContainer{
+  display: flex;
+  align-items: center;
+}

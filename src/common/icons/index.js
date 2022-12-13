@@ -29,6 +29,7 @@ import veersaLogoCollapse from './veersa-logo-collapse.svg'
 import logoutBlueIcon from './logout-blue-icon.svg';
 import settingBlueIcon from './settings-blue-icon.svg';
 import dashboardBlueIcon from './dashboard-blue-icon.svg';
+import announcementIcon from './announcement-icon.svg'
 export {
   veersaLogo,
   clientAdminImg,
@@ -60,5 +61,6 @@ export {
   openArrowImg,
   settingBlueIcon,
   logoutBlueIcon,
-  dashboardBlueIcon
+  dashboardBlueIcon,
+  announcementIcon
 };
