@@ -4,7 +4,7 @@ import { SelectedModule } from "../../components/SelectedModule/selected-module"
 import Sidebar from "../../components/Sidebar/Sidebar";
 import "./dashboard.css";
 import { useNavigate } from "react-router-dom";
-import Announcement from "../../components/Announcement/announcement";
+import { Announcement } from "../../components/Announcement/announcement";
 
 export const Dashboard = () => {
   const [headingName, setHeadingName] = useState("Client Admin");
@@ -25,9 +25,11 @@ export const Dashboard = () => {
         <div className="sidebarContainer">
           <Sidebar changePage={changePage} />
         </div>
-        <div className="announcementContainer">
-          <Announcement />
-          <div className="rightDiv">
+        <div className="rightContainer">
+          <div className="announcementContainer">
+            <Announcement />
+          </div>
+          <div className="selectedModule">
             <SelectedModule headingName={headingName}/>
           </div>
         </div>

@@ -21,7 +21,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { Button } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { getClientAdminData } from "../../redux/actions/client-admin";
 
@@ -29,7 +28,6 @@ export default function StickyHeadTable({isAddButtonClicked}) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const [isRowToBeAdded, setRowToBeAdded] = React.useState(true);
   const [currency, setCurrency] = React.useState('EUR');
   const [location, setLocation] = React.useState("US");
   const [businessOwner, setBusinessOwner] = React.useState("Sudeb Mandal");
@@ -38,9 +36,6 @@ export default function StickyHeadTable({isAddButtonClicked}) {
   const [msaEndDate, setMsaEndDate] = React.useState();
   const [msaStartDate, setMsaStartDate] = React.useState();
 
-  const addButtonClicked = (event) => {
-    setRowToBeAdded(true);
-  }
   const dispatch = useDispatch();
 
   const handleChangePage = (event, newPage) => {
@@ -270,7 +265,7 @@ export default function StickyHeadTable({isAddButtonClicked}) {
 
   return (
     <Paper  sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 480 }}>
+      <TableContainer>
         <Table aria-label="sticky table" size="small">
           <TableHead>
             <TableRow>

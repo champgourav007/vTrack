@@ -2,7 +2,7 @@ import {announcementIcon} from '../../common/icons/index'
 import './announcement.css'
 import { Button } from '@mui/material';
 
-function Announcement(){
+export const Announcement = () => {
   return(
     <>
         <div className='announcement-wrapper'>
@@ -16,7 +16,6 @@ function Announcement(){
             <div className='read-more'>
               <Button variant="text"><span className='button-text'>Read More</span></Button>
             </div>
-
         </div>
     </>
   )
