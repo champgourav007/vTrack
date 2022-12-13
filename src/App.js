@@ -8,6 +8,7 @@ import "./common/fonts/Montserrat/static/Montserrat-Bold.ttf";
 import "./common/fonts/Montserrat/static/Montserrat-Light.ttf";
 import "./common/fonts/Montserrat/static/Montserrat-Thin.ttf";
 import "./common/fonts/Montserrat/static/Montserrat-Medium.ttf";
+import "./common/fonts/Kumbh_Sans/static/KumbhSans-Regular.ttf";
 import { useWindowSize } from "./common/hooks";
 
 function App() {

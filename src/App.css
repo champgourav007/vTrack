@@ -28,6 +28,12 @@
     url("./common/fonts/Montserrat/static/Montserrat-Thin.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "Kumbh Sans";   /*Can be any text*/
+  src: local("KumbhSans-Regular"),
+    url("./common/fonts/Kumbh_Sans/static/KumbhSans-Regular.ttf") format("truetype");
+}
+
 *{
   margin: 0;
   padding: 0;
