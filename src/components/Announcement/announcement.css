@@ -2,7 +2,6 @@
   display: flex;
   align-items: center;
   background: #DCEFFF;
-  width: 100%;
   height: 2rem;
 }
 
@@ -15,8 +14,8 @@
   font-family: 'Kumbh Sans';
   font-style: normal;
   font-weight: 700;
-  font-size: 16px;
-  line-height: 20px;
+  font-size: 1rem;
+  line-height: 1.25rem;
   color: #073044;
 }
 
@@ -24,8 +23,8 @@
   font-family: 'Kumbh Sans';
   font-style: normal;
   font-weight: 400;
-  font-size: 14px;
-  line-height: 17px;
+  font-size: 0.875rem;
+  line-height: 1.0625rem;
   color: #073044;
 }
 
@@ -44,5 +43,5 @@
 }
 
 .read-more{
-  margin-left: 29rem;
+  margin-left: auto;
 }

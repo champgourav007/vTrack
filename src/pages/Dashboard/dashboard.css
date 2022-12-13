@@ -18,14 +18,18 @@
   background-color: #1773bc;
 }
 
-.rightDiv {
-  width: 100%;
+.selectedModule {
   padding: 1.875rem;
   background-color: #F5F5F5;
+  flex: 1;
 }
 
 .announcementContainer{
-  width: 100%;
   margin: 0;
   padding: 0;
+}
+
+.rightContainer {
+  flex: 1;
+  background-color: #F5F5F5;
 }

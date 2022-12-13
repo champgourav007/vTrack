@@ -14,7 +14,7 @@ export const getClientAdminData = (data) =>
 export const setClientAdminData = (data) => 
 ({
   type: ClientAdminType.SET_CLIENT_ADMIN_DATA,
-  payload: { data },
+  payload: data,
 });
 
 export const saveClientAdminData = (data) => 

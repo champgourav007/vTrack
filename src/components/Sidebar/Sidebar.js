@@ -26,7 +26,7 @@ export default function Sidebar(props) {
   return (
     <div className="sidebarOuterContainer">
       <div className={(collapse === false) ? "veersaLogoContainer":"veersaLogoContainer-collapse"}>
-        <img className={(collapse === false)?"veersaLogo":""} src={(collapse === false)?veersaLogo:veersaLogoCollapse} id="veersalogo" alt="" />
+        <img className={(collapse === false)?"veersaLogo":"veersaLogo-collapse"} src={(collapse === false)?veersaLogo:veersaLogoCollapse} id="veersalogo" alt="" />
       </div>
       { ( collapse === true ) ? <div className="divider" /> : "" }
       <div className="sidebarWrapper">
@@ -70,8 +70,8 @@ export default function Sidebar(props) {
             {(collapse === false) ?
             <div className="itemName">Logout</div>:""}
           </div>
-          <div className="arrowIcon" id="collapse_buttom" onClick={()=>{setCollapse(!collapse)}}>
-            <img src={(collapse === false) ? collapseArrowImg : openArrowImg}  alt=""/>
+          <div id="collapse_buttom" onClick={()=>{setCollapse(!collapse)}}>
+            <img className="arrowIcon" src={(collapse === false) ? collapseArrowImg : openArrowImg}  alt=""/>
           </div>
         </div>
       </div>

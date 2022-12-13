@@ -74,7 +74,7 @@ export default function StickyHeadTable({ isAddButtonClicked }) {
   useEffect(() => {
     if (clientAdminData) {
       const temp = [];
-      Object.keys(clientAdminData.data[0]).forEach((col) => {
+      Object.keys(clientAdminData[0]).forEach((col) => {
         temp.push({
           id: col,
           label: getLabel(col),
@@ -82,7 +82,7 @@ export default function StickyHeadTable({ isAddButtonClicked }) {
         });
       });
       setColumnsData(temp);
-      setRows(clientAdminData.data);
+      setRows(clientAdminData);
     }
   }, [clientAdminData]);
 
@@ -349,8 +349,8 @@ export default function StickyHeadTable({ isAddButtonClicked }) {
   }, []);
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 480 }}>
+    <Paper  sx={{ width: "100%", overflow: "hidden" }}>
+      <TableContainer>
         <Table aria-label="sticky table" size="small">
           <TableHead>
             <TableRow>
@@ -397,9 +397,6 @@ export default function StickyHeadTable({ isAddButtonClicked }) {
                 {columnsData.map((col) => {
                   return createInputField(col.id);
                 })}
-                {/* <TableCell>
-                      
-                    </TableCell> */}
               </TableRow>
             )}
             {rows
