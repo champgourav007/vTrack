@@ -207,6 +207,18 @@ export const DataTable = ({
     setNewRowAdded({ ...newRowAdded, clientName: event.target.value });
   };
 
+  const handleSortBy = (colName) => {
+    setSortBy(colName);
+    dispatch(
+      getClientAdminData({
+        pageNo: page + 1,
+        pageSize: rowsPerPage,
+        sortBy: colName,
+        sortDir: sortDir,
+      })
+    );
+  }
+
   const createInputField = (col) => {
     switch (col) {
       case "clientName":
@@ -410,7 +422,7 @@ export const DataTable = ({
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer>
+      <TableContainer sx={{ maxHeight: '48rem' }}>
         <Table aria-label="sticky table" size="small">
           <TableHead>
             <TableRow>
@@ -442,7 +454,7 @@ export const DataTable = ({
                     <img
                       src={TableArrows}
                       alt=""
-                      onClick={() => setSortBy(column.id)}
+                      onClick={() => handleSortBy(column.id)}
                     />
                   </TableCell>
                 ) : null
@@ -527,7 +539,7 @@ export const DataTable = ({
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={rows.length}
+        count={rows.length > 0 ?  rows[0].totalCount : 0}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
