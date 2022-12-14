@@ -244,3 +244,15 @@ export const businessOwners = ["Sudeb Mandal", "Rahul Gupta", "Vipul Taneja"];
 export const paymentTerms = ["consectetur", "consectetur"];
 
 export const deliveryOfficers = ["Rahul Gupta", "Vipul Taneja"];
+
+export const initialData = {
+  clientName: "",
+  location: "US",
+  currency: "INR",
+  msaStartDate: "2022-12-12T11:30:39.91",
+  msaEndDate: "2022-12-12T11:30:39.91",
+  businessOwner: "Sudeb Mandal",
+  paymentTerms: "consectetur",
+  deliveryOfficer: "Rahul Gupta",
+  msaDoc: "",
+};

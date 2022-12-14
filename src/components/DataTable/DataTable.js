@@ -12,12 +12,13 @@ import "./DataTable.css";
 import { TableArrows } from "../../common/icons";
 import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
-import { currencies } from "../../mock-data/TableData";
 import MenuItem from "@mui/material/MenuItem";
 import {
   locations,
   deliveryOfficers,
   businessOwners,
+  initialData,
+  currencies,
 } from "../../mock-data/TableData";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -31,8 +32,8 @@ import {
   saveClientAdminData,
   updateClientAdminData,
 } from "../../redux/actions/client-admin";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Loader from "../Loader";
 
 export const DataTable = ({
   isAddButtonClicked,
@@ -41,42 +42,20 @@ export const DataTable = ({
   isEditButtonClicked,
   setIsEditButtonClicked,
 }) => {
+  const dispatch = useDispatch();
+
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const initialData = {
-    clientName: "",
-    location: "US",
-    currency: "INR",
-    msaStartDate: "2022-12-12T11:30:39.91",
-    msaEndDate: "2022-12-12T11:30:39.91",
-    businessOwner: "Sudeb Mandal",
-    paymentTerms: "consectetur",
-    deliveryOfficer: "Rahul Gupta",
-    msaDoc: "",
-  };
   const [newRowAdded, setNewRowAdded] = useState(initialData);
   const [columnsData, setColumnsData] = React.useState([]);
-  const { clientAdminData } = useSelector(({ CLIENT_ADMIN }) => CLIENT_ADMIN);
   const [rows, setRows] = useState([]);
   const [sortBy, setSortBy] = useState("clientName");
   const [sortDir, setSortDir] = useState("ASC");
   const [rowToBeUpdated, setRowToBeUpdated] = useState({});
-
-  useEffect(() => {
-    if (selectedRows.length == 1) {
-      setIsEdit(true);
-    } else {
-      setIsEdit(false);
-    }
-  }, [selectedRows]);
-
-  useEffect(() => {
-    if (isEditButtonClicked) {
-      setRowToBeUpdated(selectedRows[0]);
-      setNewRowAdded(selectedRows[0]);
-    }
-  }, [isEditButtonClicked]);
+  const [loader, setLoader] = useState(false);
+  const { clientAdminData } = useSelector(({ CLIENT_ADMIN }) => CLIENT_ADMIN);
+  const [fillHeading, setFillHeading] = useState(true);
 
   const getLabel = (col) => {
     for (let column of columns) {
@@ -92,7 +71,32 @@ export const DataTable = ({
       }
     }
   };
+
+  useEffect(() => {
+    if (clientAdminData && clientAdminData.length) {
+      setLoader(false);
+      const temp = [];
+      Object.keys(clientAdminData[0]).forEach((col) => {
+        if (fillHeading) {
+          temp.push({
+            id: col,
+            label: getLabel(col),
+            minWidth: getMinWidth(col),
+            sortDir: col === "clientName" ? "ASC" : "",
+          });
+          setFillHeading(false);
+          setColumnsData(temp);
+        }
+      });
+      setRows(clientAdminData);
+    } else if (clientAdminData && clientAdminData.length === 0) {
+      setColumnsData([]);
+      setRows([]);
+    }
+  }, [clientAdminData]);
+  
   const saveDataHandler = () => {
+    setLoader(true);
     if (!isEditButtonClicked) {
       dispatch(saveClientAdminData(newRowAdded));
     } else {
@@ -103,36 +107,15 @@ export const DataTable = ({
     setRowToBeUpdated({});
     setNewRowAdded(initialData);
   };
-  useEffect(() => {
-    if (clientAdminData && clientAdminData.length) {
-      const temp = [];
-      Object.keys(clientAdminData[0]).forEach((col) => {
-        temp.push({
-          id: col,
-          label: getLabel(col),
-          minWidth: getMinWidth(col),
-        });
-      });
-      console.log(clientAdminData);
-      setColumnsData(temp);
-      setRows(clientAdminData);
-    } else if (clientAdminData && clientAdminData.length === 0) {
-      setColumnsData([]);
-      setRows([]);
-    }
-  }, [clientAdminData]);
-
-  const dispatch = useDispatch();
 
   const handleChangePage = (event, newPage) => {
-    console.log("pagination clicked ", newPage + 1, " ", rowsPerPage);
     setPage(newPage);
     dispatch(
       getClientAdminData({
         pageNo: newPage + 1,
         pageSize: rowsPerPage,
         sortBy: sortBy,
-        sortDir: sortDir,
+        sortDir: "ASC",
       })
     );
   };
@@ -144,10 +127,9 @@ export const DataTable = ({
         pageNo: page + 1,
         pageSize: event.target.value,
         sortBy: sortBy,
-        sortDir: sortDir,
+        sortDir: "ASC",
       })
     );
-    // setPage(0);
   };
 
   const handleClick = (row) => {
@@ -213,17 +195,30 @@ export const DataTable = ({
   };
 
   const handleSortBy = (colName) => {
+    setLoader(true);
     setSortBy(colName);
+    let sortDirection;
+    let tempColumnsData = JSON.parse(JSON.stringify([...columnsData]));
+    let idx = tempColumnsData.findIndex((col) => col.id === colName);
+    if (tempColumnsData[idx].sortDir === "ASC") {
+      tempColumnsData[idx].sortDir = "DESC";
+      sortDirection = "DESC";
+    } else {
+      tempColumnsData[idx].sortDir = "ASC";
+      sortDirection = "ASC";
+    }
+    console.log(tempColumnsData);
+    setColumnsData([...tempColumnsData]);
     dispatch(
       getClientAdminData({
         pageNo: page + 1,
         pageSize: rowsPerPage,
         sortBy: colName,
-        sortDir: sortDir,
+        sortDir: sortDirection,
       })
     );
-  }
-  
+  };
+
   const createInputField = (col) => {
     switch (col) {
       case "clientName":
@@ -414,141 +409,159 @@ export const DataTable = ({
       );
     }
   };
+
+  useEffect(() => {
+    if (selectedRows.length == 1) {
+      setIsEdit(true);
+    } else {
+      setIsEdit(false);
+    }
+  }, [selectedRows]);
+
+  useEffect(() => {
+    if (isEditButtonClicked) {
+      setRowToBeUpdated(selectedRows[0]);
+      setNewRowAdded(selectedRows[0]);
+    }
+  }, [isEditButtonClicked]);
+
   React.useEffect(() => {
     dispatch(
       getClientAdminData({
         pageNo: page + 1,
         pageSize: rowsPerPage,
         sortBy: sortBy,
-        sortDir: sortDir,
+        sortDir: "ASC",
       })
     );
   }, []);
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: "48rem" }}>
-        <Table aria-label="sticky table" size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell
-                sx={{
-                  backgroundColor: "#1773bc0d",
-                  color: "#1773bc",
-                  fontWeight: 700,
-                }}
-              >
-                <Checkbox
-                  checked={selectedRows.length === rows.length}
-                  onClick={() => selectOrDeSelectAll()}
-                />
-              </TableCell>
-              {columnsData.map((column) =>
-                column.id !== "clientId" && column.id !== "totalCount" ? (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                    sx={{
-                      backgroundColor: "#1773bc0d",
-                      color: "#1773bc",
-                      fontWeight: 700,
-                    }}
-                  >
-                    {column.label}
-                    <img
-                      src={TableArrows}
-                      alt=""
-                      onClick={() => handleSortBy(column.id)}
-                    />
-                  </TableCell>
-                ) : null
-              )}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {isAddButtonClicked && (
-              <TableRow id="new_row">
-                <TableCell>
-                  <Checkbox checked="true" />
+    <>
+      <Paper sx={{ width: "100%", overflow: "hidden" }}>
+        <TableContainer sx={{ maxHeight: "48rem" }}>
+          <Table aria-label="sticky table" size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#1773bc0d",
+                    color: "#1773bc",
+                    fontWeight: 700,
+                  }}
+                >
+                  <Checkbox
+                    checked={selectedRows.length === rows.length}
+                    onClick={() => selectOrDeSelectAll()}
+                  />
                 </TableCell>
-                {columnsData.map((col) => {
-                  return createInputField(col.id);
-                })}
-              </TableRow>
-            )}
-            {rows.map((row, rowIdx) => {
-              if (rowToBeUpdated.clientId === row.clientId) {
-                return (
-                  <TableRow id="new_row">
-                    <TableCell>
-                      <Checkbox checked="true" />
-                    </TableCell>
-                    {columnsData.map((col) => {
-                      return createInputField(col.id);
-                    })}
-                  </TableRow>
-                );
-              } else {
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={row.clientId}
-                  >
-                    <TableCell>
-                      <Checkbox
-                        checked={checkSelectedOrNot(row)}
-                        onClick={() => handleClick(row)}
+                {columnsData.map((column) =>
+                  column.id !== "clientId" && column.id !== "totalCount" ? (
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                      style={{ minWidth: column.minWidth }}
+                      sx={{
+                        backgroundColor: "#1773bc0d",
+                        color: "#1773bc",
+                        fontWeight: 700,
+                      }}
+                    >
+                      {column.label}
+                      <img
+                        src={TableArrows}
+                        alt=""
+                        onClick={() => handleSortBy(column.id)}
                       />
                     </TableCell>
-                    {columnsData.map((col) => {
-                      if (col.id === "msaDoc") {
-                        return (
-                          <TableCell key={col.id}>
-                            <IconButton
-                              color="primary"
-                              aria-label="upload picture"
-                              component="label"
-                            >
-                              <input hidden accept="*" type="file" />
-                              <AttachFileIcon />
-                            </IconButton>
-                          </TableCell>
-                        );
-                      } else if (
-                        col.id === "msaStartDate" ||
-                        col.id === "msaEndDate"
-                      ) {
-                        return (
-                          <TableCell key={col.id}>
-                            {row[col.id].split("T")[0]}
-                          </TableCell>
-                        );
-                      }
-                      return col.id !== "clientId" &&
-                        col.id !== "totalCount" ? (
-                        <TableCell key={col.id}>{row[col.id]}</TableCell>
-                      ) : null;
-                    })}
-                  </TableRow>
-                );
-              }
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        // count={rows.length}
-        count={rows.length > 0 ?  rows[0].totalCount : 0}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+                  ) : null
+                )}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {isAddButtonClicked && (
+                <TableRow id="new_row">
+                  <TableCell>
+                    <Checkbox checked="true" />
+                  </TableCell>
+                  {columnsData.map((col) => {
+                    return createInputField(col.id);
+                  })}
+                </TableRow>
+              )}
+              {rows.map((row, rowIdx) => {
+                if (rowToBeUpdated.clientId === row.clientId) {
+                  return (
+                    <TableRow id="new_row">
+                      <TableCell>
+                        <Checkbox checked="true" />
+                      </TableCell>
+                      {columnsData.map((col) => {
+                        return createInputField(col.id);
+                      })}
+                    </TableRow>
+                  );
+                } else {
+                  return (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row.clientId}
+                    >
+                      <TableCell>
+                        <Checkbox
+                          checked={checkSelectedOrNot(row)}
+                          onClick={() => handleClick(row)}
+                        />
+                      </TableCell>
+                      {columnsData.map((col) => {
+                        if (col.id === "msaDoc") {
+                          return (
+                            <TableCell key={col.id}>
+                              <IconButton
+                                color="primary"
+                                aria-label="upload picture"
+                                component="label"
+                              >
+                                <input hidden accept="*" type="file" />
+                                <AttachFileIcon />
+                              </IconButton>
+                            </TableCell>
+                          );
+                        } else if (
+                          col.id === "msaStartDate" ||
+                          col.id === "msaEndDate"
+                        ) {
+                          return (
+                            <TableCell key={col.id}>
+                              {row[col.id].split("T")[0]}
+                            </TableCell>
+                          );
+                        }
+                        return col.id !== "clientId" &&
+                          col.id !== "totalCount" ? (
+                          <TableCell key={col.id}>{row[col.id]}</TableCell>
+                        ) : null;
+                      })}
+                    </TableRow>
+                  );
+                }
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={rows.length > 0 ? rows[0].totalCount : 0}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+      {loader && <Loader />}
+    </>
   );
 };

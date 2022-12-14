@@ -3,6 +3,6 @@ import { httpRequest } from "../../common/utils/http-request";
 
 export const getUserDetails = () =>
   httpRequest({
-    url: `https://graph.microsoft.com/v1.0/me/photo/$value`,
+    url: `https://vtrack-api.azurewebsites.net/Users/active-user-details`,
     method: HttpMethod.GET,
   });
