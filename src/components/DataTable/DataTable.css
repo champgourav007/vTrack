@@ -1,3 +1,7 @@
+img {
+  cursor: pointer;
+}
+
 #new_row {
   height: 6rem;
 }

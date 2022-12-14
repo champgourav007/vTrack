@@ -104,7 +104,7 @@ export const DataTable = ({
     setNewRowAdded(initialData);
   };
   useEffect(() => {
-    if (clientAdminData) {
+    if (clientAdminData && clientAdminData.length) {
       const temp = [];
       Object.keys(clientAdminData[0]).forEach((col) => {
         temp.push({
@@ -113,14 +113,19 @@ export const DataTable = ({
           minWidth: getMinWidth(col),
         });
       });
+      console.log(clientAdminData);
       setColumnsData(temp);
       setRows(clientAdminData);
+    } else if (clientAdminData && clientAdminData.length === 0) {
+      setColumnsData([]);
+      setRows([]);
     }
   }, [clientAdminData]);
 
   const dispatch = useDispatch();
 
   const handleChangePage = (event, newPage) => {
+    console.log("pagination clicked ", newPage + 1, " ", rowsPerPage);
     setPage(newPage);
     dispatch(
       getClientAdminData({
@@ -218,7 +223,7 @@ export const DataTable = ({
       })
     );
   }
-
+  
   const createInputField = (col) => {
     switch (col) {
       case "clientName":
@@ -422,7 +427,7 @@ export const DataTable = ({
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: '48rem' }}>
+      <TableContainer sx={{ maxHeight: "48rem" }}>
         <Table aria-label="sticky table" size="small">
           <TableHead>
             <TableRow>
@@ -472,73 +477,72 @@ export const DataTable = ({
                 })}
               </TableRow>
             )}
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, rowIdx) => {
-                if (rowToBeUpdated.clientId === row.clientId) {
-                  return (
-                    <TableRow id="new_row">
-                      <TableCell>
-                        <Checkbox checked="true" />
-                      </TableCell>
-                      {columnsData.map((col) => {
-                        return createInputField(col.id);
-                      })}
-                    </TableRow>
-                  );
-                } else {
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.clientId}
-                    >
-                      <TableCell>
-                        <Checkbox
-                          checked={checkSelectedOrNot(row)}
-                          onClick={() => handleClick(row)}
-                        />
-                      </TableCell>
-                      {columnsData.map((col) => {
-                        if (col.id === "msaDoc") {
-                          return (
-                            <TableCell key={col.id}>
-                              <IconButton
-                                color="primary"
-                                aria-label="upload picture"
-                                component="label"
-                              >
-                                <input hidden accept="*" type="file" />
-                                <AttachFileIcon />
-                              </IconButton>
-                            </TableCell>
-                          );
-                        } else if (
-                          col.id === "msaStartDate" ||
-                          col.id === "msaEndDate"
-                        ) {
-                          return (
-                            <TableCell key={col.id}>
-                              {row[col.id].split("T")[0]}
-                            </TableCell>
-                          );
-                        }
-                        return col.id !== "clientId" &&
-                          col.id !== "totalCount" ? (
-                          <TableCell key={col.id}>{row[col.id]}</TableCell>
-                        ) : null;
-                      })}
-                    </TableRow>
-                  );
-                }
-              })}
+            {rows.map((row, rowIdx) => {
+              if (rowToBeUpdated.clientId === row.clientId) {
+                return (
+                  <TableRow id="new_row">
+                    <TableCell>
+                      <Checkbox checked="true" />
+                    </TableCell>
+                    {columnsData.map((col) => {
+                      return createInputField(col.id);
+                    })}
+                  </TableRow>
+                );
+              } else {
+                return (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={row.clientId}
+                  >
+                    <TableCell>
+                      <Checkbox
+                        checked={checkSelectedOrNot(row)}
+                        onClick={() => handleClick(row)}
+                      />
+                    </TableCell>
+                    {columnsData.map((col) => {
+                      if (col.id === "msaDoc") {
+                        return (
+                          <TableCell key={col.id}>
+                            <IconButton
+                              color="primary"
+                              aria-label="upload picture"
+                              component="label"
+                            >
+                              <input hidden accept="*" type="file" />
+                              <AttachFileIcon />
+                            </IconButton>
+                          </TableCell>
+                        );
+                      } else if (
+                        col.id === "msaStartDate" ||
+                        col.id === "msaEndDate"
+                      ) {
+                        return (
+                          <TableCell key={col.id}>
+                            {row[col.id].split("T")[0]}
+                          </TableCell>
+                        );
+                      }
+                      return col.id !== "clientId" &&
+                        col.id !== "totalCount" ? (
+                        <TableCell key={col.id}>{row[col.id]}</TableCell>
+                      ) : null;
+                    })}
+                  </TableRow>
+                );
+              }
+            })}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
+        // count={rows.length}
         count={rows.length > 0 ?  rows[0].totalCount : 0}
         rowsPerPage={rowsPerPage}
         page={page}
