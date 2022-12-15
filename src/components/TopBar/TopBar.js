@@ -19,13 +19,12 @@ export const TopBar = () => {
   }, []);
 
   useEffect(() => {
-    if (userData && userData.length && userData.length == 5)
-    {
-      console.log("has image");
-    console.log(userData.length, userData);
-    }
-    console.log(userData)
-    // setPersonData(userData);
+    setPersonData({
+      lastName: userData.data.lastName,
+      firstName: userData.data.firstName,
+      photo: userData.data.photo,
+    });
+    console.log(userData);
   }, [userData]);
 
   return (

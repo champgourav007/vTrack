@@ -31,7 +31,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -76,30 +75,6 @@ export const DataTable = ({
       }
     }
   };
-
-  useEffect(() => {
-    if (clientAdminData && clientAdminData.length) {
-      setLoader(false);
-      const temp = [];
-      Object.keys(clientAdminData[0]).forEach((col) => {
-        if (fillHeading) {
-          temp.push({
-            id: col,
-            label: getLabel(col),
-            minWidth: getMinWidth(col),
-            sortDir: col === "clientName" ? "ASC" : "",
-            align: "left",
-          });
-          setFillHeading(false);
-          setColumnsData(temp);
-        }
-      });
-      setRows(clientAdminData);
-    } else if (clientAdminData && clientAdminData.length === 0) {
-      setColumnsData([]);
-      setRows([]);
-    }
-  }, [clientAdminData]);
 
   const saveDataHandler = () => {
     setLoader(true);
@@ -369,19 +344,27 @@ export const DataTable = ({
                   src={AddEnableIcon}
                   onClick={saveDataHandler}
                   className="cursorPointer editDeleteIcon"
+                  // height={"18px"}
+                  // width={"18px"}
                 />
               ) : (
                 <button
                   disable
                   className="buttonBackgroundBorder editDeleteIcon"
                 >
-                  <img src={AddDisableIcon} />
+                  <img
+                    src={AddDisableIcon}
+                    // height={"18px"}
+                    // width={"18px"}
+                  />
                 </button>
               )}
               <img
                 src={crossIcon}
                 onClick={closeButtonHandler}
                 className="cursorPointer editDeleteIcon"
+                height={"18px"}
+                width={"18px"}
               />
             </div>
           </TableCell>
@@ -417,7 +400,32 @@ export const DataTable = ({
     dispatch(deleteClientAdminData(id));
   };
 
+  useEffect(() => {
+    if (clientAdminData && clientAdminData.length) {
+      setLoader(false);
+      const temp = [];
+      Object.keys(clientAdminData[0]).forEach((col) => {
+        if (fillHeading) {
+          temp.push({
+            id: col,
+            label: getLabel(col),
+            minWidth: getMinWidth(col),
+            sortDir: col === "clientName" ? "ASC" : "",
+            align: "left",
+          });
+          setFillHeading(false);
+          setColumnsData(temp);
+        }
+      });
+      setRows(clientAdminData);
+    } else if (clientAdminData && clientAdminData.length === 0) {
+      setColumnsData([]);
+      setRows([]);
+    }
+  }, [clientAdminData]);
+
   React.useEffect(() => {
+    setLoader(true);
     dispatch(
       getClientAdminData({
         pageNo: page + 1,
