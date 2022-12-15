@@ -9,8 +9,8 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { columns, paymentTerms } from "../../mock-data/TableData";
 import "./DataTable.css";
-import { TableArrows } from "../../common/icons";
-import Checkbox from "@mui/material/Checkbox";
+import { TableArrows, editIcon, deleteIcon } from "../../common/icons";
+import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import {
@@ -25,6 +25,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -38,7 +39,6 @@ import Loader from "../Loader";
 export const DataTable = ({
   isAddButtonClicked,
   setIsAddButtonClicked,
-  setIsEdit,
   isEditButtonClicked,
   setIsEditButtonClicked,
 }) => {
@@ -46,12 +46,10 @@ export const DataTable = ({
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [selectedRows, setSelectedRows] = React.useState([]);
   const [newRowAdded, setNewRowAdded] = useState(initialData);
   const [columnsData, setColumnsData] = React.useState([]);
   const [rows, setRows] = useState([]);
   const [sortBy, setSortBy] = useState("clientName");
-  const [sortDir, setSortDir] = useState("ASC");
   const [rowToBeUpdated, setRowToBeUpdated] = useState({});
   const [loader, setLoader] = useState(false);
   const { clientAdminData } = useSelector(({ CLIENT_ADMIN }) => CLIENT_ADMIN);
@@ -83,6 +81,7 @@ export const DataTable = ({
             label: getLabel(col),
             minWidth: getMinWidth(col),
             sortDir: col === "clientName" ? "ASC" : "",
+            align: "left",
           });
           setFillHeading(false);
           setColumnsData(temp);
@@ -94,7 +93,7 @@ export const DataTable = ({
       setRows([]);
     }
   }, [clientAdminData]);
-  
+
   const saveDataHandler = () => {
     setLoader(true);
     if (!isEditButtonClicked) {
@@ -104,6 +103,16 @@ export const DataTable = ({
       setIsEditButtonClicked(false);
     }
     setIsAddButtonClicked(false);
+    setRowToBeUpdated({});
+    setNewRowAdded(initialData);
+  };
+
+  const closeButtonHandler = () => {
+    if (!isEditButtonClicked) {
+      setIsAddButtonClicked(false);
+    } else {
+      setIsEditButtonClicked(false);
+    }
     setRowToBeUpdated({});
     setNewRowAdded(initialData);
   };
@@ -130,44 +139,6 @@ export const DataTable = ({
         sortDir: "ASC",
       })
     );
-  };
-
-  const handleClick = (row) => {
-    let idx = -1;
-    if (selectedRows && selectedRows.length) {
-      idx = selectedRows.findIndex(
-        (selRow) => selRow.clientId === row.clientId
-      );
-    }
-    if (idx === -1) {
-      setSelectedRows([...selectedRows, row]);
-    } else {
-      let selRows = [...selectedRows];
-      selRows.splice(idx, 1);
-      setSelectedRows(selRows);
-    }
-  };
-
-  const selectOrDeSelectAll = () => {
-    if (selectedRows && selectedRows.length) {
-      setSelectedRows([]);
-    } else {
-      setSelectedRows([...rows]);
-    }
-  };
-
-  const checkSelectedOrNot = (row) => {
-    let idx = -1;
-    if (selectedRows && selectedRows.length) {
-      idx = selectedRows.findIndex(
-        (selRow) => row.clientId === selRow.clientId
-      );
-    }
-    if (idx === -1) {
-      return false;
-    } else {
-      return true;
-    }
   };
 
   const handleCurrencyChange = (event) => {
@@ -207,7 +178,6 @@ export const DataTable = ({
       tempColumnsData[idx].sortDir = "ASC";
       sortDirection = "ASC";
     }
-    console.log(tempColumnsData);
     setColumnsData([...tempColumnsData]);
     dispatch(
       getClientAdminData({
@@ -388,6 +358,7 @@ export const DataTable = ({
                 <AttachFileIcon />
               </IconButton>
               <AddIcon onClick={saveDataHandler} />
+              <CloseIcon onClick={closeButtonHandler} />
             </div>
           </TableCell>
         );
@@ -410,20 +381,11 @@ export const DataTable = ({
     }
   };
 
-  useEffect(() => {
-    if (selectedRows.length == 1) {
-      setIsEdit(true);
-    } else {
-      setIsEdit(false);
-    }
-  }, [selectedRows]);
-
-  useEffect(() => {
-    if (isEditButtonClicked) {
-      setRowToBeUpdated(selectedRows[0]);
-      setNewRowAdded(selectedRows[0]);
-    }
-  }, [isEditButtonClicked]);
+  const editButtonClicked = (idx) => {
+    setRowToBeUpdated(rows[idx]);
+    setNewRowAdded(rows[idx]);
+    setIsEditButtonClicked(true);
+  };
 
   React.useEffect(() => {
     dispatch(
@@ -443,18 +405,6 @@ export const DataTable = ({
           <Table aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
-                <TableCell
-                  sx={{
-                    backgroundColor: "#1773bc0d",
-                    color: "#1773bc",
-                    fontWeight: 700,
-                  }}
-                >
-                  <Checkbox
-                    checked={selectedRows.length === rows.length}
-                    onClick={() => selectOrDeSelectAll()}
-                  />
-                </TableCell>
                 {columnsData.map((column) =>
                   column.id !== "clientId" && column.id !== "totalCount" ? (
                     <TableCell
@@ -481,9 +431,6 @@ export const DataTable = ({
             <TableBody>
               {isAddButtonClicked && (
                 <TableRow id="new_row">
-                  <TableCell>
-                    <Checkbox checked="true" />
-                  </TableCell>
                   {columnsData.map((col) => {
                     return createInputField(col.id);
                   })}
@@ -493,9 +440,6 @@ export const DataTable = ({
                 if (rowToBeUpdated.clientId === row.clientId) {
                   return (
                     <TableRow id="new_row">
-                      <TableCell>
-                        <Checkbox checked="true" />
-                      </TableCell>
                       {columnsData.map((col) => {
                         return createInputField(col.id);
                       })}
@@ -509,24 +453,36 @@ export const DataTable = ({
                       tabIndex={-1}
                       key={row.clientId}
                     >
-                      <TableCell>
-                        <Checkbox
-                          checked={checkSelectedOrNot(row)}
-                          onClick={() => handleClick(row)}
-                        />
-                      </TableCell>
                       {columnsData.map((col) => {
                         if (col.id === "msaDoc") {
                           return (
-                            <TableCell key={col.id}>
+                            <TableCell
+                              key={col.id}
+                              id="edittAttachmentDeleteWrapper"
+                            >
                               <IconButton
                                 color="primary"
                                 aria-label="upload picture"
                                 component="label"
                               >
                                 <input hidden accept="*" type="file" />
-                                <AttachFileIcon />
+                                <Tooltip title="Attackment">
+                                  <AttachFileIcon className="editDeleteIcon" />
+                                </Tooltip>
                               </IconButton>
+                              <Tooltip title="Edit">
+                                <img
+                                  src={editIcon}
+                                  className="editDeleteIcon"
+                                  onClick={() => editButtonClicked(rowIdx)}
+                                />
+                              </Tooltip>
+                              <Tooltip title="Delete">
+                                <img
+                                  src={deleteIcon}
+                                  className="editDeleteIcon"
+                                />
+                              </Tooltip>
                             </TableCell>
                           );
                         } else if (

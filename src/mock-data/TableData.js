@@ -33,8 +33,9 @@ export const columns = [
   },
   {
     id: "msaDoc",
-    label: "MSA Attachment",
-    minWidth: 80,
+    label: "Actions",
+    minWidth: 50,
+    align: "left"
   },
 ];
 

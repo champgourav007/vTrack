@@ -11,11 +11,6 @@ export const TabsTable = (props) => {
     setIsAddButtonClicked(isTrue);
   };
 
-  const editHandler = () => {
-    // setIsAddButtonClicked(true);
-    setIsEditButtonClicked(true);
-  };
-
   return (
     <div className="tableDiv">
       <div className="searchHeader">
@@ -23,20 +18,6 @@ export const TabsTable = (props) => {
         <button className="filterBtn">
           <img className="filterIcon" src={filterIcon} alt="" />
           <div className="disableBtnText">Filter</div>
-        </button>
-        <button
-          disable={!isEdit}
-          className={isEdit ? "editBtn" : "disableEditBtn"}
-          onClick={() => {
-            setIsEdit(!isEdit);
-          }}
-        >
-          <div
-            className={isEdit ? "btnText" : "disableBtnText"}
-            onClick={() => editHandler()}
-          >
-            Edit Selected
-          </div>
         </button>
         <button
           disabled={isAddButtonClicked}

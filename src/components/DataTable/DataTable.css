@@ -1,3 +1,11 @@
+#edittAttachmentDeleteWrapper {
+  display: flex;
+}
+
+.editDeleteIcon {
+  margin: 0.5rem;
+}
+
 img {
   cursor: pointer;
 }
