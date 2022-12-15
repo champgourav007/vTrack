@@ -1,12 +1,16 @@
-import { all, fork } from 'redux-saga/effects';
-import { clientAdminSaga, saveClientAdminSaga, updateClientAdminSaga } from './client-admin-saga';
-import { userSaga } from './user-saga';
+import { all, fork } from "redux-saga/effects";
+import {
+  clientAdminSaga,
+  saveClientAdminSaga,
+  updateClientAdminSaga,
+} from "./client-admin-saga";
+import { deleteClientAdminSaga } from "./delete-client-admin-saga";
 
 export function* rootSaga() {
   yield all([
     fork(clientAdminSaga),
-    // fork(userSaga),
     fork(saveClientAdminSaga),
-    fork(updateClientAdminSaga)
+    fork(updateClientAdminSaga),
+    fork(deleteClientAdminSaga),
   ]);
 }

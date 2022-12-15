@@ -9,7 +9,14 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { columns, paymentTerms } from "../../mock-data/TableData";
 import "./DataTable.css";
-import { TableArrows, editIcon, deleteIcon } from "../../common/icons";
+import {
+  TableArrows,
+  editIcon,
+  deleteIcon,
+  AddDisableIcon,
+  AddEnableIcon,
+  crossIcon,
+} from "../../common/icons";
 import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
@@ -24,11 +31,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import IconButton from "@mui/material/IconButton";
-import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  deleteClientAdminData,
   getClientAdminData,
   saveClientAdminData,
   updateClientAdminData,
@@ -357,8 +364,25 @@ export const DataTable = ({
                 <input hidden accept="*" type="file" />
                 <AttachFileIcon />
               </IconButton>
-              <AddIcon onClick={saveDataHandler} />
-              <CloseIcon onClick={closeButtonHandler} />
+              {newRowAdded.clientName !== "" ? (
+                <img
+                  src={AddEnableIcon}
+                  onClick={saveDataHandler}
+                  className="cursorPointer editDeleteIcon"
+                />
+              ) : (
+                <button
+                  disable
+                  className="buttonBackgroundBorder editDeleteIcon"
+                >
+                  <img src={AddDisableIcon} />
+                </button>
+              )}
+              <img
+                src={crossIcon}
+                onClick={closeButtonHandler}
+                className="cursorPointer editDeleteIcon"
+              />
             </div>
           </TableCell>
         );
@@ -381,10 +405,16 @@ export const DataTable = ({
     }
   };
 
-  const editButtonClicked = (idx) => {
+  const editButtonClicked = (id) => {
+    let idx = rows.findIndex((row) => row.clientId === id);
     setRowToBeUpdated(rows[idx]);
     setNewRowAdded(rows[idx]);
     setIsEditButtonClicked(true);
+  };
+
+  const deleteButtonClicked = (id) => {
+    setLoader(true);
+    dispatch(deleteClientAdminData(id));
   };
 
   React.useEffect(() => {
@@ -456,10 +486,7 @@ export const DataTable = ({
                       {columnsData.map((col) => {
                         if (col.id === "msaDoc") {
                           return (
-                            <TableCell
-                              key={col.id}
-                              id="edittAttachmentDeleteWrapper"
-                            >
+                            <TableCell key={col.id} class="attachmentContainer">
                               <IconButton
                                 color="primary"
                                 aria-label="upload picture"
@@ -467,20 +494,27 @@ export const DataTable = ({
                               >
                                 <input hidden accept="*" type="file" />
                                 <Tooltip title="Attackment">
-                                  <AttachFileIcon className="editDeleteIcon" />
+                                  <AttachFileIcon />
                                 </Tooltip>
                               </IconButton>
                               <Tooltip title="Edit">
-                                <img
-                                  src={editIcon}
-                                  className="editDeleteIcon"
-                                  onClick={() => editButtonClicked(rowIdx)}
-                                />
+                                <button
+                                  onClick={() =>
+                                    editButtonClicked(row.clientId)
+                                  }
+                                  className="buttonBackgroundBorder cursorPointer"
+                                  disabled={isAddButtonClicked}
+                                >
+                                  <img src={editIcon} />
+                                </button>
                               </Tooltip>
                               <Tooltip title="Delete">
                                 <img
                                   src={deleteIcon}
-                                  className="editDeleteIcon"
+                                  className="editDeleteIcon cursorPointer"
+                                  onClick={() =>
+                                    deleteButtonClicked(row.clientId)
+                                  }
                                 />
                               </Tooltip>
                             </TableCell>

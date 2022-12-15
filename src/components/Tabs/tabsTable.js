@@ -20,12 +20,20 @@ export const TabsTable = (props) => {
           <div className="disableBtnText">Filter</div>
         </button>
         <button
-          disabled={isAddButtonClicked}
-          className={isAddButtonClicked ? "disableAddButton" : "addBtn"}
+          disabled={isAddButtonClicked || isEditButtonClicked}
+          className={
+            isAddButtonClicked || isEditButtonClicked
+              ? "disableAddButton"
+              : "addBtn"
+          }
           onClick={() => addNewRow(true)}
         >
           <div
-            className={isAddButtonClicked ? "disableAddButtonText" : "btnText"}
+            className={
+              isAddButtonClicked || isEditButtonClicked
+                ? "disableAddButtonText"
+                : "btnText"
+            }
           >
             Add
           </div>

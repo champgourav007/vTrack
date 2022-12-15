@@ -32,8 +32,14 @@ import dashboardBlueIcon from "./dashboard-blue-icon.svg";
 import announcementIcon from "./announcement-icon.svg";
 import editIcon from "./Edit.svg";
 import deleteIcon from "./Delete.svg";
+import AddDisableIcon from "./AddDisableIcon.svg";
+import AddEnableIcon from "./AddEnableIcon.svg";
+import crossIcon from "./crossIcon.svg";
 
 export {
+  crossIcon,
+  AddEnableIcon,
+  AddDisableIcon,
   deleteIcon,
   editIcon,
   veersaLogo,

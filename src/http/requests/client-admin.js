@@ -14,9 +14,15 @@ export const postClientAdminDetails = (data) =>
     data: data,
   });
 
-  export const updateClientAdminDetails = (data) =>
+export const updateClientAdminDetails = (data) =>
   httpRequest({
     url: `https://vtrack-api.azurewebsites.net/Client/${data.clientId}/update-client`,
     method: HttpMethod.PUT,
     data: data,
+  });
+
+export const deleteClientAdminDetails = (clientId) =>
+  httpRequest({
+    url: `https://vtrack-api.azurewebsites.net/Client/${clientId}/delete-client`,
+    method: HttpMethod.DELETE,
   });
