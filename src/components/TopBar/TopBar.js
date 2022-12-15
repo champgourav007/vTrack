@@ -19,11 +19,13 @@ export const TopBar = () => {
   }, []);
 
   useEffect(() => {
-    setPersonData({
-      lastName: userData.data.lastName,
-      firstName: userData.data.firstName,
-      photo: userData.data.photo,
-    });
+    if (userData) {
+      setPersonData({
+        lastName: userData.data.lastName,
+        firstName: userData.data.firstName,
+        photo: userData.data.photo === "" ? UserTemp : userData.data.photo,
+      });
+    }
     console.log(userData);
   }, [userData]);
 
@@ -48,11 +50,15 @@ export const TopBar = () => {
           </div>
           <div className="user-wrapper">
             <div>
-              <img
-                alt=""
-                className="image"
-                src={`data:image/jpeg;base64,${personData.photo}`}
-              />
+              {personData.photo === UserTemp ? (
+                <img src={UserTemp} className="image" />
+              ) : (
+                <img
+                  alt=""
+                  className="image"
+                  src={`data:image/jpeg;base64,${personData.photo}`}
+                />
+              )}
             </div>
             <div>
               <div className="user-name">
