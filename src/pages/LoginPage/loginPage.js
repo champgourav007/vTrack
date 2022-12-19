@@ -14,7 +14,7 @@ export const LoginPage = () => {
 
   useEffect(() => {
     let User = sessionStorage.getItem("userInformation");
-    if (User != null) navigate("/dashboard");
+    if (User != null) navigate("/vTrack/ClientAdmin");
   }, []);
 
   return (

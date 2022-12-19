@@ -344,27 +344,16 @@ export const DataTable = ({
                   src={AddEnableIcon}
                   onClick={saveDataHandler}
                   className="cursorPointer editDeleteIcon"
-                  // height={"18px"}
-                  // width={"18px"}
                 />
               ) : (
-                <button
-                  disable
-                  className="buttonBackgroundBorder editDeleteIcon"
-                >
-                  <img
-                    src={AddDisableIcon}
-                    // height={"18px"}
-                    // width={"18px"}
-                  />
+                <button disable className="buttonBackgroundBorder">
+                  <img src={AddDisableIcon} className="editDeleteIcon" />
                 </button>
               )}
               <img
                 src={crossIcon}
-                onClick={closeButtonHandler}
                 className="cursorPointer editDeleteIcon"
-                height={"18px"}
-                width={"18px"}
+                onClick={closeButtonHandler}
               />
             </div>
           </TableCell>
@@ -401,10 +390,10 @@ export const DataTable = ({
   };
 
   useEffect(() => {
-    if (clientAdminData && clientAdminData.length) {
+    if (clientAdminData && clientAdminData.clients) {
       setLoader(false);
       const temp = [];
-      Object.keys(clientAdminData[0]).forEach((col) => {
+      Object.keys(clientAdminData.clients[0]).forEach((col) => {
         if (fillHeading) {
           temp.push({
             id: col,
@@ -417,8 +406,9 @@ export const DataTable = ({
           setColumnsData(temp);
         }
       });
-      setRows(clientAdminData);
-    } else if (clientAdminData && clientAdminData.length === 0) {
+      setRows(clientAdminData.clients);
+      console.log(rows);
+    } else if (clientAdminData && clientAdminData.clients.length === 0) {
       setColumnsData([]);
       setRows([]);
     }
@@ -444,7 +434,7 @@ export const DataTable = ({
             <TableHead>
               <TableRow>
                 {columnsData.map((column) =>
-                  column.id !== "clientId" && column.id !== "totalCount" ? (
+                  column.id !== "clientId" ? (
                     <TableCell
                       key={column.id}
                       align={column.align}
@@ -513,7 +503,10 @@ export const DataTable = ({
                                   className="buttonBackgroundBorder cursorPointer"
                                   disabled={isAddButtonClicked}
                                 >
-                                  <img src={editIcon} />
+                                  <img
+                                    src={editIcon}
+                                    className="editDeleteIcon"
+                                  />
                                 </button>
                               </Tooltip>
                               <Tooltip title="Delete">
@@ -559,7 +552,7 @@ export const DataTable = ({
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      {loader && <Loader />}
+      {loader===false && <Loader />}
     </>
   );
 };
