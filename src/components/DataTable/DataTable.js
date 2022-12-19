@@ -48,6 +48,8 @@ export const DataTable = ({
   isEditButtonClicked,
   setIsEditButtonClicked,
 }) => {
+  const { clientAdminData } = useSelector(({ CLIENT_ADMIN }) => CLIENT_ADMIN);
+  const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
   const dispatch = useDispatch();
 
   const [page, setPage] = React.useState(0);
@@ -57,8 +59,6 @@ export const DataTable = ({
   const [rows, setRows] = useState([]);
   const [sortBy, setSortBy] = useState("clientName");
   const [rowToBeUpdated, setRowToBeUpdated] = useState({});
-  const [loader, setLoader] = useState(false);
-  const { clientAdminData } = useSelector(({ CLIENT_ADMIN }) => CLIENT_ADMIN);
   const [fillHeading, setFillHeading] = useState(true);
 
   const getLabel = (col) => {
@@ -77,7 +77,6 @@ export const DataTable = ({
   };
 
   const saveDataHandler = () => {
-    setLoader(true);
     if (!isEditButtonClicked) {
       dispatch(saveClientAdminData(newRowAdded));
     } else {
@@ -148,7 +147,6 @@ export const DataTable = ({
   };
 
   const handleSortBy = (colName) => {
-    setLoader(true);
     setSortBy(colName);
     let sortDirection;
     let tempColumnsData = JSON.parse(JSON.stringify([...columnsData]));
@@ -185,7 +183,6 @@ export const DataTable = ({
             />
           </TableCell>
         );
-        break;
 
       case "location":
         return (
@@ -206,7 +203,6 @@ export const DataTable = ({
             </TextField>
           </TableCell>
         );
-        break;
 
       case "msaStartDate":
         return (
@@ -224,7 +220,6 @@ export const DataTable = ({
             </LocalizationProvider>
           </TableCell>
         );
-        break;
 
       case "currency":
         return (
@@ -244,7 +239,6 @@ export const DataTable = ({
             </TextField>
           </TableCell>
         );
-        break;
 
       case "msaEndDate":
         return (
@@ -262,7 +256,6 @@ export const DataTable = ({
             </LocalizationProvider>
           </TableCell>
         );
-        break;
 
       case "businessOwner":
         return (
@@ -283,7 +276,6 @@ export const DataTable = ({
             </TextField>
           </TableCell>
         );
-        break;
 
       case "paymentTerms":
         return (
@@ -304,7 +296,6 @@ export const DataTable = ({
             </TextField>
           </TableCell>
         );
-        break;
 
       case "deliveryOfficer":
         return (
@@ -325,7 +316,6 @@ export const DataTable = ({
             </TextField>
           </TableCell>
         );
-        break;
 
       case "msaDoc":
         return (
@@ -344,8 +334,7 @@ export const DataTable = ({
                   src={AddEnableIcon}
                   onClick={saveDataHandler}
                   className="cursorPointer editDeleteIcon"
-                  // height={"18px"}
-                  // width={"18px"}
+                  alt=""
                 />
               ) : (
                 <button
@@ -354,8 +343,7 @@ export const DataTable = ({
                 >
                   <img
                     src={AddDisableIcon}
-                    // height={"18px"}
-                    // width={"18px"}
+                    alt=""
                   />
                 </button>
               )}
@@ -365,16 +353,16 @@ export const DataTable = ({
                 className="cursorPointer editDeleteIcon"
                 height={"18px"}
                 width={"18px"}
+                alt=""
               />
             </div>
           </TableCell>
         );
-        break;
 
       default:
         break;
     }
-    if (col == "clientName") {
+    if (col === "clientName") {
       return (
         <TableCell key={col}>
           <TextField
@@ -396,13 +384,11 @@ export const DataTable = ({
   };
 
   const deleteButtonClicked = (id) => {
-    setLoader(true);
     dispatch(deleteClientAdminData(id));
   };
 
   useEffect(() => {
     if (clientAdminData && clientAdminData.length) {
-      setLoader(false);
       const temp = [];
       Object.keys(clientAdminData[0]).forEach((col) => {
         if (fillHeading) {
@@ -425,7 +411,6 @@ export const DataTable = ({
   }, [clientAdminData]);
 
   React.useEffect(() => {
-    setLoader(true);
     dispatch(
       getClientAdminData({
         pageNo: page + 1,
@@ -438,6 +423,7 @@ export const DataTable = ({
 
   return (
     <>
+    { vTrackLoader && <Loader /> }
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: "48rem" }}>
           <Table aria-label="sticky table" size="small">
@@ -513,7 +499,7 @@ export const DataTable = ({
                                   className="buttonBackgroundBorder cursorPointer"
                                   disabled={isAddButtonClicked}
                                 >
-                                  <img src={editIcon} />
+                                  <img src={editIcon} alt=""/>
                                 </button>
                               </Tooltip>
                               <Tooltip title="Delete">
@@ -523,6 +509,7 @@ export const DataTable = ({
                                   onClick={() =>
                                     deleteButtonClicked(row.clientId)
                                   }
+                                  alt=""
                                 />
                               </Tooltip>
                             </TableCell>
@@ -559,7 +546,6 @@ export const DataTable = ({
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      {loader && <Loader />}
     </>
   );
 };
