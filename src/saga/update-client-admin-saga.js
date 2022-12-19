@@ -1,11 +1,11 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { deleteClientAdminDetails } from "../http/requests/client-admin";
+import { updateClientAdminDetails } from "../http/requests/client-admin";
 import { ClientAdminType, getClientAdminData, setVtrackLoader } from "../redux/actions";
 
-function* workerDeleteClientAdminSaga({ payload }) {
+function* workerUpdateClientAdminSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
-    yield call(deleteClientAdminDetails, payload.clientId);
+    yield call(updateClientAdminDetails, payload.data);
     yield put(
       getClientAdminData({
         pageNo: 1,
@@ -16,14 +16,13 @@ function* workerDeleteClientAdminSaga({ payload }) {
     );
     yield put(setVtrackLoader(false));
   } catch (err) {
-    console.log(err);
     yield put(setVtrackLoader(false));
   }
 };
 
-export function* deleteClientAdminSaga() {
+export function* updateClientAdminSaga() {
   yield takeLatest(
-    ClientAdminType.DELETE_CLIENT_ADMIN_DATA,
-    workerDeleteClientAdminSaga
+    ClientAdminType.UPDATE_CLIENT_ADMIN_DATA,
+    workerUpdateClientAdminSaga
   );
 };

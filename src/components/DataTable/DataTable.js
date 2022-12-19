@@ -48,6 +48,8 @@ export const DataTable = ({
   isEditButtonClicked,
   setIsEditButtonClicked,
 }) => {
+  const { clientAdminData } = useSelector(({ CLIENT_ADMIN }) => CLIENT_ADMIN);
+  const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
   const dispatch = useDispatch();
 
   const [page, setPage] = React.useState(0);
@@ -57,8 +59,6 @@ export const DataTable = ({
   const [rows, setRows] = useState([]);
   const [sortBy, setSortBy] = useState("clientName");
   const [rowToBeUpdated, setRowToBeUpdated] = useState({});
-  const [loader, setLoader] = useState(false);
-  const { clientAdminData } = useSelector(({ CLIENT_ADMIN }) => CLIENT_ADMIN);
   const [fillHeading, setFillHeading] = useState(true);
 
   const getLabel = (col) => {
@@ -77,7 +77,6 @@ export const DataTable = ({
   };
 
   const saveDataHandler = () => {
-    setLoader(true);
     if (!isEditButtonClicked) {
       dispatch(saveClientAdminData(newRowAdded));
     } else {
@@ -148,7 +147,6 @@ export const DataTable = ({
   };
 
   const handleSortBy = (colName) => {
-    setLoader(true);
     setSortBy(colName);
     let sortDirection;
     let tempColumnsData = JSON.parse(JSON.stringify([...columnsData]));
@@ -185,7 +183,6 @@ export const DataTable = ({
             />
           </TableCell>
         );
-        break;
 
       case "location":
         return (
@@ -206,7 +203,6 @@ export const DataTable = ({
             </TextField>
           </TableCell>
         );
-        break;
 
       case "msaStartDate":
         return (
@@ -224,7 +220,6 @@ export const DataTable = ({
             </LocalizationProvider>
           </TableCell>
         );
-        break;
 
       case "currency":
         return (
@@ -244,7 +239,6 @@ export const DataTable = ({
             </TextField>
           </TableCell>
         );
-        break;
 
       case "msaEndDate":
         return (
@@ -262,7 +256,6 @@ export const DataTable = ({
             </LocalizationProvider>
           </TableCell>
         );
-        break;
 
       case "businessOwner":
         return (
@@ -283,7 +276,6 @@ export const DataTable = ({
             </TextField>
           </TableCell>
         );
-        break;
 
       case "paymentTerms":
         return (
@@ -304,7 +296,6 @@ export const DataTable = ({
             </TextField>
           </TableCell>
         );
-        break;
 
       case "deliveryOfficer":
         return (
@@ -325,9 +316,8 @@ export const DataTable = ({
             </TextField>
           </TableCell>
         );
-        break;
 
-      case "msaDoc":
+      case "actions":
         return (
           <TableCell key={col}>
             <div className="attachmentContainer">
@@ -358,12 +348,11 @@ export const DataTable = ({
             </div>
           </TableCell>
         );
-        break;
 
       default:
         break;
     }
-    if (col == "clientName") {
+    if (col === "clientName") {
       return (
         <TableCell key={col}>
           <TextField
@@ -385,29 +374,37 @@ export const DataTable = ({
   };
 
   const deleteButtonClicked = (id) => {
-    setLoader(true);
     dispatch(deleteClientAdminData(id));
   };
 
   useEffect(() => {
-    if (clientAdminData && clientAdminData.clients) {
-      setLoader(false);
+    if (
+      clientAdminData &&
+      clientAdminData.clients &&
+      clientAdminData.clients.length
+    ) {
       const temp = [];
       Object.keys(clientAdminData.clients[0]).forEach((col) => {
-        if (fillHeading) {
           temp.push({
             id: col,
             label: getLabel(col),
             minWidth: getMinWidth(col),
-            sortDir: col === "clientName" ? "ASC" : "",
+            sortDir: "DESC",
             align: "left",
           });
-          setFillHeading(false);
-          setColumnsData(temp);
-        }
       });
+      setColumnsData([
+        ...temp,
+        {
+          id: "actions",
+          label: "Actions",
+          minWidth: 100,
+          sortDir: "",
+          align: "left",
+        },
+      ]);
+      setFillHeading(false);
       setRows(clientAdminData.clients);
-      console.log(rows);
     } else if (clientAdminData && clientAdminData.clients.length === 0) {
       setColumnsData([]);
       setRows([]);
@@ -415,7 +412,6 @@ export const DataTable = ({
   }, [clientAdminData]);
 
   React.useEffect(() => {
-    setLoader(true);
     dispatch(
       getClientAdminData({
         pageNo: page + 1,
@@ -428,6 +424,7 @@ export const DataTable = ({
 
   return (
     <>
+      {vTrackLoader && <Loader />}
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: "48rem" }}>
           <Table aria-label="sticky table" size="small">
@@ -482,7 +479,7 @@ export const DataTable = ({
                       key={row.clientId}
                     >
                       {columnsData.map((col) => {
-                        if (col.id === "msaDoc") {
+                        if (col.id === "actions") {
                           return (
                             <TableCell key={col.id} class="attachmentContainer">
                               <IconButton
@@ -516,6 +513,7 @@ export const DataTable = ({
                                   onClick={() =>
                                     deleteButtonClicked(row.clientId)
                                   }
+                                  alt=""
                                 />
                               </Tooltip>
                             </TableCell>
@@ -530,8 +528,7 @@ export const DataTable = ({
                             </TableCell>
                           );
                         }
-                        return col.id !== "clientId" &&
-                          col.id !== "totalCount" ? (
+                        return col.id !== "clientId" ? (
                           <TableCell key={col.id}>{row[col.id]}</TableCell>
                         ) : null;
                       })}
@@ -545,14 +542,13 @@ export const DataTable = ({
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={rows.length > 0 ? rows[0].totalCount : 0}
+          count={rows.length > 0 ? clientAdminData.totalCount : 0}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      {loader===false && <Loader />}
     </>
   );
 };

@@ -16,7 +16,7 @@ export const useAzureADAuth = () => {
         console.log(e);
         setLocalStorageItem(ACCESS_TOKEN, e.accessToken);
         sessionStorage.setItem("userInformation", JSON.stringify(e));
-        navigate("/vTrack");
+        navigate("/vTrack/ClientAdmin");
       })
       .catch((e) => {
         console.log(e);

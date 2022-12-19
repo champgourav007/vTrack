@@ -7,8 +7,6 @@ import { dashboardURL } from "../../routes/routes";
 
 export const SelectedModule = ({ headingName }) => {
   const navigate = useNavigate();
-  // const [params, setParams] = useParams()
-  // let {params} = useParams()
   useEffect(() => {
     if (headingName === "Dashboard") {
       navigate(dashboardURL);

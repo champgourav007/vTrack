@@ -13,9 +13,6 @@ export const VTrack = () => {
 
   const changePage = (headingName) => {
     setHeadingName(headingName);
-    // if (headingName === 'Dashboard') {
-    //   navigate(dashboardURL);
-    // }
   };
 
   useEffect(() => {

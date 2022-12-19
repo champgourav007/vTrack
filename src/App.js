@@ -19,7 +19,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path={VTrackURL + "/:moduleName"} element={<VTrack />}></Route>
-        {/* <Route path={VTrackURL} element={<VTrack />}></Route> */}
+        <Route path={VTrackURL} element={<VTrack />}></Route>
         <Route path={dashboardURL} element={<Dashboard />}></Route>
         <Route path={indexURL} element={<LoginPage />}></Route>
       </Routes>
