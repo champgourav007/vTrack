@@ -2,9 +2,9 @@ import { HttpMethod } from "../../common/constants/http-requests";
 import { httpRequest } from "../../common/utils/http-request";
 import { CLIENT_API } from "../api";
 
-export const getClientAdminDetails = (pageNo, pageSize, sortDir, sortBy) =>
+export const getClientAdminDetails = (pageNo, pageSize, sortDir, sortBy, searchData) =>
   httpRequest({
-    url: `${CLIENT_API}/get-clients?page=${pageNo}&pagesize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`,
+    url: `${CLIENT_API}/get-clients?page=${pageNo}&pagesize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}&searchKey=${searchData}`,
     method: HttpMethod.GET,
   });
 

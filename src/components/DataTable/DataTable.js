@@ -48,6 +48,7 @@ export const DataTable = ({
   setIsAddButtonClicked,
   isEditButtonClicked,
   setIsEditButtonClicked,
+  searchData,
 }) => {
   const { clientsData, projectManagers, listItems, allUsers } = useSelector(({ MODULES }) => MODULES);
   const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
@@ -112,6 +113,7 @@ export const DataTable = ({
         pageSize: rowsPerPage,
         sortBy: sortBy,
         sortDir: "ASC",
+        searchData: searchData,
       })
     );
   };
@@ -125,6 +127,7 @@ export const DataTable = ({
           pageSize: event.target.value,
           sortBy: sortBy,
           sortDir: "ASC",
+          searchData: searchData,
         })
       );
     }
@@ -135,6 +138,7 @@ export const DataTable = ({
           pageSize: event.target.value,
           sortBy: sortBy,
           sortDir: "ASC",
+          searchData: searchData
         })
       );
     }
@@ -145,6 +149,7 @@ export const DataTable = ({
           pageSize: event.target.value,
           sortBy: sortBy,
           sortDir: "ASC",
+          searchData: searchData
         })
       );
     }
@@ -174,6 +179,7 @@ export const DataTable = ({
           pageSize: rowsPerPage,
           sortBy: colName,
           sortDir: sortDirection,
+          searchData: searchData
         })
       );
     }
@@ -184,6 +190,7 @@ export const DataTable = ({
           pageSize: rowsPerPage,
           sortBy: colName,
           sortDir: sortDirection,
+          searchData: searchData
         })
       );
     }
@@ -194,6 +201,7 @@ export const DataTable = ({
           pageSize: rowsPerPage,
           sortBy: colName,
           sortDir: sortDirection,
+          searchData: searchData
         })
       );
     }

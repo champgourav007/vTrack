@@ -18,6 +18,8 @@ export const TabsTable = ({ headingName, tabName }) => {
   const [ rows, setRows ] = useState([]);
   const [ columns, setColumns ] = useState([]);
   const [ totalRecord, setTotalRecord ] = useState(0);
+  const [searchData, setSearchData] = useState("");
+
   const addNewRow = (isTrue) => {
     setIsAddButtonClicked(isTrue);
   };
@@ -86,6 +88,7 @@ export const TabsTable = ({ headingName, tabName }) => {
             pageSize: 10,
             sortBy: 'clientName',
             sortDir: "ASC",
+            searchData: searchData
           })
         );
         break;
@@ -96,6 +99,7 @@ export const TabsTable = ({ headingName, tabName }) => {
             pageSize: 10,
             sortBy: 'projectName',
             sortDir: "ASC",
+            searchData: searchData
           })
         );
         break;
@@ -106,6 +110,7 @@ export const TabsTable = ({ headingName, tabName }) => {
             pageSize: 10,
             sortBy: 'clientName',
             sortDir: "ASC",
+            searchData: searchData
           })
         );
     }
@@ -118,12 +123,31 @@ export const TabsTable = ({ headingName, tabName }) => {
     dispatch(getAllUsersData());
   }, []);
 
+  const searchHandler = (e) => {
+    console.log(e.target.value);
+    setSearchData(e.target.value);
+    if (e.target.value.length > 2 || e.target.value.length === 0)
+      dispatch(
+        getClientAdminData({
+          pageNo: 1,
+          pageSize: 10,
+          sortBy: "ClientName",
+          sortDir: "ASC",
+          searchData: e.target.value,
+        })
+      );
+  };
   return (
     <div className="tableDiv">
       <div className="searchHeader">
         <div className="searchWrapper">
-          <img src={searchIcon} alt=""/>
-          <input className="searchBox" type="search" placeholder="Search" />
+          <img src={searchIcon} className="searchIcon"/>
+          <input
+            className="searchBox"
+            type="search"
+            placeholder="Search"
+            onChange={(e) => searchHandler(e)}
+          />
         </div>
         <button className="filterBtn">
           <img className="filterIcon" src={filterIcon} alt="" />
@@ -160,6 +184,7 @@ export const TabsTable = ({ headingName, tabName }) => {
         setIsEdit={setIsEdit}
         isEditButtonClicked={isEditButtonClicked}
         setIsEditButtonClicked={setIsEditButtonClicked}
+        searchData={searchData}
       />
     </div>
   );

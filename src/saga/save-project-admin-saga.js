@@ -12,6 +12,7 @@ function* workerSaveProjectAdminSaga({ payload }) {
         pageSize: 10,
         sortDir: "ASC",
         sortBy: "projectName",
+        searchData: ''
       })
     );
     yield put(setVtrackLoader(false));

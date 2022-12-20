@@ -1,0 +1,35 @@
+.mainDiv {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  height: 100vh;
+}
+
+.sidebarContainer {
+  background-color: #1773bc;
+}
+
+.rightContainer {
+  flex: 1;
+  background-color: #f5f5f5;
+}
+
+.individualItemText {
+  display: flex;
+  width: 10%;
+  justify-content: center;
+}
+
+.wrapperHeading {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.individualItemText {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.individualItemImg {
+  cursor: pointer;
+}

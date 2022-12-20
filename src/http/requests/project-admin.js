@@ -4,7 +4,7 @@ import { PROJECT_ADMIN_API } from "../api";
 
 export const getProjectAdminDetails = (pageNo, pageSize, sortDir, sortBy) =>
   httpRequest({
-    url: `${PROJECT_ADMIN_API}/get-projects?page=${pageNo}&pagesize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}&searchKey=""`,
+    url: `${PROJECT_ADMIN_API}/get-projects?page=${pageNo}&pagesize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}&searchKey=`,
     method: HttpMethod.GET,
   });
 
