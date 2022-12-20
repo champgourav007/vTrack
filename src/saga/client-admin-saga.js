@@ -14,7 +14,8 @@ function* workerClientAdminSaga({ payload }) {
       payload.pageNo,
       payload.pageSize,
       payload.sortDir,
-      payload.sortBy
+      payload.sortBy,
+      payload.searchData
     );
     yield put(setClientAdminData(clientAdminDetails));
     yield put(setVtrackLoader(false));

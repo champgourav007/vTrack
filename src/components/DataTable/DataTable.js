@@ -47,6 +47,7 @@ export const DataTable = ({
   setIsAddButtonClicked,
   isEditButtonClicked,
   setIsEditButtonClicked,
+  searchData,
 }) => {
   const { clientAdminData } = useSelector(({ CLIENT_ADMIN }) => CLIENT_ADMIN);
   const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
@@ -106,6 +107,7 @@ export const DataTable = ({
         pageSize: rowsPerPage,
         sortBy: sortBy,
         sortDir: "ASC",
+        searchData: searchData,
       })
     );
   };
@@ -118,6 +120,7 @@ export const DataTable = ({
         pageSize: event.target.value,
         sortBy: sortBy,
         sortDir: "ASC",
+        searchData: searchData,
       })
     );
   };
@@ -165,6 +168,7 @@ export const DataTable = ({
         pageSize: rowsPerPage,
         sortBy: colName,
         sortDir: sortDirection,
+        searchData: searchData,
       })
     );
   };
@@ -385,13 +389,13 @@ export const DataTable = ({
     ) {
       const temp = [];
       Object.keys(clientAdminData.clients[0]).forEach((col) => {
-          temp.push({
-            id: col,
-            label: getLabel(col),
-            minWidth: getMinWidth(col),
-            sortDir: "DESC",
-            align: "left",
-          });
+        temp.push({
+          id: col,
+          label: getLabel(col),
+          minWidth: getMinWidth(col),
+          sortDir: "DESC",
+          align: "left",
+        });
       });
       setColumnsData([
         ...temp,
@@ -418,6 +422,7 @@ export const DataTable = ({
         pageSize: rowsPerPage,
         sortBy: sortBy,
         sortDir: "ASC",
+        searchData: searchData,
       })
     );
   }, []);
