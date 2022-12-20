@@ -10,14 +10,29 @@
     margin-bottom: 1.25rem;
 }
 
+.searchWrapper {
+  display: flex;
+  background: #ffffff;
+  border: 0.0625rem solid #9cc9ec;
+  border-radius: 0.625rem;
+  padding-left: 0.75rem;
+  width: 23rem;
+}
+
 .searchBox {
-    width: 23rem;
+    /* width: 23rem;
     height: 3rem;
     padding: 0.75rem;
     background: #ffffff;
     border: 0.0625rem solid #9cc9ec;
-    border-radius: 0.625rem;
+    border-radius: 0.625rem; */
+    border: transparent;
   }
+
+.searchBox:focus {
+  outline: none;
+  border: transparent;
+}
 
   .searchBox::placeholder {
     font-family: "Montserrat";

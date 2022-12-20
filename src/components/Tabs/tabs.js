@@ -5,10 +5,7 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import "./tabs.css";
-import { DataTable } from "./../DataTable/DataTable";
-import { useState } from "react";
 import TabsData from "../../mock-data/TabsData";
-import props from "../../mock-data/TopBarMock";
 import { TabsTable } from "./tabsTable";
 
 function TabPanel(props) {
@@ -53,9 +50,7 @@ export default function BasicTabs(props) {
   return (
     <Box sx={{ width: "100%" }}>
       <Box>
-        {props.headingName === "Project Allocation" ||
-        props.headingName === "TimeSheet" ||
-        props.headingName === "Project Management" ? (
+        { TabsData[props.headingName] && (
           <Tabs
             value={value}
             onChange={handleChange}
@@ -65,20 +60,16 @@ export default function BasicTabs(props) {
               <Tab className="" label={tab} {...a11yProps(index)} />
             ))}
           </Tabs>
-        ) : (
-          ""
         )}
       </Box>
-      {props.headingName === "Project Allocation" ||
-      props.headingName === "TimeSheet" ||
-      props.headingName === "Project Management" ? (
+      { TabsData[props.headingName] ? (
         TabsData[props.headingName].map((tab, index) => (
           <TabPanel value={value} index={index}>
-            <TabsTable headingName={props.headingName} />
+            <TabsTable headingName={props.headingName} tabName={tab} />
           </TabPanel>
         ))
       ) : (
-        <TabsTable headingName={props.headingName} />
+        <TabsTable headingName={props.headingName} tabName=''/>
       )}
     </Box>
   );

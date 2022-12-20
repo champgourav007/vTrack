@@ -10,7 +10,7 @@ import "./common/fonts/Montserrat/static/Montserrat-Thin.ttf";
 import "./common/fonts/Montserrat/static/Montserrat-Medium.ttf";
 import "./common/fonts/Kumbh_Sans/static/KumbhSans-Regular.ttf";
 import { useWindowSize } from "./common/hooks";
-import Dashboard from "./pages/dashboard/dashboard";
+import { Dashboard } from "./pages/Dashboard/dashboard";
 
 function App() {
   useWindowSize();

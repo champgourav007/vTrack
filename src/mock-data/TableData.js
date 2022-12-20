@@ -1,44 +1,3 @@
-export const columns = [
-  { id: "clientName", label: "Client Name", minWidth: 100 },
-  { id: "location", label: "Client Location", minWidth: 80 },
-  {
-    id: "currency",
-    label: "Currency",
-    minWidth: 80,
-  },
-  {
-    id: "msaStartDate",
-    label: "MSA Start Date",
-    minWidth: 100,
-  },
-  {
-    id: "msaEndDate",
-    label: "MSA End Date",
-    minWidth: 110,
-  },
-  {
-    id: "businessOwner",
-    label: "Veersa Business Owner",
-    minWidth: 100,
-  },
-  {
-    id: "paymentTerms",
-    label: "Payment Terms",
-    minWidth: 80,
-  },
-  {
-    id: "deliveryOfficer",
-    label: "Veersa Delivery Officer",
-    minWidth: 100,
-  },
-  {
-    id: "msaDoc",
-    label: "Actions",
-    minWidth: 50,
-    align: "left"
-  },
-];
-
 export function createData(
   Id,
   ClientName,
@@ -236,24 +195,34 @@ export const rows = [
   ),
 ];
 
-export const currencies = ["USD", "INR", "EU", "EUR"];
-
-export const locations = ["US", "UK", "IN"];
-
-export const businessOwners = ["Sudeb Mandal", "Rahul Gupta", "Vipul Taneja"];
-
-export const paymentTerms = ["consectetur", "consectetur"];
-
-export const deliveryOfficers = ["Rahul Gupta", "Vipul Taneja"];
+export const dropDownMockData = {
+  currency: ["USD", "INR", "EU", "EUR"],
+  location: ["US", "UK", "IN"],
+  businessOwner: ["Sudeb Mandal", "Rahul Gupta", "Vipul Taneja"],
+  paymentTerms: ["consectetur", "consectetur"],
+  deliveryOfficer: ["Rahul Gupta", "Vipul Taneja"],
+  clientName: ['Duly', 'Pharma Code', 'Kipu'],
+  projectManagerName: ['Amar', 'Sahil', 'Gaurav'], 
+};
 
 export const initialData = {
-  clientName: "",
-  location: "US",
-  currency: "INR",
-  msaStartDate: "2022-12-12T11:30:39.91",
-  msaEndDate: "2022-12-12T11:30:39.91",
-  businessOwner: "Sudeb Mandal",
-  paymentTerms: "consectetur",
-  deliveryOfficer: "Rahul Gupta",
-  msaDoc: "",
+  'Client Admin': {
+    clientName: "",
+    location: "US",
+    currency: "INR",
+    msaStartDate: "2022-12-12T11:30:39.91",
+    msaEndDate: "2022-12-12T11:30:39.91",
+    businessOwner: "Sudeb Mandal",
+    paymentTerms: "consectetur",
+    deliveryOfficer: "Rahul Gupta",
+    msaDoc: "",
+  },
+  'Project Admin': {
+    projectName: '',
+    clientName: '',
+    type: '',
+    sowStartDate: '',
+    sowEndDate: '',
+    projectManagerName: ''
+  }
 };

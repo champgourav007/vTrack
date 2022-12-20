@@ -35,8 +35,10 @@ import deleteIcon from "./Delete.svg";
 import AddDisableIcon from "./AddDisableIcon.svg";
 import AddEnableIcon from "./AddEnableIcon.svg";
 import crossIcon from "./crossIcon.svg";
+import searchIcon from "./searchIcon.svg";
 
 export {
+  searchIcon,
   crossIcon,
   AddEnableIcon,
   AddDisableIcon,
