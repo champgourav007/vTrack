@@ -12,6 +12,7 @@ function* workerSaveClientAdminSaga({ payload }) {
         pageSize: 10,
         sortDir: "ASC",
         sortBy: "clientName",
+        searchData: "",
       })
     );
     yield put(setVtrackLoader(false));
