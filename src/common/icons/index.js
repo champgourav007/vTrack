@@ -36,8 +36,10 @@ import AddDisableIcon from "./AddDisableIcon.svg";
 import AddEnableIcon from "./AddEnableIcon.svg";
 import crossIcon from "./crossIcon.svg";
 import searchIcon from "./searchIcon.svg";
+import vTrackIcon from "./vTrackIcon.svg";
 
 export {
+  vTrackIcon,
   searchIcon,
   crossIcon,
   AddEnableIcon,

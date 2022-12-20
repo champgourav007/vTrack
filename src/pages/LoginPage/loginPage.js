@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { veersaLogo } from "../../common/icons";
 import { useAzureADAuth } from "../../config/use-azure-ad";
+import { dashboardURL } from "../../routes/routes";
 import "./loginPage.css";
 
 export const LoginPage = () => {
@@ -14,7 +15,7 @@ export const LoginPage = () => {
 
   useEffect(() => {
     let User = sessionStorage.getItem("userInformation");
-    if (User != null) navigate("/vTrack/ClientAdmin");
+    if (User != null) navigate(dashboardURL);
   }, []);
 
   return (

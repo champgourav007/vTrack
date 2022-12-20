@@ -1,3 +1,7 @@
+.displayNone {
+  display: none;
+}
+
 .sidebarOuterContainer {
   display: flex;
   flex-direction: column;

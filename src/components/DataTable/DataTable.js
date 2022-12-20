@@ -384,11 +384,11 @@ export const DataTable = ({
   useEffect(() => {
     if (
       clientAdminData &&
-      clientAdminData.clients &&
-      clientAdminData.clients.length
+      clientAdminData.data &&
+      clientAdminData.data.length
     ) {
       const temp = [];
-      Object.keys(clientAdminData.clients[0]).forEach((col) => {
+      Object.keys(clientAdminData.data[0]).forEach((col) => {
         temp.push({
           id: col,
           label: getLabel(col),
@@ -408,8 +408,8 @@ export const DataTable = ({
         },
       ]);
       setFillHeading(false);
-      setRows(clientAdminData.clients);
-    } else if (clientAdminData && clientAdminData.clients.length === 0) {
+      setRows(clientAdminData.data);
+    } else if (clientAdminData && clientAdminData.data.length === 0) {
       setColumnsData([]);
       setRows([]);
     }
