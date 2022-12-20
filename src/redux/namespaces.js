@@ -3,6 +3,7 @@ export const Namespaces = {
   ROUTER: 'router',
   CLIENT_ADMIN: 'CLIENT_ADMIN',
   USER: 'USER', 
-  UI: 'UI' 
+  UI: 'UI',
+  APP_STATE: 'APP_STATE'
 };
   

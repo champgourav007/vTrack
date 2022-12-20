@@ -1,5 +1,16 @@
-img {
+.editDeleteIcon {
+  margin: 0.5rem;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.cursorPointer {
   cursor: pointer;
+}
+
+.buttonBackgroundBorder {
+  background-color: transparent;
+  border: none;
 }
 
 #new_row {

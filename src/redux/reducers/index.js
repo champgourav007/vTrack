@@ -2,6 +2,7 @@ import { connectRouter } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 import { combineReducers } from 'redux';
 import { Namespaces } from '../namespaces';
+import { appStateReducer } from './app-state';
 import { clientAdminReducer } from './client-admin';
 import { localeReducer } from './locale';
 import { uiReducer } from './ui';
@@ -13,4 +14,5 @@ export const rootReducer = combineReducers({
   [Namespaces.CLIENT_ADMIN]: clientAdminReducer,
   [Namespaces.USER]: userReducer,
   [Namespaces.UI]: uiReducer,
+  [Namespaces.APP_STATE]: appStateReducer
 });

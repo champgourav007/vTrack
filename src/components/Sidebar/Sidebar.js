@@ -12,9 +12,11 @@ import {
 } from "../../common/icons";
 import { useAzureADAuth } from "../../config/use-azure-ad";
 import { ModuleList } from "../../mock-data/Sidebar";
+import { useNavigate } from "react-router-dom";
 
 export default function Sidebar(props) {
   const { logoutAzureAD } = useAzureADAuth();
+  const navigate = useNavigate();
 
   const signOutHandler = () => {
     logoutAzureAD();

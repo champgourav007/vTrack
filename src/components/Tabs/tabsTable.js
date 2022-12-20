@@ -1,50 +1,66 @@
 import "./tabsTable.css";
-import { filterIcon } from "../../common/icons";
+import { filterIcon, searchIcon } from "../../common/icons";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { DataTable } from "../DataTable/DataTable";
+import { getClientAdminData } from "../../redux/actions";
 
 export const TabsTable = (props) => {
   const [isEdit, setIsEdit] = useState(false);
   const [isAddButtonClicked, setIsAddButtonClicked] = useState(false);
   const [isEditButtonClicked, setIsEditButtonClicked] = useState(false);
+  const [searchData, setSearchData] = useState("");
+  const dispatch = useDispatch();
+
   const addNewRow = (isTrue) => {
     setIsAddButtonClicked(isTrue);
   };
 
-  const editHandler = () => {
-    // setIsAddButtonClicked(true);
-    setIsEditButtonClicked(true);
+  const searchHandler = (e) => {
+    console.log(e.target.value);
+    setSearchData(e.target.value);
+    if (e.target.value.length > 2 || e.target.value.length === 0)
+      dispatch(
+        getClientAdminData({
+          pageNo: 1,
+          pageSize: 10,
+          sortBy: "ClientName",
+          sortDir: "ASC",
+          searchData: e.target.value,
+        })
+      );
   };
-
   return (
     <div className="tableDiv">
       <div className="searchHeader">
-        <input className="searchBox" type="search" placeholder="Search" />
+        <div className="searchWrapper">
+          <img src={searchIcon} className="searchIcon"/>
+          <input
+            className="searchBox"
+            type="search"
+            placeholder="Search"
+            onChange={(e) => searchHandler(e)}
+          />
+        </div>
         <button className="filterBtn">
           <img className="filterIcon" src={filterIcon} alt="" />
           <div className="disableBtnText">Filter</div>
         </button>
         <button
-          disable={!isEdit}
-          className={isEdit ? "editBtn" : "disableEditBtn"}
-          onClick={() => {
-            setIsEdit(!isEdit);
-          }}
-        >
-          <div
-            className={isEdit ? "btnText" : "disableBtnText"}
-            onClick={() => editHandler()}
-          >
-            Edit Selected
-          </div>
-        </button>
-        <button
-          disabled={isAddButtonClicked}
-          className={isAddButtonClicked ? "disableAddButton" : "addBtn"}
+          disabled={isAddButtonClicked || isEditButtonClicked}
+          className={
+            isAddButtonClicked || isEditButtonClicked
+              ? "disableAddButton"
+              : "addBtn"
+          }
           onClick={() => addNewRow(true)}
         >
           <div
-            className={isAddButtonClicked ? "disableAddButtonText" : "btnText"}
+            className={
+              isAddButtonClicked || isEditButtonClicked
+                ? "disableAddButtonText"
+                : "btnText"
+            }
           >
             Add
           </div>
@@ -56,6 +72,7 @@ export const TabsTable = (props) => {
         setIsEdit={setIsEdit}
         isEditButtonClicked={isEditButtonClicked}
         setIsEditButtonClicked={setIsEditButtonClicked}
+        searchData={searchData}
       />
     </div>
   );

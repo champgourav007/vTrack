@@ -9,8 +9,15 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { columns, paymentTerms } from "../../mock-data/TableData";
 import "./DataTable.css";
-import { TableArrows } from "../../common/icons";
-import Checkbox from "@mui/material/Checkbox";
+import {
+  TableArrows,
+  editIcon,
+  deleteIcon,
+  AddDisableIcon,
+  AddEnableIcon,
+  crossIcon,
+} from "../../common/icons";
+import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import {
@@ -24,10 +31,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import IconButton from "@mui/material/IconButton";
-import AddIcon from "@mui/icons-material/Add";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  deleteClientAdminData,
   getClientAdminData,
   saveClientAdminData,
   updateClientAdminData,
@@ -38,23 +45,21 @@ import Loader from "../Loader";
 export const DataTable = ({
   isAddButtonClicked,
   setIsAddButtonClicked,
-  setIsEdit,
   isEditButtonClicked,
   setIsEditButtonClicked,
+  searchData,
 }) => {
+  const { clientAdminData } = useSelector(({ CLIENT_ADMIN }) => CLIENT_ADMIN);
+  const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
   const dispatch = useDispatch();
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [selectedRows, setSelectedRows] = React.useState([]);
   const [newRowAdded, setNewRowAdded] = useState(initialData);
   const [columnsData, setColumnsData] = React.useState([]);
   const [rows, setRows] = useState([]);
   const [sortBy, setSortBy] = useState("clientName");
-  const [sortDir, setSortDir] = useState("ASC");
   const [rowToBeUpdated, setRowToBeUpdated] = useState({});
-  const [loader, setLoader] = useState(false);
-  const { clientAdminData } = useSelector(({ CLIENT_ADMIN }) => CLIENT_ADMIN);
   const [fillHeading, setFillHeading] = useState(true);
 
   const getLabel = (col) => {
@@ -72,31 +77,7 @@ export const DataTable = ({
     }
   };
 
-  useEffect(() => {
-    if (clientAdminData && clientAdminData.length) {
-      setLoader(false);
-      const temp = [];
-      Object.keys(clientAdminData[0]).forEach((col) => {
-        if (fillHeading) {
-          temp.push({
-            id: col,
-            label: getLabel(col),
-            minWidth: getMinWidth(col),
-            sortDir: col === "clientName" ? "ASC" : "",
-          });
-          setFillHeading(false);
-          setColumnsData(temp);
-        }
-      });
-      setRows(clientAdminData);
-    } else if (clientAdminData && clientAdminData.length === 0) {
-      setColumnsData([]);
-      setRows([]);
-    }
-  }, [clientAdminData]);
-  
   const saveDataHandler = () => {
-    setLoader(true);
     if (!isEditButtonClicked) {
       dispatch(saveClientAdminData(newRowAdded));
     } else {
@@ -104,6 +85,16 @@ export const DataTable = ({
       setIsEditButtonClicked(false);
     }
     setIsAddButtonClicked(false);
+    setRowToBeUpdated({});
+    setNewRowAdded(initialData);
+  };
+
+  const closeButtonHandler = () => {
+    if (!isEditButtonClicked) {
+      setIsAddButtonClicked(false);
+    } else {
+      setIsEditButtonClicked(false);
+    }
     setRowToBeUpdated({});
     setNewRowAdded(initialData);
   };
@@ -116,6 +107,7 @@ export const DataTable = ({
         pageSize: rowsPerPage,
         sortBy: sortBy,
         sortDir: "ASC",
+        searchData: searchData,
       })
     );
   };
@@ -128,46 +120,9 @@ export const DataTable = ({
         pageSize: event.target.value,
         sortBy: sortBy,
         sortDir: "ASC",
+        searchData: searchData,
       })
     );
-  };
-
-  const handleClick = (row) => {
-    let idx = -1;
-    if (selectedRows && selectedRows.length) {
-      idx = selectedRows.findIndex(
-        (selRow) => selRow.clientId === row.clientId
-      );
-    }
-    if (idx === -1) {
-      setSelectedRows([...selectedRows, row]);
-    } else {
-      let selRows = [...selectedRows];
-      selRows.splice(idx, 1);
-      setSelectedRows(selRows);
-    }
-  };
-
-  const selectOrDeSelectAll = () => {
-    if (selectedRows && selectedRows.length) {
-      setSelectedRows([]);
-    } else {
-      setSelectedRows([...rows]);
-    }
-  };
-
-  const checkSelectedOrNot = (row) => {
-    let idx = -1;
-    if (selectedRows && selectedRows.length) {
-      idx = selectedRows.findIndex(
-        (selRow) => row.clientId === selRow.clientId
-      );
-    }
-    if (idx === -1) {
-      return false;
-    } else {
-      return true;
-    }
   };
 
   const handleCurrencyChange = (event) => {
@@ -195,7 +150,6 @@ export const DataTable = ({
   };
 
   const handleSortBy = (colName) => {
-    setLoader(true);
     setSortBy(colName);
     let sortDirection;
     let tempColumnsData = JSON.parse(JSON.stringify([...columnsData]));
@@ -207,7 +161,6 @@ export const DataTable = ({
       tempColumnsData[idx].sortDir = "ASC";
       sortDirection = "ASC";
     }
-    console.log(tempColumnsData);
     setColumnsData([...tempColumnsData]);
     dispatch(
       getClientAdminData({
@@ -215,6 +168,7 @@ export const DataTable = ({
         pageSize: rowsPerPage,
         sortBy: colName,
         sortDir: sortDirection,
+        searchData: searchData,
       })
     );
   };
@@ -233,7 +187,6 @@ export const DataTable = ({
             />
           </TableCell>
         );
-        break;
 
       case "location":
         return (
@@ -254,7 +207,6 @@ export const DataTable = ({
             </TextField>
           </TableCell>
         );
-        break;
 
       case "msaStartDate":
         return (
@@ -272,7 +224,6 @@ export const DataTable = ({
             </LocalizationProvider>
           </TableCell>
         );
-        break;
 
       case "currency":
         return (
@@ -292,7 +243,6 @@ export const DataTable = ({
             </TextField>
           </TableCell>
         );
-        break;
 
       case "msaEndDate":
         return (
@@ -310,7 +260,6 @@ export const DataTable = ({
             </LocalizationProvider>
           </TableCell>
         );
-        break;
 
       case "businessOwner":
         return (
@@ -331,7 +280,6 @@ export const DataTable = ({
             </TextField>
           </TableCell>
         );
-        break;
 
       case "paymentTerms":
         return (
@@ -352,7 +300,6 @@ export const DataTable = ({
             </TextField>
           </TableCell>
         );
-        break;
 
       case "deliveryOfficer":
         return (
@@ -373,9 +320,8 @@ export const DataTable = ({
             </TextField>
           </TableCell>
         );
-        break;
 
-      case "msaDoc":
+      case "actions":
         return (
           <TableCell key={col}>
             <div className="attachmentContainer">
@@ -387,16 +333,30 @@ export const DataTable = ({
                 <input hidden accept="*" type="file" />
                 <AttachFileIcon />
               </IconButton>
-              <AddIcon onClick={saveDataHandler} />
+              {newRowAdded.clientName !== "" ? (
+                <img
+                  src={AddEnableIcon}
+                  onClick={saveDataHandler}
+                  className="cursorPointer editDeleteIcon"
+                />
+              ) : (
+                <button disable className="buttonBackgroundBorder">
+                  <img src={AddDisableIcon} className="editDeleteIcon" />
+                </button>
+              )}
+              <img
+                src={crossIcon}
+                className="cursorPointer editDeleteIcon"
+                onClick={closeButtonHandler}
+              />
             </div>
           </TableCell>
         );
-        break;
 
       default:
         break;
     }
-    if (col == "clientName") {
+    if (col === "clientName") {
       return (
         <TableCell key={col}>
           <TextField
@@ -410,20 +370,50 @@ export const DataTable = ({
     }
   };
 
-  useEffect(() => {
-    if (selectedRows.length == 1) {
-      setIsEdit(true);
-    } else {
-      setIsEdit(false);
-    }
-  }, [selectedRows]);
+  const editButtonClicked = (id) => {
+    let idx = rows.findIndex((row) => row.clientId === id);
+    setRowToBeUpdated(rows[idx]);
+    setNewRowAdded(rows[idx]);
+    setIsEditButtonClicked(true);
+  };
+
+  const deleteButtonClicked = (id) => {
+    dispatch(deleteClientAdminData(id));
+  };
 
   useEffect(() => {
-    if (isEditButtonClicked) {
-      setRowToBeUpdated(selectedRows[0]);
-      setNewRowAdded(selectedRows[0]);
+    if (
+      clientAdminData &&
+      clientAdminData.clients &&
+      clientAdminData.clients.length
+    ) {
+      const temp = [];
+      Object.keys(clientAdminData.clients[0]).forEach((col) => {
+        temp.push({
+          id: col,
+          label: getLabel(col),
+          minWidth: getMinWidth(col),
+          sortDir: "DESC",
+          align: "left",
+        });
+      });
+      setColumnsData([
+        ...temp,
+        {
+          id: "actions",
+          label: "Actions",
+          minWidth: 100,
+          sortDir: "",
+          align: "left",
+        },
+      ]);
+      setFillHeading(false);
+      setRows(clientAdminData.clients);
+    } else if (clientAdminData && clientAdminData.clients.length === 0) {
+      setColumnsData([]);
+      setRows([]);
     }
-  }, [isEditButtonClicked]);
+  }, [clientAdminData]);
 
   React.useEffect(() => {
     dispatch(
@@ -432,31 +422,21 @@ export const DataTable = ({
         pageSize: rowsPerPage,
         sortBy: sortBy,
         sortDir: "ASC",
+        searchData: searchData,
       })
     );
   }, []);
 
   return (
     <>
+      {vTrackLoader && <Loader />}
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: "48rem" }}>
           <Table aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
-                <TableCell
-                  sx={{
-                    backgroundColor: "#1773bc0d",
-                    color: "#1773bc",
-                    fontWeight: 700,
-                  }}
-                >
-                  <Checkbox
-                    checked={selectedRows.length === rows.length}
-                    onClick={() => selectOrDeSelectAll()}
-                  />
-                </TableCell>
                 {columnsData.map((column) =>
-                  column.id !== "clientId" && column.id !== "totalCount" ? (
+                  column.id !== "clientId" ? (
                     <TableCell
                       key={column.id}
                       align={column.align}
@@ -481,9 +461,6 @@ export const DataTable = ({
             <TableBody>
               {isAddButtonClicked && (
                 <TableRow id="new_row">
-                  <TableCell>
-                    <Checkbox checked="true" />
-                  </TableCell>
                   {columnsData.map((col) => {
                     return createInputField(col.id);
                   })}
@@ -493,9 +470,6 @@ export const DataTable = ({
                 if (rowToBeUpdated.clientId === row.clientId) {
                   return (
                     <TableRow id="new_row">
-                      <TableCell>
-                        <Checkbox checked="true" />
-                      </TableCell>
                       {columnsData.map((col) => {
                         return createInputField(col.id);
                       })}
@@ -509,24 +483,44 @@ export const DataTable = ({
                       tabIndex={-1}
                       key={row.clientId}
                     >
-                      <TableCell>
-                        <Checkbox
-                          checked={checkSelectedOrNot(row)}
-                          onClick={() => handleClick(row)}
-                        />
-                      </TableCell>
                       {columnsData.map((col) => {
-                        if (col.id === "msaDoc") {
+                        if (col.id === "actions") {
                           return (
-                            <TableCell key={col.id}>
+                            <TableCell key={col.id} class="attachmentContainer">
                               <IconButton
                                 color="primary"
                                 aria-label="upload picture"
                                 component="label"
                               >
                                 <input hidden accept="*" type="file" />
-                                <AttachFileIcon />
+                                <Tooltip title="Attackment">
+                                  <AttachFileIcon />
+                                </Tooltip>
                               </IconButton>
+                              <Tooltip title="Edit">
+                                <button
+                                  onClick={() =>
+                                    editButtonClicked(row.clientId)
+                                  }
+                                  className="buttonBackgroundBorder cursorPointer"
+                                  disabled={isAddButtonClicked}
+                                >
+                                  <img
+                                    src={editIcon}
+                                    className="editDeleteIcon"
+                                  />
+                                </button>
+                              </Tooltip>
+                              <Tooltip title="Delete">
+                                <img
+                                  src={deleteIcon}
+                                  className="editDeleteIcon cursorPointer"
+                                  onClick={() =>
+                                    deleteButtonClicked(row.clientId)
+                                  }
+                                  alt=""
+                                />
+                              </Tooltip>
                             </TableCell>
                           );
                         } else if (
@@ -539,8 +533,7 @@ export const DataTable = ({
                             </TableCell>
                           );
                         }
-                        return col.id !== "clientId" &&
-                          col.id !== "totalCount" ? (
+                        return col.id !== "clientId" ? (
                           <TableCell key={col.id}>{row[col.id]}</TableCell>
                         ) : null;
                       })}
@@ -554,14 +547,13 @@ export const DataTable = ({
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={rows.length > 0 ? rows[0].totalCount : 0}
+          count={rows.length > 0 ? clientAdminData.totalCount : 0}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      {loader && <Loader />}
     </>
   );
 };
