@@ -10,7 +10,7 @@ import "./common/fonts/Montserrat/static/Montserrat-Thin.ttf";
 import "./common/fonts/Montserrat/static/Montserrat-Medium.ttf";
 import "./common/fonts/Kumbh_Sans/static/KumbhSans-Regular.ttf";
 import { useWindowSize } from "./common/hooks";
-import { Dashboard } from "./pages/Dashboard/dashboard";
+import { Dashboard } from "./pages/dashboard/dashboard";
 
 function App() {
   useWindowSize();
@@ -20,7 +20,7 @@ function App() {
       <Routes>
         <Route path={VTrackURL + "/:moduleName"} element={<VTrack />}></Route>
         <Route path={VTrackURL} element={<VTrack />}></Route>
-        <Route path={dashboardURL} element={<Dashboard />}></Route>
+        <Route path={dashboardURL} element={<Dashboard/>}></Route>
         <Route path={indexURL} element={<LoginPage />}></Route>
       </Routes>
     </BrowserRouter>

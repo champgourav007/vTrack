@@ -7,10 +7,13 @@ import { allClientsSaga } from "./get-client-saga";
 import { listItemsSaga } from "./get-list-items-saga";
 import { projectManagersSaga } from "./get-project-managers-saga";
 import { projectAdminSaga } from "./project-admin-saga";
+import { projectAllocationSaga } from "./project-allocation-saga";
 import { saveClientAdminSaga } from "./save-client-admin-saga";
 import { saveProjectAdminSaga } from "./save-project-admin-saga";
+import { saveProjectAllocationSaga } from "./save-project-allocation-saga";
 import { updateClientAdminSaga } from "./update-client-admin-saga";
 import { updateProjectAdminSaga } from "./update-project-admin-saga";
+import { updateProjectAllocationSaga } from "./update-project-allocation-saga";
 import { userSaga } from "./user-saga";
 
 export function* rootSaga() {
@@ -27,6 +30,9 @@ export function* rootSaga() {
     fork(listItemsSaga),
     fork(allClientsSaga),
     fork(projectManagersSaga),
-    fork(allUsersSaga)
+    fork(allUsersSaga),
+    fork(projectAllocationSaga),
+    fork(updateProjectAllocationSaga),
+    fork(saveProjectAllocationSaga)
   ]);
 }

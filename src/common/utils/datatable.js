@@ -1,6 +1,7 @@
 export const UniqueIds = {
   ProjectAdmin: 'projectId',
-  ClientAdmin: 'clientId'
+  ClientAdmin: 'clientId',
+  ProjectAllocation: 'projectAllocationId'
 };
 
 export const tableColumnsData = {
@@ -22,7 +23,15 @@ export const tableColumnsData = {
     { id: "paymentTerms", label: "Payment Terms", minWidth: 80, type: 'select' },
     { id: "deliveryOfficer", label: "Veersa Delivery Officer", minWidth: 100, type: 'select' },
     { id: "msaDoc", label: "Actions", minWidth: 50, align: "left", type: 'none' },
-  ] 
+  ],
+  'ProjectAllocation': [
+    { id: "employeeName", label: "Employee Name", minWidth: 100, type: 'select' },
+    { id: "projectName", label: "Project Name", minWidth: 100, type: 'select' },
+    { id: "projectManager", label: "Project Manager", minWidth: 80, type: 'select' },
+    { id: "startDate", label: "Start Date", minWidth: 100, type: 'date' },
+    { id: "endDate", label: "End Date", minWidth: 110, type: 'date' },
+    { id: 'allocation', label: 'Allocation', minWidth: 100, type: 'textfield' }
+  ], 
 };
 
 export const getTypeofColumn = (col, moduleName) => {

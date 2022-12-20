@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { DataTable } from "../DataTable/DataTable";
 import { useDispatch, useSelector } from "react-redux";
 import { Modules } from "../../common/constants/sidebar";
-import { getAllUsersData, getClientAdminData, getClientsData, getListItems, getProjectAdminData, getProjectManagersData } from "../../redux/actions";
+import { getAllUsersData, getClientAdminData, getClientsData, getListItems, getProjectAdminData, getProjectAllocationData, getProjectManagersData } from "../../redux/actions";
 import { getLabel, getMinWidth, tableColumnsData } from "../../common/utils/datatable";
 
 export const TabsTable = ({ headingName, tabName }) => {
-  const { clientAdminData, projectAdminData } = useSelector(({ MODULES }) => MODULES);
+  const { clientAdminData, projectAdminData, projectAllocationData } = useSelector(({ MODULES }) => MODULES);
 
   const dispatch = useDispatch();
 
@@ -57,8 +57,11 @@ export const TabsTable = ({ headingName, tabName }) => {
       handleSetColumnsData(projectAdminData.data[0]);
       setRows(projectAdminData.data);
       setTotalRecord(projectAdminData.totalCount);
-    }
-    else{
+    } else if (headingName === Modules.PROJECT_ALLOCATION && projectAllocationData && projectAllocationData.totalCount) {
+      handleSetColumnsData(projectAllocationData.data[0]);
+      setRows(projectAllocationData.data);
+      setTotalRecord(projectAllocationData.totalCount);
+    } else{
       if (tableColumnsData[headingName.replace(' ', '')]) {
         setColumns([
           ...tableColumnsData[headingName.replace(' ', '')],
@@ -77,7 +80,7 @@ export const TabsTable = ({ headingName, tabName }) => {
       setRows([]);
       setTotalRecord(0);
     }
-  }, [ clientAdminData, projectAdminData, headingName ]);
+  }, [ clientAdminData, projectAdminData, projectAllocationData, headingName ]);
 
   useEffect(() => {
     switch(headingName) {
@@ -95,6 +98,17 @@ export const TabsTable = ({ headingName, tabName }) => {
       case Modules.PROJECT_ADMIN:
         dispatch(
           getProjectAdminData({
+            pageNo: 1,
+            pageSize: 10,
+            sortBy: 'projectName',
+            sortDir: "ASC",
+            searchData: searchData
+          })
+        );
+        break;
+      case Modules.PROJECT_ALLOCATION:
+        dispatch(
+          getProjectAllocationData({
             pageNo: 1,
             pageSize: 10,
             sortBy: 'projectName',

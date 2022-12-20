@@ -203,6 +203,8 @@ export const dropDownMockData = {
   deliveryOfficer: ["Rahul Gupta", "Vipul Taneja"],
   clientName: ['Duly', 'Pharma Code', 'Kipu'],
   projectManagerName: ['Amar', 'Sahil', 'Gaurav'], 
+  employeeName: ['Arsalan', 'Arvind', 'Aditya'],
+  projectName: ['duly', 'kipu']
 };
 
 export const initialData = {

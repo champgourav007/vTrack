@@ -34,13 +34,26 @@ import {
 } from "../../redux/actions/client-admin";
 import { useState } from "react";
 import Loader from "../Loader";
-import { getLabel, getTypeofColumn, UniqueIds } from "../../common/utils/datatable";
+import {
+  getLabel,
+  getTypeofColumn,
+  UniqueIds,
+} from "../../common/utils/datatable";
 import { Modules } from "../../common/constants/sidebar";
-import { deleteProjectAdminData, deleteProjectAllocationData, getProjectAdminData, getProjectAllocationData, saveProjectAdminData, saveProjectAllocationData, updateProjectAdminData, updateProjectAllocationData } from "../../redux/actions";
+import {
+  deleteProjectAdminData,
+  deleteProjectAllocationData,
+  getProjectAdminData,
+  getProjectAllocationData,
+  saveProjectAdminData,
+  saveProjectAllocationData,
+  updateProjectAdminData,
+  updateProjectAllocationData,
+} from "../../redux/actions";
 
 export const DataTable = ({
   headingName,
-  rows, 
+  rows,
   columns,
   setColumns,
   totalRecord,
@@ -50,7 +63,9 @@ export const DataTable = ({
   setIsEditButtonClicked,
   searchData,
 }) => {
-  const { clientsData, projectManagers, listItems, allUsers } = useSelector(({ MODULES }) => MODULES);
+  const { clientsData, projectManagers, listItems, allUsers } = useSelector(
+    ({ MODULES }) => MODULES
+  );
   const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
   const dispatch = useDispatch();
 
@@ -65,27 +80,23 @@ export const DataTable = ({
     setNewRowAdded(initialData[headingName]);
     setPage(0);
     setRowsPerPage(10);
-  }, [ headingName ]);
+  }, [headingName]);
 
   const saveDataHandler = () => {
     if (!isEditButtonClicked) {
       if (headingName === Modules.CLIENT_ADMIN) {
         dispatch(saveClientAdminData(newRowAdded));
-      }
-      else if (headingName === Modules.PROJECT_ADMIN) {
+      } else if (headingName === Modules.PROJECT_ADMIN) {
         dispatch(saveProjectAdminData(newRowAdded));
-      }
-      else if (headingName === Modules.PROJECT_ALLOCATION) {
+      } else if (headingName === Modules.PROJECT_ALLOCATION) {
         dispatch(saveProjectAllocationData(newRowAdded));
       }
     } else {
       if (headingName === Modules.CLIENT_ADMIN) {
         dispatch(updateClientAdminData(newRowAdded));
-      }
-      else if (headingName === Modules.PROJECT_ADMIN) {
+      } else if (headingName === Modules.PROJECT_ADMIN) {
         dispatch(updateProjectAdminData(newRowAdded));
-      }
-      else if (headingName === Modules.PROJECT_ALLOCATION) {
+      } else if (headingName === Modules.PROJECT_ALLOCATION) {
         dispatch(updateProjectAllocationData(newRowAdded));
       }
       setIsEditButtonClicked(false);
@@ -107,15 +118,37 @@ export const DataTable = ({
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-    dispatch(
-      getClientAdminData({
-        pageNo: newPage + 1,
-        pageSize: rowsPerPage,
-        sortBy: sortBy,
-        sortDir: "ASC",
-        searchData: searchData,
-      })
-    );
+    if (headingName === Modules.CLIENT_ADMIN) {
+      dispatch(
+        getClientAdminData({
+          pageNo: newPage + 1,
+          pageSize: rowsPerPage,
+          sortBy: sortBy,
+          sortDir: "ASC",
+          searchData: searchData,
+        })
+      );
+    } else if (headingName === Modules.PROJECT_ADMIN) {
+      dispatch(
+        getProjectAdminData({
+          pageNo: newPage + 1,
+          pageSize: rowsPerPage,
+          sortBy: sortBy,
+          sortDir: "ASC",
+          searchData: searchData,
+        })
+      );
+    } else if (headingName === Modules.PROJECT_ALLOCATION) {
+      dispatch(
+        getProjectAllocationData({
+          pageNo: newPage + 1,
+          pageSize: rowsPerPage,
+          sortBy: sortBy,
+          sortDir: "ASC",
+          searchData: searchData,
+        })
+      );
+    }
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -130,26 +163,24 @@ export const DataTable = ({
           searchData: searchData,
         })
       );
-    }
-    else if (headingName === Modules.PROJECT_ADMIN) {
+    } else if (headingName === Modules.PROJECT_ADMIN) {
       dispatch(
         getProjectAdminData({
           pageNo: page + 1,
           pageSize: event.target.value,
           sortBy: sortBy,
           sortDir: "ASC",
-          searchData: searchData
+          searchData: searchData,
         })
       );
-    }
-    else if (headingName === Modules.PROJECT_ALLOCATION) {
+    } else if (headingName === Modules.PROJECT_ALLOCATION) {
       dispatch(
         getProjectAllocationData({
           pageNo: page + 1,
           pageSize: event.target.value,
           sortBy: sortBy,
           sortDir: "ASC",
-          searchData: searchData
+          searchData: searchData,
         })
       );
     }
@@ -179,36 +210,34 @@ export const DataTable = ({
           pageSize: rowsPerPage,
           sortBy: colName,
           sortDir: sortDirection,
-          searchData: searchData
+          searchData: searchData,
         })
       );
-    }
-    else if (headingName === Modules.PROJECT_ADMIN) {
+    } else if (headingName === Modules.PROJECT_ADMIN) {
       dispatch(
         getProjectAdminData({
           pageNo: page + 1,
           pageSize: rowsPerPage,
           sortBy: colName,
           sortDir: sortDirection,
-          searchData: searchData
+          searchData: searchData,
         })
       );
-    }
-    else if (headingName === Modules.PROJECT_ALLOCATION) {
+    } else if (headingName === Modules.PROJECT_ALLOCATION) {
       dispatch(
         getProjectAllocationData({
           pageNo: page + 1,
           pageSize: rowsPerPage,
           sortBy: colName,
           sortDir: sortDirection,
-          searchData: searchData
+          searchData: searchData,
         })
       );
     }
   };
 
   const createInputField = (col) => {
-    if (getTypeofColumn(col, headingName) === 'textfield') {
+    if (getTypeofColumn(col, headingName) === "textfield") {
       return (
         <TableCell key={col}>
           <TextField
@@ -220,7 +249,7 @@ export const DataTable = ({
           />
         </TableCell>
       );
-    } else if (getTypeofColumn(col, headingName) === 'select') {
+    } else if (getTypeofColumn(col, headingName) === "select") {
       return (
         <TableCell key={col}>
           <TextField
@@ -231,64 +260,155 @@ export const DataTable = ({
             // onChange={(e) => inputFieldHandler(e, col)}
             style={{ width: 100 }}
           >
-            {col === 'clientName' ? clientsData.map((option) => (
-                <MenuItem key={option.id} value={option.name} 
-                  onClick={() => setNewRowAdded({ ...newRowAdded, [col]: option.name, 'clientId': option.id }) }>
-                  {option.name}
-                </MenuItem>
-            )) :
-            col === 'projectManagerName' ? projectManagers.map((option) => (
-              <MenuItem key={option.id} value={option.name} 
-                onClick={() => setNewRowAdded({ ...newRowAdded, [col]: option.name, 'projectManagerId': option.id })}>
-                {option.name}
-              </MenuItem>
-            )) : 
-            col === 'currency' ? listItems && listItems.currency.map((option) => (
-              <MenuItem key={option.id} value={option.shortCodeValue} 
-                onClick={() => setNewRowAdded({ ...newRowAdded, [col]: option.shortCodeValue, 'currencyId': option.id })}>
-                {option.shortCodeValue}
-              </MenuItem>
-            )) : 
-            col === 'paymentTerms' ? listItems && listItems.paymentTerms.map((option) => (
-              <MenuItem key={option.id} value={option.shortCodeValue} 
-                onClick={() => setNewRowAdded({ ...newRowAdded, [col]: option.shortCodeValue, 'paymentTermsId': option.id })}>
-                {option.shortCodeValue}
-              </MenuItem>
-            )) :
-            col === 'location' ? listItems && listItems.location.map((option) => (
-              <MenuItem key={option.id} value={option.shortCodeValue} 
-                onClick={() => setNewRowAdded({ ...newRowAdded, [col]: option.shortCodeValue, 'locationId': option.id })}>
-                {option.shortCodeValue}
-              </MenuItem>
-            )) :
-            col === 'type' ? listItems && listItems.type.map((option) => (
-              <MenuItem key={option.id} value={option.shortCodeValue} 
-                onClick={() => setNewRowAdded({ ...newRowAdded, [col]: option.shortCodeValue, 'typeId': option.id })}>
-                {option.shortCodeValue}
-              </MenuItem>
-            )) :
-            col === 'businessOwner' ? allUsers && allUsers.type.map((option) => (
-              <MenuItem key={option.id} value={option.name} 
-                onClick={() => setNewRowAdded({ ...newRowAdded, [col]: option.name, 'businessOwnerId': option.id })}>
-                {option.name}
-              </MenuItem>
-            )) :
-            col === 'deliveryOfficer' ? allUsers && allUsers.type.map((option) => (
-              <MenuItem key={option.id} value={option.name} 
-                onClick={() => setNewRowAdded({ ...newRowAdded, [col]: option.name, 'deliveryOfficerId': option.id })}>
-                {option.name}
-              </MenuItem>
-            )) :
-            dropDownMockData[col].map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))
-            }
+            {col === "clientName"
+              ? clientsData.map((option) => (
+                  <MenuItem
+                    key={option.id}
+                    value={option.name}
+                    onClick={() =>
+                      setNewRowAdded({
+                        ...newRowAdded,
+                        [col]: option.name,
+                        clientId: option.id,
+                      })
+                    }
+                  >
+                    {option.name}
+                  </MenuItem>
+                ))
+              : col === "projectManagerName"
+              ? projectManagers.map((option) => (
+                  <MenuItem
+                    key={option.id}
+                    value={option.name}
+                    onClick={() =>
+                      setNewRowAdded({
+                        ...newRowAdded,
+                        [col]: option.name,
+                        projectManagerId: option.id,
+                      })
+                    }
+                  >
+                    {option.name}
+                  </MenuItem>
+                ))
+              : col === "currency"
+              ? listItems &&
+                listItems.currency.map((option) => (
+                  <MenuItem
+                    key={option.id}
+                    value={option.shortCodeValue}
+                    onClick={() =>
+                      setNewRowAdded({
+                        ...newRowAdded,
+                        [col]: option.shortCodeValue,
+                        currencyId: option.id,
+                      })
+                    }
+                  >
+                    {option.shortCodeValue}
+                  </MenuItem>
+                ))
+              : col === "paymentTerms"
+              ? listItems &&
+                listItems.paymentTerms.map((option) => (
+                  <MenuItem
+                    key={option.id}
+                    value={option.shortCodeValue}
+                    onClick={() =>
+                      setNewRowAdded({
+                        ...newRowAdded,
+                        [col]: option.shortCodeValue,
+                        paymentTermsId: option.id,
+                      })
+                    }
+                  >
+                    {option.shortCodeValue}
+                  </MenuItem>
+                ))
+              : col === "location"
+              ? listItems &&
+                listItems.location.map((option) => (
+                  <MenuItem
+                    key={option.id}
+                    value={option.shortCodeValue}
+                    onClick={() =>
+                      setNewRowAdded({
+                        ...newRowAdded,
+                        [col]: option.shortCodeValue,
+                        locationId: option.id,
+                      })
+                    }
+                  >
+                    {option.shortCodeValue}
+                  </MenuItem>
+                ))
+              : col === "type"
+              ? listItems &&
+                listItems.type.map((option) => (
+                  <MenuItem
+                    key={option.id}
+                    value={option.shortCodeValue}
+                    onClick={() =>
+                      setNewRowAdded({
+                        ...newRowAdded,
+                        [col]: option.shortCodeValue,
+                        typeId: option.id,
+                      })
+                    }
+                  >
+                    {option.shortCodeValue}
+                  </MenuItem>
+                ))
+              : col === "businessOwner"
+              ? allUsers &&
+                allUsers.type.map((option) => (
+                  <MenuItem
+                    key={option.id}
+                    value={option.name}
+                    onClick={() =>
+                      setNewRowAdded({
+                        ...newRowAdded,
+                        [col]: option.name,
+                        businessOwnerId: option.id,
+                      })
+                    }
+                  >
+                    {option.name}
+                  </MenuItem>
+                ))
+              : col === "deliveryOfficer"
+              ? allUsers &&
+                allUsers.type.map((option) => (
+                  <MenuItem
+                    key={option.id}
+                    value={option.name}
+                    onClick={() =>
+                      setNewRowAdded({
+                        ...newRowAdded,
+                        [col]: option.name,
+                        deliveryOfficerId: option.id,
+                      })
+                    }
+                  >
+                    {option.name}
+                  </MenuItem>
+                ))
+              : dropDownMockData[col].map((option) => (
+                  <MenuItem
+                    key={option}
+                    value={option}
+                    onClick={() =>
+                      setNewRowAdded({ ...newRowAdded, [col]: option })
+                    }
+                  >
+                    {option}
+                  </MenuItem>
+                ))}
           </TextField>
         </TableCell>
       );
-    } else if (getTypeofColumn(col, headingName) === 'date') {
+    } else if (getTypeofColumn(col, headingName) === "date") {
       return (
         <TableCell key={col}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -304,7 +424,7 @@ export const DataTable = ({
           </LocalizationProvider>
         </TableCell>
       );
-    } else if (col === 'actions') {
+    } else if (col === "actions") {
       return (
         <TableCell key={col}>
           <div className="attachmentContainer">
@@ -341,7 +461,9 @@ export const DataTable = ({
   };
 
   const editButtonClicked = (id) => {
-    let idx = rows.findIndex((row) => row[UniqueIds[headingName.replace(' ', '')]] === id);
+    let idx = rows.findIndex(
+      (row) => row[UniqueIds[headingName.replace(" ", "")]] === id
+    );
     setRowToBeUpdated(rows[idx]);
     setNewRowAdded(rows[idx]);
     setIsEditButtonClicked(true);
@@ -350,13 +472,11 @@ export const DataTable = ({
   const deleteButtonClicked = (id) => {
     if (headingName === Modules.CLIENT_ADMIN) {
       dispatch(deleteClientAdminData(id));
-    }
-    else if (headingName === Modules.PROJECT_ADMIN) {
+    } else if (headingName === Modules.PROJECT_ADMIN) {
       console.log(id);
       debugger;
       dispatch(deleteProjectAdminData(id));
-    }
-    else if (headingName === Modules.PROJECT_ALLOCATION) {
+    } else if (headingName === Modules.PROJECT_ALLOCATION) {
       dispatch(deleteProjectAllocationData(id));
     }
   };
@@ -368,26 +488,27 @@ export const DataTable = ({
           <Table aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
-                {columns.map((column) =>
-                  column.id !== UniqueIds[headingName.replace(' ', '')] && (
-                    <TableCell
-                      key={column.id}
-                      align={column.align}
-                      style={{ minWidth: column.minWidth }}
-                      sx={{
-                        backgroundColor: "#1773bc0d",
-                        color: "#1773bc",
-                        fontWeight: 700,
-                      }}
-                    >
-                      {column.label}
-                      <img
-                        src={TableArrows}
-                        alt=""
-                        onClick={() => handleSortBy(column.id)}
-                      />
-                    </TableCell>
-                  )
+                {columns.map(
+                  (column) =>
+                    column.id !== UniqueIds[headingName.replace(" ", "")] && (
+                      <TableCell
+                        key={column.id}
+                        align={column.align}
+                        style={{ minWidth: column.minWidth }}
+                        sx={{
+                          backgroundColor: "#1773bc0d",
+                          color: "#1773bc",
+                          fontWeight: 700,
+                        }}
+                      >
+                        {column.label}
+                        <img
+                          src={TableArrows}
+                          alt=""
+                          onClick={() => handleSortBy(column.id)}
+                        />
+                      </TableCell>
+                    )
                 )}
               </TableRow>
             </TableHead>
@@ -400,7 +521,10 @@ export const DataTable = ({
                 </TableRow>
               )}
               {rows.map((row, rowIdx) => {
-                if (rowToBeUpdated[UniqueIds[headingName.replace(' ', '')]] === row[UniqueIds[headingName.replace(' ', '')]]) {
+                if (
+                  rowToBeUpdated[UniqueIds[headingName.replace(" ", "")]] ===
+                  row[UniqueIds[headingName.replace(" ", "")]]
+                ) {
                   return (
                     <TableRow id="new_row">
                       {columns.map((col) => {
@@ -414,7 +538,7 @@ export const DataTable = ({
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                      key={row[headingName.replace(' ', '')]}
+                      key={row[headingName.replace(" ", "")]}
                     >
                       {columns.map((col) => {
                         if (col.id === "actions") {
@@ -433,8 +557,11 @@ export const DataTable = ({
                               <Tooltip title="Edit">
                                 <button
                                   onClick={() =>
-
-                                    editButtonClicked(row[UniqueIds[headingName.replace(' ', '')]])
+                                    editButtonClicked(
+                                      row[
+                                        UniqueIds[headingName.replace(" ", "")]
+                                      ]
+                                    )
                                   }
                                   className="buttonBackgroundBorder cursorPointer"
                                   disabled={isAddButtonClicked}
@@ -451,7 +578,11 @@ export const DataTable = ({
                                   src={deleteIcon}
                                   className="editDeleteIcon cursorPointer"
                                   onClick={() =>
-                                    deleteButtonClicked(row[UniqueIds[headingName.replace(' ', '')]])
+                                    deleteButtonClicked(
+                                      row[
+                                        UniqueIds[headingName.replace(" ", "")]
+                                      ]
+                                    )
                                   }
                                   alt=""
                                 />
@@ -468,7 +599,8 @@ export const DataTable = ({
                             </TableCell>
                           );
                         }
-                        return col.id !== UniqueIds[headingName.replace(' ', '')] ? (
+                        return col.id !==
+                          UniqueIds[headingName.replace(" ", "")] ? (
                           <TableCell key={col.id}>{row[col.id]}</TableCell>
                         ) : null;
                       })}
