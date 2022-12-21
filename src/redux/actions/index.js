@@ -6,3 +6,4 @@ export * from './app-state';
 export * from './project-admin';
 export * from './project-allocation';
 export * from './dropdown';
+export * from './settings';

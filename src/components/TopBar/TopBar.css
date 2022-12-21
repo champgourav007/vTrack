@@ -1,9 +1,9 @@
 .logoText {
   width: 6.9375rem;
   height: 2.437rem;
-  font-family: "Montserrat";
+  font-family: "Montserrat-Bold";
   font-style: normal;
-  font-weight: 700;
+  /* font-weight: 900; */
   font-size: 2.5rem;
   line-height: 3rem;
 }
@@ -38,6 +38,7 @@
   font-size: 1.25rem;
   line-height: 1.5rem;
   color: #6e6f74;
+  margin-left: 1rem;
 }
 .rectangle {
   box-sizing: border-box;

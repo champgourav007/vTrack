@@ -89,6 +89,7 @@ th.css-1g0973d-MuiTableCell-root {
 
 .allocationProgress {
   width: 2rem !important;
+  margin-left: 1rem !important;
 }
 
 .tableArrows {

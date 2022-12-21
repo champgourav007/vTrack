@@ -210,13 +210,13 @@ export const dropDownMockData = {
 export const initialData = {
   'Client Admin': {
     clientName: "",
-    location: "US",
-    currency: "INR",
-    msaStartDate: "2022-12-12T11:30:39.91",
-    msaEndDate: "2022-12-12T11:30:39.91",
-    businessOwner: "Sudeb Mandal",
-    paymentTerms: "consectetur",
-    deliveryOfficer: "Rahul Gupta",
+    location: "",
+    currency: "",
+    msaStartDate: "",
+    msaEndDate: "",
+    businessOwner: "",
+    paymentTerms: "",
+    deliveryOfficer: "",
     msaDoc: "",
   },
   'Project Admin': {

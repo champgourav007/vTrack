@@ -11,6 +11,7 @@ import "./common/fonts/Montserrat/static/Montserrat-Medium.ttf";
 import "./common/fonts/Kumbh_Sans/static/KumbhSans-Regular.ttf";
 import { useWindowSize } from "./common/hooks";
 import { Dashboard } from "./pages/Dashboard/dashboard";
+import Settings from "./pages/Settings/settings";
 
 function App() {
   useWindowSize();
@@ -18,6 +19,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+      <Route path={VTrackURL + "/settings"} element={<Settings />}></Route>
         <Route path={VTrackURL + "/:moduleName"} element={<VTrack />}></Route>
         <Route path={VTrackURL} element={<VTrack />}></Route>
         <Route path={dashboardURL} element={<Dashboard/>}></Route>

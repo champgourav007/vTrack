@@ -75,7 +75,6 @@
   font-size: 1rem;
   line-height: 1.25rem;
   color: #193f4b;
-  margin-left: auto;
 }
 
 .editBtn {
@@ -92,6 +91,16 @@
   background: #fafafa;
   border: 0.0625rem solid #fafafa;
   border-radius: 0.625rem;
+}
+
+.disableAddButton{
+  height: 3rem;
+  width: 6.875rem;
+  border-radius: 0.625rem;
+  background: #fafafa;
+  border: 0.0625rem solid #fafafa;
+  border-radius: 0.625rem;
+  margin-left: auto;
 }
 
 .addBtn {

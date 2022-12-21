@@ -21,9 +21,3 @@ export const updateProjectAllocationDetails = (data) =>
     method: HttpMethod.PUT,
     data: data,
   });
-
-// export const deleteProjectAllocationDetails = (projectId) =>
-//   httpRequest({
-//     url: `${PROJECT_ALLOCATION_API}/${projectId}/delete-project-allocation`,
-//     method: HttpMethod.DELETE,
-//   });

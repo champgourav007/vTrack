@@ -15,6 +15,7 @@ import {
   AddDisableIcon,
   AddEnableIcon,
   crossIcon,
+  downloadIcon,
 } from "../../common/icons";
 import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
@@ -51,6 +52,9 @@ import {
   updateProjectAllocationData,
 } from "../../redux/actions";
 import CircularProgress from "@mui/material/CircularProgress";
+import { getLocalStorageItem } from "../../common/utils/local-storage";
+import { ACCESS_TOKEN } from "../../common/constants/local-storage-keys";
+import axios from "axios";
 
 export const DataTable = ({
   headingName,
@@ -75,6 +79,7 @@ export const DataTable = ({
   const [newRowAdded, setNewRowAdded] = useState(initialData[headingName]);
   const [sortBy, setSortBy] = useState("clientName");
   const [rowToBeUpdated, setRowToBeUpdated] = useState({});
+  const [fileState, setFileState] = useState("");
 
   React.useEffect(() => {
     setRowToBeUpdated({});
@@ -259,7 +264,7 @@ export const DataTable = ({
             label={getLabel(col, headingName)}
             value={newRowAdded[col]}
             // onChange={(e) => inputFieldHandler(e, col)}
-            style={{ width: '80%' }}
+            style={{ width: "80%" }}
           >
             {col === "clientName"
               ? clientsData.map((option) => (
@@ -349,16 +354,16 @@ export const DataTable = ({
                 listItems.type.map((option) => (
                   <MenuItem
                     key={option.id}
-                    value={option.shortCodeValue}
+                    value={option.longCodeValue}
                     onClick={() =>
                       setNewRowAdded({
                         ...newRowAdded,
-                        [col]: option.shortCodeValue,
+                        [col]: option.longCodeValue,
                         typeId: option.id,
                       })
                     }
                   >
-                    {option.shortCodeValue}
+                    {option.longCodeValue}
                   </MenuItem>
                 ))
               : col === "businessOwner"
@@ -508,8 +513,6 @@ export const DataTable = ({
     if (headingName === Modules.CLIENT_ADMIN) {
       dispatch(deleteClientAdminData(id));
     } else if (headingName === Modules.PROJECT_ADMIN) {
-      console.log(id);
-      debugger;
       dispatch(deleteProjectAdminData(id));
     } else if (headingName === Modules.PROJECT_ALLOCATION) {
       dispatch(deleteProjectAllocationData(id));
@@ -527,6 +530,24 @@ export const DataTable = ({
         }
       });
     return employeeName;
+  };
+
+  const fileHandler = (file, id, name) => {
+    const accessToken = getLocalStorageItem(ACCESS_TOKEN);
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      axios.post(
+        `https://vtrack-api.azurewebsites.net/Client/upload-msa?clientId=${id}&clientName=${name}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+    }
   };
 
   return (
@@ -594,18 +615,38 @@ export const DataTable = ({
                         if (col.id === "actions") {
                           return (
                             <TableCell key={col.id} class="attachmentContainer">
-                              {headingName !== Modules.PROJECT_ALLOCATION && (
-                                <IconButton
-                                  color="primary"
-                                  aria-label="upload picture"
-                                  component="label"
-                                >
-                                  <input hidden accept="*" type="file" />
-                                  <Tooltip title="Attachment">
-                                    <AttachFileIcon />
-                                  </Tooltip>
-                                </IconButton>
-                              )}
+                              {headingName !== Modules.PROJECT_ALLOCATION ?
+                                headingName === Modules.CLIENT_ADMIN &&
+                                row.msaDocLink ? (
+                                  <a href={row.msaDocLink}>
+                                    <img src={downloadIcon} className="editDeleteIcon"/>
+                                  </a>
+                                ) : (
+                                  <IconButton
+                                    color="primary"
+                                    aria-label="upload picture"
+                                    component="label"
+                                  >
+                                    {headingName === Modules.CLIENT_ADMIN && (
+                                      <input
+                                        hidden
+                                        accept="*"
+                                        type="file"
+                                        onChange={(e) =>
+                                          fileHandler(
+                                            e.target.files[0],
+                                            row.clientId,
+                                            row.clientName
+                                          )
+                                        }
+                                      />
+                                    )}
+                                    <Tooltip title="Attachment">
+                                      <AttachFileIcon />
+                                    </Tooltip>
+                                  </IconButton>
+                                )
+                              : null}
                               <Tooltip title="Edit">
                                 <button
                                   onClick={() =>
@@ -646,9 +687,13 @@ export const DataTable = ({
                             </TableCell>
                           );
                         } else if (col.id.includes("Date")) {
+                          let date = new Date(row[col.id].split("T")[0])
+                          let MM = date.toLocaleString('default', { month: 'long' });
+                          let YYYY = date.getFullYear();
+                          let DD = date.getDate();
                           return (
                             <TableCell key={col.id}>
-                              {row[col.id].split("T")[0]}
+                              {DD + '-' + MM + '-' + YYYY}
                             </TableCell>
                           );
                         }
@@ -660,7 +705,11 @@ export const DataTable = ({
                             ) : col.id === "allocation" ? (
                               <div className="allocation">
                                 <div>
-                                <CircularProgress className="allocationProgress" variant="determinate" value={row[col.id]} />
+                                  <CircularProgress
+                                    className="allocationProgress"
+                                    variant="determinate"
+                                    value={row[col.id]}
+                                  />
                                 </div>
                                 <div>{row[col.id]}%</div>
                               </div>

@@ -13,6 +13,7 @@ import {
 import { useAzureADAuth } from "../../config/use-azure-ad";
 import { ModuleList } from "../../mock-data/Sidebar";
 import { useNavigate } from "react-router-dom";
+import { VTrackURL } from "../../routes/routes";
 
 export default function Sidebar({ changePage, pageName }) {
   const { logoutAzureAD } = useAzureADAuth();
@@ -35,6 +36,11 @@ export default function Sidebar({ changePage, pageName }) {
       setSelected("5");
     } else sidebarClass = "sidebarItems";
     return sidebarClass;
+  };
+
+  const settingsHandler = () => {
+    setSelected("settings");
+    navigate(`${VTrackURL}/settings`);
   };
   return (
     <div className={`sidebarOuterContainer ${collapse ? "" : "minWidthClass"}`}>
@@ -67,7 +73,10 @@ export default function Sidebar({ changePage, pageName }) {
                 }}
                 onMouseOver={() => setMouseHover(module.id)}
                 onMouseOut={() => setMouseHover(-1)}
-                style={{display: pageName==="Dashboard" && module.id !== "1" ? "none" : ""}}
+                style={{
+                  display:
+                    pageName === "Dashboard" && module.id !== "1" ? "none" : "",
+                }}
               >
                 <img
                   className="itemImage"
@@ -93,7 +102,7 @@ export default function Sidebar({ changePage, pageName }) {
             className={
               selected === "settings" ? "sidebarItemsSelected" : "sidebarItems"
             }
-            onClick={() => setSelected("settings")}
+            onClick={() => settingsHandler()}
             onMouseOver={() => setMouseHover("settings")}
             onMouseOut={() => setMouseHover("-1")}
           >

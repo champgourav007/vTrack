@@ -1,4 +1,4 @@
-import { ClientAdminType, DropdownType, ProjectAdminType, ProjectAllocationType } from "../actions"
+import { ClientAdminType, DropdownType, ProjectAdminType, ProjectAllocationType, SettingDataType } from "../actions"
 
 export const modulesState = {
   clientAdminData: null,
@@ -9,6 +9,7 @@ export const modulesState = {
   listItems: null,
   allUsers: null,
   allProjectsData: null,
+  userRole: null
 }
 
 export const modulesReducer = (state = modulesState, action) => {
@@ -53,6 +54,11 @@ export const modulesReducer = (state = modulesState, action) => {
       return {
         ...state,
         allProjectsData: action.payload,
+      }
+    case SettingDataType.SET_USER_ROLE_DATA:
+      return {
+        ...state,
+        userRole: action.payload
       }
     default: return state;
   }
