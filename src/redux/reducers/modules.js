@@ -8,6 +8,7 @@ export const modulesState = {
   projectManagers: null,
   listItems: null,
   allUsers: null,
+  allProjectsData: null,
 }
 
 export const modulesReducer = (state = modulesState, action) => {
@@ -47,6 +48,11 @@ export const modulesReducer = (state = modulesState, action) => {
       return {
         ...state,
         allUsers: action.payload,
+      }
+    case DropdownType.SET_ALL_PROJECTS_DATA:
+      return {
+        ...state,
+        allProjectsData: action.payload,
       }
     default: return state;
   }

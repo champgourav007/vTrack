@@ -8,6 +8,8 @@ export const DropdownType = {
     SET_LIST_ITEMS: 'SET_LIST_ITEMS',
     GET_ALL_USERS: 'GET_ALL_USERS',
     SET_ALL_USERS: 'SET_ALL_USERS',
+    GET_ALL_PROJECTS_DATA: 'GET_ALL_PROJECTS_DATA',
+    SET_ALL_PROJECTS_DATA: 'SET_ALL_PROJECTS_DATA'
   }
   
 export const getClientsData = () => 
@@ -53,4 +55,14 @@ export const setAllUsersData = (data) =>
     type: DropdownType.SET_ALL_USERS,
     payload: data,
   });
-  
+
+export const getAllProjectsData = () => 
+  ({
+    type: DropdownType.GET_ALL_PROJECTS_DATA,
+  });
+
+export const setAllProjectsData = (data) => 
+  ({
+    type: DropdownType.SET_ALL_PROJECTS_DATA,
+    payload: data,
+  });

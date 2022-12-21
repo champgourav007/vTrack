@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { DataTable } from "../DataTable/DataTable";
 import { useDispatch, useSelector } from "react-redux";
 import { Modules } from "../../common/constants/sidebar";
-import { getAllUsersData, getClientAdminData, getClientsData, getListItems, getProjectAdminData, getProjectAllocationData, getProjectManagersData } from "../../redux/actions";
+import { getAllProjectsData, getAllUserDetails, getAllUsersData, getClientAdminData, getClientsData, getListItems, getProjectAdminData, getProjectAllocationData, getProjectManagersData } from "../../redux/actions";
 import { getLabel, getMinWidth, tableColumnsData } from "../../common/utils/datatable";
 
 export const TabsTable = ({ headingName, tabName }) => {
@@ -27,7 +27,7 @@ export const TabsTable = ({ headingName, tabName }) => {
   const handleSetColumnsData = (data) => {
     const temp = [];
     Object.keys(data).forEach((col) => {
-      if (!col.includes('Id') && getLabel(col, headingName) !== '')
+      if (!col.includes('Id') && getLabel(col, headingName) !== '') {
         temp.push({
           id: col,
           label: getLabel(col, headingName),
@@ -35,6 +35,15 @@ export const TabsTable = ({ headingName, tabName }) => {
           sortDir: "DESC",
           align: "left",
         });
+      } else if (col === 'employeeId') {
+        temp.push({
+          id: 'employeeName',
+          label: getLabel('employeeName', headingName),
+          minWidth: getMinWidth('employeeName', headingName),
+          sortDir: "DESC",
+          align: "left",
+        });
+      }
     });
     setColumns([
       ...temp,
@@ -135,12 +144,15 @@ export const TabsTable = ({ headingName, tabName }) => {
     dispatch(getClientsData());
     dispatch(getListItems());
     dispatch(getAllUsersData());
+    dispatch(getAllUserDetails());
+    dispatch(getAllProjectsData());
   }, []);
 
   const searchHandler = (e) => {
     console.log(e.target.value);
     setSearchData(e.target.value);
     if (e.target.value.length > 2 || e.target.value.length === 0)
+      if (headingName === Modules.CLIENT_ADMIN) {
       dispatch(
         getClientAdminData({
           pageNo: 1,
@@ -150,6 +162,27 @@ export const TabsTable = ({ headingName, tabName }) => {
           searchData: e.target.value,
         })
       );
+    } else if (headingName === Modules.PROJECT_ADMIN) {
+      dispatch(
+        getProjectAdminData({
+          pageNo: 1,
+          pageSize: 10,
+          sortBy: "ProjectName",
+          sortDir: "ASC",
+          searchData: e.target.value,
+        })
+      );
+    } else if (headingName === Modules.PROJECT_ALLOCATION) {
+      dispatch(
+        getProjectAllocationData({
+          pageNo: 1,
+          pageSize: 10,
+          sortBy: "ProjectName",
+          sortDir: "ASC",
+          searchData: e.target.value,
+        })
+      );
+    }
   };
   return (
     <div className="tableDiv">

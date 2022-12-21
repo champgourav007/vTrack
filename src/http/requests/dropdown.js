@@ -26,3 +26,9 @@ export const getAllUsers = () => {
     method: HttpMethod.GET,
   });
 }
+
+export const getAllProjectsDetails = () =>
+  httpRequest({
+    url: `${DROPDOWN}/get-all-projects`,
+    method: HttpMethod.GET,
+  });
