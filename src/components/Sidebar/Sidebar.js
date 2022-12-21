@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Sidebar.css";
 import {
   veersaLogo,
@@ -14,7 +14,7 @@ import { useAzureADAuth } from "../../config/use-azure-ad";
 import { ModuleList } from "../../mock-data/Sidebar";
 import { useNavigate } from "react-router-dom";
 
-export default function Sidebar(props) {
+export default function Sidebar({ changePage, pageName }) {
   const { logoutAzureAD } = useAzureADAuth();
   const navigate = useNavigate();
 
@@ -25,6 +25,7 @@ export default function Sidebar(props) {
   const [collapse, setCollapse] = useState(false);
   const [mouseHover, setMouseHover] = useState("-1");
   const [selected, setSelected] = useState("");
+  const [displaystate, setDisplayState] = useState("");
 
   const getSidebarClass = (moduleId) => {
     let sidebarClass = "";
@@ -61,11 +62,12 @@ export default function Sidebar(props) {
                 key={index}
                 className={sidebarClass}
                 onClick={() => {
-                  props.changePage(module.name);
+                  changePage(module.name);
                   setSelected(module.id);
                 }}
                 onMouseOver={() => setMouseHover(module.id)}
                 onMouseOut={() => setMouseHover(-1)}
+                style={{display: pageName==="Dashboard" && module.id !== "1" ? "none" : ""}}
               >
                 <img
                   className="itemImage"

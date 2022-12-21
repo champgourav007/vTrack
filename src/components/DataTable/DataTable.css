@@ -61,6 +61,7 @@ th.css-1g0973d-MuiTableCell-root {
   font-size: 1.25rem;
   line-height: 1.25rem;
   color: #1773bc;
+  height: 3rem;
 }
 .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
   height: 3rem;
@@ -77,4 +78,13 @@ th.css-1g0973d-MuiTableCell-root {
 .attachmentContainer {
   display: flex;
   align-items: center;
+}
+
+.allocation {
+  display: flex;
+}
+
+.allocationProgress {
+  height: 1rem;
+  width: 1rem;
 }

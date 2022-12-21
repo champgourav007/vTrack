@@ -12,7 +12,7 @@ function* workerDeleteClientAdminSaga({ payload }) {
         pageSize: 10,
         sortDir: "ASC",
         sortBy: "clientName",
-        searchData: "",
+        searchData: ''
       })
     );
     yield put(setVtrackLoader(false));
