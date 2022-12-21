@@ -23,7 +23,7 @@ export const Dashboard = () => {
       <div className="sidebarContainer">
         <Sidebar changePage={changePage} pageName="Dashboard" />
       </div>
-      <div className="rightContainer">
+      <div className="rightContainer dashboardRightContainer">
         <TopBar />
         <div className="vToolWrapper">
           <div className="wrapperHeading">vTools</div>

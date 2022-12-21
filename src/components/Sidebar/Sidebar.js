@@ -37,7 +37,7 @@ export default function Sidebar({ changePage, pageName }) {
     return sidebarClass;
   };
   return (
-    <div className="sidebarOuterContainer">
+    <div className={`sidebarOuterContainer ${collapse ? "" : "minWidthClass"}`}>
       <div
         className={
           collapse === false

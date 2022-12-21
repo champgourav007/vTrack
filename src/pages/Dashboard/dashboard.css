@@ -1,3 +1,7 @@
+.dashboardRightContainer {
+  padding: 2rem;
+}
+
 .mainDiv {
   display: flex;
   flex-direction: row;
@@ -11,7 +15,7 @@
 
 .rightContainer {
   flex: 1;
-  background-color: #f5f5f5;
+  background-color: #FFFFFF;
 }
 
 .individualItemText {

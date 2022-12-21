@@ -29,6 +29,10 @@
   margin-bottom: 1.25rem;
 }
 
+.css-1fw5qro-MuiPaper-root {
+  box-shadow: none !important;
+}
+
 .searchBox {
   width: 23rem;
   height: 3rem;
