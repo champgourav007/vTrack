@@ -14,7 +14,8 @@ function* workerProjectAdminSaga({ payload }) {
       payload.pageNo,
       payload.pageSize,
       payload.sortDir,
-      payload.sortBy
+      payload.sortBy,
+      payload.searchData
     );
     yield put(setProjectAdminData(projectAdminDetails));
     yield put(setVtrackLoader(false));

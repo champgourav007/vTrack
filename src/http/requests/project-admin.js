@@ -2,9 +2,9 @@ import { HttpMethod } from "../../common/constants/http-requests";
 import { httpRequest } from "../../common/utils/http-request";
 import { PROJECT_ADMIN_API } from "../api";
 
-export const getProjectAdminDetails = (pageNo, pageSize, sortDir, sortBy) =>
+export const getProjectAdminDetails = (pageNo, pageSize, sortDir, sortBy, searchData) =>
   httpRequest({
-    url: `${PROJECT_ADMIN_API}/get-projects?page=${pageNo}&pagesize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}&searchKey=`,
+    url: `${PROJECT_ADMIN_API}/get-projects?page=${pageNo}&pagesize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}&searchKey=${searchData}`,
     method: HttpMethod.GET,
   });
 

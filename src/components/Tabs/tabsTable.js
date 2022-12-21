@@ -137,6 +137,7 @@ export const TabsTable = ({ headingName, tabName }) => {
           })
         );
     }
+    setSearchData('');
   }, [ headingName ]);
 
   useEffect(() => {
@@ -146,7 +147,7 @@ export const TabsTable = ({ headingName, tabName }) => {
     dispatch(getAllUsersData());
     dispatch(getAllUserDetails());
     dispatch(getAllProjectsData());
-  }, []);
+  }, [ headingName]);
 
   const searchHandler = (e) => {
     console.log(e.target.value);
@@ -196,10 +197,10 @@ export const TabsTable = ({ headingName, tabName }) => {
             onChange={(e) => searchHandler(e)}
           />
         </div>
-        <button className="filterBtn">
+        {/* <button className="filterBtn">
           <img className="filterIcon" src={filterIcon} alt="" />
           <div className="disableBtnText">Filter</div>
-        </button>
+        </button> */}
         <button
           disabled={isAddButtonClicked || isEditButtonClicked}
           className={

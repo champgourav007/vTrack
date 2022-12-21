@@ -75,6 +75,7 @@
   font-size: 1rem;
   line-height: 1.25rem;
   color: #193f4b;
+  margin-left: auto;
 }
 
 .editBtn {
@@ -99,4 +100,5 @@
   background: #1773bc;
   border: 0.0625rem solid #1773bc;
   border-radius: 0.625rem;
+  margin-left: auto;
 }

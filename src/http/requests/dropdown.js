@@ -20,12 +20,11 @@ export const getListItems = (code) =>
     method: HttpMethod.GET,
   });
 
-export const getAllUsers = () => {
+export const getAllUsers = () =>
   httpRequest({
     url: `${DROPDOWN}/get-all-users`,
     method: HttpMethod.GET,
   });
-}
 
 export const getAllProjectsDetails = () =>
   httpRequest({

@@ -8,11 +8,7 @@ import Loader from "../Loader";
 export const TopBar = () => {
   const dispatch = useDispatch();
   const { userData } = useSelector(({ USER }) => USER);
-  const [personData, setPersonData] = useState({
-    lastName: "Gupta",
-    firstName: "Rahul",
-    photo: UserTemp,
-  });
+  const [personData, setPersonData] = useState(null);
 
   useEffect(() => {
     dispatch(getUserDetails());
@@ -23,7 +19,7 @@ export const TopBar = () => {
       setPersonData({
         lastName: userData.data.lastName,
         firstName: userData.data.firstName,
-        photo: userData.data.photo === "" ? UserTemp : userData.data.photo,
+        photo: userData.data.photo === "" ? "" : userData.data.photo,
       });
     }
     console.log(userData);
@@ -40,17 +36,14 @@ export const TopBar = () => {
           <div className="mainText">{props.mainText}</div>
         </div>
         <div className="topbar-right">
+          {personData  && 
           <div className="user-wrapper">
             <div>
-              {personData.photo === UserTemp ? (
-                <img src={UserTemp} className="image" />
-              ) : (
-                <img
+              <img
                   alt=""
                   className="image"
                   src={`data:image/jpeg;base64,${personData.photo}`}
                 />
-              )}
             </div>
             <div className="userNameRoleWrapper">
               <div className="user-name">
@@ -60,6 +53,7 @@ export const TopBar = () => {
             </div>
             {/* <img className="dropDownArrow" src={dropDownArrow} alt="" /> */}
           </div>
+          }
         </div>
       </div>
     </>

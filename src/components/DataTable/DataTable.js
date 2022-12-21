@@ -259,7 +259,7 @@ export const DataTable = ({
             label={getLabel(col, headingName)}
             value={newRowAdded[col]}
             // onChange={(e) => inputFieldHandler(e, col)}
-            style={{ width: 100 }}
+            style={{ width: '80%' }}
           >
             {col === "clientName"
               ? clientsData.map((option) => (
@@ -363,7 +363,7 @@ export const DataTable = ({
                 ))
               : col === "businessOwner"
               ? allUsers &&
-                allUsers.type.map((option) => (
+                allUsers.map((option) => (
                   <MenuItem
                     key={option.id}
                     value={option.name}
@@ -380,7 +380,7 @@ export const DataTable = ({
                 ))
               : col === "deliveryOfficer"
               ? allUsers &&
-                allUsers.type.map((option) => (
+                allUsers.map((option) => (
                   <MenuItem
                     key={option.id}
                     value={option.name}
@@ -659,8 +659,10 @@ export const DataTable = ({
                               getEmployeeName(row["employeeId"])
                             ) : col.id === "allocation" ? (
                               <div className="allocation">
-                                {/* <CircularProgress className="allocationProgress" variant="determinate" value={row[col.id]} /> */}
-                                <div>{row[col.id]}</div>
+                                <div>
+                                <CircularProgress className="allocationProgress" variant="determinate" value={row[col.id]} />
+                                </div>
+                                <div>{row[col.id]}%</div>
                               </div>
                             ) : (
                               row[col.id]

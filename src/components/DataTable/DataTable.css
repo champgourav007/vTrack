@@ -83,14 +83,15 @@ th.css-1g0973d-MuiTableCell-root {
 
 .allocation {
   display: flex;
+    gap: 6px;
+    align-items: center;
 }
 
 .allocationProgress {
-  height: 1rem;
-  width: 1rem;
+  width: 2rem !important;
 }
 
 .tableArrows {
   height: 1.1rem;
-  width: 4.15rem;
+  width: 2.5rem;
 }

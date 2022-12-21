@@ -25,9 +25,9 @@ export const tableColumnsData = {
     { id: "msaDoc", label: "Actions", minWidth: 50, align: "left", type: 'none' },
   ],
   'ProjectAllocation': [
-    { id: "employeeName", label: "Employee Name", minWidth: 100, type: 'select' },
+    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select' },
     { id: "projectName", label: "Project Name", minWidth: 100, type: 'select' },
-    { id: "projectManager", label: "Project Manager", minWidth: 80, type: 'select' },
+    { id: "projectManagerName", label: "Project Manager", minWidth: 80, type: 'select' },
     { id: "startDate", label: "Start Date", minWidth: 100, type: 'date' },
     { id: "endDate", label: "End Date", minWidth: 110, type: 'date' },
     { id: 'allocation', label: 'Allocation', minWidth: 100, type: 'textfield' }
