@@ -40,7 +40,7 @@ export default function Sidebar({ changePage, pageName }) {
 
   const settingsHandler = () => {
     setSelected("settings");
-    navigate(`${VTrackURL}/settings`);
+    // navigate(`${VTrackURL}/settings`);
   };
   return (
     <div className={`sidebarOuterContainer ${collapse ? "" : "minWidthClass"}`}>

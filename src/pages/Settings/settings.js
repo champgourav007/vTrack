@@ -6,7 +6,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import { TopBar } from "../../components/TopBar/TopBar";
 import { getAllUserDetails } from "../../redux/actions";
 
-export default function Settings() {
+export function Settings() {
   const [headingName, setHeadingName] = useState("Settings");
   const [rows, setRows] = useState([]);
   const dispatch = useDispatch();

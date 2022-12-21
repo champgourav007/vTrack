@@ -11,7 +11,7 @@ import "./common/fonts/Montserrat/static/Montserrat-Medium.ttf";
 import "./common/fonts/Kumbh_Sans/static/KumbhSans-Regular.ttf";
 import { useWindowSize } from "./common/hooks";
 import { Dashboard } from "./pages/Dashboard/dashboard";
-import Settings from "./pages/Settings/settings";
+import {Settings} from "./pages/Settings/settings";
 
 function App() {
   useWindowSize();
