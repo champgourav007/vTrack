@@ -1,3 +1,7 @@
+.minWidthClass {
+  min-width: 20rem;
+}
+
 .displayNone {
   display: none;
 }

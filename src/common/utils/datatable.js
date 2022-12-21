@@ -35,9 +35,11 @@ export const tableColumnsData = {
 };
 
 export const getTypeofColumn = (col, moduleName) => {
-  for (let column of tableColumnsData[moduleName.replace(' ', '')]) {
-    if (column.id === col) {
-      return column.type;
+  if (tableColumnsData[moduleName.replace(' ', '')] && tableColumnsData[moduleName.replace(' ', '')].length) {
+    for (let column of tableColumnsData[moduleName.replace(' ', '')]) {
+      if (column.id === col) {
+        return column.type;
+      }
     }
   }
 };

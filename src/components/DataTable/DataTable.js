@@ -50,7 +50,7 @@ import {
   updateProjectAdminData,
   updateProjectAllocationData,
 } from "../../redux/actions";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 
 export const DataTable = ({
   headingName,
@@ -64,9 +64,8 @@ export const DataTable = ({
   setIsEditButtonClicked,
   searchData,
 }) => {
-  const { clientsData, projectManagers, listItems, allUsers, allProjectsData } = useSelector(
-    ({ MODULES }) => MODULES
-  );
+  const { clientsData, projectManagers, listItems, allUsers, allProjectsData } =
+    useSelector(({ MODULES }) => MODULES);
   const { allUserDetails } = useSelector(({ USER }) => USER);
   const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
   const dispatch = useDispatch();
@@ -519,12 +518,14 @@ export const DataTable = ({
 
   const getEmployeeName = (id) => {
     console.log(id);
-    let employeeName = '';
-    allUserDetails && allUserDetails.data.length && allUserDetails.data.forEach((user) => {
-      if (user.id === id) {
-        employeeName = `${user.firstName} ${user.lastName}`;
-      }
-    });
+    let employeeName = "";
+    allUserDetails &&
+      allUserDetails.data.length &&
+      allUserDetails.data.forEach((user) => {
+        if (user.id === id) {
+          employeeName = `${user.firstName} ${user.lastName}`;
+        }
+      });
     return employeeName;
   };
 
@@ -553,6 +554,7 @@ export const DataTable = ({
                         <img
                           src={TableArrows}
                           alt=""
+                          className="tableArrows"
                           onClick={() => handleSortBy(column.id)}
                         />
                       </TableCell>
@@ -592,18 +594,18 @@ export const DataTable = ({
                         if (col.id === "actions") {
                           return (
                             <TableCell key={col.id} class="attachmentContainer">
-                              { headingName !== Modules.PROJECT_ALLOCATION && 
-                              <IconButton
-                                color="primary"
-                                aria-label="upload picture"
-                                component="label"
-                              >
-                                <input hidden accept="*" type="file" />
-                                <Tooltip title="Attachment">
-                                  <AttachFileIcon />
-                                </Tooltip>
-                              </IconButton>
-                              }
+                              {headingName !== Modules.PROJECT_ALLOCATION && (
+                                <IconButton
+                                  color="primary"
+                                  aria-label="upload picture"
+                                  component="label"
+                                >
+                                  <input hidden accept="*" type="file" />
+                                  <Tooltip title="Attachment">
+                                    <AttachFileIcon />
+                                  </Tooltip>
+                                </IconButton>
+                              )}
                               <Tooltip title="Edit">
                                 <button
                                   onClick={() =>
@@ -623,25 +625,27 @@ export const DataTable = ({
                                   />
                                 </button>
                               </Tooltip>
-                              { headingName !== Modules.PROJECT_ALLOCATION && 
-                              <Tooltip title="Delete">
-                                <img
-                                  src={deleteIcon}
-                                  className="editDeleteIcon cursorPointer"
-                                  onClick={() =>
-                                    deleteButtonClicked(
-                                      row[
-                                        UniqueIds[headingName.replace(" ", "")]
-                                      ]
-                                    )
-                                  }
-                                  alt=""
-                                />
-                              </Tooltip>
-                              }
+                              {headingName !== Modules.PROJECT_ALLOCATION && (
+                                <Tooltip title="Delete">
+                                  <img
+                                    src={deleteIcon}
+                                    className="editDeleteIcon cursorPointer"
+                                    onClick={() =>
+                                      deleteButtonClicked(
+                                        row[
+                                          UniqueIds[
+                                            headingName.replace(" ", "")
+                                          ]
+                                        ]
+                                      )
+                                    }
+                                    alt=""
+                                  />
+                                </Tooltip>
+                              )}
                             </TableCell>
                           );
-                        } else if (col.id.includes('Date')) {
+                        } else if (col.id.includes("Date")) {
                           return (
                             <TableCell key={col.id}>
                               {row[col.id].split("T")[0]}
@@ -650,14 +654,18 @@ export const DataTable = ({
                         }
                         return col.id !==
                           UniqueIds[headingName.replace(" ", "")] ? (
-                          <TableCell key={col.id}>{col.id === 'employeeName' ? getEmployeeName(row['employeeId']) : col.id === 'allocation' ? 
-                          (
-                            <div className="allocation">
-                            {/* <CircularProgress className="allocationProgress" variant="determinate" value={row[col.id]} /> */}
-                            <div>{row[col.id]}</div>
-                            </div>
-                          )
-                           : row[col.id]}</TableCell>
+                          <TableCell key={col.id}>
+                            {col.id === "employeeName" ? (
+                              getEmployeeName(row["employeeId"])
+                            ) : col.id === "allocation" ? (
+                              <div className="allocation">
+                                {/* <CircularProgress className="allocationProgress" variant="determinate" value={row[col.id]} /> */}
+                                <div>{row[col.id]}</div>
+                              </div>
+                            ) : (
+                              row[col.id]
+                            )}
+                          </TableCell>
                         ) : null;
                       })}
                     </TableRow>

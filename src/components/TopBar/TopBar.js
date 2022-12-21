@@ -40,14 +40,6 @@ export const TopBar = () => {
           <div className="mainText">{props.mainText}</div>
         </div>
         <div className="topbar-right">
-          <div className="rectangle-wrapper">
-            <div className="rectangle">
-              <img src={bellIcon} alt="" />
-            </div>
-            <div className="rectangle">
-              <img src={message} alt="" />
-            </div>
-          </div>
           <div className="user-wrapper">
             <div>
               {personData.photo === UserTemp ? (
@@ -60,13 +52,13 @@ export const TopBar = () => {
                 />
               )}
             </div>
-            <div>
+            <div className="userNameRoleWrapper">
               <div className="user-name">
                 {personData.lastName}, {personData.firstName}
               </div>
               <div className="user-role">{props.role}</div>
             </div>
-            <img className="dropDownArrow" src={dropDownArrow} alt="" />
+            {/* <img className="dropDownArrow" src={dropDownArrow} alt="" /> */}
           </div>
         </div>
       </div>
