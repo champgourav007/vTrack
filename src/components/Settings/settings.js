@@ -2,9 +2,6 @@ import { MenuItem } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import Announcement from "../Announcement/announcement";
-import Sidebar from "../Sidebar/Sidebar";
-import { TopBar } from "../TopBar/TopBar";
 import { getAllUserDetails } from "../../redux/actions";
 import "./settings.css";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -13,7 +10,6 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
-import Box from "@mui/material/Box";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -27,12 +23,35 @@ const MenuProps = {
 };
 
 export function Settings() {
-  const [headingName, setHeadingName] = useState("Settings");
-  const [rows, setRows] = useState([]);
-  const [names, setNames] = useState([])
+  const [selectedUsers, setSelectedUsers] = React.useState([]);
+  const [userData, setUserData] = useState([])
   const dispatch = useDispatch();
   const { allUserDetails } = useSelector(({ USER }) => USER);
   console.log(allUserDetails);
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setSelectedUsers(value);
+  };
+
+  const getUsersNames = () => {
+    let selectedNames = '';
+    if (selectedUsers && selectedUsers.length) {
+      for (let i=0;i<selectedUsers.length;i++) {
+        if (selectedUsers[i].lastName) {
+          selectedNames += `${selectedUsers[i].firstName} ${selectedUsers[i].lastName}`;
+        }
+        else {
+          selectedNames += selectedUsers[i].firstName;
+        }
+        if (i !== selectedUsers.length - 1)
+          selectedNames += ', ';
+      }
+    }
+    return selectedNames;
+  };
 
   useEffect(() => {
     dispatch(getAllUserDetails());
@@ -40,26 +59,9 @@ export function Settings() {
 
   useEffect(() => {
     if (allUserDetails) {
-      setNames(allUserDetails.data);
-      console.log(allUserDetails.data);
+      setUserData(allUserDetails.data);
     }
   }, [allUserDetails]);
-  const changePage = (headingName) => {
-    setHeadingName(headingName);
-  };
-  const [personName, setPersonName] = React.useState([]);
-
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    console.log(value)
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-    // console.log(personName)
-  };
 
   return (
     <>
@@ -73,16 +75,16 @@ export function Settings() {
                 labelId="demo-multiple-checkbox-label"
                 id="demo-multiple-checkbox"
                 multiple
-                value={personName.firstName + personName.lastName}
+                value={selectedUsers}
                 onChange={handleChange}
                 input={<OutlinedInput label="Select User" />}
-                renderValue={(selected) => selected.join(", ")}
+                renderValue={getUsersNames}
                 MenuProps={MenuProps}
               >
-                {names.map((name) => (
-                  <MenuItem key={name.id} value={name}>
-                    <Checkbox checked={personName.indexOf(name.id) > -1} />
-                    <ListItemText primary={name.firstName + " " + name.lastName + " (" + name.email + ")"} />
+                {userData.map((user) => (
+                  <MenuItem key={user.id} value={user}>
+                    <Checkbox checked={selectedUsers.findIndex(person => person.id === user.id) > -1} />
+                    <ListItemText primary={user.firstName + " " + user.lastName + " (" + user.email + ")"} />
                   </MenuItem>
                 ))}
               </Select>
