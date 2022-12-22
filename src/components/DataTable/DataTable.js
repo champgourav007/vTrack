@@ -100,14 +100,17 @@ export const DataTable = ({
     } else {
       if (headingName === Modules.CLIENT_ADMIN) {
         if (fileState && newRowAdded.clientId && newRowAdded.clientName) {
-          fileHandler(
-            fileState,
-            newRowAdded.clientId,
-            newRowAdded.clientName
-          )
+          fileHandler(fileState, newRowAdded.clientId, newRowAdded.clientName);
         }
         dispatch(updateClientAdminData(newRowAdded));
       } else if (headingName === Modules.PROJECT_ADMIN) {
+        if (fileState && newRowAdded.projectId && newRowAdded.projectName) {
+          fileHandler(
+            fileState,
+            newRowAdded.projectId,
+            newRowAdded.projectName
+          );
+        }
         dispatch(updateProjectAdminData(newRowAdded));
       } else if (headingName === Modules.PROJECT_ALLOCATION) {
         dispatch(updateProjectAllocationData(newRowAdded));
@@ -480,7 +483,12 @@ export const DataTable = ({
               aria-label="upload picture"
               component="label"
             >
-              <input hidden accept="*" type="file" onChange={(e) => setFileState(e.target.files[0])}/>
+              <input
+                hidden
+                accept="*"
+                type="file"
+                onChange={(e) => setFileState(e.target.files[0])}
+              />
               <AttachFileIcon />
             </IconButton>
             {newRowAdded.clientName !== "" ? (
@@ -544,16 +552,17 @@ export const DataTable = ({
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
-      axios.post(
-        `https://vtrack-api.azurewebsites.net/Client/upload-msa?clientId=${id}&clientName=${name}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      let URL = "";
+      if (headingName === Modules.CLIENT_ADMIN)
+        URL = `https://vtrack-api.azurewebsites.net/Client/upload-msa?clientId=${id}&clientName=${name}`;
+      else if (headingName === Modules.PROJECT_ADMIN)
+        URL = `https://vtrack-api.azurewebsites.net/ProjectAdmin/upload-sow?projectId=${id}&projectName=${name}`;
+      axios.post(URL, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
     }
   };
 
@@ -622,11 +631,22 @@ export const DataTable = ({
                         if (col.id === "actions") {
                           return (
                             <TableCell key={col.id} class="attachmentContainer">
-                              {headingName !== Modules.PROJECT_ALLOCATION ?
-                                headingName === Modules.CLIENT_ADMIN &&
-                                row.msaDocLink ? (
-                                  <a href={row.msaDocLink}>
-                                    <img src={downloadIcon} className="editDeleteIcon"/>
+                              {headingName !== Modules.PROJECT_ALLOCATION ? (
+                                (headingName === Modules.CLIENT_ADMIN &&
+                                  row.msaDocLink) ||
+                                (headingName === Modules.PROJECT_ADMIN &&
+                                  row.sowAttachmentLink) ? (
+                                  <a
+                                    href={
+                                      headingName === Modules.PROJECT_ADMIN
+                                        ? row.sowAttachmentLink
+                                        : row.msaDocLink
+                                    }
+                                  >
+                                    <img
+                                      src={downloadIcon}
+                                      className="editDeleteIcon"
+                                    />
                                   </a>
                                 ) : (
                                   <IconButton
@@ -648,12 +668,26 @@ export const DataTable = ({
                                         }
                                       />
                                     )}
+                                    {headingName === Modules.PROJECT_ADMIN && (
+                                      <input
+                                        hidden
+                                        accept="*"
+                                        type="file"
+                                        onChange={(e) =>
+                                          fileHandler(
+                                            e.target.files[0],
+                                            row.projectId,
+                                            row.projectName
+                                          )
+                                        }
+                                      />
+                                    )}
                                     <Tooltip title="Attachment">
                                       <AttachFileIcon />
                                     </Tooltip>
                                   </IconButton>
                                 )
-                              : null}
+                              ) : null}
                               <Tooltip title="Edit">
                                 <button
                                   onClick={() =>
@@ -694,13 +728,15 @@ export const DataTable = ({
                             </TableCell>
                           );
                         } else if (col.id.includes("Date")) {
-                          let date = new Date(row[col.id].split("T")[0])
-                          let MM = date.toLocaleString('default', { month: 'long' });
+                          let date = new Date(row[col.id].split("T")[0]);
+                          let MM = date.toLocaleString("default", {
+                            month: "long",
+                          });
                           let YYYY = date.getFullYear();
                           let DD = date.getDate();
                           return (
                             <TableCell key={col.id}>
-                              {DD + '-' + MM + '-' + YYYY}
+                              {DD + "-" + MM + "-" + YYYY}
                             </TableCell>
                           );
                         }

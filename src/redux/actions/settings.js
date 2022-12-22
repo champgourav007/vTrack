@@ -10,10 +10,10 @@ export const getUserRoleData = () => ({
 
 export const saveUserRoleData = (data) => ({
   type: SettingDataType.SAVE_USER_ROLE_DATA,
-  payload: { data },
+  payload: data,
 });
 
 export const setUserRoleData = (data) => ({
-  type: SettingDataType.SET_USER_DATA,
+  type: SettingDataType.SET_USER_ROLE_DATA,
   payload: data,
 });

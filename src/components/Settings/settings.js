@@ -2,7 +2,11 @@ import { MenuItem } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { getAllUserDetails } from "../../redux/actions";
+import {
+  getAllUserDetails,
+  getUserRoleData,
+  saveUserRoleData,
+} from "../../redux/actions";
 import "./settings.css";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -10,6 +14,8 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
+import Button from "@mui/material/Button";
+import { ConnectingAirportsOutlined } from "@mui/icons-material";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -24,10 +30,12 @@ const MenuProps = {
 
 export function Settings() {
   const [selectedUsers, setSelectedUsers] = React.useState([]);
-  const [userData, setUserData] = useState([])
+  const [userData, setUserData] = useState([]);
+  const [rolesData, setRolesData] = useState([]);
+  const [selectedRole, setSelectedRole] = useState("");
   const dispatch = useDispatch();
   const { allUserDetails } = useSelector(({ USER }) => USER);
-  console.log(allUserDetails);
+  const { userRole } = useSelector(({ MODULES }) => MODULES);
 
   const handleChange = (event) => {
     const {
@@ -37,24 +45,44 @@ export function Settings() {
   };
 
   const getUsersNames = () => {
-    let selectedNames = '';
+    let selectedNames = "";
     if (selectedUsers && selectedUsers.length) {
-      for (let i=0;i<selectedUsers.length;i++) {
+      for (let i = 0; i < selectedUsers.length; i++) {
         if (selectedUsers[i].lastName) {
           selectedNames += `${selectedUsers[i].firstName} ${selectedUsers[i].lastName}`;
-        }
-        else {
+        } else {
           selectedNames += selectedUsers[i].firstName;
         }
-        if (i !== selectedUsers.length - 1)
-          selectedNames += ', ';
+        if (i !== selectedUsers.length - 1) selectedNames += ", ";
       }
     }
     return selectedNames;
   };
 
+  const convertIdToAzureId = (selUsers) => {
+    let tempUsers = [];
+    for (let user of selUsers) {
+      tempUsers.push({
+        ...user,
+        azureId: user.id,
+      });
+    }
+    return tempUsers;
+  };
+  const submitHandler = () => {
+    console.log(selectedRole);
+    console.log(selectedUsers);
+    dispatch(
+      saveUserRoleData({
+        roleID: selectedRole.roleID,
+        data: convertIdToAzureId(selectedUsers),
+      })
+    );
+  };
+
   useEffect(() => {
     dispatch(getAllUserDetails());
+    dispatch(getUserRoleData());
   }, []);
 
   useEffect(() => {
@@ -62,6 +90,13 @@ export function Settings() {
       setUserData(allUserDetails.data);
     }
   }, [allUserDetails]);
+
+  useEffect(() => {
+    if (userRole) {
+      setRolesData(userRole);
+      console.log(rolesData);
+    }
+  }, [userRole]);
 
   return (
     <>
@@ -83,13 +118,53 @@ export function Settings() {
               >
                 {userData.map((user) => (
                   <MenuItem key={user.id} value={user}>
-                    <Checkbox checked={selectedUsers.findIndex(person => person.id === user.id) > -1} />
-                    <ListItemText primary={user.firstName + " " + user.lastName + " (" + user.email + ")"} />
+                    <Checkbox
+                      checked={
+                        selectedUsers.findIndex(
+                          (person) => person.id === user.id
+                        ) > -1
+                      }
+                    />
+                    <ListItemText
+                      primary={
+                        user.firstName +
+                        " " +
+                        user.lastName +
+                        " (" +
+                        user.email +
+                        ")"
+                      }
+                    />
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </div>
+        </div>
+        <div className="selectRolesWrapper">
+          <div className="rolesText">Please Select the Role</div>
+          <div>
+            <FormControl sx={{ m: 1, width: 300 }}>
+              <InputLabel id="demo-multiple-checkbox-label">Role</InputLabel>
+              <Select
+                labelId="demo-multiple-checkbox-label"
+                id="demo-multiple-checkbox"
+                onChange={(e) => setSelectedRole(e.target.value)}
+                input={<OutlinedInput label="Select Role" />}
+              >
+                {rolesData.map((roles) => (
+                  <MenuItem key={roles.roleID} value={roles}>
+                    <ListItemText primary={roles.roleName} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+        </div>
+        <div className="buttonClass">
+          <Button variant="contained" onClick={submitHandler}>
+            Add Role
+          </Button>
         </div>
       </div>
     </>

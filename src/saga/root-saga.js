@@ -7,11 +7,13 @@ import { allUsersSaga } from "./get-all-user-saga";
 import { allClientsSaga } from "./get-client-saga";
 import { listItemsSaga } from "./get-list-items-saga";
 import { projectManagersSaga } from "./get-project-managers-saga";
+import { getRolesSaga } from "./get-user-roles-setting-saga";
 import { projectAdminSaga } from "./project-admin-saga";
 import { projectAllocationSaga } from "./project-allocation-saga";
 import { saveClientAdminSaga } from "./save-client-admin-saga";
 import { saveProjectAdminSaga } from "./save-project-admin-saga";
 import { saveProjectAllocationSaga } from "./save-project-allocation-saga";
+import { saveUserRoleSaga } from "./save-user-roles-setting-saga";
 import { updateClientAdminSaga } from "./update-client-admin-saga";
 import { updateProjectAdminSaga } from "./update-project-admin-saga";
 import { updateProjectAllocationSaga } from "./update-project-allocation-saga";
@@ -36,6 +38,8 @@ export function* rootSaga() {
     fork(updateProjectAllocationSaga),
     fork(saveProjectAllocationSaga),
     fork(allUserDetailSaga),
-    fork(allProjectsSaga)
+    fork(allProjectsSaga),
+    fork(getRolesSaga),
+    fork(saveUserRoleSaga),
   ]);
 }
