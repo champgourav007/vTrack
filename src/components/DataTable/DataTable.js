@@ -99,6 +99,13 @@ export const DataTable = ({
       }
     } else {
       if (headingName === Modules.CLIENT_ADMIN) {
+        if (fileState && newRowAdded.clientId && newRowAdded.clientName) {
+          fileHandler(
+            fileState,
+            newRowAdded.clientId,
+            newRowAdded.clientName
+          )
+        }
         dispatch(updateClientAdminData(newRowAdded));
       } else if (headingName === Modules.PROJECT_ADMIN) {
         dispatch(updateProjectAdminData(newRowAdded));
@@ -473,7 +480,7 @@ export const DataTable = ({
               aria-label="upload picture"
               component="label"
             >
-              <input hidden accept="*" type="file" />
+              <input hidden accept="*" type="file" onChange={(e) => setFileState(e.target.files[0])}/>
               <AttachFileIcon />
             </IconButton>
             {newRowAdded.clientName !== "" ? (

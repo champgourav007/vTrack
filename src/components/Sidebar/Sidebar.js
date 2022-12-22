@@ -38,10 +38,6 @@ export default function Sidebar({ changePage, pageName }) {
     return sidebarClass;
   };
 
-  const settingsHandler = () => {
-    setSelected("settings");
-    // navigate(`${VTrackURL}/settings`);
-  };
   return (
     <div className={`sidebarOuterContainer ${collapse ? "" : "minWidthClass"}`}>
       <div
@@ -102,7 +98,10 @@ export default function Sidebar({ changePage, pageName }) {
             className={
               selected === "settings" ? "sidebarItemsSelected" : "sidebarItems"
             }
-            onClick={() => settingsHandler()}
+            onClick={() => {
+              changePage("Settings");
+              setSelected("Settings");
+            }}
             onMouseOver={() => setMouseHover("settings")}
             onMouseOut={() => setMouseHover("-1")}
           >

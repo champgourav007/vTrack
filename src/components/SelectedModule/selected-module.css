@@ -7,9 +7,9 @@
 }
 
 .heading {
-  font-family: "Montserrat";
+  font-family: "Montserrat-Bold";
   font-style: normal;
-  font-weight: 700;
+  /* font-weight: 700; */
   font-size: 1.75rem;
   line-height: 2.125rem;
   color: #1773bc;
