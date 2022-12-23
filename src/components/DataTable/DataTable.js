@@ -36,6 +36,8 @@ import {
 import { useState } from "react";
 import Loader from "../Loader";
 import {
+  convertDateToDDMYYYY,
+  fileHandler,
   getLabel,
   getTypeofColumn,
   UniqueIds,
@@ -52,9 +54,6 @@ import {
   updateProjectAllocationData,
 } from "../../redux/actions";
 import CircularProgress from "@mui/material/CircularProgress";
-import { getLocalStorageItem } from "../../common/utils/local-storage";
-import { ACCESS_TOKEN } from "../../common/constants/local-storage-keys";
-import axios from "axios";
 
 export const DataTable = ({
   headingName,
@@ -100,7 +99,7 @@ export const DataTable = ({
     } else {
       if (headingName === Modules.CLIENT_ADMIN) {
         if (fileState && newRowAdded.clientId && newRowAdded.clientName) {
-          fileHandler(fileState, newRowAdded.clientId, newRowAdded.clientName);
+          fileHandler(fileState, newRowAdded.clientId, newRowAdded.clientName, headingName);
         }
         dispatch(updateClientAdminData(newRowAdded));
       } else if (headingName === Modules.PROJECT_ADMIN) {
@@ -108,7 +107,8 @@ export const DataTable = ({
           fileHandler(
             fileState,
             newRowAdded.projectId,
-            newRowAdded.projectName
+            newRowAdded.projectName,
+            headingName
           );
         }
         dispatch(updateProjectAdminData(newRowAdded));
@@ -252,6 +252,134 @@ export const DataTable = ({
     }
   };
 
+  const displayMenuItem = (col) => {
+    if (col === "clientName") {
+      return clientsData.map((option) => (
+        <MenuItem
+          key={option.id}
+          value={option.name}
+          onClick={() =>
+            setNewRowAdded({
+              ...newRowAdded,
+              [col]: option.name,
+              clientId: option.id,
+            })
+          }
+        >
+          {option.name}
+        </MenuItem>
+      ))
+    } else if (col === "projectManagerName") {
+      projectManagers.map((option) => (
+        <MenuItem
+          key={option.id}
+          value={option.name}
+          onClick={() =>
+            setNewRowAdded({
+              ...newRowAdded,
+              [col]: option.name,
+              projectManagerId: option.id,
+            })
+          }
+        >
+          {option.name}
+        </MenuItem>
+      ))
+    } else if(col === "currency" || col === "paymentTerms" || col === 'location') {
+      return listItems && listItems.paymentTerms.map((option) => (
+        <MenuItem
+          key={option.id}
+          value={option.shortCodeValue}
+          onClick={() =>
+            setNewRowAdded({
+              ...newRowAdded,
+              [col]: option.shortCodeValue,
+              [`${col}Id`]: option.id,
+            })
+          }
+        >
+          {option.shortCodeValue}
+        </MenuItem>
+      ))
+    } else if (col === "type") {
+      return listItems && listItems.type.map((option) => (
+          <MenuItem
+            key={option.id}
+            value={option.longCodeValue}
+            onClick={() =>
+              setNewRowAdded({
+                ...newRowAdded,
+                [col]: option.longCodeValue,
+                typeId: option.id,
+              })
+            }
+          >
+            {option.longCodeValue}
+          </MenuItem>
+        ))
+    } else if (col === "businessOwner" || col === "deliveryOfficer") {
+      return allUsers && allUsers.map((option) => (
+        <MenuItem
+          key={option.id}
+          value={option.name}
+          onClick={() =>
+            setNewRowAdded({
+              ...newRowAdded,
+              [col]: option.name,
+              [`${col}Id`]: option.id,
+            })
+          }
+        >
+          {option.name}
+        </MenuItem>
+      ))
+    } else if (col === "employeeName") {
+      return allUserDetails && allUserDetails.data.map((option) => (
+        <MenuItem
+          key={option.id}
+          value={`${option.firstName} ${option.lastName}`}
+          onClick={() =>
+            setNewRowAdded({
+              ...newRowAdded,
+              [col]: `${option.firstName} ${option.lastName}`,
+              employeeId: option.id,
+            })
+          }
+        >
+          {`${option.firstName} ${option.lastName}`}
+        </MenuItem>
+      ))
+    } else if (col === "projectName") {
+      return allProjectsData && allProjectsData.map((option) => (
+        <MenuItem
+          key={option.projectId}
+          value={option.projectName}
+          onClick={() =>
+            setNewRowAdded({
+              ...newRowAdded,
+              [col]: option.projectName,
+              projectId: option.projectId,
+            })
+          }
+        >
+          {option.projectName}
+        </MenuItem>
+      ))
+    } else {
+      dropDownMockData[col].map((option) => (
+        <MenuItem
+          key={option}
+          value={option}
+          onClick={() =>
+            setNewRowAdded({ ...newRowAdded, [col]: option })
+          }
+        >
+          {option}
+        </MenuItem>
+      ))
+    }
+  };
+
   const createInputField = (col) => {
     if (getTypeofColumn(col, headingName) === "textfield") {
       return (
@@ -276,185 +404,7 @@ export const DataTable = ({
             // onChange={(e) => inputFieldHandler(e, col)}
             style={{ width: "80%" }}
           >
-            {col === "clientName"
-              ? clientsData.map((option) => (
-                  <MenuItem
-                    key={option.id}
-                    value={option.name}
-                    onClick={() =>
-                      setNewRowAdded({
-                        ...newRowAdded,
-                        [col]: option.name,
-                        clientId: option.id,
-                      })
-                    }
-                  >
-                    {option.name}
-                  </MenuItem>
-                ))
-              : col === "projectManagerName"
-              ? projectManagers.map((option) => (
-                  <MenuItem
-                    key={option.id}
-                    value={option.name}
-                    onClick={() =>
-                      setNewRowAdded({
-                        ...newRowAdded,
-                        [col]: option.name,
-                        projectManagerId: option.id,
-                      })
-                    }
-                  >
-                    {option.name}
-                  </MenuItem>
-                ))
-              : col === "currency"
-              ? listItems &&
-                listItems.currency.map((option) => (
-                  <MenuItem
-                    key={option.id}
-                    value={option.shortCodeValue}
-                    onClick={() =>
-                      setNewRowAdded({
-                        ...newRowAdded,
-                        [col]: option.shortCodeValue,
-                        currencyId: option.id,
-                      })
-                    }
-                  >
-                    {option.shortCodeValue}
-                  </MenuItem>
-                ))
-              : col === "paymentTerms"
-              ? listItems &&
-                listItems.paymentTerms.map((option) => (
-                  <MenuItem
-                    key={option.id}
-                    value={option.shortCodeValue}
-                    onClick={() =>
-                      setNewRowAdded({
-                        ...newRowAdded,
-                        [col]: option.shortCodeValue,
-                        paymentTermsId: option.id,
-                      })
-                    }
-                  >
-                    {option.shortCodeValue}
-                  </MenuItem>
-                ))
-              : col === "location"
-              ? listItems &&
-                listItems.location.map((option) => (
-                  <MenuItem
-                    key={option.id}
-                    value={option.shortCodeValue}
-                    onClick={() =>
-                      setNewRowAdded({
-                        ...newRowAdded,
-                        [col]: option.shortCodeValue,
-                        locationId: option.id,
-                      })
-                    }
-                  >
-                    {option.shortCodeValue}
-                  </MenuItem>
-                ))
-              : col === "type"
-              ? listItems &&
-                listItems.type.map((option) => (
-                  <MenuItem
-                    key={option.id}
-                    value={option.longCodeValue}
-                    onClick={() =>
-                      setNewRowAdded({
-                        ...newRowAdded,
-                        [col]: option.longCodeValue,
-                        typeId: option.id,
-                      })
-                    }
-                  >
-                    {option.longCodeValue}
-                  </MenuItem>
-                ))
-              : col === "businessOwner"
-              ? allUsers &&
-                allUsers.map((option) => (
-                  <MenuItem
-                    key={option.id}
-                    value={option.name}
-                    onClick={() =>
-                      setNewRowAdded({
-                        ...newRowAdded,
-                        [col]: option.name,
-                        businessOwnerId: option.id,
-                      })
-                    }
-                  >
-                    {option.name}
-                  </MenuItem>
-                ))
-              : col === "deliveryOfficer"
-              ? allUsers &&
-                allUsers.map((option) => (
-                  <MenuItem
-                    key={option.id}
-                    value={option.name}
-                    onClick={() =>
-                      setNewRowAdded({
-                        ...newRowAdded,
-                        [col]: option.name,
-                        deliveryOfficerId: option.id,
-                      })
-                    }
-                  >
-                    {option.name}
-                  </MenuItem>
-                ))
-              : col === "employeeName"
-              ? allUserDetails &&
-                allUserDetails.data.map((option) => (
-                  <MenuItem
-                    key={option.id}
-                    value={`${option.firstName} ${option.lastName}`}
-                    onClick={() =>
-                      setNewRowAdded({
-                        ...newRowAdded,
-                        [col]: `${option.firstName} ${option.lastName}`,
-                        employeeId: option.id,
-                      })
-                    }
-                  >
-                    {`${option.firstName} ${option.lastName}`}
-                  </MenuItem>
-                ))
-              : col === "projectName"
-              ? allProjectsData &&
-                allProjectsData.map((option) => (
-                  <MenuItem
-                    key={option.projectId}
-                    value={option.projectName}
-                    onClick={() =>
-                      setNewRowAdded({
-                        ...newRowAdded,
-                        [col]: option.projectName,
-                        projectId: option.projectId,
-                      })
-                    }
-                  >
-                    {option.projectName}
-                  </MenuItem>
-                ))
-              : dropDownMockData[col].map((option) => (
-                  <MenuItem
-                    key={option}
-                    value={option}
-                    onClick={() =>
-                      setNewRowAdded({ ...newRowAdded, [col]: option })
-                    }
-                  >
-                    {option}
-                  </MenuItem>
-                ))}
+            {displayMenuItem(col)}
           </TextField>
         </TableCell>
       );
@@ -547,25 +497,6 @@ export const DataTable = ({
     return employeeName;
   };
 
-  const fileHandler = (file, id, name) => {
-    const accessToken = getLocalStorageItem(ACCESS_TOKEN);
-    if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
-      let URL = "";
-      if (headingName === Modules.CLIENT_ADMIN)
-        URL = `https://vtrack-api.azurewebsites.net/Client/upload-msa?clientId=${id}&clientName=${name}`;
-      else if (headingName === Modules.PROJECT_ADMIN)
-        URL = `https://vtrack-api.azurewebsites.net/ProjectAdmin/upload-sow?projectId=${id}&projectName=${name}`;
-      axios.post(URL, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-    }
-  };
-
   return (
     <>
       {vTrackLoader && <Loader />}
@@ -646,6 +577,7 @@ export const DataTable = ({
                                     <img
                                       src={downloadIcon}
                                       className="editDeleteIcon"
+                                      alt=""
                                     />
                                   </a>
                                 ) : (
@@ -663,7 +595,8 @@ export const DataTable = ({
                                           fileHandler(
                                             e.target.files[0],
                                             row.clientId,
-                                            row.clientName
+                                            row.clientName,
+                                            headingName
                                           )
                                         }
                                       />
@@ -677,7 +610,8 @@ export const DataTable = ({
                                           fileHandler(
                                             e.target.files[0],
                                             row.projectId,
-                                            row.projectName
+                                            row.projectName, 
+                                            headingName
                                           )
                                         }
                                       />
@@ -691,20 +625,12 @@ export const DataTable = ({
                               <Tooltip title="Edit">
                                 <button
                                   onClick={() =>
-                                    editButtonClicked(
-                                      row[
-                                        UniqueIds[headingName.replace(" ", "")]
-                                      ]
-                                    )
+                                    editButtonClicked(row[UniqueIds[headingName.replace(" ", "")]])
                                   }
                                   className="buttonBackgroundBorder cursorPointer"
                                   disabled={isAddButtonClicked}
                                 >
-                                  <img
-                                    src={editIcon}
-                                    className="editDeleteIcon"
-                                    alt=""
-                                  />
+                                  <img src={editIcon} className="editDeleteIcon" alt="" />
                                 </button>
                               </Tooltip>
                               {headingName !== Modules.PROJECT_ALLOCATION && (
@@ -728,15 +654,9 @@ export const DataTable = ({
                             </TableCell>
                           );
                         } else if (col.id.includes("Date")) {
-                          let date = new Date(row[col.id].split("T")[0]);
-                          let MM = date.toLocaleString("default", {
-                            month: "long",
-                          });
-                          let YYYY = date.getFullYear();
-                          let DD = date.getDate();
                           return (
                             <TableCell key={col.id}>
-                              {DD + "-" + MM + "-" + YYYY}
+                              {convertDateToDDMYYYY(row[col.id])}
                             </TableCell>
                           );
                         }

@@ -1,11 +1,9 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Announcement } from "../../components/Announcement/announcement";
 import { SelectedModule } from "../../components/SelectedModule/selected-module";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import "./VTrack.css";
-import { useNavigate } from "react-router-dom";
-import { Announcement } from "../../components/Announcement/announcement";
-import { dashboardURL } from "../../routes/routes";
 
 export const VTrack = () => {
   const [headingName, setHeadingName] = useState("Client Admin");
