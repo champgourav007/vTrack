@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { bellIcon, message, dropDownArrow, UserTemp } from "../../common/icons";
 import "./TopBar.css";
 import props from "../../mock-data/TopBarMock";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserDetails } from "../../redux/actions";
-import Loader from "../Loader";
 export const TopBar = () => {
   const dispatch = useDispatch();
   const { userData } = useSelector(({ USER }) => USER);

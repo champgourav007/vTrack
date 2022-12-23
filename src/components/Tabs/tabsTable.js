@@ -1,5 +1,5 @@
 import "./tabsTable.css";
-import { filterIcon, searchIcon } from "../../common/icons";
+import { searchIcon } from "../../common/icons";
 import { useEffect, useState } from "react";
 import { DataTable } from "../DataTable/DataTable";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,16 +9,14 @@ import { getLabel, getMinWidth, tableColumnsData } from "../../common/utils/data
 
 export const TabsTable = ({ headingName, tabName }) => {
   const { clientAdminData, projectAdminData, projectAllocationData } = useSelector(({ MODULES }) => MODULES);
-
   const dispatch = useDispatch();
 
-  const [isEdit, setIsEdit] = useState(false);
-  const [isAddButtonClicked, setIsAddButtonClicked] = useState(false);
-  const [isEditButtonClicked, setIsEditButtonClicked] = useState(false);
+  const [ isAddButtonClicked, setIsAddButtonClicked ] = useState(false);
+  const [ isEditButtonClicked, setIsEditButtonClicked ] = useState(false);
   const [ rows, setRows ] = useState([]);
   const [ columns, setColumns ] = useState([]);
   const [ totalRecord, setTotalRecord ] = useState(0);
-  const [searchData, setSearchData] = useState("");
+  const [ searchData, setSearchData ] = useState("");
 
   const addNewRow = (isTrue) => {
     setIsAddButtonClicked(isTrue);
@@ -57,19 +55,19 @@ export const TabsTable = ({ headingName, tabName }) => {
     ]);
   };
 
-  useEffect(() => { 
+  const setTableData = (tableData) => {
+    handleSetColumnsData(tableData.data[0]);
+    setRows(tableData.data);
+    setTotalRecord(tableData.totalCount);
+  };
+
+  useEffect(() => {  
     if (headingName === Modules.CLIENT_ADMIN && clientAdminData && clientAdminData.totalCount) {
-      handleSetColumnsData(clientAdminData.data[0]);
-      setRows(clientAdminData.data);
-      setTotalRecord(clientAdminData.totalCount);
+      setTableData(clientAdminData);
     } else if (headingName === Modules.PROJECT_ADMIN && projectAdminData && projectAdminData.totalCount) {
-      handleSetColumnsData(projectAdminData.data[0]);
-      setRows(projectAdminData.data);
-      setTotalRecord(projectAdminData.totalCount);
+      setTableData(projectAdminData);
     } else if (headingName === Modules.PROJECT_ALLOCATION && projectAllocationData && projectAllocationData.totalCount) {
-      handleSetColumnsData(projectAllocationData.data[0]);
-      setRows(projectAllocationData.data);
-      setTotalRecord(projectAllocationData.totalCount);
+      setTableData(projectAllocationData);
     } else{
       if (tableColumnsData[headingName.replace(' ', '')]) {
         setColumns([
@@ -137,8 +135,7 @@ export const TabsTable = ({ headingName, tabName }) => {
           })
         );
     }
-    setSearchData('');
-  }, [ headingName ]);
+  }, [ headingName, searchData ]);
 
   useEffect(() => {
     dispatch(getProjectManagersData());
@@ -147,60 +144,21 @@ export const TabsTable = ({ headingName, tabName }) => {
     dispatch(getAllUsersData());
     dispatch(getAllUserDetails());
     dispatch(getAllProjectsData());
+    setSearchData('')
   }, [ headingName]);
 
-  const searchHandler = (e) => {
-    console.log(e.target.value);
-    setSearchData(e.target.value);
-    if (e.target.value.length > 2 || e.target.value.length === 0)
-      if (headingName === Modules.CLIENT_ADMIN) {
-      dispatch(
-        getClientAdminData({
-          pageNo: 1,
-          pageSize: 10,
-          sortBy: "ClientName",
-          sortDir: "ASC",
-          searchData: e.target.value,
-        })
-      );
-    } else if (headingName === Modules.PROJECT_ADMIN) {
-      dispatch(
-        getProjectAdminData({
-          pageNo: 1,
-          pageSize: 10,
-          sortBy: "ProjectName",
-          sortDir: "ASC",
-          searchData: e.target.value,
-        })
-      );
-    } else if (headingName === Modules.PROJECT_ALLOCATION) {
-      dispatch(
-        getProjectAllocationData({
-          pageNo: 1,
-          pageSize: 10,
-          sortBy: "ProjectName",
-          sortDir: "ASC",
-          searchData: e.target.value,
-        })
-      );
-    }
-  };
   return (
     <div className="tableDiv">
       <div className="searchHeader">
         <div className="searchWrapper">
-          <img src={searchIcon} className="searchIcon"/>
+          <img src={searchIcon} className="searchIcon" alt="" />
           <input
             className="searchBox"
             type="search"
             placeholder="Search"
-            onChange={(e) => searchHandler(e)}
+            onChange={(e) => e.target.value.length > 2 || e.target.value.length === 0 ? setSearchData(e.target.value) : null}
           />
         </div>
-        {/* <button className="filterBtn">
-          <img className="filterIcon" src={filterIcon} alt="" />
-          <div className="disableBtnText">Filter</div>
-        </button> */}
         <button
           disabled={isAddButtonClicked || isEditButtonClicked}
           className={
@@ -229,7 +187,6 @@ export const TabsTable = ({ headingName, tabName }) => {
         totalRecord={totalRecord}
         isAddButtonClicked={isAddButtonClicked}
         setIsAddButtonClicked={setIsAddButtonClicked}
-        setIsEdit={setIsEdit}
         isEditButtonClicked={isEditButtonClicked}
         setIsEditButtonClicked={setIsEditButtonClicked}
         searchData={searchData}

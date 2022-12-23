@@ -1,3 +1,8 @@
+import axios from "axios";
+import { ACCESS_TOKEN } from "../constants/local-storage-keys";
+import { Modules } from "../constants/sidebar";
+import { getLocalStorageItem } from "./local-storage";
+
 export const UniqueIds = {
   ProjectAdmin: 'projectId',
   ClientAdmin: 'clientId',
@@ -59,4 +64,33 @@ export const getMinWidth = (col, moduleName) => {
       return column.minWidth;
     }
   }
+};
+
+export const fileHandler = (file, id, name, headingName) => {
+  const accessToken = getLocalStorageItem(ACCESS_TOKEN);
+  if (file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    let URL = "";
+    if (headingName === Modules.CLIENT_ADMIN)
+      URL = `https://vtrack-api.azurewebsites.net/Client/upload-msa?clientId=${id}&clientName=${name}`;
+    else if (headingName === Modules.PROJECT_ADMIN)
+      URL = `https://vtrack-api.azurewebsites.net/ProjectAdmin/upload-sow?projectId=${id}&projectName=${name}`;
+    axios.post(URL, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+};
+
+export const convertDateToDDMYYYY = (data) => {
+  let date = new Date(data.split("T")[0]);
+  let MM = date.toLocaleString("default", {
+    month: "long",
+  });
+  let YYYY = date.getFullYear();
+  let DD = date.getDate();
+  return DD + "-" + MM + "-" + YYYY
 };
