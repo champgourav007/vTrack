@@ -307,7 +307,7 @@ export const DataTable = ({
         </MenuItem>
       ));
     } else if (col === "projectManagerName") {
-      projectManagers.map((option) => (
+      return projectManagers.map((option) => (
         <MenuItem
           key={option.id}
           value={option.name}
@@ -427,7 +427,7 @@ export const DataTable = ({
         </MenuItem>
       )) : null;
     } else {
-      dropDownMockData[col].map((option) => (
+      return dropDownMockData[col].map((option) => (
         <MenuItem
           key={option}
           value={option}

@@ -11,7 +11,7 @@ import MenuItem from "@mui/material/MenuItem";
 import moment from 'moment';
 import { getProjectManagementData } from "../../redux/actions/project-management";
 
-export const TabsTable = ({ headingName, tabName,status }) => {
+export const TabsTable = ({ headingName, tabName, status }) => {
   const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData } = useSelector(({ MODULES }) => MODULES);
   const dispatch = useDispatch();
 
