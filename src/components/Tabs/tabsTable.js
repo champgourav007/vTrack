@@ -11,7 +11,7 @@ import MenuItem from "@mui/material/MenuItem";
 import moment from 'moment';
 import { getProjectManagementData } from "../../redux/actions/project-management";
 
-export const TabsTable = ({ headingName, tabName, status }) => {
+export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData } = useSelector(({ MODULES }) => MODULES);
   const dispatch = useDispatch();
 
@@ -211,7 +211,7 @@ export const TabsTable = ({ headingName, tabName, status }) => {
       case Modules.PROJECT_MANAGEMENT:
         dispatch(
           getProjectManagementData({
-            projectId: 1,
+            projectId: projectId,
             pageNo: 1,
             pageSize: 10,
             sortBy: 'projectName',
@@ -322,6 +322,7 @@ export const TabsTable = ({ headingName, tabName, status }) => {
         setIsEditButtonClicked={setIsEditButtonClicked}
         searchData={searchData}
         projectStatus={status}
+        projectId={projectId}
       />
     </div>
   );

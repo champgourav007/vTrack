@@ -1,6 +1,6 @@
 import { HttpMethod } from "../../common/constants/http-requests";
 import { httpRequest } from "../../common/utils/http-request";
-import { PROJECT_MANAGEMENT_API } from "../api";
+import { PROJECT_MANAGEMENT_API, USER_DETAILS } from "../api";
 
 export const getProjectManagementDetails = (projectId, pageNo, pageSize, sortDir, sortBy, searchData) =>
   httpRequest({
@@ -21,3 +21,10 @@ export const updateProjectManagementDetails = (data) =>
     method: HttpMethod.PUT,
     data: data,
   });
+
+export const getMappedProjectManagementData = ()=>
+httpRequest({
+  url:`${USER_DETAILS}/get-projects`,
+  method: HttpMethod.GET
+})  
+  

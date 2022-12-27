@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import "./tabs.css";
 import TabsData from "../../mock-data/TabsData";
 import { TabsTable } from "./tabsTable";
+import { useSelector } from "react-redux";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -44,22 +45,38 @@ export default function BasicTabs(props) {
   console.log(props.headingName);
   const [value, setValue] = React.useState(0);
   const [status, setStatus] = React.useState("All")
+  const { mappedProjectManagementData  } = useSelector(({ MODULES }) => MODULES);
+
   const handleChange = (event, newValue) => {
+    console.log(newValue);
+    if(props.headingName === "Project Allocation"){
     if(newValue === 0) setStatus("All")
     else if(newValue === 1) setStatus("Active")
     else if(newValue === 2) setStatus("History")
     else setStatus("Future")
+  }
     setValue(newValue);
   };
 
   React.useEffect(() => {
     setValue(0);
-  }, [props.headingName]);
-
+  }, [props.headingName, props.selectedClient.id])
+  
   return (
     <Box sx={{ width: "100%" }}>
       <Box>
-        { TabsData[props.headingName] && (
+        {props.headingName === "Project Management" ? 
+        <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+          >
+            {mappedProjectManagementData?.filter((projectVal)=>projectVal.clientId === props.selectedClient.id)[0]
+            ?.projects?.map((project, index)=> (
+              <Tab className="" label={project.projectName} {...a11yProps(index)} />
+            ))}
+          </Tabs>
+         : TabsData[props.headingName] && (
           <Tabs
             value={value}
             onChange={handleChange}
@@ -71,15 +88,20 @@ export default function BasicTabs(props) {
           </Tabs>
         )}
       </Box>
-      { TabsData[props.headingName] ? (
+      {props.headingName === "Project Management" ? 
+      mappedProjectManagementData?.filter((projectVal)=>projectVal.clientId === props.selectedClient.id)[0]
+            ?.projects?.map((tab, index)=><TabPanel key={index} value={value} index={index}>
+            <TabsTable headingName={props.headingName} tabName={tab} status={status} projectId={tab.projectId}/>
+          </TabPanel>)
+      : (TabsData[props.headingName] ? (
         TabsData[props.headingName].map((tab, index) => (
           <TabPanel key={index} value={value} index={index}>
-            <TabsTable headingName={props.headingName} tabName={tab} status={status}/>
+            <TabsTable headingName={props.headingName} tabName={tab} status={status} projectId={null}/>
           </TabPanel>
         ))
       ) : (
-        <TabsTable headingName={props.headingName} tabName='' status={status}/>
-      )}
+        <TabsTable headingName={props.headingName} tabName='' status={status}  projectId={null}/>
+      ))}
     </Box>
   );
 }

@@ -15,7 +15,8 @@ export const modulesState = {
   allProjectsData: null,
   userRole: null,
   projectManagementData: null,
-  settingTableData:null
+  settingTableData:null,
+  mappedProjectManagementData:null
 }
 
 export const modulesReducer = (state = modulesState, action) => {
@@ -76,6 +77,11 @@ export const modulesReducer = (state = modulesState, action) => {
         ...state,
         settingTableData: action.payload
       }
+    case ProjectManagementType.SET_MAPPED_PROJECT_MANAGEMENT_DATA:
+      return{
+        ...state,
+        mappedProjectManagementData: action.payload
+      }  
     default: return state;
   }
 };

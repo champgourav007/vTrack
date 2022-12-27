@@ -66,7 +66,8 @@ export const DataTable = ({
   isEditButtonClicked,
   setIsEditButtonClicked,
   searchData,
-  projectStatus
+  projectStatus,
+  projectId
 }) => {
   const { clientsData, projectManagers, allTasks, listItems, allUsers, allProjectsData } =
     useSelector(({ MODULES }) => MODULES);
@@ -172,7 +173,7 @@ export const DataTable = ({
     } else if (headingName === Modules.PROJECT_MANAGEMENT) {
       dispatch(
         getProjectManagementData({
-          projectId: 1,
+          projectId: projectId,
           pageNo: newPage + 1,
           pageSize: rowsPerPage,
           sortBy: sortBy,
@@ -219,7 +220,7 @@ export const DataTable = ({
     } else if (headingName === Modules.PROJECT_MANAGEMENT) {
       dispatch(
         getProjectManagementData({
-          projectId: 1,
+          projectId: projectId,
           pageNo: page + 1,
           pageSize: event.target.value,
           sortBy: sortBy,
@@ -281,7 +282,7 @@ export const DataTable = ({
     } else if (headingName === Modules.PROJECT_MANAGEMENT) {
       dispatch(
         getProjectManagementData({
-          projectId: 1,
+          projectId: projectId,
           pageNo: page + 1,
           pageSize: rowsPerPage,
           sortBy: colName,
@@ -673,7 +674,7 @@ export const DataTable = ({
                             return (
                             <TableCell key={col.id}>
                               <div className="attachmentContainer">
-                                {headingName !== Modules.PROJECT_ALLOCATION && headingName !== Modules.TIMESHEET ? (
+                                {headingName === Modules.CLIENT_ADMIN || headingName === Modules.PROJECT_ADMIN ? (
                                   (headingName === Modules.CLIENT_ADMIN &&
                                     row.msaDocLink) ||
                                   (headingName === Modules.PROJECT_ADMIN &&

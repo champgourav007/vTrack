@@ -103,6 +103,7 @@ export const fileHandler = (file, id, name, headingName) => {
       },
     });
   }
+  
 };
 
 export const convertDateToDDMYYYY = (data) => {

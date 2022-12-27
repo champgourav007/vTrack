@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-
+import './dialogBox.css';
 const DialogBox = ({ setShowDialogBox, setDialogDeleteButtonClicked }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -23,22 +23,24 @@ const DialogBox = ({ setShowDialogBox, setDialogDeleteButtonClicked }) => {
   return (
     <div>
       <Dialog
-        fullScreen={fullScreen}
         open={true}
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
+         min-maxWidth={400}
       >
-        <DialogTitle id="responsive-dialog-title">
+      <div className="wrapper">
+        <div id="responsive-dialog-title" className="title">
           {"Are you sure you want to Delete?"}
-        </DialogTitle>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose}>
+        </div>
+        <div className="dialogActions">
+          <Button autoFocus onClick={handleClose}  variant="outlined"  size="large">
             Cancel
           </Button>
-          <Button onClick={handleDelete} autoFocus>
-            Delete
+          <Button onClick={handleDelete} autoFocus  variant="contained"  size="large" >
+            Ok
           </Button>
-        </DialogActions>
+        </div>
+        </div>
       </Dialog>
     </div>
   );
