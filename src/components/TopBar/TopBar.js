@@ -13,14 +13,14 @@ export const TopBar = () => {
   }, []);
 
   useEffect(() => {
-    if (userData) {
+    if (userData && userData.data) {
       setPersonData({
-        lastName: userData.data.lastName,
-        firstName: userData.data.firstName,
-        photo: userData.data.photo === "" ? "" : userData.data.photo,
+        lastName: userData.data.activeUsers.lastName,
+        firstName: userData.data.activeUsers.firstName,
+        photo: userData.data.activeUsers.photo === "" ? "" : userData.data.activeUsers.photo,
       });
     }
-    console.log(userData);
+    console.log("User Data", userData);
   }, [userData]);
 
   return (
@@ -49,7 +49,6 @@ export const TopBar = () => {
               </div>
               <div className="user-role">{props.role}</div>
             </div>
-            {/* <img className="dropDownArrow" src={dropDownArrow} alt="" /> */}
           </div>
           }
         </div>

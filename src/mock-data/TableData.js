@@ -233,5 +233,13 @@ export const initialData = {
     startDate: '',
     endDate: '',
     allocation: ''
+  },
+  'Project Management': {
+    employeeName: '',
+    endDate: '',
+    projectManagerName: '',
+    projectName: '',
+    startDate: '',
+    status: ''
   }
 };

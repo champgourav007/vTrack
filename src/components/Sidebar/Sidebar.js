@@ -17,16 +17,15 @@ import { VTrackURL } from "../../routes/routes";
 
 export default function Sidebar({ changePage, pageName }) {
   const { logoutAzureAD } = useAzureADAuth();
+  const [collapse, setCollapse] = useState(false);
+  const [mouseHover, setMouseHover] = useState("-1");
+  const [selected, setSelected] = useState("");
+  const [displaystate, setDisplayState] = useState("");
   const navigate = useNavigate();
 
   const signOutHandler = () => {
     logoutAzureAD();
   };
-
-  const [collapse, setCollapse] = useState(false);
-  const [mouseHover, setMouseHover] = useState("-1");
-  const [selected, setSelected] = useState("");
-  const [displaystate, setDisplayState] = useState("");
 
   const getSidebarClass = (moduleId) => {
     let sidebarClass = "";

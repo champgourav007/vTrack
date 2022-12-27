@@ -6,7 +6,8 @@ import { getLocalStorageItem } from "./local-storage";
 export const UniqueIds = {
   ProjectAdmin: 'projectId',
   ClientAdmin: 'clientId',
-  ProjectAllocation: 'projectAllocationId'
+  ProjectAllocation: 'projectAllocationId',
+  ProjectManagement: 'projectAllocationId'
 };
 
 export const tableColumnsData = {
@@ -35,7 +36,20 @@ export const tableColumnsData = {
     { id: "projectManagerName", label: "Project Manager", minWidth: 80, type: 'select' },
     { id: "startDate", label: "Start Date", minWidth: 100, type: 'date' },
     { id: "endDate", label: "End Date", minWidth: 110, type: 'date' },
-    { id: 'allocation', label: 'Allocation', minWidth: 100, type: 'textfield' }
+    { id: 'allocation', label: 'Allocation', minWidth: 100, type: 'textfield' },
+    { id: 'status', label: 'Status', minWidth: 100, type: 'textfield' }
+  ], 
+  'ProjectManagement': [
+    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select' },
+    { id: "endDate", label: "End Date", minWidth: 120, type: 'textfield' },
+    { id: 'projectManagerName', label: 'Project Manager', minWidth: 100, type: 'textfield' },
+    { id: 'projectName', label: 'Project Name', minWidth: 100, type: 'textfield' },
+    { id: 'startDate', label: 'Start Date', minWidth: 110, type: 'textfield' },
+    { id: 'status', label: 'Status', minWidth: 80, type: 'textfield' },
+    { id: 'billRate', label: 'Bill Rate', minWidth: 80, type: 'textfield' },
+    { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, type: 'textfield' },
+    { id: 'billStatus', label: 'Bill Status', minWidth: 80, type: 'select' },
+    { id: 'costAllocation', label: 'Cost Allocation', minWidth: 100, type: 'textfield' },
   ], 
 };
 
@@ -94,3 +108,10 @@ export const convertDateToDDMYYYY = (data) => {
   let DD = date.getDate();
   return DD + "-" + MM + "-" + YYYY
 };
+
+export const initialSort = {
+  'Client Admin': 'clientName',
+  'Project Admin': 'projectName',
+  'Project Allocation': 'projectName',
+  'Project Management': 'projectName',
+}

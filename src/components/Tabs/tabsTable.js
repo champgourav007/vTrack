@@ -6,9 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Modules } from "../../common/constants/sidebar";
 import { getAllProjectsData, getAllUserDetails, getAllUsersData, getClientAdminData, getClientsData, getListItems, getProjectAdminData, getProjectAllocationData, getProjectManagersData } from "../../redux/actions";
 import { getLabel, getMinWidth, tableColumnsData } from "../../common/utils/datatable";
+import { getProjectManagementData } from "../../redux/actions/project-management";
 
-export const TabsTable = ({ headingName, tabName }) => {
-  const { clientAdminData, projectAdminData, projectAllocationData } = useSelector(({ MODULES }) => MODULES);
+export const TabsTable = ({ headingName, tabName, status }) => {
+  const { clientAdminData, projectAdminData, projectAllocationData, projectManagementData } = useSelector(({ MODULES }) => MODULES);
   const dispatch = useDispatch();
 
   const [ isAddButtonClicked, setIsAddButtonClicked ] = useState(false);
@@ -43,16 +44,20 @@ export const TabsTable = ({ headingName, tabName }) => {
         });
       }
     });
-    setColumns([
-      ...temp,
-      {
-        id: "actions",
-        label: "Actions",
-        minWidth: 100,
-        sortDir: "",
-        align: "left",
-      },
-    ]);
+    if(headingName === Modules.PROJECT_ALLOCATION) {
+      setColumns([ ...temp ]);
+    } else {
+      setColumns([
+        ...temp,
+        {
+          id: "actions",
+          label: "Actions",
+          minWidth: 100,
+          sortDir: "",
+          align: "left",
+        },
+      ]);
+    }
   };
 
   const setTableData = (tableData) => {
@@ -68,7 +73,9 @@ export const TabsTable = ({ headingName, tabName }) => {
       setTableData(projectAdminData);
     } else if (headingName === Modules.PROJECT_ALLOCATION && projectAllocationData && projectAllocationData.totalCount) {
       setTableData(projectAllocationData);
-    } else{
+    } else if (headingName === Modules.PROJECT_MANAGEMENT && projectManagementData && projectManagementData.totalCount) {
+      setTableData(projectManagementData);
+    } else {
       if (tableColumnsData[headingName.replace(' ', '')]) {
         setColumns([
           ...tableColumnsData[headingName.replace(' ', '')],
@@ -87,7 +94,7 @@ export const TabsTable = ({ headingName, tabName }) => {
       setRows([]);
       setTotalRecord(0);
     }
-  }, [ clientAdminData, projectAdminData, projectAllocationData, headingName ]);
+  }, [ clientAdminData, projectAdminData, projectAllocationData, projectManagementData, headingName ]);
 
   useEffect(() => {
     switch(headingName) {
@@ -120,7 +127,19 @@ export const TabsTable = ({ headingName, tabName }) => {
             pageSize: 10,
             sortBy: 'projectName',
             sortDir: "ASC",
-            searchData: searchData
+            searchData: searchData,
+            status: status
+          })
+        );
+        break;
+      case Modules.PROJECT_MANAGEMENT:
+        dispatch(
+          getProjectManagementData({
+            pageNo: 1,
+            pageSize: 10,
+            sortBy: 'projectName',
+            sortDir: "ASC",
+            searchData: searchData,
           })
         );
         break;
@@ -159,7 +178,7 @@ export const TabsTable = ({ headingName, tabName }) => {
             onChange={(e) => e.target.value.length > 2 || e.target.value.length === 0 ? setSearchData(e.target.value) : null}
           />
         </div>
-        <button
+        {headingName !== "Project Allocation" && <button
           disabled={isAddButtonClicked || isEditButtonClicked}
           className={
             isAddButtonClicked || isEditButtonClicked
@@ -177,7 +196,7 @@ export const TabsTable = ({ headingName, tabName }) => {
           >
             Add
           </div>
-        </button>
+        </button>}
       </div>
       <DataTable
         rows={rows}
@@ -190,6 +209,7 @@ export const TabsTable = ({ headingName, tabName }) => {
         isEditButtonClicked={isEditButtonClicked}
         setIsEditButtonClicked={setIsEditButtonClicked}
         searchData={searchData}
+        projectStatus={status}
       />
     </div>
   );
