@@ -15,7 +15,6 @@ import filterIcon from "./filter-icon.svg";
 import TableArrows from "./TableArrows.svg";
 import bellIcon from "./BellIcon.svg";
 import message from "./message.svg";
-import UserTemp from "./UserTemp.svg";
 import dropDownArrow from "./dropdown-arrow.svg";
 import clientAdminBlueIcon from "./client-admin-blue.svg";
 import extendedArrowIcon from "./extended-arrow.svg";
@@ -64,7 +63,6 @@ export {
   TableArrows,
   bellIcon,
   message,
-  UserTemp,
   dropDownArrow,
   clientAdminBlueIcon,
   extendedArrowIcon,

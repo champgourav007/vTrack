@@ -52,6 +52,10 @@ export default function BasicTabs(props) {
     setValue(newValue);
   };
 
+  React.useEffect(() => {
+    setValue(0);
+  }, [props.headingName]);
+
   return (
     <Box sx={{ width: "100%" }}>
       <Box>
