@@ -11,6 +11,7 @@ function* workerSaveProjectManagementSaga({ payload }) {
     yield call(postProjectManagementDetails, payload.data);
     yield put(
         getProjectManagementData({
+        projectId: payload.data.projectId,
         pageNo: 1,
         pageSize: 10,
         sortDir: "ASC",

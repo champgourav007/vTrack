@@ -211,6 +211,7 @@ export const TabsTable = ({ headingName, tabName, status }) => {
       case Modules.PROJECT_MANAGEMENT:
         dispatch(
           getProjectManagementData({
+            projectId: 1,
             pageNo: 1,
             pageSize: 10,
             sortBy: 'projectName',

@@ -20,7 +20,7 @@ export const SelectedModule = ({ headingName }) => {
     <div className="mainContainer">
       <TopBar />
       <div className="heading">{headingName}</div>
-      {headingName === "Settings" ? <Settings/> : <TabsComponent headingName={headingName} />}
+      {headingName === "settings" ? <Settings/> : <TabsComponent headingName={headingName} />}
     </div>
   );
 };

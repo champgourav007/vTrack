@@ -172,6 +172,7 @@ export const DataTable = ({
     } else if (headingName === Modules.PROJECT_MANAGEMENT) {
       dispatch(
         getProjectManagementData({
+          projectId: 1,
           pageNo: newPage + 1,
           pageSize: rowsPerPage,
           sortBy: sortBy,
@@ -218,6 +219,7 @@ export const DataTable = ({
     } else if (headingName === Modules.PROJECT_MANAGEMENT) {
       dispatch(
         getProjectManagementData({
+          projectId: 1,
           pageNo: page + 1,
           pageSize: event.target.value,
           sortBy: sortBy,
@@ -279,6 +281,7 @@ export const DataTable = ({
     } else if (headingName === Modules.PROJECT_MANAGEMENT) {
       dispatch(
         getProjectManagementData({
+          projectId: 1,
           pageNo: page + 1,
           pageSize: rowsPerPage,
           sortBy: colName,
@@ -775,7 +778,7 @@ export const DataTable = ({
                           <TableCell key={col.id} style={{textAlign: col.isDate || col.id === 'totalHours' ? "center" : "auto"}}>
                             {col.id === "employeeName" ? (
                               getEmployeeName(row["employeeId"])
-                            ) : col.id === "allocation" ? (
+                            ) : col.id === "allocation" && row[col.id] ? (
                               <div className="allocation">
                                 <div>
                                   <CircularProgress
