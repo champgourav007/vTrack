@@ -12,6 +12,7 @@ export const modulesState = {
   allProjectsData: null,
   userRole: null,
   projectManagementData: null,
+  settingTableData:null
 }
 
 export const modulesReducer = (state = modulesState, action) => {
@@ -66,6 +67,11 @@ export const modulesReducer = (state = modulesState, action) => {
       return {
         ...state,
         projectManagementData: action.payload
+      }
+    case SettingDataType.SET_SETTING_TABLE_DATA:
+      return {
+        ...state,
+        settingTableData: action.payload
       }
     default: return state;
   }
