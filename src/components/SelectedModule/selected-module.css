@@ -106,18 +106,15 @@
 }
 
 .addBtn {
-  height: 3rem;
-  width: 6.875rem;
+  padding: 0.875rem 2.375rem;
   background: #1773bc;
   border: 0.0625rem solid #1773bc;
   border-radius: 0.625rem;
-}
-
-.disableAddButtonText{
   font-family: "Montserrat";
   font-style: normal;
   font-weight: 500;
   font-size: 1rem;
   line-height: 1.25rem;
-  color: #193f4b;
+  color: #ffffff;
+  cursor: pointer;
 }

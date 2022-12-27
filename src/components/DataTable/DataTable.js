@@ -67,7 +67,7 @@ export const DataTable = ({
   setIsEditButtonClicked,
   searchData,
 }) => {
-  const { clientsData, projectManagers, listItems, allUsers, allProjectsData } =
+  const { clientsData, projectManagers, allTasks, listItems, allUsers, allProjectsData } =
     useSelector(({ MODULES }) => MODULES);
   const { allUserDetails } = useSelector(({ USER }) => USER);
   const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
@@ -286,7 +286,7 @@ export const DataTable = ({
         </MenuItem>
       ))
     } else if(col === "currency" || col === "paymentTerms" || col === 'location') {
-      return listItems && listItems.paymentTerms.map((option) => (
+      return listItems && listItems[col].map((option) => (
         <MenuItem
           key={option.id}
           value={option.shortCodeValue}
@@ -365,6 +365,22 @@ export const DataTable = ({
           {option.projectName}
         </MenuItem>
       ))
+    } else if (col === "task"){
+      console.log(allTasks)
+      return allTasks ? allTasks.map((option,index) => (
+        <MenuItem
+          key={index}
+          value={option}
+          onClick={() =>
+            setNewRowAdded({
+              ...newRowAdded,
+              [col]: option,
+            })
+          }
+        >
+          {option}
+        </MenuItem>
+      )) : null;
     } else {
       dropDownMockData[col].map((option) => (
         <MenuItem
@@ -381,42 +397,42 @@ export const DataTable = ({
   };
 
   const createInputField = (col) => {
-    if (getTypeofColumn(col, headingName) === "textfield") {
+    if (getTypeofColumn(col.id, headingName) === "textfield") {
       return (
-        <TableCell key={col}>
+        <TableCell key={col.id}>
           <TextField
             id="outlined-required"
-            label={getLabel(col, headingName)}
+            label={getLabel(col.id, headingName)}
             placeholder=""
-            value={newRowAdded[col]}
-            onChange={(e) => inputFieldHandler(e, col)}
+            value={newRowAdded[col.id]}
+            onChange={(e) => inputFieldHandler(e, col.id)}
           />
         </TableCell>
       );
-    } else if (getTypeofColumn(col, headingName) === "select") {
+    } else if (getTypeofColumn(col.id, headingName) === "select") {
       return (
-        <TableCell key={col}>
+        <TableCell key={col.id}>
           <TextField
             id="outlined-select-currency"
             select
-            label={getLabel(col, headingName)}
-            value={newRowAdded[col]}
-            // onChange={(e) => inputFieldHandler(e, col)}
+            label={getLabel(col.id, headingName)}
+            value={newRowAdded[col.id]}
+            // onChange={(e) => inputFieldHandler(e, col.id)}
             style={{ width: "80%" }}
           >
-            {displayMenuItem(col)}
+            {displayMenuItem(col.id)}
           </TextField>
         </TableCell>
       );
-    } else if (getTypeofColumn(col, headingName) === "date") {
+    } else if (getTypeofColumn(col.id, headingName) === "date") {
       return (
-        <TableCell key={col}>
+        <TableCell key={col.id}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label=""
-              value={newRowAdded[col]}
+              value={newRowAdded[col.id]}
               onChange={(newValue) => {
-                setNewRowAdded({ ...newRowAdded, [col]: newValue });
+                setNewRowAdded({ ...newRowAdded, [col.id]: newValue });
               }}
               placeholder="Date"
               renderInput={(params) => <TextField {...params} />}
@@ -424,11 +440,12 @@ export const DataTable = ({
           </LocalizationProvider>
         </TableCell>
       );
-    } else if (col === "actions") {
+    } else if (col.id === "actions") {
       return (
-        <TableCell key={col}>
+        <TableCell key={col.id}>
           <div className="attachmentContainer">
-            <IconButton
+            {headingName !== Modules.TIMESHEET && 
+              <IconButton
               color="primary"
               aria-label="upload picture"
               component="label"
@@ -441,6 +458,7 @@ export const DataTable = ({
               />
               <AttachFileIcon />
             </IconButton>
+            }
             {newRowAdded.clientName !== "" ? (
               <img
                 src={AddEnableIcon}
@@ -461,6 +479,24 @@ export const DataTable = ({
             />
           </div>
         </TableCell>
+      );
+    }
+    else if(col.isDate){
+      return (
+        <TableCell key={col.id}>
+          <TextField
+            label={"Time"}
+            type="number"
+            value={newRowAdded[col.id]}
+            style={{maxWidth:'80%'}}
+            onChange={(e) => inputFieldHandler(e, col.id)}
+          />
+        </TableCell>
+      );
+    }
+    else if(getTypeofColumn(col.id, headingName) === "empty"){
+      return (
+        <TableCell key={col.id}/>
       );
     }
   };
@@ -511,7 +547,7 @@ export const DataTable = ({
                       <TableCell
                         key={column.id}
                         align={column.align}
-                        style={{ minWidth: column.minWidth }}
+                        style={{ minWidth: column.minWidth, position: 'relative' }}
                         sx={{
                           backgroundColor: "#1773bc0d",
                           color: "#1773bc",
@@ -519,12 +555,17 @@ export const DataTable = ({
                         }}
                       >
                         {column.label}
-                        <img
-                          src={TableArrows}
-                          alt=""
-                          className="tableArrows"
-                          onClick={() => handleSortBy(column.id)}
-                        />
+                        {!column.isDate && 
+                          <img
+                            src={TableArrows}
+                            alt=""
+                            className="tableArrows"
+                            onClick={() => handleSortBy(column.id)}
+                          />
+                        }
+                        {column.day && 
+                          <div className="month">{column.day}</div>
+                        }
                       </TableCell>
                     )
                 )}
@@ -534,126 +575,129 @@ export const DataTable = ({
               {isAddButtonClicked && (
                 <TableRow id="new_row">
                   {columns.map((col) => {
-                    return createInputField(col.id);
+                    return createInputField(col);
                   })}
                 </TableRow>
               )}
-              {rows.map((row, rowIdx) => {
-                if (
-                  rowToBeUpdated[UniqueIds[headingName.replace(" ", "")]] ===
-                  row[UniqueIds[headingName.replace(" ", "")]]
-                ) {
-                  return (
-                    <TableRow id="new_row">
-                      {columns.map((col) => {
-                        return createInputField(col.id);
-                      })}
-                    </TableRow>
-                  );
-                } else {
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row[headingName.replace(" ", "")]}
-                    >
-                      {columns.map((col) => {
-                        if (col.id === "actions") {
-                          return (
-                            <TableCell key={col.id} class="attachmentContainer">
-                              {headingName !== Modules.PROJECT_ALLOCATION ? (
-                                (headingName === Modules.CLIENT_ADMIN &&
-                                  row.msaDocLink) ||
-                                (headingName === Modules.PROJECT_ADMIN &&
-                                  row.sowAttachmentLink) ? (
-                                  <a
-                                    href={
-                                      headingName === Modules.PROJECT_ADMIN
-                                        ? row.sowAttachmentLink
-                                        : row.msaDocLink
+                {rows.map((row, rowIdx) => {
+                  if (
+                    rowToBeUpdated[UniqueIds[headingName.replace(" ", "")]] ===
+                    row[UniqueIds[headingName.replace(" ", "")]]
+                  ) {
+                    return (
+                      <TableRow id="new_row" key={rowIdx}>
+                        {columns.map((col) => {
+                          return createInputField(col);
+                        })}
+                      </TableRow>
+                    );
+                  } else {
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={row[headingName.replace(" ", "")]}
+                      >
+                        {columns.map((col) => {
+                          if (col.id === "actions") {
+                            return (
+                            <TableCell key={col.id}>
+                              <div className="attachmentContainer">
+                                {headingName !== Modules.PROJECT_ALLOCATION && headingName !== Modules.TIMESHEET ? (
+                                  (headingName === Modules.CLIENT_ADMIN &&
+                                    row.msaDocLink) ||
+                                  (headingName === Modules.PROJECT_ADMIN &&
+                                    row.sowAttachmentLink) ? (
+                                    <a
+                                      href={
+                                        headingName === Modules.PROJECT_ADMIN
+                                          ? row.sowAttachmentLink
+                                          : row.msaDocLink
+                                      }
+                                    >
+                                      <img
+                                        src={downloadIcon}
+                                        className="editDeleteIcon"
+                                        alt=""
+                                      />
+                                    </a>
+                                  ) : (
+                                    <IconButton
+                                      color="primary"
+                                      aria-label="upload picture"
+                                      component="label"
+                                    >
+                                      {headingName === Modules.CLIENT_ADMIN && (
+                                        <input
+                                          hidden
+                                          accept="*"
+                                          type="file"
+                                          onChange={(e) =>
+                                            fileHandler(
+                                              e.target.files[0],
+                                              row.clientId,
+                                              row.clientName,
+                                              headingName
+                                            )
+                                          }
+                                        />
+                                      )}
+                                      {headingName === Modules.PROJECT_ADMIN && (
+                                        <input
+                                          hidden
+                                          accept="*"
+                                          type="file"
+                                          onChange={(e) =>
+                                            fileHandler(
+                                              e.target.files[0],
+                                              row.projectId,
+                                              row.projectName, 
+                                              headingName
+                                            )
+                                          }
+                                        />
+                                      )}
+                                      <Tooltip title="Attachment">
+                                        <AttachFileIcon />
+                                      </Tooltip>
+                                    </IconButton>
+                                  )
+                                ) : null}
+                                <Tooltip title="Edit">
+                                  <button
+                                    onClick={() =>
+                                      editButtonClicked(row[UniqueIds[headingName.replace(" ", "")]])
                                     }
+                                    className="buttonBackgroundBorder cursorPointer"
+                                    disabled={isAddButtonClicked}
                                   >
+                                    <img src={editIcon} className="editDeleteIcon" alt="" />
+                                  </button>
+                                </Tooltip>
+                                {headingName !== Modules.PROJECT_ALLOCATION && (
+                                  <Tooltip title="Delete">
                                     <img
-                                      src={downloadIcon}
-                                      className="editDeleteIcon"
+                                      src={deleteIcon}
+                                      className="editDeleteIcon cursorPointer"
+                                      onClick={() =>
+                                        deleteButtonClicked(
+                                          row[
+                                            UniqueIds[
+                                              headingName.replace(" ", "")
+                                            ]
+                                          ]
+                                        )
+                                      }
                                       alt=""
                                     />
-                                  </a>
-                                ) : (
-                                  <IconButton
-                                    color="primary"
-                                    aria-label="upload picture"
-                                    component="label"
-                                  >
-                                    {headingName === Modules.CLIENT_ADMIN && (
-                                      <input
-                                        hidden
-                                        accept="*"
-                                        type="file"
-                                        onChange={(e) =>
-                                          fileHandler(
-                                            e.target.files[0],
-                                            row.clientId,
-                                            row.clientName,
-                                            headingName
-                                          )
-                                        }
-                                      />
-                                    )}
-                                    {headingName === Modules.PROJECT_ADMIN && (
-                                      <input
-                                        hidden
-                                        accept="*"
-                                        type="file"
-                                        onChange={(e) =>
-                                          fileHandler(
-                                            e.target.files[0],
-                                            row.projectId,
-                                            row.projectName, 
-                                            headingName
-                                          )
-                                        }
-                                      />
-                                    )}
-                                    <Tooltip title="Attachment">
-                                      <AttachFileIcon />
-                                    </Tooltip>
-                                  </IconButton>
-                                )
-                              ) : null}
-                              <Tooltip title="Edit">
-                                <button
-                                  onClick={() =>
-                                    editButtonClicked(row[UniqueIds[headingName.replace(" ", "")]])
-                                  }
-                                  className="buttonBackgroundBorder cursorPointer"
-                                  disabled={isAddButtonClicked}
-                                >
-                                  <img src={editIcon} className="editDeleteIcon" alt="" />
-                                </button>
-                              </Tooltip>
-                              {headingName !== Modules.PROJECT_ALLOCATION && (
-                                <Tooltip title="Delete">
-                                  <img
-                                    src={deleteIcon}
-                                    className="editDeleteIcon cursorPointer"
-                                    onClick={() =>
-                                      deleteButtonClicked(
-                                        row[
-                                          UniqueIds[
-                                            headingName.replace(" ", "")
-                                          ]
-                                        ]
-                                      )
-                                    }
-                                    alt=""
-                                  />
-                                </Tooltip>
-                              )}
+                                  </Tooltip>
+                                )}
+                              </div>
                             </TableCell>
                           );
-                        } else if (col.id.includes("Date")) {
+                        } 
+                        else if (col.id.includes("Date")) {
                           return (
                             <TableCell key={col.id}>
                               {convertDateToDDMYYYY(row[col.id])}
@@ -662,7 +706,7 @@ export const DataTable = ({
                         }
                         return col.id !==
                           UniqueIds[headingName.replace(" ", "")] ? (
-                          <TableCell key={col.id}>
+                          <TableCell key={col.id} style={{textAlign: col.isDate || col.id === 'totalHours' ? "center" : "auto"}}>
                             {col.id === "employeeName" ? (
                               getEmployeeName(row["employeeId"])
                             ) : col.id === "allocation" ? (

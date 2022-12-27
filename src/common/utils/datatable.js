@@ -6,7 +6,8 @@ import { getLocalStorageItem } from "./local-storage";
 export const UniqueIds = {
   ProjectAdmin: 'projectId',
   ClientAdmin: 'clientId',
-  ProjectAllocation: 'projectAllocationId'
+  ProjectAllocation: 'projectAllocationId',
+  TimeSheet: 'fieldId'
 };
 
 export const tableColumnsData = {
@@ -36,6 +37,11 @@ export const tableColumnsData = {
     { id: "startDate", label: "Start Date", minWidth: 100, type: 'date' },
     { id: "endDate", label: "End Date", minWidth: 110, type: 'date' },
     { id: 'allocation', label: 'Allocation', minWidth: 100, type: 'textfield' }
+  ], 
+  'TimeSheet': [
+    { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
+    { id: "task", label: "Task", minWidth: 100, type: 'select' },
+    { id: "totalHours", label: "Total", minWidth: 60, type: 'empty' },
   ], 
 };
 

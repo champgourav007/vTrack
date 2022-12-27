@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export function createData(
   Id,
   ClientName,
@@ -233,5 +235,96 @@ export const initialData = {
     startDate: '',
     endDate: '',
     allocation: ''
+  },
+  'TimeSheet': {
+    projectName:'',
+    task:'',
+    totalHours:''
   }
 };
+
+export const timeSheetData = {
+  data: [
+    {
+      "fieldId": 1,
+      "projectName": "Duly",
+      "task": "Development",
+      "dateHours": [
+        {
+          "date": moment(),
+          "hours": 2,
+        },
+        {
+          "date": moment().add(1,'days'),
+          "hours": 4,
+        },
+        {
+          "date": moment().add(2,'days'),
+          "hours": 1.2,
+        },
+        {
+          "date": moment().add(3,'days'),
+          "hours": 0,
+        },
+        {
+          "date": moment().add(4,'days'),
+          "hours": 2,
+        },
+        {
+          "date": moment().add(5,'days'),
+          "hours": 0,
+        },
+        {
+          "date": moment().add(6,'days'),
+          "hours": 1,
+        }
+      ],
+      "totalHours": 5
+    },
+    {
+      "fieldId": 2,
+      "projectName": "Duly",
+      "task": "Development",
+      "dateHours": [
+        {
+          "date": moment(),
+          "hours": 2.1,
+        },
+        {
+          "date": moment().add(1,'days'),
+          "hours": 0,
+        },
+        {
+          "date": moment().add(2,'days'),
+          "hours": 3.2,
+        },
+        {
+          "date": moment().add(3,'days'),
+          "hours": 0.5,
+        },
+        {
+          "date": moment().add(4,'days'),
+          "hours": 1,
+        },
+        {
+          "date": moment().add(5,'days'),
+          "hours": 4,
+        },
+        {
+          "date": moment().add(6,'days'),
+          "hours": 0,
+        }
+      ],
+      "totalHours": 5
+    }
+  ],
+  totalCount: 2
+}
+
+export const allTasks = [
+  "Define & Hypothesis",
+  "Development",
+  "Prototyping & Testing",
+  "Design Review",
+  "Visual Design"
+]

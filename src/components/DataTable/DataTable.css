@@ -97,3 +97,15 @@ th.css-1g0973d-MuiTableCell-root {
   width: 2.5rem;
   cursor: pointer;
 }
+
+.month{
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.75rem;
+  line-height: 0.875rem;
+  position: absolute;
+  top: 0.5rem;
+  left: 0.375rem;
+  color: #000000;
+}

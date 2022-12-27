@@ -64,7 +64,7 @@ export default function BasicTabs(props) {
       </Box>
       { TabsData[props.headingName] ? (
         TabsData[props.headingName].map((tab, index) => (
-          <TabPanel value={value} index={index}>
+          <TabPanel key={index} value={value} index={index}>
             <TabsTable headingName={props.headingName} tabName={tab} />
           </TabPanel>
         ))

@@ -117,7 +117,7 @@ export function Settings() {
                 MenuProps={MenuProps}
               >
                 {userData.map((user) => (
-                  <MenuItem key={user.id} value={user}>
+                  <MenuItem key={user.id} value={user} className="no-left-margin">
                     <Checkbox
                       checked={
                         selectedUsers.findIndex(

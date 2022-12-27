@@ -1,12 +1,15 @@
+import { allTasks, timeSheetData } from "../../mock-data/TableData";
 import { ClientAdminType, DropdownType, ProjectAdminType, ProjectAllocationType, SettingDataType } from "../actions"
 
 export const modulesState = {
   clientAdminData: null,
   projectAdminData: null,
   projectAllocationData: null,
+  timeSheetData: timeSheetData,
   clientsData: null,
   projectManagers: null,
   listItems: null,
+  allTasks: allTasks,
   allUsers: null,
   allProjectsData: null,
   userRole: null
