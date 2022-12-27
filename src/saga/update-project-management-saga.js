@@ -12,6 +12,7 @@ function* workerUpdateProjectManagementSaga({ payload }) {
     yield call(updateProjectManagementDetails, payload.data);
     yield put(
         getProjectManagementData({
+        projectId: payload.data.projectId, 
         pageNo: 1,
         pageSize: 10,
         sortDir: "ASC",

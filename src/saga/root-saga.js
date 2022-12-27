@@ -7,6 +7,7 @@ import { allProjectsSaga } from "./get-all-projects-saga";
 import { allUsersSaga } from "./get-all-user-saga";
 import { allClientsSaga } from "./get-client-saga";
 import { listItemsSaga } from "./get-list-items-saga";
+import { mappedProjectManagementSaga } from "./get-mapped-project-management-data";
 import { projectManagementSaga } from "./get-project-management-saga";
 import { projectManagersSaga } from "./get-project-managers-saga";
 import { getSettingTableDataSaga } from "./get-setting-table-data";
@@ -54,6 +55,7 @@ export function* rootSaga() {
     fork(updateProjectManagementSaga),
     fork(getSettingTableDataSaga),
     fork(deleteSettingTableDataSaga),
-    fork(updateSettingTableDataSaga)
+    fork(updateSettingTableDataSaga),
+    fork(mappedProjectManagementSaga)
   ]);
 }

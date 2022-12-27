@@ -1,12 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./selected-module.css";
 import { TopBar } from "../TopBar/TopBar";
 import TabsComponent from "../Tabs/tabs";
 import { Navigate, useNavigate, Redirect, useParams} from "react-router-dom";
 import { dashboardURL } from "../../routes/routes";
 import { Settings } from "../Settings/settings";
+import SelectBar from "../SelectBar/selectBar";
+import { useDispatch } from "react-redux";
+import { getMappedProjectManagementData } from "../../redux/actions/project-management";
 
 export const SelectedModule = ({ headingName }) => {
+  const [selectedClient, setSelectedClient] = useState('')
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
     if (headingName === "Dashboard") {
@@ -16,11 +21,19 @@ export const SelectedModule = ({ headingName }) => {
       navigate(`/vTrack/${tempRouteName}`);
     }
   }, [headingName]);
+
+ useEffect(()=>{
+  dispatch(getMappedProjectManagementData());
+ },[]);
+
   return (
     <div className="mainContainer">
       <TopBar />
+      {
+        headingName === "Project Management" && <SelectBar setSelectedClient={setSelectedClient} />
+      }
       <div className="heading">{headingName}</div>
-      {headingName === "Settings" ? <Settings/> : <TabsComponent headingName={headingName} />}
+      {headingName === "settings" ? <Settings/> : <TabsComponent headingName={headingName} selectedClient = {selectedClient}/>}
     </div>
   );
 };

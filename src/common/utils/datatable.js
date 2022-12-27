@@ -42,14 +42,14 @@ export const tableColumnsData = {
   ], 
   'ProjectManagement': [
     { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select' },
-    { id: "endDate", label: "End Date", minWidth: 120, type: 'textfield' },
-    { id: 'projectManagerName', label: 'Project Manager', minWidth: 100, type: 'textfield' },
-    { id: 'projectName', label: 'Project Name', minWidth: 100, type: 'textfield' },
-    { id: 'startDate', label: 'Start Date', minWidth: 110, type: 'textfield' },
-    { id: 'status', label: 'Status', minWidth: 80, type: 'textfield' },
+    { id: 'projectName', label: 'Project Name', minWidth: 100, type: 'select' },
+    { id: 'projectManagerName', label: 'Project Manager', minWidth: 100, type: 'select' },
+    { id: 'status', label: 'Status', minWidth: 80, type: 'select' },
+    { id: 'startDate', label: 'Start Date', minWidth: 110, type: 'date' },
+    { id: "endDate", label: "End Date", minWidth: 120, type: 'date' },
     { id: 'billRate', label: 'Bill Rate', minWidth: 80, type: 'textfield' },
     { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, type: 'textfield' },
-    { id: 'billStatus', label: 'Bill Status', minWidth: 80, type: 'select' },
+    { id: 'billStatus', label: 'Bill Status', minWidth: 80, type: 'textfield' },
     { id: 'costAllocation', label: 'Cost Allocation', minWidth: 100, type: 'textfield' },
   ], 
   'TimeSheet': [
@@ -103,6 +103,7 @@ export const fileHandler = (file, id, name, headingName) => {
       },
     });
   }
+  
 };
 
 export const convertDateToDDMYYYY = (data) => {

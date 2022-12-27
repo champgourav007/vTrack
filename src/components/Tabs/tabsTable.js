@@ -24,7 +24,7 @@ const getPeriods = () => {
   return periods;
 }
 
-export const TabsTable = ({ headingName, tabName,status }) => {
+export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData } = useSelector(({ MODULES }) => MODULES);
   const dispatch = useDispatch();
 
@@ -220,6 +220,7 @@ export const TabsTable = ({ headingName, tabName,status }) => {
       case Modules.PROJECT_MANAGEMENT:
         dispatch(
           getProjectManagementData({
+            projectId: projectId,
             pageNo: 1,
             pageSize: 10,
             sortBy: 'projectName',
@@ -341,6 +342,7 @@ export const TabsTable = ({ headingName, tabName,status }) => {
         searchData={searchData}
         projectStatus={status}
         selectedPeriodWeek={selectedPeriodWeek}
+        projectId={projectId}
       />
     </div>
   );
