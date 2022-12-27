@@ -1,12 +1,14 @@
 import { allTasks, timeSheetData } from "../../mock-data/TableData";
 import { ClientAdminType, DropdownType, ProjectAdminType, ProjectAllocationType, SettingDataType } from "../actions"
 import { ProjectManagementType } from "../actions/project-management";
+import { TimeSheetType } from "../actions/timesheet";
 
 export const modulesState = {
   clientAdminData: null,
   projectAdminData: null,
   projectAllocationData: null,
-  timeSheetData: timeSheetData,
+  timeSheetData: null,
+  timesheetPeriodId: 0,
   clientsData: null,
   projectManagers: null,
   listItems: null,
@@ -25,7 +27,11 @@ export const modulesReducer = (state = modulesState, action) => {
         ...state,
         clientAdminData: action.payload,
       };
-
+    case TimeSheetType.SET_TIMESHEET_DATA:
+      return {
+        ...state,
+        timeSheetData: action.payload,
+      };
     case ProjectAdminType.SET_PROJECT_ADMIN_DATA:
       return {
         ...state,
@@ -75,6 +81,11 @@ export const modulesReducer = (state = modulesState, action) => {
       return {
         ...state,
         settingTableData: action.payload
+      }
+    case TimeSheetType.SET_TIMESHEET_PERIOD_ID:
+      return {
+        ...state,
+        timesheetPeriodId: action.payload
       }
     default: return state;
   }

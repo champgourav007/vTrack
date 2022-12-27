@@ -54,6 +54,8 @@ import {
 import CircularProgress from "@mui/material/CircularProgress";
 import DialogBox from "../DialogBox/dialogBox";
 import { getProjectManagementData, saveProjectManagementData, updateProjectManagementData } from "../../redux/actions/project-management";
+import { getTimeSheetData, saveTimeSheetData } from "../../redux/actions/timesheet";
+import moment from "moment";
 
 export const DataTable = ({
   headingName,
@@ -66,7 +68,8 @@ export const DataTable = ({
   isEditButtonClicked,
   setIsEditButtonClicked,
   searchData,
-  projectStatus
+  projectStatus,
+  selectedPeriodWeek
 }) => {
   const { clientsData, projectManagers, allTasks, listItems, allUsers, allProjectsData } =
     useSelector(({ MODULES }) => MODULES);
@@ -76,7 +79,7 @@ export const DataTable = ({
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [newRowAdded, setNewRowAdded] = useState(initialData[headingName]);
+  const [newRowAdded, setNewRowAdded] = useState(initialData(headingName,selectedPeriodWeek));
   const [sortBy, setSortBy] = useState(initialSort[headingName]);
 
   const [rowToBeUpdated, setRowToBeUpdated] = useState({});
@@ -94,6 +97,25 @@ export const DataTable = ({
         dispatch(saveProjectAdminData(newRowAdded));
       } else if (headingName === Modules.PROJECT_MANAGEMENT) {
         dispatch(saveProjectManagementData(newRowAdded));
+      } else if (headingName === Modules.TIMESHEET){
+        const dateHours = [];
+        const restProps = {};
+        let totalHours = 0;
+        Object.keys(newRowAdded).forEach(key=>{
+          if(moment(key).isValid()){
+            dateHours.push({
+              date: key,
+              hours: newRowAdded[key]
+            });
+            if(newRowAdded[key] !== "") totalHours += parseInt(newRowAdded[key]);
+          }
+          else{
+            restProps[key] = newRowAdded[key];
+          }
+        });
+        restProps['dateHours'] = [...dateHours];
+        restProps['totalHours'] = totalHours.toString();
+        dispatch(saveTimeSheetData(restProps));
       }
     } else {
       if (headingName === Modules.CLIENT_ADMIN) {
@@ -123,7 +145,7 @@ export const DataTable = ({
     }
     setIsAddButtonClicked(false);
     setRowToBeUpdated({});
-    setNewRowAdded(initialData[headingName]);
+    setNewRowAdded(initialData(headingName,selectedPeriodWeek));
   };
 
   const closeButtonHandler = () => {
@@ -133,7 +155,7 @@ export const DataTable = ({
       setIsEditButtonClicked(false);
     }
     setRowToBeUpdated({});
-    setNewRowAdded(initialData[headingName]);
+    setNewRowAdded(initialData(headingName,selectedPeriodWeek));
   };
 
   const handleChangePage = (event, newPage) => {
@@ -180,6 +202,15 @@ export const DataTable = ({
         })
       );
     }
+    else if (headingName === Modules.TIMESHEET) {
+      dispatch(
+        getTimeSheetData({
+          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
+          pageNo: newPage + 1,
+          sortDir: "ASC",
+        })
+      );
+    }
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -223,6 +254,14 @@ export const DataTable = ({
           sortBy: sortBy,
           sortDir: "ASC",
           searchData: searchData,
+        })
+      );
+    } else if (headingName === Modules.TIMESHEET) {
+      dispatch(
+        getTimeSheetData({
+          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
+          pageNo: page + 1,
+          sortDir: "ASC",
         })
       );
     }
@@ -284,6 +323,14 @@ export const DataTable = ({
           sortBy: colName,
           sortDir: sortDirection,
           searchData: searchData,
+        })
+      );
+    } else if (headingName === Modules.TIMESHEET) {
+      dispatch(
+        getTimeSheetData({
+          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
+          pageNo: page + 1,
+          sortDir: "ASC",
         })
       );
     }
@@ -415,15 +462,16 @@ export const DataTable = ({
       return allTasks ? allTasks.map((option,index) => (
         <MenuItem
           key={index}
-          value={option}
+          value={option.taskName}
           onClick={() =>
             setNewRowAdded({
               ...newRowAdded,
-              [col]: option,
+              [col]: option.taskName,
+              taskId: option.taskId,
             })
           }
         >
-          {option}
+          {option.taskName}
         </MenuItem>
       )) : null;
     } else {
@@ -525,6 +573,7 @@ export const DataTable = ({
       );
     }
     else if(col.isDate){
+      console.log(col)
       return (
         <TableCell key={col.id}>
           <TextField
@@ -532,7 +581,7 @@ export const DataTable = ({
             type="number"
             value={newRowAdded[col.id]}
             style={{maxWidth:'80%'}}
-            onChange={(e) => inputFieldHandler(e, col.id)}
+            onChange={(e) => inputFieldHandler(e, col.date)}
           />
         </TableCell>
       );
@@ -581,7 +630,7 @@ export const DataTable = ({
 
   React.useEffect(() => {
     setRowToBeUpdated({});
-    setNewRowAdded(initialData[headingName]);
+    setNewRowAdded(initialData(headingName,selectedPeriodWeek));
     setSortBy(initialSort[headingName]);
     setPage(0);
     setRowsPerPage(10);

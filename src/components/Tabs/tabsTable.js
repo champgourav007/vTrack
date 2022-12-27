@@ -4,12 +4,25 @@ import { useEffect, useState } from "react";
 import { DataTable } from "../DataTable/DataTable";
 import { useDispatch, useSelector } from "react-redux";
 import { Modules } from "../../common/constants/sidebar";
-import { getAllProjectsData, getAllUserDetails, getAllUsersData, getClientAdminData, getClientsData, getListItems, getProjectAdminData, getProjectAllocationData, getProjectManagersData } from "../../redux/actions";
+import { getAllProjectsData, getAllUserDetails, getAllUsersData, getClientAdminData, getClientsData, getListItems, getProjectAdminData, getProjectAllocationData, getProjectManagersData, getTimeSheetData, saveTimeSheetData, saveTimeSheetPeriodData } from "../../redux/actions";
 import { getLabel, getMinWidth, tableColumnsData } from "../../common/utils/datatable";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import moment from 'moment';
 import { getProjectManagementData } from "../../redux/actions/project-management";
+
+const getPeriods = () => {
+  let date = moment().subtract(42,'days');
+  const periods = [];
+  for(let i = 0; i < 13; i++){
+    periods.push({
+      startDate : moment(date.startOf('isoweek')),
+      endDate : moment(date.add(7,'days').startOf('week'))
+    })
+    date.add(7,'days');
+  }
+  return periods;
+}
 
 export const TabsTable = ({ headingName, tabName,status }) => {
   const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData } = useSelector(({ MODULES }) => MODULES);
@@ -21,6 +34,8 @@ export const TabsTable = ({ headingName, tabName,status }) => {
   const [ columns, setColumns ] = useState([]);
   const [ totalRecord, setTotalRecord ] = useState(0);
   const [ searchData, setSearchData ] = useState("");
+  const periodWeeks = getPeriods();
+  const [ selectedPeriodWeek, setSelectedPriodWeek ] = useState(periodWeeks ? periodWeeks[0] : null)
 
   const handleSetColumnsData = (data) => {
     const temp = [];
@@ -34,6 +49,7 @@ export const TabsTable = ({ headingName, tabName,status }) => {
           temp.push({
             id: dateHour.date.format('ddd DD'),
             label: dateHour.date.format('ddd DD'),
+            date: dateHour.date.format(),
             minWidth: 55,
             sortDir: "",
             align: "left",
@@ -107,27 +123,20 @@ export const TabsTable = ({ headingName, tabName,status }) => {
       setSearchData(e.target.value);
   }
 
-  const getPeriods = () => {
-    let date = moment().subtract(42,'days');
-    const periods = [];
-    for(let i = 0; i < 13; i++){
-      periods.push({
-        startDate : moment(date.startOf('isoweek')),
-        endDate : moment(date.add(7,'days').startOf('week'))
-      })
-      date.add(7,'days');
-    }
-    return periods;
-  }
-
-  const periodWeeks = getPeriods();
-
   const getDateItems = () => {
     return periodWeeks.map((periodWeek)=>(
       <MenuItem
         value={periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM')}
-        onClick={() =>
-          console.log('b')
+        onClick={() =>{
+            setSelectedPriodWeek(periodWeek);
+            dispatch(
+              saveTimeSheetPeriodData({
+                periodWeek: periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM'),
+                startDT: periodWeek.startDate,
+                endDT: periodWeek.endDate,
+              })
+            );
+          }
         }
       >
         {periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM')}
@@ -145,7 +154,7 @@ export const TabsTable = ({ headingName, tabName,status }) => {
     } else if (headingName === Modules.PROJECT_ALLOCATION && projectAllocationData && projectAllocationData.totalCount) {
       setTableData(projectAllocationData);
       setRows(projectAllocationData.data);
-    } else if (headingName === Modules.TIMESHEET){
+    } else if (headingName === Modules.TIMESHEET && timeSheetData && timeSheetData.totalCount){
       setTableData(timeSheetData);
       handleSetRows(timeSheetData.data);
     } else if (headingName === Modules.PROJECT_MANAGEMENT && projectManagementData && projectManagementData.totalCount) {
@@ -170,7 +179,7 @@ export const TabsTable = ({ headingName, tabName,status }) => {
       setRows([]);
       setTotalRecord(0);
     }
-  }, [ clientAdminData, projectAdminData, projectAllocationData, projectManagementData, headingName ]);
+  }, [ clientAdminData, projectAdminData, projectAllocationData, projectManagementData, timeSheetData, headingName ]);
 
   useEffect(() => {
     switch(headingName) {
@@ -216,6 +225,16 @@ export const TabsTable = ({ headingName, tabName,status }) => {
             sortBy: 'projectName',
             sortDir: "ASC",
             searchData: searchData,
+          })
+        );
+        break;
+      case Modules.TIMESHEET:
+        dispatch(
+          getTimeSheetData({
+            periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
+            pageNo: 1,
+            pageSize: 10,
+            sortDir: "ASC",
           })
         );
         break;
@@ -321,6 +340,7 @@ export const TabsTable = ({ headingName, tabName,status }) => {
         setIsEditButtonClicked={setIsEditButtonClicked}
         searchData={searchData}
         projectStatus={status}
+        selectedPeriodWeek={selectedPeriodWeek}
       />
     </div>
   );

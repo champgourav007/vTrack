@@ -16,7 +16,10 @@ import { projectAllocationSaga } from "./project-allocation-saga";
 import { saveClientAdminSaga } from "./save-client-admin-saga";
 import { saveProjectAdminSaga } from "./save-project-admin-saga";
 import { saveProjectManagementSaga } from "./save-project-management-data";
+import { saveTimeSheetPeriodSaga } from "./save-timesheet-period-saga";
+import { saveTimeSheetSaga } from "./save-timesheet-saga";
 import { saveUserRoleSaga } from "./save-user-roles-setting-saga";
+import { timeSheetSaga } from "./timesheet-saga";
 import { updateClientAdminSaga } from "./update-client-admin-saga";
 import { updateProjectAdminSaga } from "./update-project-admin-saga";
 import { updateProjectManagementSaga } from "./update-project-management-saga";
@@ -26,7 +29,10 @@ import { allUserDetailSaga, userSaga } from "./user-saga";
 export function* rootSaga() {
   yield all([
     fork(clientAdminSaga),
+    fork(timeSheetSaga),
     fork(saveClientAdminSaga),
+    fork(saveTimeSheetSaga),
+    fork(saveTimeSheetPeriodSaga),
     fork(updateClientAdminSaga),
     fork(deleteClientAdminSaga),
     fork(userSaga),

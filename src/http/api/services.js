@@ -1,6 +1,7 @@
 const BASE_URL = "https://vtrack-api.azurewebsites.net";
 
 export const CLIENT_API = `${BASE_URL}/Client`;
+export const TIMESHEET_API = `${BASE_URL}/Timesheet`;
 export const PROJECT_ADMIN_API = `${BASE_URL}/ProjectAdmin`;
 export const PROJECT_ALLOCATION_API = `${BASE_URL}/ProjectAllocation`;
 export const PROJECT_MANAGEMENT_API = `${BASE_URL}/ProjectManagement`;
