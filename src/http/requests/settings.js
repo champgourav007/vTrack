@@ -14,3 +14,20 @@ export const saveUserRoles = (data) =>
     method: HttpMethod.POST,
     data: data.data,
   });
+
+  export const getSettingUserData = () =>
+  httpRequest({
+    url: `${ROLES_API}/get-users`,
+    method: HttpMethod.GET,
+  });
+
+  export const deleteSettingUserData = (userId) =>
+  httpRequest({
+    url: `${ROLES_API}/${userId}/delete-user`,
+    method: HttpMethod.DELETE,
+  });
+  export const updateSettingUserRole = (userId, roleId) =>
+  httpRequest({
+    url: `${ROLES_API}/${userId}/${roleId}/update-user-role`,
+    method: HttpMethod.PUT,
+  });

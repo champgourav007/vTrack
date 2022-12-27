@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { saveUserRoles } from "../http/requests/settings";
-import { SettingDataType, setVtrackLoader } from "../redux/actions";
+import { getSettingTableData, SettingDataType, setVtrackLoader } from "../redux/actions";
 
 function* workerSaveUserRoleSaga({ payload }) {
   try {
@@ -11,6 +11,7 @@ function* workerSaveUserRoleSaga({ payload }) {
         
     //   })
     // );
+    yield put(getSettingTableData());
     yield put(setVtrackLoader(false));
   } catch (err) {
     yield put(setVtrackLoader(false));
