@@ -103,7 +103,7 @@
 }
 
 .addBtn {
-  padding: 0.875rem 2.375rem;
+  padding: 0.875rem 2.375rem !important;
   background: #1773bc;
   border: 0.0625rem solid #1773bc;
   border-radius: 0.625rem;

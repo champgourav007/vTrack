@@ -240,6 +240,14 @@ export const initialData = {
     projectName:'',
     task:'',
     totalHours:''
+  },
+  'Project Management': {
+    employeeName: '',
+    endDate: '',
+    projectManagerName: '',
+    projectName: '',
+    startDate: '',
+    status: ''
   }
 };
 

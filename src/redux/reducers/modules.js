@@ -1,5 +1,6 @@
 import { allTasks, timeSheetData } from "../../mock-data/TableData";
 import { ClientAdminType, DropdownType, ProjectAdminType, ProjectAllocationType, SettingDataType } from "../actions"
+import { ProjectManagementType } from "../actions/project-management";
 
 export const modulesState = {
   clientAdminData: null,
@@ -12,7 +13,9 @@ export const modulesState = {
   allTasks: allTasks,
   allUsers: null,
   allProjectsData: null,
-  userRole: null
+  userRole: null,
+  projectManagementData: null,
+  settingTableData:null
 }
 
 export const modulesReducer = (state = modulesState, action) => {
@@ -62,6 +65,16 @@ export const modulesReducer = (state = modulesState, action) => {
       return {
         ...state,
         userRole: action.payload
+      }
+    case ProjectManagementType.SET_PROJECT_MANAGEMENT_DATA:
+      return {
+        ...state,
+        projectManagementData: action.payload
+      }
+    case SettingDataType.SET_SETTING_TABLE_DATA:
+      return {
+        ...state,
+        settingTableData: action.payload
       }
     default: return state;
   }

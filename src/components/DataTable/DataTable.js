@@ -40,20 +40,20 @@ import {
   fileHandler,
   getLabel,
   getTypeofColumn,
+  initialSort,
   UniqueIds,
 } from "../../common/utils/datatable";
 import { Modules } from "../../common/constants/sidebar";
 import {
   deleteProjectAdminData,
-  deleteProjectAllocationData,
   getProjectAdminData,
   getProjectAllocationData,
   saveProjectAdminData,
-  saveProjectAllocationData,
   updateProjectAdminData,
-  updateProjectAllocationData,
 } from "../../redux/actions";
 import CircularProgress from "@mui/material/CircularProgress";
+import DialogBox from "../DialogBox/dialogBox";
+import { getProjectManagementData, saveProjectManagementData, updateProjectManagementData } from "../../redux/actions/project-management";
 
 export const DataTable = ({
   headingName,
@@ -66,6 +66,7 @@ export const DataTable = ({
   isEditButtonClicked,
   setIsEditButtonClicked,
   searchData,
+  projectStatus
 }) => {
   const { clientsData, projectManagers, allTasks, listItems, allUsers, allProjectsData } =
     useSelector(({ MODULES }) => MODULES);
@@ -76,16 +77,14 @@ export const DataTable = ({
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [newRowAdded, setNewRowAdded] = useState(initialData[headingName]);
-  const [sortBy, setSortBy] = useState("clientName");
+  const [sortBy, setSortBy] = useState(initialSort[headingName]);
+
   const [rowToBeUpdated, setRowToBeUpdated] = useState({});
   const [fileState, setFileState] = useState("");
-
-  React.useEffect(() => {
-    setRowToBeUpdated({});
-    setNewRowAdded(initialData[headingName]);
-    setPage(0);
-    setRowsPerPage(10);
-  }, [headingName]);
+  const [showDialogBox, setShowDialogBox] = useState(false);
+  const [deleteRow, setDeleteRow] = useState({});
+  const [dialogDeleteButtonClicked, setDialogDeleteButtonClicked] =
+    useState(false);
 
   const saveDataHandler = () => {
     if (!isEditButtonClicked) {
@@ -93,13 +92,18 @@ export const DataTable = ({
         dispatch(saveClientAdminData(newRowAdded));
       } else if (headingName === Modules.PROJECT_ADMIN) {
         dispatch(saveProjectAdminData(newRowAdded));
-      } else if (headingName === Modules.PROJECT_ALLOCATION) {
-        dispatch(saveProjectAllocationData(newRowAdded));
+      } else if (headingName === Modules.PROJECT_MANAGEMENT) {
+        dispatch(saveProjectManagementData(newRowAdded));
       }
     } else {
       if (headingName === Modules.CLIENT_ADMIN) {
         if (fileState && newRowAdded.clientId && newRowAdded.clientName) {
-          fileHandler(fileState, newRowAdded.clientId, newRowAdded.clientName, headingName);
+          fileHandler(
+            fileState,
+            newRowAdded.clientId,
+            newRowAdded.clientName,
+            headingName
+          );
         }
         dispatch(updateClientAdminData(newRowAdded));
       } else if (headingName === Modules.PROJECT_ADMIN) {
@@ -112,8 +116,8 @@ export const DataTable = ({
           );
         }
         dispatch(updateProjectAdminData(newRowAdded));
-      } else if (headingName === Modules.PROJECT_ALLOCATION) {
-        dispatch(updateProjectAllocationData(newRowAdded));
+      } else if (headingName === Modules.PROJECT_MANAGEMENT) {
+        dispatch(updateProjectManagementData(newRowAdded));
       }
       setIsEditButtonClicked(false);
     }
@@ -162,6 +166,17 @@ export const DataTable = ({
           sortBy: sortBy,
           sortDir: "ASC",
           searchData: searchData,
+          status: projectStatus
+        })
+      );
+    } else if (headingName === Modules.PROJECT_MANAGEMENT) {
+      dispatch(
+        getProjectManagementData({
+          pageNo: newPage + 1,
+          pageSize: rowsPerPage,
+          sortBy: sortBy,
+          sortDir: "ASC",
+          searchData: searchData,
         })
       );
     }
@@ -192,6 +207,17 @@ export const DataTable = ({
     } else if (headingName === Modules.PROJECT_ALLOCATION) {
       dispatch(
         getProjectAllocationData({
+          pageNo: page + 1,
+          pageSize: event.target.value,
+          sortBy: sortBy,
+          sortDir: "ASC",
+          searchData: searchData,
+          status: projectStatus
+        })
+      );
+    } else if (headingName === Modules.PROJECT_MANAGEMENT) {
+      dispatch(
+        getProjectManagementData({
           pageNo: page + 1,
           pageSize: event.target.value,
           sortBy: sortBy,
@@ -247,6 +273,17 @@ export const DataTable = ({
           sortBy: colName,
           sortDir: sortDirection,
           searchData: searchData,
+          status: projectStatus
+        })
+      );
+    } else if (headingName === Modules.PROJECT_MANAGEMENT) {
+      dispatch(
+        getProjectManagementData({
+          pageNo: page + 1,
+          pageSize: rowsPerPage,
+          sortBy: colName,
+          sortDir: sortDirection,
+          searchData: searchData,
         })
       );
     }
@@ -268,7 +305,7 @@ export const DataTable = ({
         >
           {option.name}
         </MenuItem>
-      ))
+      ));
     } else if (col === "projectManagerName") {
       projectManagers.map((option) => (
         <MenuItem
@@ -302,7 +339,9 @@ export const DataTable = ({
         </MenuItem>
       ))
     } else if (col === "type") {
-      return listItems && listItems.type.map((option) => (
+      return (
+        listItems &&
+        listItems.type.map((option) => (
           <MenuItem
             key={option.id}
             value={option.longCodeValue}
@@ -317,38 +356,45 @@ export const DataTable = ({
             {option.longCodeValue}
           </MenuItem>
         ))
+      );
     } else if (col === "businessOwner" || col === "deliveryOfficer") {
-      return allUsers && allUsers.map((option) => (
-        <MenuItem
-          key={option.id}
-          value={option.name}
-          onClick={() =>
-            setNewRowAdded({
-              ...newRowAdded,
-              [col]: option.name,
-              [`${col}Id`]: option.id,
-            })
-          }
-        >
-          {option.name}
-        </MenuItem>
-      ))
+      return (
+        allUsers &&
+        allUsers.map((option) => (
+          <MenuItem
+            key={option.id}
+            value={option.name}
+            onClick={() =>
+              setNewRowAdded({
+                ...newRowAdded,
+                [col]: option.name,
+                [`${col}Id`]: option.id,
+              })
+            }
+          >
+            {option.name}
+          </MenuItem>
+        ))
+      );
     } else if (col === "employeeName") {
-      return allUserDetails && allUserDetails.data.map((option) => (
-        <MenuItem
-          key={option.id}
-          value={`${option.firstName} ${option.lastName}`}
-          onClick={() =>
-            setNewRowAdded({
-              ...newRowAdded,
-              [col]: `${option.firstName} ${option.lastName}`,
-              employeeId: option.id,
-            })
-          }
-        >
-          {`${option.firstName} ${option.lastName}`}
-        </MenuItem>
-      ))
+      return (
+        allUserDetails &&
+        allUserDetails.data.map((option) => (
+          <MenuItem
+            key={option.id}
+            value={`${option.firstName} ${option.lastName}`}
+            onClick={() =>
+              setNewRowAdded({
+                ...newRowAdded,
+                [col]: `${option.firstName} ${option.lastName}`,
+                employeeId: option.id,
+              })
+            }
+          >
+            {`${option.firstName} ${option.lastName}`}
+          </MenuItem>
+        ))
+      );
     } else if (col === "projectName") {
       return allProjectsData && allProjectsData.map((option) => (
         <MenuItem
@@ -366,7 +412,6 @@ export const DataTable = ({
         </MenuItem>
       ))
     } else if (col === "task"){
-      console.log(allTasks)
       return allTasks ? allTasks.map((option,index) => (
         <MenuItem
           key={index}
@@ -386,13 +431,11 @@ export const DataTable = ({
         <MenuItem
           key={option}
           value={option}
-          onClick={() =>
-            setNewRowAdded({ ...newRowAdded, [col]: option })
-          }
+          onClick={() => setNewRowAdded({ ...newRowAdded, [col]: option })}
         >
           {option}
         </MenuItem>
-      ))
+      ));
     }
   };
 
@@ -515,8 +558,6 @@ export const DataTable = ({
       dispatch(deleteClientAdminData(id));
     } else if (headingName === Modules.PROJECT_ADMIN) {
       dispatch(deleteProjectAdminData(id));
-    } else if (headingName === Modules.PROJECT_ALLOCATION) {
-      dispatch(deleteProjectAllocationData(id));
     }
   };
 
@@ -533,9 +574,34 @@ export const DataTable = ({
     return employeeName;
   };
 
+  const dialogBoxHandler = (rowData) => { 
+    setDeleteRow(rowData);
+    setShowDialogBox(true);
+  };
+
+  React.useEffect(() => {
+    setRowToBeUpdated({});
+    setNewRowAdded(initialData[headingName]);
+    setSortBy(initialSort[headingName]);
+    setPage(0);
+    setRowsPerPage(10);
+  }, [headingName]);
+
+  React.useEffect(() => {
+    if (dialogDeleteButtonClicked) {
+      deleteButtonClicked(deleteRow);
+    }
+  }, [dialogDeleteButtonClicked]);
+
   return (
     <>
       {vTrackLoader && <Loader />}
+      {showDialogBox && (
+        <DialogBox
+          setShowDialogBox={setShowDialogBox}
+          setDialogDeleteButtonClicked={setDialogDeleteButtonClicked}
+        />
+      )}
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: "48rem" }}>
           <Table aria-label="sticky table" size="small">
@@ -681,7 +747,7 @@ export const DataTable = ({
                                       src={deleteIcon}
                                       className="editDeleteIcon cursorPointer"
                                       onClick={() =>
-                                        deleteButtonClicked(
+                                        dialogBoxHandler(
                                           row[
                                             UniqueIds[
                                               headingName.replace(" ", "")

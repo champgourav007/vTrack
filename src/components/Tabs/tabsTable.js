@@ -9,9 +9,10 @@ import { getLabel, getMinWidth, tableColumnsData } from "../../common/utils/data
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import moment from 'moment';
+import { getProjectManagementData } from "../../redux/actions/project-management";
 
-export const TabsTable = ({ headingName, tabName }) => {
-  const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData } = useSelector(({ MODULES }) => MODULES);
+export const TabsTable = ({ headingName, tabName,status }) => {
+  const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData } = useSelector(({ MODULES }) => MODULES);
   const dispatch = useDispatch();
 
   const [ isAddButtonClicked, setIsAddButtonClicked ] = useState(false);
@@ -41,26 +42,37 @@ export const TabsTable = ({ headingName, tabName }) => {
         })
       }
       else if (!col.includes('Id') && getLabel(col, headingName) !== '') {
-        const tableHeading = col === 'employeeId' ? 'employeeName' : col;
         temp.push({
-          id: tableHeading,
-          label: getLabel(tableHeading, headingName),
-          minWidth: getMinWidth(tableHeading, headingName),
+          id: col,
+          label: getLabel(col, headingName),
+          minWidth: getMinWidth(col, headingName),
+          sortDir: "DESC",
+          align: "left",
+        });
+      } else if (col === 'employeeId') {
+        temp.push({
+          id: 'employeeName',
+          label: getLabel('employeeName', headingName),
+          minWidth: getMinWidth('employeeName', headingName),
           sortDir: "DESC",
           align: "left",
         });
       }
     });
-    setColumns([
-      ...temp,
-      {
-        id: "actions",
-        label: "Actions",
-        minWidth: 100,
-        sortDir: "",
-        align: "left",
-      },
-    ]);
+    if(headingName === Modules.PROJECT_ALLOCATION) {
+      setColumns([ ...temp ]);
+    } else {
+      setColumns([
+        ...temp,
+        {
+          id: "actions",
+          label: "Actions",
+          minWidth: 100,
+          sortDir: "",
+          align: "left",
+        },
+      ]);
+    }
   };
 
   const setTableData = (tableData) => {
@@ -136,7 +148,10 @@ export const TabsTable = ({ headingName, tabName }) => {
     } else if (headingName === Modules.TIMESHEET){
       setTableData(timeSheetData);
       handleSetRows(timeSheetData.data);
-    } else{
+    } else if (headingName === Modules.PROJECT_MANAGEMENT && projectManagementData && projectManagementData.totalCount) {
+      setTableData(projectManagementData);
+      setRows(projectManagementData.data);
+    } else {
       if (tableColumnsData[headingName.replace(' ', '')]) {
         setColumns([
           ...tableColumnsData[headingName.replace(' ', '')],
@@ -155,7 +170,7 @@ export const TabsTable = ({ headingName, tabName }) => {
       setRows([]);
       setTotalRecord(0);
     }
-  }, [ clientAdminData, projectAdminData, projectAllocationData, headingName ]);
+  }, [ clientAdminData, projectAdminData, projectAllocationData, projectManagementData, headingName ]);
 
   useEffect(() => {
     switch(headingName) {
@@ -188,7 +203,19 @@ export const TabsTable = ({ headingName, tabName }) => {
             pageSize: 10,
             sortBy: 'projectName',
             sortDir: "ASC",
-            searchData: searchData
+            searchData: searchData,
+            status: status
+          })
+        );
+        break;
+      case Modules.PROJECT_MANAGEMENT:
+        dispatch(
+          getProjectManagementData({
+            pageNo: 1,
+            pageSize: 10,
+            sortBy: 'projectName',
+            sortDir: "ASC",
+            searchData: searchData,
           })
         );
         break;
@@ -258,51 +285,43 @@ export const TabsTable = ({ headingName, tabName }) => {
                   Submit For Approval
               </button>
             </div>
-          ) : (
+          ) : headingName !== "Project Allocation" ? (
             <button
-              disabled={isAddButtonClicked || isEditButtonClicked}
-              className={
-                isAddButtonClicked || isEditButtonClicked
-                  ? "disableAddButton"
-                  : "addBtn"
-              }
-              onClick={() => setIsAddButtonClicked(true)}
-            >
-                Add
-            </button>
-          )
+                disabled={isAddButtonClicked || isEditButtonClicked}
+                className={
+                  isAddButtonClicked || isEditButtonClicked
+                    ? "disableAddButton"
+                    : "addBtn"
+                }
+                onClick={() => setIsAddButtonClicked(true)}
+              >
+                <div
+                  className={
+                    isAddButtonClicked || isEditButtonClicked
+                      ? "disableAddButtonText"
+                      : "btnText"
+                  }
+                >
+                  Add
+                </div>
+              </button>
+          ) : null
         }
         
       </div>
-      {
-        headingName === 'TimeSheet' ? (
-          <DataTable
-            rows={rows}
-            columns={columns}
-            headingName={headingName}
-            setColumns={setColumns}
-            totalRecord={totalRecord}
-            isAddButtonClicked={isAddButtonClicked}
-            setIsAddButtonClicked={setIsAddButtonClicked}
-            isEditButtonClicked={isEditButtonClicked}
-            setIsEditButtonClicked={setIsEditButtonClicked}
-            searchData={searchData}
-          />
-        ) : (
-          <DataTable
-            rows={rows}
-            columns={columns}
-            headingName={headingName}
-            setColumns={setColumns}
-            totalRecord={totalRecord}
-            isAddButtonClicked={isAddButtonClicked}
-            setIsAddButtonClicked={setIsAddButtonClicked}
-            isEditButtonClicked={isEditButtonClicked}
-            setIsEditButtonClicked={setIsEditButtonClicked}
-            searchData={searchData}
-          />
-        )
-      }
+      <DataTable
+        rows={rows}
+        columns={columns}
+        headingName={headingName}
+        setColumns={setColumns}
+        totalRecord={totalRecord}
+        isAddButtonClicked={isAddButtonClicked}
+        setIsAddButtonClicked={setIsAddButtonClicked}
+        isEditButtonClicked={isEditButtonClicked}
+        setIsEditButtonClicked={setIsEditButtonClicked}
+        searchData={searchData}
+        projectStatus={status}
+      />
     </div>
   );
 };

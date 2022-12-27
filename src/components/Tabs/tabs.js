@@ -43,7 +43,12 @@ function a11yProps(index) {
 export default function BasicTabs(props) {
   console.log(props.headingName);
   const [value, setValue] = React.useState(0);
+  const [status, setStatus] = React.useState("All")
   const handleChange = (event, newValue) => {
+    if(newValue === 0) setStatus("All")
+    else if(newValue === 1) setStatus("Active")
+    else if(newValue === 2) setStatus("History")
+    else setStatus("Future")
     setValue(newValue);
   };
 
@@ -65,11 +70,11 @@ export default function BasicTabs(props) {
       { TabsData[props.headingName] ? (
         TabsData[props.headingName].map((tab, index) => (
           <TabPanel key={index} value={value} index={index}>
-            <TabsTable headingName={props.headingName} tabName={tab} />
+            <TabsTable headingName={props.headingName} tabName={tab} status={status}/>
           </TabPanel>
         ))
       ) : (
-        <TabsTable headingName={props.headingName} tabName=''/>
+        <TabsTable headingName={props.headingName} tabName='' status={status}/>
       )}
     </Box>
   );

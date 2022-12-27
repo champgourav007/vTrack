@@ -1,0 +1,46 @@
+.settingTableHeader th:first-child{
+    padding-left:1.25rem !important;
+}
+.settingTableHeader th{
+    padding: 1.15rem 1rem 1.15rem 0 !important;
+    font-size: 1.25rem !important;
+    line-height: 1.25rem !important;
+    height: auto !important;
+    display: flex !important;
+    width: max-content;
+    /* min-width: 17%; */
+    width: 17%;
+}
+.settingTableHeader{
+    display: flex !important;
+}
+.settingTableHeader th:last-child{
+   flex: 1 !important;
+}
+.settingTableBody{
+    display: flex !important;
+    flex-direction: column;
+    padding-top: 1rem;
+}
+.settingTableBody td{
+    padding: .45rem 1rem 0.15rem 0 !important;
+    font-size: 1.15rem !important;
+    line-height: 1.15rem !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center;
+    /* min-width: 17%; */
+    width: 17%;
+    border: none !important;
+}
+.settingTableBody td:first-child{
+    padding-left:1.25rem !important;
+}
+.actions{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+.settingTableBody .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input{
+padding: 0 !important;
+}

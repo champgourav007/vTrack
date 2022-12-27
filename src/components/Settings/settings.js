@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
   getAllUserDetails,
+  getSettingTableData,
   getUserRoleData,
   saveUserRoleData,
 } from "../../redux/actions";
@@ -16,6 +17,7 @@ import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import { ConnectingAirportsOutlined } from "@mui/icons-material";
+import { SettingsTable } from "./settingsTable";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -83,6 +85,7 @@ export function Settings() {
   useEffect(() => {
     dispatch(getAllUserDetails());
     dispatch(getUserRoleData());
+    dispatch(getSettingTableData());
   }, []);
 
   useEffect(() => {
@@ -101,6 +104,7 @@ export function Settings() {
   return (
     <>
       <div className="settingsWrapper">
+      <div className="topBar">
         <div className="selectUserWrapper">
           <div className="userText">Please Select the User</div>
           <div>
@@ -162,11 +166,17 @@ export function Settings() {
           </div>
         </div>
         <div className="buttonClass">
-          <Button variant="contained" onClick={submitHandler}>
+          <Button variant="contained" onClick={submitHandler} className="addBtn">
             Add Role
           </Button>
         </div>
       </div>
-    </>
+      <div className="bottomContainer">
+      <SettingsTable rolesData={rolesData}/> 
+       
+      </div>
+      </div>
+      
+    </> 
   );
 }
