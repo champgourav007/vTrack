@@ -20,7 +20,7 @@
 .settingTableBody{
     display: flex !important;
     flex-direction: column;
-    padding-top: 1rem;
+    /* padding-top: 1rem; */
 }
 .settingTableBody td{
     padding: .45rem 1rem 0.15rem 0 !important;
@@ -36,6 +36,10 @@
 .settingTableBody td:first-child{
     padding-left:1.25rem !important;
 }
+.settingTableBody tr{
+    border-bottom: 1px solid rgba(224, 224, 224, 1) !important;
+    padding: 1rem 0;
+}
 .actions{
     display: flex;
     gap: 1rem;
@@ -43,4 +47,20 @@
 }
 .settingTableBody .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input{
 padding: 0 !important;
+}
+
+.MuiTableContainer-root ::-webkit-scrollbar,
+css-vlaat-MuiTableContainer-root ::-webkit-scrollbar {
+  width: 0.625rem !important;
+}
+
+.MuiTableContainer-root ::-webkit-scrollbar-track,
+.css-vlaat-MuiTableContainer-root ::-webkit-scrollbar-track {
+  background: FFFFFF;
+}
+
+.MuiTableContainer-root ::-webkit-scrollbar-thumb,
+.css-vlaat-MuiTableContainer-root ::-webkit-scrollbar-thumb {
+  background: #1773bc;
+  border-radius: 2rem;
 }

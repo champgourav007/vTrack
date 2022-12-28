@@ -24,7 +24,7 @@ export const updateProjectManagementDetails = (data) =>
 
 export const getMappedProjectManagementData = ()=>
 httpRequest({
-  url:`${USER_DETAILS}/get-projects`,
+  url:`${USER_DETAILS}/get-projects-for-pm`,
   method: HttpMethod.GET
 })  
   

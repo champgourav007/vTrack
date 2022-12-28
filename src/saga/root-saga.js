@@ -11,6 +11,7 @@ import { mappedProjectManagementSaga } from "./get-mapped-project-management-dat
 import { projectManagementSaga } from "./get-project-management-saga";
 import { projectManagersSaga } from "./get-project-managers-saga";
 import { getSettingTableDataSaga } from "./get-setting-table-data";
+import { getUnRegisteredUsersSaga } from "./get-unregistered-user-details-saga";
 import { getRolesSaga } from "./get-user-roles-setting-saga";
 import { projectAdminSaga } from "./project-admin-saga";
 import { projectAllocationSaga } from "./project-allocation-saga";
@@ -56,6 +57,7 @@ export function* rootSaga() {
     fork(getSettingTableDataSaga),
     fork(deleteSettingTableDataSaga),
     fork(updateSettingTableDataSaga),
-    fork(mappedProjectManagementSaga)
+    fork(mappedProjectManagementSaga),
+    fork(getUnRegisteredUsersSaga)
   ]);
 }

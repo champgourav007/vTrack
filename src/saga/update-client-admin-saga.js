@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { call, put, takeLatest } from "redux-saga/effects";
 import { updateClientAdminDetails } from "../http/requests/client-admin";
 import {
@@ -5,11 +6,13 @@ import {
   getClientAdminData,
   setVtrackLoader,
 } from "../redux/actions";
+import { toastOptions } from "../common/utils/toasterOptions";
 
 function* workerUpdateClientAdminSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
     yield call(updateClientAdminDetails, payload.data);
+    toast.success("Data Saved", toastOptions)
     yield put(
       getClientAdminData({
         pageNo: 1,
@@ -21,6 +24,7 @@ function* workerUpdateClientAdminSaga({ payload }) {
     );
     yield put(setVtrackLoader(false));
   } catch (err) {
+    toast.error("Something Went Wrong", toastOptions)
     yield put(setVtrackLoader(false));
   }
 }

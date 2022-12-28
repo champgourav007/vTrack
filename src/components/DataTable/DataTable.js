@@ -38,6 +38,7 @@ import Loader from "../Loader";
 import {
   convertDateToDDMYYYY,
   fileHandler,
+  getFullName,
   getLabel,
   getTypeofColumn,
   initialSort,
@@ -357,22 +358,6 @@ export const DataTable = ({
           {option.name}
         </MenuItem>
       ));
-    } else if (col === "projectManagerName") {
-      return projectManagers.map((option) => (
-        <MenuItem
-          key={option.id}
-          value={option.name}
-          onClick={() =>
-            setNewRowAdded({
-              ...newRowAdded,
-              [col]: option.name,
-              projectManagerId: option.id,
-            })
-          }
-        >
-          {option.name}
-        </MenuItem>
-      ))
     } else if(col === "currency" || col === "paymentTerms" || col === 'location') {
       return listItems && listItems[col].map((option) => (
         <MenuItem
@@ -408,22 +393,22 @@ export const DataTable = ({
           </MenuItem>
         ))
       );
-    } else if (col === "businessOwner" || col === "deliveryOfficer") {
+    } else if (col === "projectManagerName" || col === "businessOwner" || col === "deliveryOfficer") {
       return (
-        allUsers &&
-        allUsers.map((option) => (
+        allUserDetails &&
+        allUserDetails.data.map((option) => (
           <MenuItem
             key={option.id}
-            value={option.name}
+            value={getFullName(option.firstName, option.lastName)}
             onClick={() =>
               setNewRowAdded({
                 ...newRowAdded,
-                [col]: option.name,
+                [col]: getFullName(option.firstName, option.lastName),
                 [`${col}Id`]: option.id,
               })
             }
           >
-            {option.name}
+            {`${getFullName(option.firstName, option.lastName)} (${option.email})`}
           </MenuItem>
         ))
       );
@@ -492,7 +477,22 @@ export const DataTable = ({
   };
 
   const createInputField = (col) => {
-    if (getTypeofColumn(col.id, headingName) === "textfield") {
+    if(col.id === "paymentTerms"){
+      return (
+        <TableCell key={col.id}>
+          <TextField
+          className="numberInput"
+            type="number"
+            id="outlined-required"
+            label={getLabel(col.id, headingName)}
+            placeholder=""
+            value={newRowAdded[col.id]}
+            onChange={(e) => inputFieldHandler(e, col.id)}
+          />
+        </TableCell>
+      );
+    }
+    else if (getTypeofColumn(col.id, headingName) === "textfield") {
       return (
         <TableCell key={col.id} style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
           <TextField
@@ -810,7 +810,7 @@ export const DataTable = ({
                                     <img src={editIcon} className="editDeleteIcon" alt="" />
                                   </button>
                                 </Tooltip>
-                                {headingName !== Modules.PROJECT_ALLOCATION && (
+                                {headingName !== Modules.PROJECT_ALLOCATION && headingName !== Modules.PROJECT_MANAGEMENT && (
                                   <Tooltip title="Delete">
                                     <img
                                       src={deleteIcon}
