@@ -25,7 +25,8 @@ const getPeriods = () => {
 }
 
 export const TabsTable = ({ headingName, tabName, status, projectId }) => {
-  const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData } = useSelector(({ MODULES }) => MODULES);
+  const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData, allProjectsData } = useSelector(({ MODULES }) => MODULES);
+  const { allUserDetails } = useSelector(({ USER }) => USER);
   const dispatch = useDispatch();
 
   const [ isAddButtonClicked, setIsAddButtonClicked ] = useState(false);
@@ -35,7 +36,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const [ totalRecord, setTotalRecord ] = useState(0);
   const [ searchData, setSearchData ] = useState("");
   const periodWeeks = getPeriods();
-  const [ selectedPeriodWeek, setSelectedPriodWeek ] = useState(periodWeeks ? periodWeeks[0] : null)
+  const [ selectedPeriodWeek, setSelectedPriodWeek ] = useState(periodWeeks ? periodWeeks[0] : null);
+  const [ selectedProject, setSelectedProject ] = useState({});
+  const [ selectedEmployee, setSelectedEmployee ] = useState({});
 
   useEffect(()=>{
     dispatch(
@@ -152,20 +155,22 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       setSearchData(e.target.value);
   }
 
-  const getDateItems = () => {
+  const getDateItems = (fromMyTimeSheet) => {
     return periodWeeks.map((periodWeek)=>(
       <MenuItem
         value={periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM')}
         onClick={() =>{
-            setSelectedPriodWeek(periodWeek);
-            dispatch(
-              saveTimeSheetPeriodData({
-                periodWeek: periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM'),
-                startDT: periodWeek.startDate.format(),
-                endDT: periodWeek.endDate.format(),
-              })
-            );
-            dispatch(setTimeSheetPeriodWeek(periodWeeks[0].startDate.format('DD MMM') + ' - ' + periodWeeks[0].endDate.format('DD MMM')));
+            if(fromMyTimeSheet){
+              setSelectedPriodWeek(periodWeek);
+              dispatch(
+                saveTimeSheetPeriodData({
+                  periodWeek: periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM'),
+                  startDT: periodWeek.startDate.format(),
+                  endDT: periodWeek.endDate.format(),
+                })
+              );
+            }
+            dispatch(setTimeSheetPeriodWeek(periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM')));
           }
         }
       >
@@ -282,9 +287,6 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         dispatch(
           getTimeSheetData({
             periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
-            pageNo: 1,
-            pageSize: 10,
-            sortDir: "ASC",
           })
         );
         break;
@@ -326,35 +328,112 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         }
         {
           headingName === 'TimeSheet' ? (
-            <div className="button-flex">
-              <TextField
-                select
-                defaultValue={periodWeeks[0].startDate.format('DD MMM') + ' - ' + periodWeeks[0].endDate.format('DD MMM')}
-              >
-                {getDateItems()}
-              </TextField>
-              <button
-                disabled={isAddButtonClicked || isEditButtonClicked}
-                className={
-                  isAddButtonClicked || isEditButtonClicked
-                    ? "disableAddButton"
-                    : "addBtn"
-                }
-                onClick={() => setIsAddButtonClicked(true)}
-              >
-                  Add
-              </button>
-              <button
-                disabled={isAddButtonClicked || isEditButtonClicked}
-                className={
-                  isAddButtonClicked || isEditButtonClicked
-                    ? "disableAddButton"
-                    : "addBtn"
-                }
-              >
-                  Submit For Approval
-              </button>
-            </div>
+            tabName === 'MY TIMESHEET' ? 
+              <div className="button-flex">
+                <TextField
+                  select
+                  sx={{minWidth: '15rem'}}
+                  defaultValue={periodWeeks[0].startDate.format('DD MMM') + ' - ' + periodWeeks[0].endDate.format('DD MMM')}
+                >
+                  {getDateItems(true)}
+                </TextField>
+                <button
+                  disabled={isAddButtonClicked || isEditButtonClicked}
+                  className={
+                    isAddButtonClicked || isEditButtonClicked
+                      ? "disableAddButton"
+                      : "addBtn"
+                  }
+                  onClick={() => setIsAddButtonClicked(true)}
+                >
+                    Add
+                </button>
+                <button
+                  disabled={isAddButtonClicked || isEditButtonClicked}
+                  className={
+                    isAddButtonClicked || isEditButtonClicked
+                      ? "disableAddButton"
+                      : "addBtn"
+                  }
+                >
+                    Submit For Approval
+                </button>
+              </div> 
+            :
+              <div className="pendingApprovalDiv">
+                <TextField
+                  select
+                  label={"Projects"}
+                  value={selectedProject.projectName}
+                  sx={{
+                    minWidth: '15rem',
+                    "& label": {
+                      lineHeight: '0.8rem'
+                    }
+                  }}
+                >
+                  {allProjectsData && allProjectsData.map((option) => (
+                    <MenuItem
+                      key={option.projectId}
+                      value={option.projectName}
+                      onClick={() =>
+                        setSelectedProject({
+                          projectId: option.projectId,projectName: option.projectName
+                        })
+                      }
+                    >
+                      {option.projectName}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  select
+                  label={"Emp"}
+                  value={selectedEmployee.employeeName}
+                  sx={{
+                    minWidth: '15rem',
+                    "& label": {
+                      lineHeight: '1rem',
+                      marginTop: '-0.1rem'
+                    }
+                  }}
+                >
+                  {allUserDetails.data.map((option) => (
+                    <MenuItem
+                      key={option.id}
+                      value={`${option.firstName} ${option.lastName}`}
+                      onClick={() =>
+                        setSelectedProject({
+                          employeeId: option.projectId,employeeName: `${option.firstName} ${option.lastName}`
+                        })
+                      }
+                    >
+                      {`${option.firstName} ${option.lastName}`}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  select
+                  sx={{minWidth: '15rem'}}
+                  defaultValue={periodWeeks[0].startDate.format('DD MMM') + ' - ' + periodWeeks[0].endDate.format('DD MMM')}
+                >
+                  {getDateItems(false)}
+                </TextField>
+                <button 
+                  className={"addBtn showDataBtn"}
+                  onClick={()=>{
+                    dispatch(
+                      getTimeSheetData({
+                        periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
+                        employeeId: selectedEmployee.employeeId,
+                        projectId: selectedProject.projectId
+                      })
+                    );
+                  }}
+                >
+                  Show Data
+                </button>
+              </div>
           ) : headingName !== "Project Allocation" ? (
             <button
                 disabled={isAddButtonClicked || isEditButtonClicked}

@@ -15,7 +15,9 @@ function* workerTimeSheetSaga({ payload }) {
         state.MODULES.timesheetPeriodWeek);
     const timeSheetDetails = yield call(
         getTimeSheetDetails,
-        timesheetPeriodWeek
+        payload.periodWeek ? payload.periodWeek : timesheetPeriodWeek,
+        payload.projectId ? payload.projectId : 0,
+        payload.employeeId ? payload.employeeId : 0
     );
     // const timeSheetDetails = timeSheetData;
     yield put(setTimeSheetData(timeSheetDetails));

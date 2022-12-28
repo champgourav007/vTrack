@@ -7,19 +7,16 @@ import { toast } from "react-toastify";
 function* workerSaveTimeSheetPeriodSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
-    const employeeID = yield select(state=>
-        state.USER.userData.data.activeUsers.id);
-    const periodWeek = yield select(state=>
-        state.MODULES.timesheetPeriodWeek);
+    // const employeeID = yield select(state=>
+    //     state.USER.userData.data.activeUsers.id);
+    // const periodWeek = yield select(state=>
+    //     state.MODULES.timesheetPeriodWeek);
     const data = yield call(postTimeSheetPeriod, { ...payload.data, employeeID: 2});
     toast.success("Data Saved", toastOptions)
     yield put(setTimeSheetPeriodId(data.timesheetPeriodId))
     yield put(
       getTimeSheetData({
-        periodWeek: periodWeek,
-        pageNo: 1,
-        pageSize: 10,
-        sortDir: "ASC",
+        periodWeek: payload.data.periodWeek,
       })
     );
     yield put(setVtrackLoader(false));

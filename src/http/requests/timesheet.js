@@ -2,9 +2,9 @@ import { HttpMethod } from "../../common/constants/http-requests";
 import { httpRequest } from "../../common/utils/http-request";
 import { TIMESHEET_API } from "../api";
 
-export const getTimeSheetDetails = (timesheetPeriodWeek) =>
+export const getTimeSheetDetails = (timesheetPeriodWeek,projectId = 0,employeeId = 0) =>
   httpRequest({
-    url: `${TIMESHEET_API}/get-timesheet-detail/${timesheetPeriodWeek}/0/0`,
+    url: `${TIMESHEET_API}/get-timesheet-detail/${timesheetPeriodWeek}/${projectId}/${employeeId}`,
     method: HttpMethod.GET,
   });
 
@@ -22,15 +22,15 @@ export const postTimeSheetDetails = (data) =>
     data: data,
   });
 
-// export const updateTimeSheetDetails = (data) =>
-//   httpRequest({
-//     url: `${TIMESHEET_API}/${data.clientId}/update-client`,
-//     method: HttpMethod.PUT,
-//     data: data,
-//   });
+export const updateTimeSheetDetails = (data) =>
+  httpRequest({
+    url: `${TIMESHEET_API}/update-timesheet-detail`,
+    method: HttpMethod.PUT,
+    data: data,
+  });
 
-// export const deleteTimeSheetDetails = (clientId) =>
-//   httpRequest({
-//     url: `${TIMESHEET_API}/${clientId}/delete-client`,
-//     method: HttpMethod.DELETE,
-//   });
+export const deleteTimeSheetDetails = (timesheetDetailId) =>
+  httpRequest({
+    url: `${TIMESHEET_API}/delete-timesheet-detail/${timesheetDetailId}`,
+    method: HttpMethod.GET,
+  });
