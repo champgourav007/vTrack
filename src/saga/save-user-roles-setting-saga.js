@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 import { call, delay, put, takeLatest } from "redux-saga/effects";
 import { toastOptions } from "../common/utils/toasterOptions";
 import { saveUserRoles } from "../http/requests/settings";
-import { getSettingTableData, SettingDataType, setVtrackLoader } from "../redux/actions";
+import { getSettingTableData, getUnregisteredUserDetails, SettingDataType, setVtrackLoader } from "../redux/actions";
 
 function* workerSaveUserRoleSaga({ payload }) {
   try {
@@ -10,6 +10,7 @@ function* workerSaveUserRoleSaga({ payload }) {
     yield call(saveUserRoles, payload);
     toast.success("Data Saved", toastOptions)
     yield put(getSettingTableData());
+    yield put(getUnregisteredUserDetails());
     yield put(setVtrackLoader(false));
   } catch (err) {
     yield put(setVtrackLoader(false));

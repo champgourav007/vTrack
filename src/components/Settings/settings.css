@@ -95,6 +95,7 @@
   display: flex;
   align-items: center;
 }
-.addBtn{
+.addUserBtn{
   display: flex !important;
+  padding: .85rem 1.25rem !important;
 }

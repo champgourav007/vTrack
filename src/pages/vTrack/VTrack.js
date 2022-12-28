@@ -25,9 +25,9 @@ export const VTrack = () => {
           <Sidebar changePage={changePage} />
         </div>
         <div className="rightContainer">
-          <div className="announcementContainer">
-            <Announcement />
-          </div>
+          {/* <div className="announcementContainer">
+            <Announcement /> */}
+          {/* </div> */}
           <div className="selectedModule">
             <SelectedModule headingName={headingName} />
           </div>

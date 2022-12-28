@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import {
   getAllUserDetails,
   getSettingTableData,
+  getUnregisteredUserDetails,
   getUserRoleData,
   saveUserRoleData,
 } from "../../redux/actions";
@@ -37,7 +38,7 @@ export function Settings() {
   const [selectedRole, setSelectedRole] = useState("");
   const [searchData, setSearchData] = useState("");
   const dispatch = useDispatch();
-  const { allUserDetails } = useSelector(({ USER }) => USER);
+  const { unRegisteredUserDetails } = useSelector(({ USER }) => USER);
   const { userRole } = useSelector(({ MODULES }) => MODULES);
 
   const handleChange = (event) => {
@@ -81,6 +82,9 @@ export function Settings() {
         data: convertIdToAzureId(selectedUsers),
       })
     );
+    setSelectedRole("");
+    setSelectedUsers([]);
+   
   };
 
   const setSearchDataHelper = (e) => {
@@ -91,15 +95,17 @@ export function Settings() {
 
   useEffect(() => {
     dispatch(getAllUserDetails());
+    dispatch(getUnregisteredUserDetails());
     dispatch(getUserRoleData());
     dispatch(getSettingTableData());
+    
   }, []);
 
   useEffect(() => {
-    if (allUserDetails) {
-      setUserData(allUserDetails.data);
+    if (unRegisteredUserDetails) {
+      setUserData(unRegisteredUserDetails);
     }
-  }, [allUserDetails]);
+  }, [unRegisteredUserDetails]);
 
   useEffect(() => {
     if (userRole) {
@@ -172,7 +178,8 @@ export function Settings() {
           </div>
         </div>
         <div className="buttonClass">
-          <Button variant="contained" onClick={submitHandler} className="addBtn">
+          <Button variant="contained" onClick={submitHandler} 
+    className="addUserBtn">
             Add Role
           </Button>
         </div>

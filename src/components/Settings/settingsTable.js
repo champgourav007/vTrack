@@ -1,9 +1,9 @@
-import { FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from '@mui/material'
+import { FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Tooltip } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { TABLE_HEADERS } from '../../common/constants/setting-table-header'
 import { AddEnableIcon, crossIcon, deleteIcon, editIcon, TableArrows } from '../../common/icons';
-import { deleteSettingTableData, updateSettingTableData } from '../../redux/actions';
+import { deleteSettingTableData, getSettingTableData, updateSettingTableData } from '../../redux/actions';
 import DialogBox from '../DialogBox/dialogBox';
 import './settingTable.css';
 
@@ -13,10 +13,10 @@ export const SettingsTable = ({ rolesData }) => {
     const [editUserRole, setEditUserRole] = useState("");
     const [selectedRole, setSelectedRole] = useState("");
     const [dialogDeleteButtonClicked, setDialogDeleteButtonClicked] =
-    useState(false);
+        useState(false);
     const [idToDelete, setIdToDelete] = useState();
     const dispatch = useDispatch();
-    
+
     const handleUserUpdate = (userId) => {
         setEditUserRole(userId);
     }
@@ -31,21 +31,23 @@ export const SettingsTable = ({ rolesData }) => {
         setSelectedRole("");
 
     }
-    useEffect(()=>{
-        if(dialogDeleteButtonClicked){
+
+    useEffect(() => {
+        if (dialogDeleteButtonClicked) {
             dispatch(deleteSettingTableData(idToDelete));
             setDialogDeleteButtonClicked(false);
         }
-    },[dialogDeleteButtonClicked])
+    }, [dialogDeleteButtonClicked])
     return (
         <>
-         {showDialogBox && (
-        <DialogBox
-          setShowDialogBox={setShowDialogBox}
-          setDialogDeleteButtonClicked={setDialogDeleteButtonClicked}
-        />
-      )}
-            <TableContainer sx={{ maxHeight: "48rem", overflowX: "inherit" }}>
+            {showDialogBox && (
+                <DialogBox
+                    setShowDialogBox={setShowDialogBox}
+                    setDialogDeleteButtonClicked={setDialogDeleteButtonClicked}
+                />
+            )}
+            <Paper sx={{ width: "100%", overflow: "hidden" }}>
+            <TableContainer sx={{ maxHeight: "48rem"}}>
                 <Table aria-label="sticky table" size="small">
                     <TableHead>
                         <TableRow className='settingTableHeader'>
@@ -76,8 +78,8 @@ export const SettingsTable = ({ rolesData }) => {
                     <TableBody className='settingTableBody'>
                         {usersData && usersData.map((user) =>
                             <TableRow key={user.userId} className='settingTableHeader'>
-                                <TableCell align="left">{user.userId}</TableCell>
                                 <TableCell align="left">{`${user.firstName} ${user.lastName}`}</TableCell>
+                                <TableCell align="left">{user.email}</TableCell>
                                 {editUserRole === user.userId ?
                                     (<TableCell align="left">
                                         <FormControl sx={{ m: 1, width: "80%", margin: 0 }}>
@@ -102,45 +104,47 @@ export const SettingsTable = ({ rolesData }) => {
                                 <TableCell align="left">
                                     {editUserRole === user.userId ?
                                         <div className='actions'>
-                                        <Tooltip title="Update">
-                                            <img
-                                                src={AddEnableIcon}
-                                                className="editDeleteIcon cursorPointer"
-                                                onClick={() => handleUpdate(selectedRole, user.userId)}
-                                                alt=""
-                                            />
+                                            <Tooltip title="Update">
+                                                <img
+                                                    src={AddEnableIcon}
+                                                    className="editDeleteIcon cursorPointer"
+                                                    onClick={() => handleUpdate(selectedRole, user.userId)}
+                                                    alt=""
+                                                />
                                             </Tooltip>
                                             <Tooltip title="Cancel">
-                                            <img src={crossIcon} className="editDeleteIcon" alt=""
-                                                onClick={() =>
-                                                    handleCancelIcon()
-                                                }
-                                            />
+                                                <img src={crossIcon} className="editDeleteIcon" alt=""
+                                                    onClick={() =>
+                                                        handleCancelIcon()
+                                                    }
+                                                />
                                             </Tooltip>
 
                                         </div>
                                         :
                                         <div className='actions'>
-                                        <Tooltip title="Delete">
-                                            <img
-                                                src={deleteIcon}
-                                                className="editDeleteIcon cursorPointer"
-                                                onClick={() => {setIdToDelete(user.userId);
-                                                    setShowDialogBox(true);
-                                                }}
-                                                alt=""
-                                            />
-                                            </Tooltip>
                                             <Tooltip title="Edit">
-                                            <button
-                                                onClick={() =>
-                                                    handleUserUpdate(user.userId)
-                                                }
-                                                className="buttonBackgroundBorder cursorPointer"
-                                            >
-                                                <img src={editIcon} className="editDeleteIcon" alt="" />
-                                            </button>
+                                                <button
+                                                    onClick={() =>
+                                                        handleUserUpdate(user.userId)
+                                                    }
+                                                    className="buttonBackgroundBorder cursorPointer"
+                                                >
+                                                    <img src={editIcon} className="editDeleteIcon" alt="" />
+                                                </button>
                                             </Tooltip>
+                                            <Tooltip title="Delete">
+                                                <img
+                                                    src={deleteIcon}
+                                                    className="editDeleteIcon cursorPointer"
+                                                    onClick={() => {
+                                                        setIdToDelete(user.userId);
+                                                        setShowDialogBox(true);
+                                                    }}
+                                                    alt=""
+                                                />
+                                            </Tooltip>
+
                                         </div>
                                     }
                                 </TableCell>
@@ -151,6 +155,7 @@ export const SettingsTable = ({ rolesData }) => {
 
                 </Table>
             </TableContainer>
+            </Paper>
 
         </>
     )

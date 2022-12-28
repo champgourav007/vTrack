@@ -110,3 +110,13 @@ th.css-1g0973d-MuiTableCell-root {
   left: 0.375rem;
   color: #000000;
 }
+.numberInput input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.numberInput input[type=number] {
+  -moz-appearance: textfield;
+}
