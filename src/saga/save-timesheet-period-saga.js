@@ -12,7 +12,6 @@ function* workerSaveTimeSheetPeriodSaga({ payload }) {
     const periodWeek = yield select(state=>
         state.MODULES.timesheetPeriodWeek);
     const data = yield call(postTimeSheetPeriod, { ...payload.data, employeeID: 2});
-    toast.success("Data Saved", toastOptions)
     yield put(setTimeSheetPeriodId(data.timesheetPeriodId))
     yield put(
       getTimeSheetData({
@@ -24,7 +23,6 @@ function* workerSaveTimeSheetPeriodSaga({ payload }) {
     );
     yield put(setVtrackLoader(false));
   } catch (err) {
-    toast.error("Something Went Wrong", toastOptions)
     yield put(setVtrackLoader(false));
   }
 };
