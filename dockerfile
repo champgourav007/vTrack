@@ -17,6 +17,7 @@ COPY . .
 # Building our application
 RUN npm run build
 
+
 # Fetching the latest nginx image
 FROM nginx
 
