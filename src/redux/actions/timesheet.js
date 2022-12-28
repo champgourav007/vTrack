@@ -7,6 +7,8 @@ export const TimeSheetType = {
     SAVE_TIMESHEET_PERIOD_DATA: 'SAVE_TIMESHEET_PERIOD_DATA',
     UPDATE_TIMESHEET_DATA: 'UPDATE_TIMESHEET_DATA',
     DELETE_TIMESHEET_DATA: 'DELETE_TIMESHEET_DATA',
+    GET_PROJECT_TASKS_DATA: 'GET_PROJECT_TASKS_DATA',
+    SET_PROJECT_TASKS_DATA: 'SET_PROJECT_TASKS_DATA'
   }
   
   export const getTimeSheetData = (data) => 
@@ -54,6 +56,17 @@ export const TimeSheetType = {
   export const setTimeSheetPeriodWeek = (data) => 
   ({
     type: TimeSheetType.SET_TIMESHEET_PERIOD_WEEK,
+    payload: data,
+  });
+
+  export const getProjectTasks = () => 
+  ({
+    type: TimeSheetType.GET_PROJECT_TASKS_DATA,
+  });
+
+  export const setProjectTasks = (data) => 
+  ({
+    type: TimeSheetType.SET_PROJECT_TASKS_DATA,
     payload: data,
   });
   

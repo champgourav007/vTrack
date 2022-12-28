@@ -130,14 +130,14 @@ export default function Sidebar({ changePage, pageName }) {
           </div>
           <div
             id="collapse_buttom"
-            onClick={() => {
-              setCollapse(!collapse);
-            }}
           >
             <img
               className="arrowIcon"
               src={collapse === false ? collapseArrowImg : openArrowImg}
               alt=""
+              onClick={() => {
+                setCollapse(!collapse);
+              }}
             />
           </div>
         </div>

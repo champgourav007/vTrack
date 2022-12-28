@@ -29,14 +29,14 @@ export const Dashboard = () => {
       <div className="rightContainer dashboardRightContainer">
         <TopBar />
         <div className="vToolWrapper">
-          <div className="wrapperHeading">vTools</div>
+          <div className="wrapperHeading">
+            <span style={{ color: '#1773BC' }}>v</span><span style={{ color: '#6E6F74'}}>Tools</span>
+          </div>
           <div className="allItemsWrapper">
             <div className="individualItemWrapper">
-              <div className="individualItemImg" onClick={navigateHandler}>
-                <img src={vTrackIcon} alt="" />
-              </div>
+              <img className="individualItemImg" src={vTrackIcon} alt="" onClick={navigateHandler}/>
               <div className="individualItemText">
-                <span>vTrack</span>
+                <span style={{ color: '#1773BC' }}>v</span><span style={{ color: '#6E6F74'}}>Track</span>
               </div>
             </div>
           </div>

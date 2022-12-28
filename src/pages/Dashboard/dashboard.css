@@ -15,25 +15,40 @@
 
 .rightContainer {
   flex: 1;
-  background-color: #FFFFFF;
-}
-
-.individualItemText {
-  display: flex;
-  width: 10%;
-  justify-content: center;
+  background: rgba(23, 115, 188, 0.02);
 }
 
 .wrapperHeading {
-  font-size: 28px;
+  font-size: 2.5rem;
+  line-height: 3rem;
   font-weight: 600;
+  margin-bottom: 1.25rem;
 }
 
 .individualItemText {
-  font-size: 16px;
+  font-size: 1.5rem;
   font-weight: 600;
+  line-height: 2rem;
+  text-align: center;
 }
 
 .individualItemImg {
   cursor: pointer;
+  height: 12rem;
+  width: 12rem;
+}
+
+.allItemsWrapper {
+  display: flex;
+  gap: 5rem;
+  padding: 2.5rem;
+  background: #FFFFFF;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+  border-radius: 0 0.625rem 0.625rem 0.625rem;
+}
+
+.individualItemWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
 }

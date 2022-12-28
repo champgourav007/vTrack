@@ -69,18 +69,22 @@ export const getTypeofColumn = (col, moduleName) => {
 };
 
 export const getLabel = (col, moduleName) => {
-  for (let column of tableColumnsData[moduleName.replace(' ', '')]) {
-    if (column.id === col) {
-      return column.label;
+  if (tableColumnsData[moduleName.replace(' ', '')] && tableColumnsData[moduleName.replace(' ', '')].length) {
+    for (let column of tableColumnsData[moduleName.replace(' ', '')]) {
+      if (column.id === col) {
+        return column.label;
+      }
     }
   }
   return '';
 };
 
 export const getMinWidth = (col, moduleName) => {
-  for (let column of tableColumnsData[moduleName.replace(' ', '')]) {
-    if (column.id === col) {
-      return column.minWidth;
+  if (tableColumnsData[moduleName.replace(' ', '')] && tableColumnsData[moduleName.replace(' ', '')].length) {
+    for (let column of tableColumnsData[moduleName.replace(' ', '')]) {
+      if (column.id === col) {
+        return column.minWidth;
+      }
     }
   }
 };

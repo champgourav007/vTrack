@@ -31,3 +31,9 @@ export const getAllProjectsDetails = () =>
     url: `${DROPDOWN}/get-all-projects`,
     method: HttpMethod.GET,
   });
+
+export const projectTasksDetails = () =>
+  httpRequest({
+    url: `${DROPDOWN}/get-project-tasks`,
+    method: HttpMethod.GET,
+  });
