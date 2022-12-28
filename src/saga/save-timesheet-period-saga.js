@@ -7,11 +7,13 @@ function* workerSaveTimeSheetPeriodSaga({ payload }) {
     yield put(setVtrackLoader(true));
     const employeeID = yield select(state=>
         state.USER.userData.data.activeUsers.id);
+    const periodWeek = yield select(state=>
+        state.MODULES.timesheetPeriodWeek);
     const data = yield call(postTimeSheetPeriod, { ...payload.data, employeeID: 2});
     yield put(setTimeSheetPeriodId(data.timesheetPeriodId))
     yield put(
       getTimeSheetData({
-        // periodWeek: periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM'),
+        periodWeek: periodWeek,
         pageNo: 1,
         pageSize: 10,
         sortDir: "ASC",

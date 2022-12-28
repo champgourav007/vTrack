@@ -9,6 +9,7 @@ export const modulesState = {
   projectAllocationData: null,
   timeSheetData: null,
   timesheetPeriodId: 0,
+  timesheetPeriodWeek: "",
   clientsData: null,
   projectManagers: null,
   listItems: null,
@@ -87,6 +88,11 @@ export const modulesReducer = (state = modulesState, action) => {
       return {
         ...state,
         timesheetPeriodId: action.payload
+      }
+    case TimeSheetType.SET_TIMESHEET_PERIOD_WEEK:
+      return {
+        ...state,
+        timesheetPeriodWeek: action.payload
       }
     case ProjectManagementType.SET_MAPPED_PROJECT_MANAGEMENT_DATA:
       return{

@@ -2,6 +2,7 @@ export const TimeSheetType = {
     GET_TIMESHEET_DATA: 'GET_TIMESHEET_DATA',
     SET_TIMESHEET_DATA: 'SET_TIMESHEET_DATA',
     SET_TIMESHEET_PERIOD_ID: 'SET_TIMESHEET_PERIOD_ID',
+    SET_TIMESHEET_PERIOD_WEEK: 'SET_TIMESHEET_PERIOD_WEEK',
     SAVE_TIMESHEET_DATA: 'SAVE_TIMESHEET_DATA',
     SAVE_TIMESHEET_PERIOD_DATA: 'SAVE_TIMESHEET_PERIOD_DATA',
     UPDATE_TIMESHEET_DATA: 'UPDATE_TIMESHEET_DATA',
@@ -47,6 +48,12 @@ export const TimeSheetType = {
   export const setTimeSheetPeriodId = (data) => 
   ({
     type: TimeSheetType.SET_TIMESHEET_PERIOD_ID,
+    payload: data,
+  });
+
+  export const setTimeSheetPeriodWeek = (data) => 
+  ({
+    type: TimeSheetType.SET_TIMESHEET_PERIOD_WEEK,
     payload: data,
   });
   

@@ -110,3 +110,18 @@ th.css-1g0973d-MuiTableCell-root {
   left: 0.375rem;
   color: #000000;
 }
+
+.table-header-cell{
+  display: flex;
+  align-items: center;
+}
+
+fieldset{
+  border-color: none !important;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

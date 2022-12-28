@@ -101,21 +101,21 @@ export const DataTable = ({
       } else if (headingName === Modules.TIMESHEET){
         const dateHours = [];
         const restProps = {};
-        let totalHours = 0;
+        let totalHrs = 0;
         Object.keys(newRowAdded).forEach(key=>{
           if(moment(key).isValid()){
             dateHours.push({
               date: key,
               hours: newRowAdded[key]
             });
-            if(newRowAdded[key] !== "") totalHours += parseInt(newRowAdded[key]);
+            if(newRowAdded[key] !== "") totalHrs += parseInt(newRowAdded[key]);
           }
           else{
             restProps[key] = newRowAdded[key];
           }
         });
         restProps['dateHours'] = [...dateHours];
-        restProps['totalHours'] = totalHours.toString();
+        restProps['totalHrs'] = totalHrs.toString();
         dispatch(saveTimeSheetData(restProps));
       }
     } else {
@@ -462,7 +462,7 @@ export const DataTable = ({
           {option.projectName}
         </MenuItem>
       ))
-    } else if (col === "task"){
+    } else if (col === "taskName"){
       return allTasks ? allTasks.map((option,index) => (
         <MenuItem
           key={index}
@@ -494,24 +494,33 @@ export const DataTable = ({
   const createInputField = (col) => {
     if (getTypeofColumn(col.id, headingName) === "textfield") {
       return (
-        <TableCell key={col.id}>
+        <TableCell key={col.id} style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
           <TextField
             id="outlined-required"
             label={getLabel(col.id, headingName)}
             placeholder=""
             value={newRowAdded[col.id]}
+            sx={{
+            "& label": {
+              lineHeight: '0.8rem'
+            }
+          }}
             onChange={(e) => inputFieldHandler(e, col.id)}
           />
         </TableCell>
       );
     } else if (getTypeofColumn(col.id, headingName) === "select") {
       return (
-        <TableCell key={col.id}>
+        <TableCell key={col.id}  style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
           <TextField
             id="outlined-select-currency"
             select
             label={getLabel(col.id, headingName)}
             value={newRowAdded[col.id]}
+            sx={{
+            "& label": {
+              lineHeight: '0.8rem'
+            }}}
             // onChange={(e) => inputFieldHandler(e, col.id)}
             style={{ width: "80%" }}
           >
@@ -521,7 +530,7 @@ export const DataTable = ({
       );
     } else if (getTypeofColumn(col.id, headingName) === "date") {
       return (
-        <TableCell key={col.id}>
+        <TableCell key={col.id} style={{maxWidth: '7rem'}}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label=""
@@ -530,7 +539,7 @@ export const DataTable = ({
                 setNewRowAdded({ ...newRowAdded, [col.id]: newValue });
               }}
               placeholder="Date"
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params) => <TextField {...params} error={false} />}
             />
           </LocalizationProvider>
         </TableCell>
@@ -584,7 +593,12 @@ export const DataTable = ({
             label={"Time"}
             type="number"
             value={newRowAdded[col.id]}
-            style={{maxWidth:'80%'}}
+            style={{maxWidth:'6rem'}}
+            sx={{
+            "& label": {
+              lineHeight: '0.8rem'
+            }
+          }}
             onChange={(e) => inputFieldHandler(e, col.date)}
           />
         </TableCell>
@@ -666,25 +680,27 @@ export const DataTable = ({
                       <TableCell
                         key={column.id}
                         align={column.align}
-                        style={{ minWidth: column.minWidth, position: 'relative' }}
+                        style={{ minWidth: column.minWidth, position: 'relative',maxWidth:column.maxWidth ? column.maxWidth : 'auto'  }}
                         sx={{
                           backgroundColor: "#1773bc0d",
                           color: "#1773bc",
                           fontWeight: 700,
                         }}
                       >
-                        {column.label}
-                        {!column.isDate && 
-                          <img
-                            src={TableArrows}
-                            alt=""
-                            className="tableArrows"
-                            onClick={() => handleSortBy(column.id)}
-                          />
-                        }
-                        {column.day && 
-                          <div className="month">{column.day}</div>
-                        }
+                        <div className="table-header-cell">
+                          <span>{column.label}</span>
+                          {!column.isDate && 
+                            <img
+                              src={TableArrows}
+                              alt=""
+                              className="tableArrows"
+                              onClick={() => handleSortBy(column.id)}
+                            />
+                          }
+                          {column.day && 
+                            <div className="month">{column.day}</div>
+                          }
+                        </div>
                       </TableCell>
                     )
                 )}
@@ -818,14 +834,14 @@ export const DataTable = ({
                         } 
                         else if (col.id.includes("Date")) {
                           return (
-                            <TableCell key={col.id}>
+                            <TableCell key={col.id} style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
                               {convertDateToDDMYYYY(row[col.id])}
                             </TableCell>
                           );
                         }
                         return col.id !==
                           UniqueIds[headingName.replace(" ", "")] ? (
-                          <TableCell key={col.id} style={{textAlign: col.isDate || col.id === 'totalHours' ? "center" : "auto"}}>
+                          <TableCell key={col.id} style={{textAlign: col.isDate || col.id === 'totalHrs' ? "center" : "auto",maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
                             {col.id === "employeeName" ? (
                               getEmployeeName(row["employeeId"])
                             ) : col.id === "allocation" && row[col.id] ? (

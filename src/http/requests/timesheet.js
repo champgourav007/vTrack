@@ -2,11 +2,11 @@ import { HttpMethod } from "../../common/constants/http-requests";
 import { httpRequest } from "../../common/utils/http-request";
 import { TIMESHEET_API } from "../api";
 
-// export const getTimeSheetDetails = (pageNo, pageSize, sortDir, sortBy, searchData) =>
-//   httpRequest({
-//     url: `${TIMESHEET_API}/get-clients?page=${pageNo}&pagesize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}&searchKey=${searchData}`,
-//     method: HttpMethod.GET,
-//   });
+export const getTimeSheetDetails = (timesheetPeriodWeek) =>
+  httpRequest({
+    url: `${TIMESHEET_API}/get-timesheet-detail/${timesheetPeriodWeek}/0/0`,
+    method: HttpMethod.GET,
+  });
 
 export const postTimeSheetPeriod = (data) =>
   httpRequest({

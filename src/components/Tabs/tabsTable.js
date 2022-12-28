@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { DataTable } from "../DataTable/DataTable";
 import { useDispatch, useSelector } from "react-redux";
 import { Modules } from "../../common/constants/sidebar";
-import { getAllProjectsData, getAllUserDetails, getAllUsersData, getClientAdminData, getClientsData, getListItems, getProjectAdminData, getProjectAllocationData, getProjectManagersData, getTimeSheetData, saveTimeSheetData, saveTimeSheetPeriodData } from "../../redux/actions";
+import { getAllProjectsData, getAllUserDetails, getAllUsersData, getClientAdminData, getClientsData, getListItems, getProjectAdminData, getProjectAllocationData, getProjectManagersData, getTimeSheetData, saveTimeSheetData, saveTimeSheetPeriodData, setTimeSheetPeriodWeek } from "../../redux/actions";
 import { getLabel, getMinWidth, tableColumnsData } from "../../common/utils/datatable";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
@@ -37,25 +37,46 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const periodWeeks = getPeriods();
   const [ selectedPeriodWeek, setSelectedPriodWeek ] = useState(periodWeeks ? periodWeeks[0] : null)
 
+  useEffect(()=>{
+    dispatch(
+      saveTimeSheetPeriodData({
+        periodWeek: moment().subtract(42,'days').startOf('isoweek').format('DD MMM') + ' - ' + moment().subtract(35,'days').startOf('week').format('DD MMM'),
+        startDT: periodWeeks[0].startDate.format(),
+        endDT: periodWeeks[0].endDate.format(),
+      })
+    );
+    dispatch(setTimeSheetPeriodWeek(moment().subtract(42,'days').startOf('isoweek').format('DD MMM') + ' - ' + moment().subtract(35,'days').startOf('week').format('DD MMM')));  
+  },[]);
+  
   const handleSetColumnsData = (data) => {
     const temp = [];
+    let totalHrs = null;
     Object.keys(data).forEach((col) => {
       if(col === 'dateHours'){
         data[col].forEach((dateHour,index)=>{
           let month = {
             isDate: true
           };
-          if(index === 0 || dateHour.date.format('DD') === '01') month['day'] = dateHour.date.format('MMM')
+          if(index === 0 || moment(dateHour.date).format('DD') === '01') month['day'] = moment(dateHour.date).format('MMM')
           temp.push({
-            id: dateHour.date.format('ddd DD'),
-            label: dateHour.date.format('ddd DD'),
-            date: dateHour.date.format(),
+            id: moment(dateHour.date).format('ddd DD'),
+            label: moment(dateHour.date).format('ddd DD'),
+            date: moment(dateHour.date).format(),
             minWidth: 55,
             sortDir: "",
             align: "left",
             ...month
           })
         })
+      }
+      else if(col === 'totalHrs'){
+        totalHrs = {
+          id: col,
+          label: getLabel(col, headingName),
+          minWidth: getMinWidth(col, headingName),
+          sortDir: "DESC",
+          align: "left",
+        };
       }
       else if (!col.includes('Id') && getLabel(col, headingName) !== '') {
         temp.push({
@@ -78,7 +99,16 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     if(headingName === Modules.PROJECT_ALLOCATION) {
       setColumns([ ...temp ]);
     } else {
-      setColumns([
+      totalHrs ? setColumns([
+        ...temp, totalHrs,
+        {
+          id: "actions",
+          label: "Actions",
+          minWidth: 100,
+          sortDir: "",
+          align: "left",
+        },
+      ]) : setColumns([
         ...temp,
         {
           id: "actions",
@@ -98,16 +128,15 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   };
 
   const handleSetRows = (tableData) => {
-    console.log('here')
     let rowsData = [];
     tableData.forEach((row)=>{
       let rowData = {};
       Object.keys(row).forEach((col) => {
         if(col === 'dateHours'){
           row[col].forEach((dateHour)=>{
-            rowData[dateHour.date.format('ddd DD')] = dateHour.hours === 0 ? '-' : dateHour.hours;
+            rowData[moment(dateHour.date).format('ddd DD')] = dateHour.hours === 0 ? '-' : dateHour.hours;
           })
-        }
+        } 
         else {
           rowData[col] = row[col];
         }
@@ -132,10 +161,11 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
             dispatch(
               saveTimeSheetPeriodData({
                 periodWeek: periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM'),
-                startDT: periodWeek.startDate,
-                endDT: periodWeek.endDate,
+                startDT: periodWeek.startDate.format(),
+                endDT: periodWeek.endDate.format(),
               })
             );
+            dispatch(setTimeSheetPeriodWeek(periodWeeks[0].startDate.format('DD MMM') + ' - ' + periodWeeks[0].endDate.format('DD MMM')));
           }
         }
       >
@@ -154,16 +184,35 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     } else if (headingName === Modules.PROJECT_ALLOCATION && projectAllocationData && projectAllocationData.totalCount) {
       setTableData(projectAllocationData);
       setRows(projectAllocationData.data);
-    } else if (headingName === Modules.TIMESHEET && timeSheetData && timeSheetData.totalCount){
-      setTableData(timeSheetData);
-      handleSetRows(timeSheetData.data);
+    } else if (headingName === Modules.TIMESHEET && timeSheetData && timeSheetData.length){
+      handleSetColumnsData(timeSheetData[0]);
+      setTotalRecord(timeSheetData.length);
+      handleSetRows(timeSheetData);
     } else if (headingName === Modules.PROJECT_MANAGEMENT && projectManagementData && projectManagementData.totalCount) {
       setTableData(projectManagementData);
       setRows(projectManagementData.data);
     } else {
       if (tableColumnsData[headingName.replace(' ', '')]) {
+        let temp = [...tableColumnsData[headingName.replace(' ', '')]];
+        if(headingName === Modules.TIMESHEET){
+          let totalHrs = temp.pop();
+          let date = moment(selectedPeriodWeek.startDate);
+          for (let i=0;i<7;i++){
+            temp.push({
+              id: moment(date).format('ddd DD'),
+              label: moment(date).format('ddd DD'),
+              date: moment(date).format(),
+              minWidth: 55,
+              sortDir: "",
+              align: "left",
+              isDate: true
+            })
+            date.add(1,'days');
+          }
+          temp.push(totalHrs);
+        }
         setColumns([
-          ...tableColumnsData[headingName.replace(' ', '')],
+          ...temp,
           {
             id: "actions",
             label: "Actions",
@@ -265,7 +314,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   return (
     <div className="tableDiv">
       <div className="searchHeader">
-        <div className="searchWrapper">
+        {headingName !== 'TimeSheet' && <div className="searchWrapper">
           <img src={searchIcon} className="searchIcon" alt="" />
           <input
             className="searchBox"
@@ -274,6 +323,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
             onChange={setSearchDataHelper}
           />
         </div>
+        }
         {
           headingName === 'TimeSheet' ? (
             <div className="button-flex">

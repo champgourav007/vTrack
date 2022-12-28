@@ -1,4 +1,5 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
+import { getTimeSheetDetails } from "../http/requests/timesheet";
 import { timeSheetData } from "../mock-data/TableData";
 // import { getTimeSheetDetails } from "../http/requests/client-admin";
 import {
@@ -10,15 +11,13 @@ import {
 function* workerTimeSheetSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
-    // const TimeSheetDetails = yield call(
-    //   getTimeSheetDetails,
-    //   payload.pageNo,
-    //   payload.pageSize,
-    //   payload.sortDir,
-    //   payload.sortBy,
-    //   payload.searchData
-    // );
-    const timeSheetDetails = timeSheetData;
+    const timesheetPeriodWeek = yield select(state=>
+        state.MODULES.timesheetPeriodWeek);
+    const timeSheetDetails = yield call(
+        getTimeSheetDetails,
+        timesheetPeriodWeek
+    );
+    // const timeSheetDetails = timeSheetData;
     yield put(setTimeSheetData(timeSheetDetails));
     yield put(setVtrackLoader(false));
   } catch (err) {

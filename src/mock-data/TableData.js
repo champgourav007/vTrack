@@ -251,7 +251,7 @@ export const initialData = (headingName ,selectedPeriodWeek) => {
       return {
         projectName:'',
         task:'',
-        totalHours:'',
+        totalHrs:'',
         ...dates
       };
     case 'Project Management':
@@ -304,7 +304,7 @@ export const timeSheetData = {
           "hours": 1,
         }
       ],
-      "totalHours": 5
+      "totalHrs": 5
     },
     {
       "fieldId": 2,
@@ -340,7 +340,7 @@ export const timeSheetData = {
           "hours": 0,
         }
       ],
-      "totalHours": 5
+      "totalHrs": 5
     }
   ],
   totalCount: 2
