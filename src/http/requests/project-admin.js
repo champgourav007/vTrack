@@ -24,6 +24,6 @@ export const updateProjectAdminDetails = (data) =>
 
 export const deleteProjectAdminDetails = (projectId) =>
   httpRequest({
-    url: `${PROJECT_ADMIN_API}/${projectId}/delete-client`,
+    url: `${PROJECT_ADMIN_API}/${projectId}/delete-project`,
     method: HttpMethod.DELETE,
   });

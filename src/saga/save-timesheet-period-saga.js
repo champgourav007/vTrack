@@ -1,6 +1,8 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
 import { postTimeSheetPeriod } from "../http/requests/timesheet";
 import { TimeSheetType, getTimeSheetData, setVtrackLoader, setTimeSheetPeriodId } from "../redux/actions";
+import { toastOptions } from "../common/utils/toasterOptions";
+import { toast } from "react-toastify";
 
 function* workerSaveTimeSheetPeriodSaga({ payload }) {
   try {
@@ -8,6 +10,7 @@ function* workerSaveTimeSheetPeriodSaga({ payload }) {
     const employeeID = yield select(state=>
         state.USER.userData.data.activeUsers.id);
     const data = yield call(postTimeSheetPeriod, { ...payload.data, employeeID: 2});
+    toast.success("Data Saved", toastOptions)
     yield put(setTimeSheetPeriodId(data.timesheetPeriodId))
     yield put(
       getTimeSheetData({
@@ -19,6 +22,7 @@ function* workerSaveTimeSheetPeriodSaga({ payload }) {
     );
     yield put(setVtrackLoader(false));
   } catch (err) {
+    toast.error("Something Went Wrong", toastOptions)
     yield put(setVtrackLoader(false));
   }
 };

@@ -8,6 +8,8 @@ import { Settings } from "../Settings/settings";
 import SelectBar from "../SelectBar/selectBar";
 import { useDispatch } from "react-redux";
 import { getMappedProjectManagementData } from "../../redux/actions/project-management";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const SelectedModule = ({ headingName }) => {
   const [selectedClient, setSelectedClient] = useState('')
@@ -27,6 +29,8 @@ export const SelectedModule = ({ headingName }) => {
  },[]);
 
   return (
+    <>
+    <ToastContainer />  
     <div className="mainContainer">
       <TopBar />
       {
@@ -35,5 +39,6 @@ export const SelectedModule = ({ headingName }) => {
       <div className="heading">{headingName}</div>
       {headingName === "settings" ? <Settings/> : <TabsComponent headingName={headingName} selectedClient = {selectedClient}/>}
     </div>
+    </>
   );
 };

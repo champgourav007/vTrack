@@ -4,11 +4,14 @@ import {
   setVtrackLoader,
 } from "../redux/actions";
 import { getProjectManagementData, ProjectManagementType } from "../redux/actions/project-management";
+import { toastOptions } from "../common/utils/toasterOptions";
+import { toast } from "react-toastify";
 
 function* workerSaveProjectManagementSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
     yield call(postProjectManagementDetails, payload.data);
+    toast.success("Data Saved", toastOptions)
     yield put(
         getProjectManagementData({
         projectId: payload.data.projectId,
@@ -21,6 +24,7 @@ function* workerSaveProjectManagementSaga({ payload }) {
     );
     yield put(setVtrackLoader(false));
   } catch (err) {
+    toast.error("Something Went Wrong", toastOptions)
     yield put(setVtrackLoader(false));
   }
 }
