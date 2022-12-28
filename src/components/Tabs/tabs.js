@@ -53,7 +53,6 @@ export default function BasicTabs(props) {
     if(newValue === 0) setStatus("All")
     else if(newValue === 1) setStatus("Active")
     else if(newValue === 2) setStatus("History")
-    else setStatus("Future")
   }
     setValue(newValue);
   };
@@ -73,7 +72,7 @@ export default function BasicTabs(props) {
           >
             {mappedProjectManagementData?.filter((projectVal)=>projectVal.clientId === props.selectedClient.id)[0]
             ?.projects?.map((project, index)=> (
-              <Tab className="" label={project.projectName} {...a11yProps(index)} />
+              <Tab className="" label={project.projectName} {...a11yProps(index)} onClick={()=>props.setSelectedProjectName(project.projectName)} />
             ))}
           </Tabs>
          : TabsData[props.headingName] && (

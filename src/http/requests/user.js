@@ -13,3 +13,9 @@ export const getAllUserDetails = () =>
     url: `${USERS_API}/get-all-users`,
     method: HttpMethod.GET,
   });
+
+  export const getUnregisteredUsers = () =>
+  httpRequest({
+    url: `${USERS_API}/get-unregistered-users`,
+    method: HttpMethod.GET,
+  });

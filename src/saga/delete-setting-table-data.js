@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { deleteSettingUserData } from "../http/requests/settings";
-import { getSettingTableData, SettingDataType, setVtrackLoader } from "../redux/actions";
+import { getSettingTableData, getUnregisteredUserDetails, SettingDataType, setVtrackLoader } from "../redux/actions";
 
 
 function* workerDeleteSettingTableData({payload}) {
@@ -8,6 +8,7 @@ function* workerDeleteSettingTableData({payload}) {
     yield put(setVtrackLoader(true));
     yield call(deleteSettingUserData,payload );
     yield put(getSettingTableData());
+    yield put(getUnregisteredUserDetails());
     yield put(setVtrackLoader(false));
   } catch (err) {
     console.log(err);

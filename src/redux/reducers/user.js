@@ -2,7 +2,8 @@ import { UserType } from "../actions/user";
 
 export const userState = {
   userData: null,
-  allUserDetails: null
+  allUserDetails: null,
+  unRegisteredUserDetails:null,
 }
 
 export const userReducer = (state = userState, action) => {
@@ -16,6 +17,11 @@ export const userReducer = (state = userState, action) => {
       return {
         ...state,
         allUserDetails: action.payload,
+      };
+      case UserType.SET_UNREGISTERED_USER_DETAILS:
+      return {
+        ...state,
+        unRegisteredUserDetails: action.payload,
       };
     default: return state;
   }

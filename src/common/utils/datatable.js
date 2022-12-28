@@ -27,7 +27,7 @@ export const tableColumnsData = {
     { id: "msaStartDate", label: "MSA Start Date", minWidth: 100, type: 'date' },
     { id: "msaEndDate", label: "MSA End Date", minWidth: 110, type: 'date' },
     { id: "businessOwner", label: "Veersa Business Owner", minWidth: 100, type: 'select' },
-    { id: "paymentTerms", label: "Payment Terms", minWidth: 80, type: 'select' },
+    { id: "paymentTerms", label: "Payment Terms", minWidth: 80, type: 'textfield' },
     { id: "deliveryOfficer", label: "Veersa Delivery Officer", minWidth: 100, type: 'select' },
     { id: "msaDoc", label: "Actions", minWidth: 50, align: "left", type: 'none' },
   ],
@@ -44,7 +44,6 @@ export const tableColumnsData = {
     { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select' },
     { id: 'projectName', label: 'Project Name', minWidth: 100, type: 'select' },
     { id: 'projectManagerName', label: 'Project Manager', minWidth: 100, type: 'select' },
-    { id: 'status', label: 'Status', minWidth: 80, type: 'select' },
     { id: 'startDate', label: 'Start Date', minWidth: 110, type: 'date' },
     { id: "endDate", label: "End Date", minWidth: 120, type: 'date' },
     { id: 'billRate', label: 'Bill Rate', minWidth: 80, type: 'textfield' },
@@ -121,4 +120,15 @@ export const initialSort = {
   'Project Admin': 'projectName',
   'Project Allocation': 'projectName',
   'Project Management': 'projectName',
+}
+
+export const getFullName = (firstName, lastName) => {
+  let fullName = "";
+  if (firstName) {
+    fullName += firstName;
+  }
+  if (lastName) {
+    fullName += " " + lastName
+  }
+  return fullName;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { vTrackIcon } from "../../common/icons";
 import Sidebar from "../../components/Sidebar/Sidebar";
@@ -17,6 +17,10 @@ export const Dashboard = () => {
   const navigateHandler = () => {
     navigate(VTrackURL);
   };
+  useEffect(() => {
+    let User = sessionStorage.getItem("userInformation");
+    if (User == null) navigate("/");
+  }, []);
   return (
     <div className="mainDiv">
       <div className="sidebarContainer">
