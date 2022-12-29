@@ -9,8 +9,8 @@ import { ProjectManagementType, setMappedProjectManagementData } from "../redux/
 function* workerMappedProjectManagementSaga() {
   try {
     yield put(setVtrackLoader(true));
-    // const projectManagementDetails = yield call(getMappedProjectManagementData);
-    yield put(setMappedProjectManagementData(mappedProjectManagementData));
+    const projectManagementDetails = yield call(getMappedProjectManagementData);
+    yield put(setMappedProjectManagementData(projectManagementDetails));
     yield put(setVtrackLoader(false));
   } catch (err) {
     console.log(err);

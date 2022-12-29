@@ -47,7 +47,7 @@ export const TopBar = () => {
               <div className="user-name">
                 {personData.lastName}, {personData.firstName}
               </div>
-              <div className="user-role">{props.role}</div>
+              <div className="user-role">{personData.role ? personData.role : ''}</div>
             </div>
           </div>
           }
