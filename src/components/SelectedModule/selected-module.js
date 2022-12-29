@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./selected-module.css";
 import { TopBar } from "../TopBar/TopBar";
 import TabsComponent from "../Tabs/tabs";
-import { Navigate, useNavigate, Redirect, useParams} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { dashboardURL } from "../../routes/routes";
 import { Settings } from "../Settings/settings";
 import SelectBar from "../SelectBar/selectBar";

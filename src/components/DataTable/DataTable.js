@@ -1,4 +1,7 @@
-import * as React from "react";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import CircularProgress from "@mui/material/CircularProgress";
+import IconButton from "@mui/material/IconButton";
+import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,36 +10,20 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import "./DataTable.css";
-import {
-  TableArrows,
-  editIcon,
-  deleteIcon,
-  AddDisableIcon,
-  AddEnableIcon,
-  crossIcon,
-  downloadIcon,
-  approveIcon,
-  rejectIcon,
-} from "../../common/icons";
-import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
-import { dropDownMockData, initialData } from "../../mock-data/TableData";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import Tooltip from "@mui/material/Tooltip";
 import { DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import IconButton from "@mui/material/IconButton";
-import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteClientAdminData,
-  getClientAdminData,
-  saveClientAdminData,
-  updateClientAdminData,
-} from "../../redux/actions/client-admin";
+import moment from "moment";
+import * as React from "react";
 import { useState } from "react";
-import Loader from "../Loader";
+import { useDispatch, useSelector } from "react-redux";
+import { Modules } from "../../common/constants/sidebar";
+import {
+  AddDisableIcon,
+  AddEnableIcon, approveIcon, crossIcon, deleteIcon, downloadIcon, editIcon, rejectIcon, TableArrows
+} from "../../common/icons";
 import {
   convertDateToDDMYYYY,
   fileHandler,
@@ -44,21 +31,27 @@ import {
   getLabel,
   getTypeofColumn,
   initialSort,
-  UniqueIds,
+  UniqueIds
 } from "../../common/utils/datatable";
-import { Modules } from "../../common/constants/sidebar";
+import { dropDownMockData, initialData } from "../../mock-data/TableData";
 import {
   deleteProjectAdminData,
   getProjectAdminData,
   getProjectAllocationData,
   saveProjectAdminData,
-  updateProjectAdminData,
+  updateProjectAdminData
 } from "../../redux/actions";
-import CircularProgress from "@mui/material/CircularProgress";
-import DialogBox from "../DialogBox/dialogBox";
+import {
+  deleteClientAdminData,
+  getClientAdminData,
+  saveClientAdminData,
+  updateClientAdminData
+} from "../../redux/actions/client-admin";
 import { getProjectManagementData, saveProjectManagementData, updateProjectManagementData } from "../../redux/actions/project-management";
 import { deleteTimeSheetData, getTimeSheetData, saveTimeSheetData, updateTimeSheetData, updateTimeSheetStatus } from "../../redux/actions/timesheet";
-import moment from "moment";
+import DialogBox from "../DialogBox/dialogBox";
+import Loader from "../Loader";
+import "./DataTable.css";
 
 export const DataTable = ({
   headingName,
@@ -76,7 +69,7 @@ export const DataTable = ({
   selectedPeriodWeek,
   projectId
 }) => {
-  const { clientsData, projectManagers, allTasks, listItems, allUsers, allProjectsData, assignedProjects } =
+  const { clientsData, allTasks, listItems, allUsers, allProjectsData, assignedProjects } =
     useSelector(({ MODULES }) => MODULES);
   const { allUserDetails } = useSelector(({ USER }) => USER);
   const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
@@ -746,7 +739,7 @@ export const DataTable = ({
                       >
                         <div className="table-header-cell">
                           <span>{column.label}</span>
-                          {!column.isDate && headingName !== Modules.TIMESHEET && 
+                          {!column.isDate && headingName !== Modules.TIMESHEET && column.id !== 'actions' &&
                             <img
                               src={TableArrows}
                               alt=""
@@ -931,13 +924,13 @@ export const DataTable = ({
                           <TableCell key={col.id} style={{textAlign: col.isDate || col.id === 'totalHrs' ? "center" : "auto",maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
                             {col.id === "employeeName" ? (
                               getEmployeeName(row["employeeId"])
-                            ) : col.id === "allocation" && row[col.id] ? (
+                            ) : col.id.toLowerCase().includes("allocation") && row[col.id] ? (
                               <div className="allocation">
                                 <div>
                                   <CircularProgress
                                     className="allocationProgress"
                                     variant="determinate"
-                                    value={row[col.id]}
+                                    value={row[col.id].replace('%', '')}
                                   />
                                 </div>
                                 <div>{row[col.id]}</div>

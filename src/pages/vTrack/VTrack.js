@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Announcement } from "../../components/Announcement/announcement";
 import { SelectedModule } from "../../components/SelectedModule/selected-module";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import { ModuleList } from "../../mock-data/Sidebar";
@@ -35,9 +34,6 @@ export const VTrack = () => {
           <Sidebar changePage={changePage} />
         </div>
         <div className="rightContainer">
-          {/* <div className="announcementContainer">
-            <Announcement /> */}
-          {/* </div> */}
           <div className="selectedModule">
             <SelectedModule headingName={headingName} />
           </div>
