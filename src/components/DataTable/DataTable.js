@@ -99,8 +99,10 @@ export const DataTable = ({
       } else if (headingName === Modules.PROJECT_ADMIN) {
         dispatch(saveProjectAdminData(newRowAdded));
       } else if (headingName === Modules.PROJECT_MANAGEMENT) {
-        dispatch(saveProjectManagementData(newRowAdded));
-      } else {
+        dispatch(saveProjectManagementData({ ...newRowAdded, projectId: projectId }));
+      } 
+    }
+    else {
       if (headingName === Modules.CLIENT_ADMIN) {
         if (fileState && newRowAdded.clientId && newRowAdded.clientName) {
           fileHandler(
@@ -122,10 +124,9 @@ export const DataTable = ({
         }
         dispatch(updateProjectAdminData(newRowAdded));
       } else if (headingName === Modules.PROJECT_MANAGEMENT) {
-        dispatch(updateProjectManagementData(newRowAdded));
+        dispatch(updateProjectManagementData({ ...newRowAdded, projectId: projectId }));
       } 
-        setIsEditButtonClicked(false);
-      }
+      setIsEditButtonClicked(false);
     }
     if (headingName === Modules.TIMESHEET){
       const dateHours = [];
@@ -484,6 +485,11 @@ export const DataTable = ({
             placeholder=""
             value={newRowAdded[col.id]}
             onChange={(e) => inputFieldHandler(e, col.id)}
+            sx={{
+              "& label": {
+                lineHeight: '0.8rem'
+              }
+            }}
           />
         </TableCell>
       );
