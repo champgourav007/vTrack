@@ -50,16 +50,16 @@ export default function BasicTabs(props) {
   const handleChange = (event, newValue) => {
     console.log(newValue);
     if(props.headingName === "Project Allocation"){
-    if(newValue === 0) setStatus("All")
-    else if(newValue === 1) setStatus("Active")
-    else if(newValue === 2) setStatus("History")
-  }
+      if(newValue === 0) setStatus("All")
+      else if(newValue === 1) setStatus("Active")
+      else if(newValue === 2) setStatus("History")
+    }
     setValue(newValue);
   };
 
   React.useEffect(() => {
     setValue(0);
-  }, [props.headingName, props.selectedClient.id])
+  }, [props.headingName, props.selectedClient.clientId])
   
   return (
     <Box sx={{ width: "100%" }}>
@@ -70,7 +70,7 @@ export default function BasicTabs(props) {
             onChange={handleChange}
             aria-label="basic tabs example"
           >
-            {mappedProjectManagementData && mappedProjectManagementData?.filter((projectVal)=>projectVal.clientId === props.selectedClient.id)[0]
+            {mappedProjectManagementData && mappedProjectManagementData?.filter((projectVal)=>projectVal.clientId === props.selectedClient.clientId)[0]
             ?.projects?.map((project, index)=> (
               <Tab className="" label={project.projectName} {...a11yProps(index)} onClick={()=>props.setSelectedProjectName(project.projectName)} />
             ))}
@@ -88,7 +88,7 @@ export default function BasicTabs(props) {
         )}
       </Box>
       {props.headingName === "Project Management" ? mappedProjectManagementData &&
-      mappedProjectManagementData?.filter((projectVal)=>projectVal.clientId === props.selectedClient.id)[0]
+      mappedProjectManagementData?.filter((projectVal)=>projectVal.clientId === props.selectedClient.clientId)[0]
             ?.projects?.map((tab, index)=><TabPanel key={index} value={value} index={index}>
             <TabsTable headingName={props.headingName} tabName={tab} status={status} projectId={tab.projectId}/>
           </TabPanel>)

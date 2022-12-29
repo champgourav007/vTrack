@@ -18,7 +18,8 @@ export const modulesState = {
   userRole: null,
   projectManagementData: null,
   settingTableData:null,
-  mappedProjectManagementData:null
+  mappedProjectManagementData:null,
+  assignedProjects: null
 }
 
 export const modulesReducer = (state = modulesState, action) => {
@@ -102,6 +103,11 @@ export const modulesReducer = (state = modulesState, action) => {
       return {
         ...state,
         allTasks: action.payload
+      }
+    case DropdownType.SET_ASSIGNED_PROJECTS_DATA:
+      return {
+        ...state,
+        assignedProjects: action.payload
       }
     default: return state;
   }

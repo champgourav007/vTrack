@@ -190,13 +190,13 @@ export function Settings() {
           <input
             className="searchBox"
             type="search"
-            placeholder="Search"
+            placeholder="Search by Emp Name"
             onChange={setSearchDataHelper}
           />
         </div>
       </div>
       <div className="bottomContainer">
-        <SettingsTable rolesData={rolesData} /> 
+        <SettingsTable rolesData={rolesData} searchData={searchData} /> 
       </div>
       </div>
     </> 

@@ -27,7 +27,13 @@ export const SelectedModule = ({ headingName }) => {
 
  useEffect(()=>{
   dispatch(getMappedProjectManagementData());
- },[]);
+ }, [headingName]);
+
+ useEffect(() => {
+  if (selectedClient && selectedClient.projects && selectedClient.projects.length) {
+    setSelectedProjectName(selectedClient.projects[0].projectName);
+  }
+ }, [selectedClient]);
 
   return (
     <>

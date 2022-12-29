@@ -37,3 +37,9 @@ export const projectTasksDetails = () =>
     url: `${DROPDOWN}/get-project-tasks`,
     method: HttpMethod.GET,
   });
+
+export const getAssignedProjectsDetails = () => 
+  httpRequest({
+    url: `${DROPDOWN}/get-projects-assigned-to-user`,
+    method: HttpMethod.GET,
+  });
