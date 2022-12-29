@@ -7,6 +7,7 @@ export const TopBar = () => {
   const dispatch = useDispatch();
   const { userData } = useSelector(({ USER }) => USER);
   const [personData, setPersonData] = useState(null);
+  const [ activeUserRole, setActiveUserRole ] = useState('');
 
   useEffect(() => {
     dispatch(getUserDetails());
@@ -19,8 +20,8 @@ export const TopBar = () => {
         firstName: userData.data.activeUsers.firstName,
         photo: userData.data.activeUsers.photo === "" ? "" : userData.data.activeUsers.photo,
       });
+      setActiveUserRole(userData.roleName);
     }
-    console.log("User Data", userData);
   }, [userData]);
 
   return (
@@ -47,7 +48,7 @@ export const TopBar = () => {
               <div className="user-name">
                 {personData.lastName}, {personData.firstName}
               </div>
-              <div className="user-role">{personData.role ? personData.role : ''}</div>
+              <div className="user-role">{activeUserRole ? activeUserRole : ''}</div>
             </div>
           </div>
           }

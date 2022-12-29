@@ -9,7 +9,9 @@ export const DropdownType = {
     GET_ALL_USERS: 'GET_ALL_USERS',
     SET_ALL_USERS: 'SET_ALL_USERS',
     GET_ALL_PROJECTS_DATA: 'GET_ALL_PROJECTS_DATA',
-    SET_ALL_PROJECTS_DATA: 'SET_ALL_PROJECTS_DATA'
+    SET_ALL_PROJECTS_DATA: 'SET_ALL_PROJECTS_DATA',
+    GET_ASSIGNED_PROJECTS_DATA: 'GET_ASSIGNED_PROJECTS_DATA',
+    SET_ASSIGNED_PROJECTS_DATA: 'SET_ASSIGNED_PROJECTS_DATA'
   }
   
 export const getClientsData = () => 
@@ -66,3 +68,14 @@ export const setAllProjectsData = (data) =>
     type: DropdownType.SET_ALL_PROJECTS_DATA,
     payload: data,
   });
+
+export const getAssignedProjects = () => 
+  ({
+    type: DropdownType.GET_ASSIGNED_PROJECTS_DATA,
+  });
+
+export const setAssignedProjects = (data) => 
+  ({
+    type: DropdownType.SET_ASSIGNED_PROJECTS_DATA,
+    payload: data,
+  }); 

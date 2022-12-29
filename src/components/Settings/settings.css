@@ -17,6 +17,7 @@
 }
 .topBar{
   display: flex;
+  margin-bottom: 4rem;
 }
 .bottomContainer{
   margin-top: 1rem;

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { DataTable } from "../DataTable/DataTable";
 import { useDispatch, useSelector } from "react-redux";
 import { Modules } from "../../common/constants/sidebar";
-import { getAllProjectsData, getAllUserDetails, getAllUsersData, getClientAdminData, getClientsData, getListItems, getProjectAdminData, getProjectAllocationData, getProjectManagersData, getTimeSheetData, saveTimeSheetData, saveTimeSheetPeriodData, setTimeSheetPeriodWeek } from "../../redux/actions";
+import { getAllProjectsData, getAllUserDetails, getAllUsersData, getAssignedProjects, getClientAdminData, getClientsData, getListItems, getProjectAdminData, getProjectAllocationData, getProjectManagersData, getProjectTasks, getTimeSheetData, saveTimeSheetData, saveTimeSheetPeriodData, setTimeSheetPeriodWeek } from "../../redux/actions";
 import { getLabel, getMinWidth, tableColumnsData } from "../../common/utils/datatable";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
@@ -304,14 +304,19 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   }, [ headingName, searchData ]);
 
   useEffect(() => {
-    dispatch(getProjectManagersData());
+    // dispatch(getProjectManagersData());
     dispatch(getClientsData());
     dispatch(getListItems());
     dispatch(getAllUsersData());
     dispatch(getAllUserDetails());
     dispatch(getAllProjectsData());
+    dispatch(getAssignedProjects());
     setSearchData('')
   }, [ headingName]);
+
+  useEffect(() => {
+    dispatch(getProjectTasks());
+  }, []);
 
   return (
     <div className="tableDiv">
@@ -329,36 +334,43 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         {
           headingName === 'TimeSheet' ? (
             tabName === 'MY TIMESHEET' ? 
-              <div className="button-flex">
-                <TextField
-                  select
-                  sx={{minWidth: '15rem'}}
-                  defaultValue={periodWeeks[0].startDate.format('DD MMM') + ' - ' + periodWeeks[0].endDate.format('DD MMM')}
-                >
-                  {getDateItems(true)}
-                </TextField>
-                <button
-                  disabled={isAddButtonClicked || isEditButtonClicked}
-                  className={
-                    isAddButtonClicked || isEditButtonClicked
-                      ? "disableAddButton"
-                      : "addBtn"
-                  }
-                  onClick={() => setIsAddButtonClicked(true)}
-                >
-                    Add
-                </button>
-                <button
-                  disabled={isAddButtonClicked || isEditButtonClicked}
-                  className={
-                    isAddButtonClicked || isEditButtonClicked
-                      ? "disableAddButton"
-                      : "addBtn"
-                  }
-                >
-                    Submit For Approval
-                </button>
-              </div> 
+              <>
+                {timeSheetData && timeSheetData.length &&
+                  <div className="searchWrapperText">
+                    TimeSheet Period Status : {timeSheetData[0].periodStatus}
+                  </div>
+                }
+                <div className="button-flex">
+                  <TextField
+                    select
+                    sx={{minWidth: '15rem'}}
+                    defaultValue={periodWeeks[0].startDate.format('DD MMM') + ' - ' + periodWeeks[0].endDate.format('DD MMM')}
+                  >
+                    {getDateItems(true)}
+                  </TextField>
+                  <button
+                    disabled={isAddButtonClicked || isEditButtonClicked}
+                    className={
+                      isAddButtonClicked || isEditButtonClicked
+                        ? "disableAddButton"
+                        : "addBtn"
+                    }
+                    onClick={() => setIsAddButtonClicked(true)}
+                  >
+                      Add
+                  </button>
+                  <button
+                    disabled={isAddButtonClicked || isEditButtonClicked}
+                    className={
+                      isAddButtonClicked || isEditButtonClicked
+                        ? "disableAddButton"
+                        : "addBtn"
+                    }
+                  >
+                      Submit For Approval
+                  </button>
+                </div> 
+              </>
             :
               <div className="pendingApprovalDiv">
                 <TextField
@@ -398,12 +410,12 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                     }
                   }}
                 >
-                  {allUserDetails.data.map((option) => (
+                  {allUserDetails && allUserDetails.data.map((option) => (
                     <MenuItem
                       key={option.id}
                       value={`${option.firstName} ${option.lastName}`}
                       onClick={() =>
-                        setSelectedProject({
+                        setSelectedEmployee({
                           employeeId: option.projectId,employeeName: `${option.firstName} ${option.lastName}`
                         })
                       }
@@ -462,6 +474,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         rows={rows}
         columns={columns}
         headingName={headingName}
+        tabName={tabName}
         setColumns={setColumns}
         totalRecord={totalRecord}
         isAddButtonClicked={isAddButtonClicked}

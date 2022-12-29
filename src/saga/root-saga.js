@@ -6,6 +6,7 @@ import { deleteSettingTableDataSaga } from "./delete-setting-table-data";
 import { deleteTimeSheetSaga } from "./delete-timesheet-saga";
 import { allProjectsSaga } from "./get-all-projects-saga";
 import { allUsersSaga } from "./get-all-user-saga";
+import { assignedProjectsSaga } from "./get-assigned-projects-saga";
 import { allClientsSaga } from "./get-client-saga";
 import { listItemsSaga } from "./get-list-items-saga";
 import { mappedProjectManagementSaga } from "./get-mapped-project-management-data";
@@ -29,6 +30,7 @@ import { updateProjectAdminSaga } from "./update-project-admin-saga";
 import { updateProjectManagementSaga } from "./update-project-management-saga";
 import { updateSettingTableDataSaga } from "./update-setting-table-user-role";
 import { updateTimeSheetSaga } from "./update-timesheet-saga";
+import { updateTimeSheetStatusSaga } from "./update-timesheet-status-saga";
 import { allUserDetailSaga, userSaga } from "./user-saga";
 
 export function* rootSaga() {
@@ -40,6 +42,7 @@ export function* rootSaga() {
     fork(saveTimeSheetPeriodSaga),
     fork(updateClientAdminSaga),
     fork(updateTimeSheetSaga),
+    fork(updateTimeSheetStatusSaga),
     fork(deleteTimeSheetSaga),
     fork(deleteClientAdminSaga),
     fork(userSaga),
@@ -64,6 +67,7 @@ export function* rootSaga() {
     fork(updateSettingTableDataSaga),
     fork(mappedProjectManagementSaga),
     fork(getUnRegisteredUsersSaga),
-    fork(projectTasksSaga)
+    fork(projectTasksSaga),
+    fork(assignedProjectsSaga)
   ]);
 }
