@@ -16,6 +16,8 @@ import {
   AddEnableIcon,
   crossIcon,
   downloadIcon,
+  approveIcon,
+  rejectIcon,
 } from "../../common/icons";
 import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
@@ -55,11 +57,12 @@ import {
 import CircularProgress from "@mui/material/CircularProgress";
 import DialogBox from "../DialogBox/dialogBox";
 import { getProjectManagementData, saveProjectManagementData, updateProjectManagementData } from "../../redux/actions/project-management";
-import { deleteTimeSheetData, getTimeSheetData, saveTimeSheetData, updateTimeSheetData } from "../../redux/actions/timesheet";
+import { deleteTimeSheetData, getTimeSheetData, saveTimeSheetData, updateTimeSheetData, updateTimeSheetStatus } from "../../redux/actions/timesheet";
 import moment from "moment";
 
 export const DataTable = ({
   headingName,
+  tabName,
   rows,
   columns,
   setColumns,
@@ -271,6 +274,7 @@ export const DataTable = ({
   };
 
   const inputFieldHandler = (event, col) => {
+    console.log(col,event.target.value,newRowAdded)
     setNewRowAdded({ ...newRowAdded, [col]: event.target.value });
   };
 
@@ -453,7 +457,7 @@ export const DataTable = ({
             setNewRowAdded({
               ...newRowAdded,
               [col]: option.taskName,
-              taskId: option.taskId,
+              taskId: option.taskID,
             })
           }
         >
@@ -593,7 +597,7 @@ export const DataTable = ({
           <TextField
             label={"Time"}
             type="number"
-            value={newRowAdded[col.id]}
+            value={newRowAdded[col.date] === '-' ? 0 : newRowAdded[col.date]}
             style={{maxWidth:'6rem'}}
             sx={{
             "& label": {
@@ -616,8 +620,31 @@ export const DataTable = ({
     let idx = rows.findIndex(
       (row) => row[UniqueIds[headingName.replace(" ", "")]] === id
     );
-    setRowToBeUpdated(rows[idx]);
-    setNewRowAdded(rows[idx]);
+    if(headingName===Modules.TIMESHEET){
+      let rowData = initialData(headingName,selectedPeriodWeek);
+      Object.keys(rows[idx]).forEach(key=>{
+        if(Object.keys(rowData).includes(key)){
+          rowData[key] = rows[idx][key];
+        }
+        else{
+          let keys = Object.keys(rowData).filter(i=>moment(i).isValid());
+          if(keys.map(i=>moment(i).format('DD')).includes(key.slice(-2)) && rows[idx][key]!=='-'){
+            rowData[keys.find(i=>moment(i).format('DD') === key.slice(-2))] = rows[idx][key].toString();
+          }
+          else if(!keys.map(i=>moment(i).format('DD')).includes(key.slice(-2))){
+            rowData[key] = rows[idx][key];
+          }
+        }
+      })
+      rowData['timesheetDetailID'] = rows[idx]['timesheetDetailID'];
+      console.log(rowData);
+      setRowToBeUpdated(rowData);
+      setNewRowAdded(rowData);
+    }
+    else{
+      setRowToBeUpdated(rows[idx]);
+      setNewRowAdded(rows[idx]);
+    }
     setIsEditButtonClicked(true);
   };
 
@@ -660,6 +687,7 @@ export const DataTable = ({
   React.useEffect(() => {
     if (dialogDeleteButtonClicked) {
       deleteButtonClicked(deleteRow);
+      setDialogDeleteButtonClicked(false)
     }
   }, [dialogDeleteButtonClicked]);
 
@@ -698,7 +726,7 @@ export const DataTable = ({
                       >
                         <div className="table-header-cell">
                           <span>{column.label}</span>
-                          {!column.isDate && 
+                          {!column.isDate && headingName !== Modules.TIMESHEET && 
                             <img
                               src={TableArrows}
                               alt=""
@@ -808,7 +836,7 @@ export const DataTable = ({
                                     </IconButton>
                                   )
                                 ) : null}
-                                <Tooltip title="Edit">
+                                {tabName !== 'PENDING APPROVAL' && <Tooltip title="Edit">
                                   <button
                                     onClick={() =>
                                       editButtonClicked(row[UniqueIds[headingName.replace(" ", "")]])
@@ -818,8 +846,8 @@ export const DataTable = ({
                                   >
                                     <img src={editIcon} className="editDeleteIcon" alt="" />
                                   </button>
-                                </Tooltip>
-                                {headingName !== Modules.PROJECT_ALLOCATION && headingName !== Modules.PROJECT_MANAGEMENT && (
+                                </Tooltip>}
+                                {headingName !== Modules.PROJECT_ALLOCATION && headingName !== Modules.PROJECT_MANAGEMENT && tabName !== 'PENDING APPROVAL' && (
                                   <Tooltip title="Delete">
                                     <img
                                       src={deleteIcon}
@@ -836,6 +864,36 @@ export const DataTable = ({
                                       alt=""
                                     />
                                   </Tooltip>
+                                )}
+                                {tabName === 'PENDING APPROVAL' && (
+                                  <>
+                                    <Tooltip title="Approve">
+                                      <img
+                                        src={approveIcon}
+                                        className="approveRejectIcon"
+                                        onClick={() =>
+                                          dispatch(updateTimeSheetStatus({
+                                            timesheetDetailID: row[UniqueIds[headingName.replace(" ", "")]],
+                                            timesheetStatus: 'Approved'
+                                          }))
+                                        }
+                                        alt=""
+                                      />
+                                    </Tooltip>
+                                    <Tooltip title="Reject">
+                                      <img
+                                        src={rejectIcon}
+                                        className="approveRejectIcon"
+                                        onClick={() =>
+                                          dispatch(updateTimeSheetStatus({
+                                            timesheetDetailID: row[UniqueIds[headingName.replace(" ", "")]],
+                                            timesheetStatus: 'Rejected'
+                                          }))
+                                        }
+                                        alt=""
+                                      />
+                                    </Tooltip>
+                                  </>
                                 )}
                               </div>
                             </TableCell>

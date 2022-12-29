@@ -29,6 +29,7 @@ import { updateProjectAdminSaga } from "./update-project-admin-saga";
 import { updateProjectManagementSaga } from "./update-project-management-saga";
 import { updateSettingTableDataSaga } from "./update-setting-table-user-role";
 import { updateTimeSheetSaga } from "./update-timesheet-saga";
+import { updateTimeSheetStatusSaga } from "./update-timesheet-status-saga";
 import { allUserDetailSaga, userSaga } from "./user-saga";
 
 export function* rootSaga() {
@@ -40,6 +41,7 @@ export function* rootSaga() {
     fork(saveTimeSheetPeriodSaga),
     fork(updateClientAdminSaga),
     fork(updateTimeSheetSaga),
+    fork(updateTimeSheetStatusSaga),
     fork(deleteTimeSheetSaga),
     fork(deleteClientAdminSaga),
     fork(userSaga),

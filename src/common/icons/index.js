@@ -37,6 +37,8 @@ import crossIcon from "./crossIcon.svg";
 import searchIcon from "./searchIcon.svg";
 import vTrackIcon from "./vTrackIcon.svg";
 import downloadIcon from "./downloadIcon.svg";
+import approveIcon from "./Approve.svg";
+import rejectIcon from "./Reject.svg";
 
 export {
   downloadIcon,
@@ -78,4 +80,6 @@ export {
   logoutBlueIcon,
   dashboardBlueIcon,
   announcementIcon,
+  approveIcon,
+  rejectIcon
 };

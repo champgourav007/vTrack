@@ -250,7 +250,7 @@ export const initialData = (headingName ,selectedPeriodWeek) => {
       }
       return {
         projectName:'',
-        task:'',
+        taskName:'',
         totalHrs:'',
         ...dates
       };

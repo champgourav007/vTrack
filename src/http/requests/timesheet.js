@@ -32,5 +32,12 @@ export const updateTimeSheetDetails = (data) =>
 export const deleteTimeSheetDetails = (timesheetDetailId) =>
   httpRequest({
     url: `${TIMESHEET_API}/delete-timesheet-detail/${timesheetDetailId}`,
-    method: HttpMethod.GET,
+    method: HttpMethod.DELETE,
+  });
+
+export const updateTimeSheetStatusDetails = (data) =>
+  httpRequest({
+    url: `${TIMESHEET_API}/update-timesheet-status`,
+    method: HttpMethod.PUT,
+    data: data
   });

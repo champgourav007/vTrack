@@ -8,7 +8,8 @@ export const TimeSheetType = {
     UPDATE_TIMESHEET_DATA: 'UPDATE_TIMESHEET_DATA',
     DELETE_TIMESHEET_DATA: 'DELETE_TIMESHEET_DATA',
     GET_PROJECT_TASKS_DATA: 'GET_PROJECT_TASKS_DATA',
-    SET_PROJECT_TASKS_DATA: 'SET_PROJECT_TASKS_DATA'
+    SET_PROJECT_TASKS_DATA: 'SET_PROJECT_TASKS_DATA',
+    UPDATE_TIMESHEET_STATUS: 'UPDATE_TIMESHEET_STATUS'
   }
   
   export const getTimeSheetData = (data) => 
@@ -67,6 +68,12 @@ export const TimeSheetType = {
   export const setProjectTasks = (data) => 
   ({
     type: TimeSheetType.SET_PROJECT_TASKS_DATA,
+    payload: data,
+  });
+
+  export const updateTimeSheetStatus = (data) => 
+  ({
+    type: TimeSheetType.UPDATE_TIMESHEET_STATUS,
     payload: data,
   });
   
