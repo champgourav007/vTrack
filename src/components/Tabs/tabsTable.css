@@ -115,3 +115,12 @@
   column-gap: 1rem;
   margin-left: auto;
 }
+
+.pendingApprovalDiv{
+  display: flex;
+  gap: 1.75rem;
+}
+
+.showDataBtn{
+  min-width: 15rem;
+}

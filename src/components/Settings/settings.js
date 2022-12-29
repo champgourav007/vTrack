@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import {
   getAllUserDetails,
   getSettingTableData,
+  getUnregisteredUserDetails,
   getUserRoleData,
   saveUserRoleData,
 } from "../../redux/actions";
@@ -16,8 +17,8 @@ import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
-import { ConnectingAirportsOutlined } from "@mui/icons-material";
 import { SettingsTable } from "./settingsTable";
+import { searchIcon } from "../../common/icons";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -35,8 +36,9 @@ export function Settings() {
   const [userData, setUserData] = useState([]);
   const [rolesData, setRolesData] = useState([]);
   const [selectedRole, setSelectedRole] = useState("");
+  const [searchData, setSearchData] = useState("");
   const dispatch = useDispatch();
-  const { allUserDetails } = useSelector(({ USER }) => USER);
+  const { unRegisteredUserDetails } = useSelector(({ USER }) => USER);
   const { userRole } = useSelector(({ MODULES }) => MODULES);
 
   const handleChange = (event) => {
@@ -80,24 +82,34 @@ export function Settings() {
         data: convertIdToAzureId(selectedUsers),
       })
     );
+    setSelectedRole("");
+    setSelectedUsers([]);
+   
   };
+
+  const setSearchDataHelper = (e) => {
+    if(e.target.value.length > 2 || e.target.value.length === 0) {
+      setSearchData(e.target.value)
+    }
+  }
 
   useEffect(() => {
     dispatch(getAllUserDetails());
+    dispatch(getUnregisteredUserDetails());
     dispatch(getUserRoleData());
     dispatch(getSettingTableData());
+    
   }, []);
 
   useEffect(() => {
-    if (allUserDetails) {
-      setUserData(allUserDetails.data);
+    if (unRegisteredUserDetails) {
+      setUserData(unRegisteredUserDetails);
     }
-  }, [allUserDetails]);
+  }, [unRegisteredUserDetails]);
 
   useEffect(() => {
     if (userRole) {
       setRolesData(userRole);
-      console.log(rolesData);
     }
   }, [userRole]);
 
@@ -166,17 +178,27 @@ export function Settings() {
           </div>
         </div>
         <div className="buttonClass">
-          <Button variant="contained" onClick={submitHandler} className="addBtn">
+          <Button variant="contained" onClick={submitHandler} 
+    className="addUserBtn">
             Add Role
           </Button>
         </div>
       </div>
+      <div className="searchHeader">
+        <div className="searchWrapper">
+          <img src={searchIcon} className="searchIcon" alt="" />
+          <input
+            className="searchBox"
+            type="search"
+            placeholder="Search"
+            onChange={setSearchDataHelper}
+          />
+        </div>
+      </div>
       <div className="bottomContainer">
-      <SettingsTable rolesData={rolesData}/> 
-       
+        <SettingsTable rolesData={rolesData} /> 
       </div>
       </div>
-      
     </> 
   );
 }

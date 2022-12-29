@@ -10,6 +10,7 @@ function* workerProjectManagementSaga({ payload }) {
     yield put(setVtrackLoader(true));
     const projectManagementDetails = yield call(
       getProjectManagementDetails,
+      payload.projectId,
       payload.pageNo,
       payload.pageSize,
       payload.sortDir,

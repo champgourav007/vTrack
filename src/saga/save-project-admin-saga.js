@@ -1,11 +1,14 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { postProjectAdminDetails } from "../http/requests/project-admin";
 import { getProjectAdminData, ProjectAdminType, setVtrackLoader } from "../redux/actions";
+import { toastOptions } from "../common/utils/toasterOptions";
+import { toast } from "react-toastify";
 
 function* workerSaveProjectAdminSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
     yield call(postProjectAdminDetails, payload.data);
+    toast.success("Data Saved", toastOptions)
     yield put(
       getProjectAdminData({
         pageNo: 1,
@@ -17,6 +20,7 @@ function* workerSaveProjectAdminSaga({ payload }) {
     );
     yield put(setVtrackLoader(false));
   } catch (err) {
+    toast.error("Something Went Wrong", toastOptions)
     yield put(setVtrackLoader(false));
   }
 };

@@ -7,7 +7,7 @@ export const UniqueIds = {
   ProjectAdmin: 'projectId',
   ClientAdmin: 'clientId',
   ProjectAllocation: 'projectAllocationId',
-  TimeSheet: 'fieldId',
+  TimeSheet: 'timesheetDetailID',
   ProjectManagement: 'projectAllocationId'
 };
 
@@ -27,7 +27,7 @@ export const tableColumnsData = {
     { id: "msaStartDate", label: "MSA Start Date", minWidth: 100, type: 'date' },
     { id: "msaEndDate", label: "MSA End Date", minWidth: 110, type: 'date' },
     { id: "businessOwner", label: "Veersa Business Owner", minWidth: 100, type: 'select' },
-    { id: "paymentTerms", label: "Payment Terms", minWidth: 80, type: 'select' },
+    { id: "paymentTerms", label: "Payment Terms", minWidth: 80, type: 'textfield' },
     { id: "deliveryOfficer", label: "Veersa Delivery Officer", minWidth: 100, type: 'select' },
     { id: "msaDoc", label: "Actions", minWidth: 50, align: "left", type: 'none' },
   ],
@@ -42,20 +42,19 @@ export const tableColumnsData = {
   ], 
   'ProjectManagement': [
     { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select' },
-    { id: 'projectName', label: 'Project Name', minWidth: 100, type: 'select' },
-    { id: 'projectManagerName', label: 'Project Manager', minWidth: 100, type: 'select' },
-    { id: 'status', label: 'Status', minWidth: 80, type: 'select' },
+    // { id: 'projectName', label: 'Project Name', minWidth: 100, type: 'select' },
+    // { id: 'projectManagerName', label: 'Project Manager', minWidth: 100, type: 'select' },
     { id: 'startDate', label: 'Start Date', minWidth: 110, type: 'date' },
     { id: "endDate", label: "End Date", minWidth: 120, type: 'date' },
     { id: 'billRate', label: 'Bill Rate', minWidth: 80, type: 'textfield' },
     { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, type: 'textfield' },
-    { id: 'billStatus', label: 'Bill Status', minWidth: 80, type: 'textfield' },
+    { id: 'billStatus', label: 'Bill Status', minWidth: 80, type: 'select' },
     { id: 'costAllocation', label: 'Cost Allocation', minWidth: 100, type: 'textfield' },
   ], 
   'TimeSheet': [
     { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
-    { id: "task", label: "Task", minWidth: 100, type: 'select' },
-    { id: "totalHours", label: "Total", minWidth: 60, type: 'empty' },
+    { id: "taskName", label: "Task", minWidth: 100, type: 'select' },
+    { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
   ], 
 };
 
@@ -70,18 +69,22 @@ export const getTypeofColumn = (col, moduleName) => {
 };
 
 export const getLabel = (col, moduleName) => {
-  for (let column of tableColumnsData[moduleName.replace(' ', '')]) {
-    if (column.id === col) {
-      return column.label;
+  if (tableColumnsData[moduleName.replace(' ', '')] && tableColumnsData[moduleName.replace(' ', '')].length) {
+    for (let column of tableColumnsData[moduleName.replace(' ', '')]) {
+      if (column.id === col) {
+        return column.label;
+      }
     }
   }
   return '';
 };
 
 export const getMinWidth = (col, moduleName) => {
-  for (let column of tableColumnsData[moduleName.replace(' ', '')]) {
-    if (column.id === col) {
-      return column.minWidth;
+  if (tableColumnsData[moduleName.replace(' ', '')] && tableColumnsData[moduleName.replace(' ', '')].length) {
+    for (let column of tableColumnsData[moduleName.replace(' ', '')]) {
+      if (column.id === col) {
+        return column.minWidth;
+      }
     }
   }
 };
@@ -103,6 +106,7 @@ export const fileHandler = (file, id, name, headingName) => {
       },
     });
   }
+  
 };
 
 export const convertDateToDDMYYYY = (data) => {
@@ -120,4 +124,15 @@ export const initialSort = {
   'Project Admin': 'projectName',
   'Project Allocation': 'projectName',
   'Project Management': 'projectName',
+}
+
+export const getFullName = (firstName, lastName) => {
+  let fullName = "";
+  if (firstName) {
+    fullName += firstName;
+  }
+  if (lastName) {
+    fullName += " " + lastName
+  }
+  return fullName;
 }

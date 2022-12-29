@@ -207,48 +207,64 @@ export const dropDownMockData = {
   projectManagerName: ['Amar', 'Sahil', 'Gaurav'], 
   employeeId: ['Arsalan', 'Arvind', 'Aditya'],
   projectName: ['duly', 'kipu'],
-  status: ['billable', 'non-billable']
+  billStatus: ['billable', 'non-billable']
 };
 
-export const initialData = {
-  'Client Admin': {
-    clientName: "",
-    location: "",
-    currency: "",
-    msaStartDate: "",
-    msaEndDate: "",
-    businessOwner: "",
-    paymentTerms: "",
-    deliveryOfficer: "",
-    msaDoc: "",
-  },
-  'Project Admin': {
-    projectName: '',
-    clientName: '',
-    type: '',
-    sowStartDate: '',
-    sowEndDate: '',
-    projectManagerName: ''
-  },
-  'Project Allocation': {
-    employeeName: '',
-    projectName: '',
-    startDate: '',
-    endDate: '',
-    allocation: ''
-  },
-  'TimeSheet': {
-    projectName:'',
-    task:'',
-    totalHours:''
-  },
-  'Project Management': {
-    employeeName: '',
-    endDate: '',
-    projectManagerName: '',
-    projectName: '',
-    startDate: '',
-    status: ''
+export const initialData = (headingName ,selectedPeriodWeek) => {
+  switch(headingName) {
+    case 'Client Admin':
+      return {
+        clientName: "",
+        location: "",
+        currency: "",
+        msaStartDate: "",
+        msaEndDate: "",
+        businessOwner: "",
+        paymentTerms: "",
+        deliveryOfficer: "",
+        msaDoc: "",
+      };
+    case 'Project Admin':
+      return {
+        projectName: '',
+        clientName: '',
+        type: '',
+        sowStartDate: '',
+        sowEndDate: '',
+        projectManagerName: ''
+      };
+    case 'Project Allocation':
+      return {
+        employeeName: '',
+        projectName: '',
+        startDate: '',
+        endDate: '',
+        allocation: ''
+      };
+    case 'TimeSheet':
+      let dates = {};
+      let date = moment(selectedPeriodWeek.startDate);
+      for (let i=0;i<7;i++){
+        dates[date.format('')] = "";
+        date.add(1,'days');
+      }
+      return {
+        projectName:'',
+        task:'',
+        totalHrs:'',
+        ...dates
+      };
+    case 'Project Management':
+      return {
+        employeeName: '',
+        endDate: '',
+        projectManagerName: '',
+        projectName: '',
+        startDate: '',
+        status: ''
+      };
+    default:
+      return {};
   }
 };
 
@@ -260,35 +276,35 @@ export const timeSheetData = {
       "task": "Development",
       "dateHours": [
         {
-          "date": moment(),
+          "date": moment('20221114'),
           "hours": 2,
         },
         {
-          "date": moment().add(1,'days'),
+          "date": moment('20221114').add(1,'days'),
           "hours": 4,
         },
         {
-          "date": moment().add(2,'days'),
+          "date": moment('20221114').add(2,'days'),
           "hours": 1.2,
         },
         {
-          "date": moment().add(3,'days'),
+          "date": moment('20221114').add(3,'days'),
           "hours": 0,
         },
         {
-          "date": moment().add(4,'days'),
+          "date": moment('20221114').add(4,'days'),
           "hours": 2,
         },
         {
-          "date": moment().add(5,'days'),
+          "date": moment('20221114').add(5,'days'),
           "hours": 0,
         },
         {
-          "date": moment().add(6,'days'),
+          "date": moment('20221114').add(6,'days'),
           "hours": 1,
         }
       ],
-      "totalHours": 5
+      "totalHrs": 5
     },
     {
       "fieldId": 2,
@@ -296,44 +312,59 @@ export const timeSheetData = {
       "task": "Development",
       "dateHours": [
         {
-          "date": moment(),
+          "date": moment('20221114'),
           "hours": 2.1,
         },
         {
-          "date": moment().add(1,'days'),
+          "date": moment('20221114').add(1,'days'),
           "hours": 0,
         },
         {
-          "date": moment().add(2,'days'),
+          "date": moment('20221114').add(2,'days'),
           "hours": 3.2,
         },
         {
-          "date": moment().add(3,'days'),
+          "date": moment('20221114').add(3,'days'),
           "hours": 0.5,
         },
         {
-          "date": moment().add(4,'days'),
+          "date": moment('20221114').add(4,'days'),
           "hours": 1,
         },
         {
-          "date": moment().add(5,'days'),
+          "date": moment('20221114').add(5,'days'),
           "hours": 4,
         },
         {
-          "date": moment().add(6,'days'),
+          "date": moment('20221114').add(6,'days'),
           "hours": 0,
         }
       ],
-      "totalHours": 5
+      "totalHrs": 5
     }
   ],
   totalCount: 2
 }
 
 export const allTasks = [
-  "Define & Hypothesis",
-  "Development",
-  "Prototyping & Testing",
-  "Design Review",
-  "Visual Design"
+  {
+    taskName: "Define & Hypothesis",
+    taskId:1,
+  },
+  {
+    taskName:"Development",
+    taskId:2,
+  },
+  {
+    taskName:"Prototyping & Testing",
+    taskId:3,
+  },
+  {
+    taskName:"Design Review",
+    taskId:4,
+  },
+  {
+    taskName:"Visual Design",
+    taskId:5,
+  }
 ]

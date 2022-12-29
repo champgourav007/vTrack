@@ -1,21 +1,24 @@
-import { allTasks, timeSheetData } from "../../mock-data/TableData";
 import { ClientAdminType, DropdownType, ProjectAdminType, ProjectAllocationType, SettingDataType } from "../actions"
 import { ProjectManagementType } from "../actions/project-management";
+import { TimeSheetType } from "../actions/timesheet";
 
 export const modulesState = {
   clientAdminData: null,
   projectAdminData: null,
   projectAllocationData: null,
-  timeSheetData: timeSheetData,
+  timeSheetData: null,
+  timesheetPeriodId: 0,
+  timesheetPeriodWeek: "",
   clientsData: null,
   projectManagers: null,
   listItems: null,
-  allTasks: allTasks,
+  allTasks: null,
   allUsers: null,
   allProjectsData: null,
   userRole: null,
   projectManagementData: null,
-  settingTableData:null
+  settingTableData:null,
+  mappedProjectManagementData:null
 }
 
 export const modulesReducer = (state = modulesState, action) => {
@@ -25,7 +28,11 @@ export const modulesReducer = (state = modulesState, action) => {
         ...state,
         clientAdminData: action.payload,
       };
-
+    case TimeSheetType.SET_TIMESHEET_DATA:
+      return {
+        ...state,
+        timeSheetData: action.payload,
+      };
     case ProjectAdminType.SET_PROJECT_ADMIN_DATA:
       return {
         ...state,
@@ -75,6 +82,26 @@ export const modulesReducer = (state = modulesState, action) => {
       return {
         ...state,
         settingTableData: action.payload
+      }
+    case TimeSheetType.SET_TIMESHEET_PERIOD_ID:
+      return {
+        ...state,
+        timesheetPeriodId: action.payload
+      }
+    case TimeSheetType.SET_TIMESHEET_PERIOD_WEEK:
+      return {
+        ...state,
+        timesheetPeriodWeek: action.payload
+      }
+    case ProjectManagementType.SET_MAPPED_PROJECT_MANAGEMENT_DATA:
+      return{
+        ...state,
+        mappedProjectManagementData: action.payload
+      }  
+    case TimeSheetType.SET_PROJECT_TASKS_DATA:
+      return {
+        ...state,
+        allTasks: action.payload
       }
     default: return state;
   }

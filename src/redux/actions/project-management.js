@@ -4,6 +4,8 @@ export const ProjectManagementType = {
     SET_PROJECT_MANAGEMENT_DATA: 'SET_PROJECT_MANAGEMENT_DATA',
     SAVE_PROJECT_MANAGEMENT_DATA: 'SAVE_PROJECT_MANAGEMENT_DATA',
     UPDATE_PROJECT_MANAGEMENT_DATA: 'UPDATE_PROJECT_MANAGEMENT_DATA',
+    GET_MAPPED_PROJECT_MANAGEMENT_DATA: 'GET_MAPPED_PROJECT_MANAGEMENT_DATA',
+    SET_MAPPED_PROJECT_MANAGEMENT_DATA: 'SET_MAPPED_PROJECT_MANAGEMENT_DATA',
   }
   
   export const getProjectManagementData = (data) => 
@@ -28,5 +30,15 @@ export const ProjectManagementType = {
   ({
     type: ProjectManagementType.UPDATE_PROJECT_MANAGEMENT_DATA,
     payload: {data},
+  });
+  
+  export const getMappedProjectManagementData = (data) => 
+  ({
+    type: ProjectManagementType.GET_MAPPED_PROJECT_MANAGEMENT_DATA,
+  });
+  export const setMappedProjectManagementData = (data) => 
+  ({
+    type: ProjectManagementType.SET_MAPPED_PROJECT_MANAGEMENT_DATA,
+    payload: data
   });
   

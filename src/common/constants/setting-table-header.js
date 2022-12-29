@@ -1,1 +1,1 @@
-export const TABLE_HEADERS = ["Employee Id", "Employee Name", "Role", "Actions"];
+export const TABLE_HEADERS = ["Employee Name", "Email", "Role", "Actions"];

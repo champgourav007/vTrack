@@ -37,3 +37,34 @@ export const columns = [
     minWidth: 80,
   },
 ];
+export const mappedProjectManagementData = [
+  {
+    clientId: 1,
+    clientName: "Duly",
+    projects: [
+      {
+        projectId: 1,
+        projectName: "Collab"
+      },
+      {
+        projectId: 2,
+        projectName: "website"
+      },
+      {
+        projectId: 3,
+        projectName: "AI/ML"
+      }
+    ]
+    
+  },
+  {
+    clientId: 2,
+    clientName: "kipu",
+    projects: [
+      {
+        projectId: 0,
+        projectName: "kipu ece"
+      }
+    ]
+  }
+]

@@ -38,6 +38,7 @@ import Loader from "../Loader";
 import {
   convertDateToDDMYYYY,
   fileHandler,
+  getFullName,
   getLabel,
   getTypeofColumn,
   initialSort,
@@ -54,6 +55,8 @@ import {
 import CircularProgress from "@mui/material/CircularProgress";
 import DialogBox from "../DialogBox/dialogBox";
 import { getProjectManagementData, saveProjectManagementData, updateProjectManagementData } from "../../redux/actions/project-management";
+import { deleteTimeSheetData, getTimeSheetData, saveTimeSheetData, updateTimeSheetData } from "../../redux/actions/timesheet";
+import moment from "moment";
 
 export const DataTable = ({
   headingName,
@@ -66,7 +69,9 @@ export const DataTable = ({
   isEditButtonClicked,
   setIsEditButtonClicked,
   searchData,
-  projectStatus
+  projectStatus,
+  selectedPeriodWeek,
+  projectId
 }) => {
   const { clientsData, projectManagers, allTasks, listItems, allUsers, allProjectsData } =
     useSelector(({ MODULES }) => MODULES);
@@ -76,26 +81,28 @@ export const DataTable = ({
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [newRowAdded, setNewRowAdded] = useState(initialData[headingName]);
+  const [newRowAdded, setNewRowAdded] = useState(initialData(headingName,selectedPeriodWeek));
   const [sortBy, setSortBy] = useState(initialSort[headingName]);
 
   const [rowToBeUpdated, setRowToBeUpdated] = useState({});
   const [fileState, setFileState] = useState("");
   const [showDialogBox, setShowDialogBox] = useState(false);
-  const [deleteRow, setDeleteRow] = useState({});
+  const [deleteRow, setDeleteRow] = useState();
   const [dialogDeleteButtonClicked, setDialogDeleteButtonClicked] =
     useState(false);
 
   const saveDataHandler = () => {
+    console.log(isEditButtonClicked)
     if (!isEditButtonClicked) {
       if (headingName === Modules.CLIENT_ADMIN) {
         dispatch(saveClientAdminData(newRowAdded));
       } else if (headingName === Modules.PROJECT_ADMIN) {
         dispatch(saveProjectAdminData(newRowAdded));
       } else if (headingName === Modules.PROJECT_MANAGEMENT) {
-        dispatch(saveProjectManagementData(newRowAdded));
-      }
-    } else {
+        dispatch(saveProjectManagementData({ ...newRowAdded, projectId: projectId }));
+      } 
+    }
+    else {
       if (headingName === Modules.CLIENT_ADMIN) {
         if (fileState && newRowAdded.clientId && newRowAdded.clientName) {
           fileHandler(
@@ -117,13 +124,33 @@ export const DataTable = ({
         }
         dispatch(updateProjectAdminData(newRowAdded));
       } else if (headingName === Modules.PROJECT_MANAGEMENT) {
-        dispatch(updateProjectManagementData(newRowAdded));
-      }
+        dispatch(updateProjectManagementData({ ...newRowAdded, projectId: projectId }));
+      } 
       setIsEditButtonClicked(false);
+    }
+    if (headingName === Modules.TIMESHEET){
+      const dateHours = [];
+      const restProps = {};
+      let totalHrs = 0;
+      Object.keys(newRowAdded).forEach(key=>{
+        if(moment(key).isValid()){
+          dateHours.push({
+            date: key,
+            hours: newRowAdded[key]
+          });
+          if(newRowAdded[key] !== "") totalHrs += parseInt(newRowAdded[key]);
+        }
+        else{
+          restProps[key] = newRowAdded[key];
+        }
+      });
+      restProps['dateHours'] = [...dateHours];
+      restProps['totalHrs'] = totalHrs.toString();
+      isEditButtonClicked ? dispatch(updateTimeSheetData(restProps)) : dispatch(saveTimeSheetData(restProps));
     }
     setIsAddButtonClicked(false);
     setRowToBeUpdated({});
-    setNewRowAdded(initialData[headingName]);
+    setNewRowAdded(initialData(headingName,selectedPeriodWeek));
   };
 
   const closeButtonHandler = () => {
@@ -133,7 +160,7 @@ export const DataTable = ({
       setIsEditButtonClicked(false);
     }
     setRowToBeUpdated({});
-    setNewRowAdded(initialData[headingName]);
+    setNewRowAdded(initialData(headingName,selectedPeriodWeek));
   };
 
   const handleChangePage = (event, newPage) => {
@@ -172,11 +199,19 @@ export const DataTable = ({
     } else if (headingName === Modules.PROJECT_MANAGEMENT) {
       dispatch(
         getProjectManagementData({
+          projectId: projectId,
           pageNo: newPage + 1,
           pageSize: rowsPerPage,
           sortBy: sortBy,
           sortDir: "ASC",
           searchData: searchData,
+        })
+      );
+    }
+    else if (headingName === Modules.TIMESHEET) {
+      dispatch(
+        getTimeSheetData({
+          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
         })
       );
     }
@@ -218,11 +253,18 @@ export const DataTable = ({
     } else if (headingName === Modules.PROJECT_MANAGEMENT) {
       dispatch(
         getProjectManagementData({
+          projectId: projectId,
           pageNo: page + 1,
           pageSize: event.target.value,
           sortBy: sortBy,
           sortDir: "ASC",
           searchData: searchData,
+        })
+      );
+    } else if (headingName === Modules.TIMESHEET) {
+      dispatch(
+        getTimeSheetData({
+          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
         })
       );
     }
@@ -279,11 +321,18 @@ export const DataTable = ({
     } else if (headingName === Modules.PROJECT_MANAGEMENT) {
       dispatch(
         getProjectManagementData({
+          projectId: projectId,
           pageNo: page + 1,
           pageSize: rowsPerPage,
           sortBy: colName,
           sortDir: sortDirection,
           searchData: searchData,
+        })
+      );
+    } else if (headingName === Modules.TIMESHEET) {
+      dispatch(
+        getTimeSheetData({
+          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
         })
       );
     }
@@ -306,22 +355,6 @@ export const DataTable = ({
           {option.name}
         </MenuItem>
       ));
-    } else if (col === "projectManagerName") {
-      return projectManagers.map((option) => (
-        <MenuItem
-          key={option.id}
-          value={option.name}
-          onClick={() =>
-            setNewRowAdded({
-              ...newRowAdded,
-              [col]: option.name,
-              projectManagerId: option.id,
-            })
-          }
-        >
-          {option.name}
-        </MenuItem>
-      ))
     } else if(col === "currency" || col === "paymentTerms" || col === 'location') {
       return listItems && listItems[col].map((option) => (
         <MenuItem
@@ -357,22 +390,22 @@ export const DataTable = ({
           </MenuItem>
         ))
       );
-    } else if (col === "businessOwner" || col === "deliveryOfficer") {
+    } else if (col === "projectManagerName" || col === "businessOwner" || col === "deliveryOfficer") {
       return (
-        allUsers &&
-        allUsers.map((option) => (
+        allUserDetails &&
+        allUserDetails.data.map((option) => (
           <MenuItem
             key={option.id}
-            value={option.name}
+            value={getFullName(option.firstName, option.lastName)}
             onClick={() =>
               setNewRowAdded({
                 ...newRowAdded,
-                [col]: option.name,
+                [col]: getFullName(option.firstName, option.lastName),
                 [`${col}Id`]: option.id,
               })
             }
           >
-            {option.name}
+            {`${getFullName(option.firstName, option.lastName)} (${option.email})`}
           </MenuItem>
         ))
       );
@@ -411,19 +444,20 @@ export const DataTable = ({
           {option.projectName}
         </MenuItem>
       ))
-    } else if (col === "task"){
+    } else if (col === "taskName"){
       return allTasks ? allTasks.map((option,index) => (
         <MenuItem
           key={index}
-          value={option}
+          value={option.taskName}
           onClick={() =>
             setNewRowAdded({
               ...newRowAdded,
-              [col]: option,
+              [col]: option.taskName,
+              taskId: option.taskId,
             })
           }
         >
-          {option}
+          {option.taskName}
         </MenuItem>
       )) : null;
     } else {
@@ -440,26 +474,55 @@ export const DataTable = ({
   };
 
   const createInputField = (col) => {
-    if (getTypeofColumn(col.id, headingName) === "textfield") {
+    if(col.id === "paymentTerms"){
       return (
         <TableCell key={col.id}>
+          <TextField
+          className="numberInput"
+            type="number"
+            id="outlined-required"
+            label={getLabel(col.id, headingName)}
+            placeholder=""
+            value={newRowAdded[col.id]}
+            onChange={(e) => inputFieldHandler(e, col.id)}
+            sx={{
+              "& label": {
+                lineHeight: '0.8rem'
+              }
+            }}
+          />
+        </TableCell>
+      );
+    }
+    else if (getTypeofColumn(col.id, headingName) === "textfield") {
+      return (
+        <TableCell key={col.id} style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
           <TextField
             id="outlined-required"
             label={getLabel(col.id, headingName)}
             placeholder=""
             value={newRowAdded[col.id]}
+            sx={{
+            "& label": {
+              lineHeight: '0.8rem'
+            }
+          }}
             onChange={(e) => inputFieldHandler(e, col.id)}
           />
         </TableCell>
       );
     } else if (getTypeofColumn(col.id, headingName) === "select") {
       return (
-        <TableCell key={col.id}>
+        <TableCell key={col.id}  style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
           <TextField
             id="outlined-select-currency"
             select
             label={getLabel(col.id, headingName)}
             value={newRowAdded[col.id]}
+            sx={{
+            "& label": {
+              lineHeight: '0.8rem'
+            }}}
             // onChange={(e) => inputFieldHandler(e, col.id)}
             style={{ width: "80%" }}
           >
@@ -469,7 +532,7 @@ export const DataTable = ({
       );
     } else if (getTypeofColumn(col.id, headingName) === "date") {
       return (
-        <TableCell key={col.id}>
+        <TableCell key={col.id} style={{maxWidth: '7rem'}}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label=""
@@ -478,7 +541,7 @@ export const DataTable = ({
                 setNewRowAdded({ ...newRowAdded, [col.id]: newValue });
               }}
               placeholder="Date"
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params) => <TextField {...params} error={false} />}
             />
           </LocalizationProvider>
         </TableCell>
@@ -487,7 +550,7 @@ export const DataTable = ({
       return (
         <TableCell key={col.id}>
           <div className="attachmentContainer">
-            {headingName !== Modules.TIMESHEET && 
+            {(headingName === Modules.PROJECT_ADMIN || headingName === Modules.CLIENT_ADMIN) && isEditButtonClicked && 
               <IconButton
               color="primary"
               aria-label="upload picture"
@@ -531,8 +594,13 @@ export const DataTable = ({
             label={"Time"}
             type="number"
             value={newRowAdded[col.id]}
-            style={{maxWidth:'80%'}}
-            onChange={(e) => inputFieldHandler(e, col.id)}
+            style={{maxWidth:'6rem'}}
+            sx={{
+            "& label": {
+              lineHeight: '0.8rem'
+            }
+          }}
+            onChange={(e) => inputFieldHandler(e, col.date)}
           />
         </TableCell>
       );
@@ -558,6 +626,8 @@ export const DataTable = ({
       dispatch(deleteClientAdminData(id));
     } else if (headingName === Modules.PROJECT_ADMIN) {
       dispatch(deleteProjectAdminData(id));
+    } else if (headingName === Modules.TIMESHEET) {
+      dispatch(deleteTimeSheetData(id));
     }
   };
 
@@ -574,14 +644,14 @@ export const DataTable = ({
     return employeeName;
   };
 
-  const dialogBoxHandler = (rowData) => { 
+  const dialogBoxHandler = (rowData) => {
     setDeleteRow(rowData);
     setShowDialogBox(true);
   };
 
   React.useEffect(() => {
     setRowToBeUpdated({});
-    setNewRowAdded(initialData[headingName]);
+    setNewRowAdded(initialData(headingName,selectedPeriodWeek));
     setSortBy(initialSort[headingName]);
     setPage(0);
     setRowsPerPage(10);
@@ -592,6 +662,12 @@ export const DataTable = ({
       deleteButtonClicked(deleteRow);
     }
   }, [dialogDeleteButtonClicked]);
+
+  React.useEffect(() => {
+    if (selectedPeriodWeek) {
+      setNewRowAdded(initialData(headingName,selectedPeriodWeek));
+    }
+  }, [selectedPeriodWeek]);
 
   return (
     <>
@@ -613,25 +689,27 @@ export const DataTable = ({
                       <TableCell
                         key={column.id}
                         align={column.align}
-                        style={{ minWidth: column.minWidth, position: 'relative' }}
+                        style={{ minWidth: column.minWidth, position: 'relative',maxWidth:column.maxWidth ? column.maxWidth : 'auto'  }}
                         sx={{
                           backgroundColor: "#1773bc0d",
                           color: "#1773bc",
                           fontWeight: 700,
                         }}
                       >
-                        {column.label}
-                        {!column.isDate && 
-                          <img
-                            src={TableArrows}
-                            alt=""
-                            className="tableArrows"
-                            onClick={() => handleSortBy(column.id)}
-                          />
-                        }
-                        {column.day && 
-                          <div className="month">{column.day}</div>
-                        }
+                        <div className="table-header-cell">
+                          <span>{column.label}</span>
+                          {!column.isDate && 
+                            <img
+                              src={TableArrows}
+                              alt=""
+                              className="tableArrows"
+                              onClick={() => handleSortBy(column.id)}
+                            />
+                          }
+                          {column.day && 
+                            <div className="month">{column.day}</div>
+                          }
+                        </div>
                       </TableCell>
                     )
                 )}
@@ -670,7 +748,7 @@ export const DataTable = ({
                             return (
                             <TableCell key={col.id}>
                               <div className="attachmentContainer">
-                                {headingName !== Modules.PROJECT_ALLOCATION && headingName !== Modules.TIMESHEET ? (
+                                {headingName === Modules.CLIENT_ADMIN || headingName === Modules.PROJECT_ADMIN ? (
                                   (headingName === Modules.CLIENT_ADMIN &&
                                     row.msaDocLink) ||
                                   (headingName === Modules.PROJECT_ADMIN &&
@@ -741,7 +819,7 @@ export const DataTable = ({
                                     <img src={editIcon} className="editDeleteIcon" alt="" />
                                   </button>
                                 </Tooltip>
-                                {headingName !== Modules.PROJECT_ALLOCATION && (
+                                {headingName !== Modules.PROJECT_ALLOCATION && headingName !== Modules.PROJECT_MANAGEMENT && (
                                   <Tooltip title="Delete">
                                     <img
                                       src={deleteIcon}
@@ -765,17 +843,17 @@ export const DataTable = ({
                         } 
                         else if (col.id.includes("Date")) {
                           return (
-                            <TableCell key={col.id}>
+                            <TableCell key={col.id} style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
                               {convertDateToDDMYYYY(row[col.id])}
                             </TableCell>
                           );
                         }
                         return col.id !==
                           UniqueIds[headingName.replace(" ", "")] ? (
-                          <TableCell key={col.id} style={{textAlign: col.isDate || col.id === 'totalHours' ? "center" : "auto"}}>
+                          <TableCell key={col.id} style={{textAlign: col.isDate || col.id === 'totalHrs' ? "center" : "auto",maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
                             {col.id === "employeeName" ? (
                               getEmployeeName(row["employeeId"])
-                            ) : col.id === "allocation" ? (
+                            ) : col.id === "allocation" && row[col.id] ? (
                               <div className="allocation">
                                 <div>
                                   <CircularProgress
