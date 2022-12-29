@@ -48,7 +48,7 @@ export const tableColumnsData = {
     { id: "endDate", label: "End Date", minWidth: 120, type: 'date' },
     { id: 'billRate', label: 'Bill Rate', minWidth: 80, type: 'textfield' },
     { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, type: 'textfield' },
-    { id: 'billStatus', label: 'Bill Status', minWidth: 80, type: 'textfield' },
+    { id: 'billStatus', label: 'Bill Status', minWidth: 80, type: 'select' },
     { id: 'costAllocation', label: 'Cost Allocation', minWidth: 100, type: 'textfield' },
   ], 
   'TimeSheet': [
