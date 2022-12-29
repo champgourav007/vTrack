@@ -73,7 +73,7 @@ export const DataTable = ({
   selectedPeriodWeek,
   projectId
 }) => {
-  const { clientsData, projectManagers, allTasks, listItems, allUsers, allProjectsData } =
+  const { clientsData, projectManagers, allTasks, listItems, allUsers, allProjectsData, assignedProjects } =
     useSelector(({ MODULES }) => MODULES);
   const { allUserDetails } = useSelector(({ USER }) => USER);
   const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
@@ -377,20 +377,39 @@ export const DataTable = ({
         listItems.type.map((option) => (
           <MenuItem
             key={option.id}
-            value={option.longCodeValue}
+            value={option.shortCodeValue}
             onClick={() =>
               setNewRowAdded({
                 ...newRowAdded,
-                [col]: option.longCodeValue,
+                [col]: option.shortCodeValue,
                 typeId: option.id,
               })
             }
           >
-            {option.longCodeValue}
+            {option.shortCodeValue}
           </MenuItem>
         ))
       );
-    } else if (col === "projectManagerName" || col === "businessOwner" || col === "deliveryOfficer") {
+    } else if (col === "projectManagerName") {
+      return (
+        allUserDetails &&
+        allUserDetails.data.map((option) => (
+          <MenuItem
+            key={option.id}
+            value={getFullName(option.firstName, option.lastName)}
+            onClick={() =>
+              setNewRowAdded({
+                ...newRowAdded,
+                [col]: getFullName(option.firstName, option.lastName),
+                projectManagerId: option.id,
+              })
+            }
+          >
+            {`${getFullName(option.firstName, option.lastName)} (${option.email})`}
+          </MenuItem>
+        ))
+      );
+    } else if (col === "businessOwner" || col === "deliveryOfficer") {
       return (
         allUserDetails &&
         allUserDetails.data.map((option) => (
@@ -429,19 +448,19 @@ export const DataTable = ({
         ))
       );
     } else if (col === "projectName") {
-      return allProjectsData && allProjectsData.map((option) => (
+      return assignedProjects && assignedProjects.map((option) => (
         <MenuItem
-          key={option.projectId}
-          value={option.projectName}
+          key={option.id}
+          value={option.name}
           onClick={() =>
             setNewRowAdded({
               ...newRowAdded,
-              [col]: option.projectName,
-              projectId: option.projectId,
+              [col]: option.name,
+              projectId: option.id,
             })
           }
         >
-          {option.projectName}
+          {option.name}
         </MenuItem>
       ))
     } else if (col === "taskName"){
@@ -629,6 +648,7 @@ export const DataTable = ({
     } else if (headingName === Modules.TIMESHEET) {
       dispatch(deleteTimeSheetData(id));
     }
+    setDialogDeleteButtonClicked(false);
   };
 
   const getEmployeeName = (id) => {
@@ -862,7 +882,7 @@ export const DataTable = ({
                                     value={row[col.id]}
                                   />
                                 </div>
-                                <div>{row[col.id]}%</div>
+                                <div>{row[col.id]}</div>
                               </div>
                             ) : (
                               row[col.id]

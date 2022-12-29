@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { TABLE_HEADERS } from '../../common/constants/setting-table-header'
 import { AddEnableIcon, crossIcon, deleteIcon, editIcon, TableArrows } from '../../common/icons';
+import { getFullName } from '../../common/utils/datatable';
 import { deleteSettingTableData, getSettingTableData, updateSettingTableData } from '../../redux/actions';
 import DialogBox from '../DialogBox/dialogBox';
 import './settingTable.css';
 
-export const SettingsTable = ({ rolesData }) => {
+export const SettingsTable = ({ rolesData, searchData }) => {
     const usersData = useSelector(({ MODULES }) => MODULES.settingTableData);
     const [showDialogBox, setShowDialogBox] = useState(false);
     const [editUserRole, setEditUserRole] = useState("");
@@ -15,6 +16,7 @@ export const SettingsTable = ({ rolesData }) => {
     const [dialogDeleteButtonClicked, setDialogDeleteButtonClicked] =
         useState(false);
     const [idToDelete, setIdToDelete] = useState();
+    const [ filteredData, setFilteredData ] = useState(null);
     const dispatch = useDispatch();
 
     const handleUserUpdate = (userId) => {
@@ -38,6 +40,23 @@ export const SettingsTable = ({ rolesData }) => {
             setDialogDeleteButtonClicked(false);
         }
     }, [dialogDeleteButtonClicked])
+
+    useEffect(() => {
+        if (usersData) {
+            if (searchData) {
+                let tempData = [ ...usersData ];
+                setFilteredData(tempData.filter(data => getFullName(data.firstName, data.lastName).trim().toLowerCase().includes(searchData.trim().toLowerCase())));
+            } else {
+                setFilteredData(usersData);
+            }
+        }
+    }, [ searchData ])
+
+    useEffect(() => {
+        if (usersData) {
+            setFilteredData(usersData);
+        }
+    }, [ usersData ])
     return (
         <>
             {showDialogBox && (
@@ -64,21 +83,21 @@ export const SettingsTable = ({ rolesData }) => {
                                         }}
                                     >
                                         {column}
-                                        <img
+                                        {/* <img
                                             src={TableArrows}
                                             alt=""
                                             className="tableArrows"
 
-                                        />
+                                        /> */}
                                     </TableCell>
                             )
                             }
                         </TableRow>
                     </TableHead>
                     <TableBody className='settingTableBody'>
-                        {usersData && usersData.map((user) =>
+                        {filteredData && filteredData.map((user) =>
                             <TableRow key={user.userId} className='settingTableHeader'>
-                                <TableCell align="left">{`${user.firstName} ${user.lastName}`}</TableCell>
+                                <TableCell align="left">{getFullName(user.firstName, user.lastName)}</TableCell>
                                 <TableCell align="left">{user.email}</TableCell>
                                 {editUserRole === user.userId ?
                                     (<TableCell align="left">
