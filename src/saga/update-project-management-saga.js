@@ -10,7 +10,6 @@ import { toastOptions } from "../common/utils/toasterOptions";
 function* workerUpdateProjectManagementSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
-    debugger
     yield call(updateProjectManagementDetails, payload.data);
     toast.success("Data Saved", toastOptions)
     yield put(
