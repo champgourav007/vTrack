@@ -14,6 +14,7 @@ import { useAzureADAuth } from "../../config/use-azure-ad";
 import { ModuleList } from "../../mock-data/Sidebar";
 import { useNavigate } from "react-router-dom";
 import { VTrackURL } from "../../routes/routes";
+import { useSelector } from "react-redux";
 
 export default function Sidebar({ changePage, pageName }) {
   const { logoutAzureAD } = useAzureADAuth();
@@ -23,17 +24,22 @@ export default function Sidebar({ changePage, pageName }) {
   const [displaystate, setDisplayState] = useState("");
   const navigate = useNavigate();
 
+  const { userData } = useSelector(({ USER }) => USER);
+
   const signOutHandler = () => {
     logoutAzureAD();
   };
 
+  useEffect(()=>{
+    if(userData){
+      setSelected(ModuleList.find(e=>e.key===Object.keys(userData.data.tabs)[1]).id);
+    }
+  },[userData]);
+
   const getSidebarClass = (moduleId) => {
     let sidebarClass = "";
     if (moduleId === selected) sidebarClass = "sidebarItemsSelected";
-    else if (selected === "" && moduleId == 5) {
-      sidebarClass = "sidebarItemsSelected";
-      setSelected("5");
-    } else sidebarClass = "sidebarItems";
+    else sidebarClass = "sidebarItems";
     return sidebarClass;
   };
 
@@ -56,7 +62,8 @@ export default function Sidebar({ changePage, pageName }) {
       {collapse === true ? <div className="divider" /> : ""}
       <div className="sidebarWrapper">
         <div className="topItems">
-          {ModuleList.map((module, index) => {
+          {userData && Object.keys(userData.data.tabs).map((moduleName, index) => {
+            let module = ModuleList.find(e=>e.key === moduleName);
             let sidebarClass = getSidebarClass(module.id);
             return (
               <div

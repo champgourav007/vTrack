@@ -544,7 +544,7 @@ export const DataTable = ({
       return (
         <TableCell key={col.id}>
           <div className="attachmentContainer">
-            {headingName !== Modules.TIMESHEET && 
+            {(headingName === Modules.PROJECT_ADMIN || headingName === Modules.CLIENT_ADMIN) && isEditButtonClicked && 
               <IconButton
               color="primary"
               aria-label="upload picture"

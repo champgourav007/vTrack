@@ -1,17 +1,27 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Announcement } from "../../components/Announcement/announcement";
 import { SelectedModule } from "../../components/SelectedModule/selected-module";
 import Sidebar from "../../components/Sidebar/Sidebar";
+import { ModuleList } from "../../mock-data/Sidebar";
 import "./VTrack.css";
 
 export const VTrack = () => {
-  const [headingName, setHeadingName] = useState("Client Admin");
+  const [headingName, setHeadingName] = useState("");
   const navigate = useNavigate();
+
+  const { userData } = useSelector(({ USER }) => USER);
 
   const changePage = (headingName) => {
     setHeadingName(headingName);
   };
+
+  useEffect(()=>{
+    if(userData){
+      setHeadingName(ModuleList.find(e=>e.key===Object.keys(userData.data.tabs)[1]).name);
+    }
+  },[userData]);
 
   useEffect(() => {
     let User = sessionStorage.getItem("userInformation");
