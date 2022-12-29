@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { DataTable } from "../DataTable/DataTable";
 import { useDispatch, useSelector } from "react-redux";
 import { Modules } from "../../common/constants/sidebar";
-import { getAllProjectsData, getAllUserDetails, getAllUsersData, getClientAdminData, getClientsData, getListItems, getProjectAdminData, getProjectAllocationData, getProjectManagersData, getTimeSheetData, saveTimeSheetData, saveTimeSheetPeriodData, setTimeSheetPeriodWeek } from "../../redux/actions";
+import { getAllProjectsData, getAllUserDetails, getAllUsersData, getClientAdminData, getClientsData, getListItems, getProjectAdminData, getProjectAllocationData, getProjectManagersData, getProjectTasks, getTimeSheetData, saveTimeSheetData, saveTimeSheetPeriodData, setTimeSheetPeriodWeek } from "../../redux/actions";
 import { getLabel, getMinWidth, tableColumnsData } from "../../common/utils/datatable";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
@@ -312,6 +312,10 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     dispatch(getAllProjectsData());
     setSearchData('')
   }, [ headingName]);
+
+  useEffect(() => {
+    dispatch(getProjectTasks());
+  }, []);
 
   return (
     <div className="tableDiv">
