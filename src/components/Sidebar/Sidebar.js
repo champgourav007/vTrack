@@ -12,8 +12,6 @@ import {
 } from "../../common/icons";
 import { useAzureADAuth } from "../../config/use-azure-ad";
 import { ModuleList } from "../../mock-data/Sidebar";
-import { useNavigate } from "react-router-dom";
-import { VTrackURL } from "../../routes/routes";
 import { useSelector } from "react-redux";
 
 export default function Sidebar({ changePage, pageName }) {
@@ -21,8 +19,6 @@ export default function Sidebar({ changePage, pageName }) {
   const [collapse, setCollapse] = useState(false);
   const [mouseHover, setMouseHover] = useState("-1");
   const [selected, setSelected] = useState("");
-  const [displaystate, setDisplayState] = useState("");
-  const navigate = useNavigate();
 
   const { userData } = useSelector(({ USER }) => USER);
 

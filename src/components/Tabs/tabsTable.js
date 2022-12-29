@@ -1,15 +1,29 @@
-import "./tabsTable.css";
-import { searchIcon } from "../../common/icons";
+import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
+import moment from 'moment';
 import { useEffect, useState } from "react";
-import { DataTable } from "../DataTable/DataTable";
 import { useDispatch, useSelector } from "react-redux";
 import { Modules } from "../../common/constants/sidebar";
-import { getAllProjectsData, getAllUserDetails, getAllUsersData, getAssignedProjects, getClientAdminData, getClientsData, getListItems, getProjectAdminData, getProjectAllocationData, getProjectManagersData, getProjectTasks, getTimeSheetData, saveTimeSheetData, saveTimeSheetPeriodData, setTimeSheetPeriodWeek } from "../../redux/actions";
+import { searchIcon } from "../../common/icons";
 import { getLabel, getMinWidth, tableColumnsData } from "../../common/utils/datatable";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
-import moment from 'moment';
+import {
+  getAllProjectsData,
+  getAllUserDetails,
+  getAllUsersData,
+  getAssignedProjects,
+  getClientAdminData,
+  getClientsData,
+  getListItems,
+  getProjectAdminData,
+  getProjectAllocationData,
+  getProjectTasks,
+  getTimeSheetData,
+  saveTimeSheetPeriodData,
+  setTimeSheetPeriodWeek
+} from "../../redux/actions";
 import { getProjectManagementData } from "../../redux/actions/project-management";
+import { DataTable } from "../DataTable/DataTable";
+import "./tabsTable.css";
 
 const getPeriods = () => {
   let date = moment().subtract(42,'days');
@@ -311,7 +325,10 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     dispatch(getAllUserDetails());
     dispatch(getAllProjectsData());
     dispatch(getAssignedProjects());
-    setSearchData('')
+
+    setSearchData('');
+    setIsAddButtonClicked(false);
+    setIsEditButtonClicked(false);
   }, [ headingName]);
 
   useEffect(() => {
@@ -321,7 +338,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   return (
     <div className="tableDiv">
       <div className="searchHeader">
-        {headingName !== 'TimeSheet' && <div className="searchWrapper">
+        {headingName !== Modules.TIMESHEET && <div className="searchWrapper">
           <img src={searchIcon} className="searchIcon" alt="" />
           <input
             className="searchBox"
@@ -332,7 +349,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         </div>
         }
         {
-          headingName === 'TimeSheet' ? (
+          headingName === Modules.TIMESHEET ? (
             tabName === 'MY TIMESHEET' ? 
               <>
                 {timeSheetData && timeSheetData.length &&
@@ -446,7 +463,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                   Show Data
                 </button>
               </div>
-          ) : headingName !== "Project Allocation" ? (
+          ) : headingName !== Modules.PROJECT_ALLOCATION ? (
             <button
                 disabled={isAddButtonClicked || isEditButtonClicked}
                 className={
