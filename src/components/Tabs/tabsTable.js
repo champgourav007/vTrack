@@ -352,10 +352,10 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           headingName === Modules.TIMESHEET ? (
             tabName === 'MY TIMESHEET' ? 
               <>
-                {timeSheetData && timeSheetData.length &&
+                {(timeSheetData && timeSheetData.length) ?
                   <div className="searchWrapperText">
                     TimeSheet Period Status : {timeSheetData[0].periodStatus}
-                  </div>
+                  </div> : null
                 }
                 <div className="button-flex">
                   <TextField

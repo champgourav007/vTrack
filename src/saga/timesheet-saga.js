@@ -13,11 +13,13 @@ function* workerTimeSheetSaga({ payload }) {
     yield put(setVtrackLoader(true));
     const timesheetPeriodWeek = yield select(state=>
         state.MODULES.timesheetPeriodWeek);
+    const employeeID = yield select(state=>
+        state.USER.userData.data.activeUsers.id);
     const timeSheetDetails = yield call(
         getTimeSheetDetails,
         payload.periodWeek ? payload.periodWeek : timesheetPeriodWeek,
         payload.projectId ? payload.projectId : 0,
-        payload.employeeId ? payload.employeeId : 0
+        payload.employeeId ? payload.employeeId : employeeID
     );
     // const timeSheetDetails = timeSheetData;
     yield put(setTimeSheetData(timeSheetDetails));
