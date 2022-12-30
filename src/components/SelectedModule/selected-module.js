@@ -7,7 +7,7 @@ import { dashboardURL } from "../../routes/routes";
 import { Settings } from "../Settings/settings";
 import SelectBar from "../SelectBar/selectBar";
 import { useDispatch } from "react-redux";
-import { getMappedProjectManagementData } from "../../redux/actions/project-management";
+import { getMappedProjectManagementData, getProjectManagementData } from "../../redux/actions/project-management";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -32,6 +32,16 @@ export const SelectedModule = ({ headingName }) => {
  useEffect(() => {
   if (selectedClient && selectedClient.projects && selectedClient.projects.length) {
     setSelectedProjectName(selectedClient.projects[0].projectName);
+    dispatch(
+      getProjectManagementData({
+        projectId: selectedClient.projects[0].projectId,
+        pageNo: 1,
+        pageSize: 10,
+        sortBy: 'projectName',
+        sortDir: "ASC",
+        searchData: '',
+      })
+    );
   }
  }, [selectedClient]);
 
