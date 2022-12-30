@@ -26,4 +26,5 @@ export const ModuleList = [
   { id: "6",key:'projectAdmin' , name: "Project Admin", img: projectAdminImg, imgHover:projectAdminBlueIcon },
   { id: "7",key:'vendorAdmin' , name: "Vendor Admin", img: vendorAdminImg, imgHover:vendorAdminBlueIcon },
   { id: "8",key:'vendorSOWAdmin' , name: "Vendor SOW Admin", img: vendorSowAdminImg, imgHover:vendorSowAdminBlueIcon },
+  { id: "9",key:'settings' , name: "Settings", img: "", imgHover:"" },
 ];

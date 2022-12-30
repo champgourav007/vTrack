@@ -72,7 +72,7 @@ export default function BasicTabs(props) {
           >
             {mappedProjectManagementData && mappedProjectManagementData?.filter((projectVal)=>projectVal.clientId === props.selectedClient.clientId)[0]
             ?.projects?.map((project, index)=> (
-              <Tab className="" label={project.projectName} {...a11yProps(index)} onClick={()=>props.setSelectedProjectName(project.projectName)} />
+              <Tab key={index} className="" label={project.projectName} {...a11yProps(index)} onClick={()=>props.setSelectedProjectName(project.projectName)} />
             ))}
           </Tabs>
          : TabsData[props.headingName] && (
@@ -82,7 +82,7 @@ export default function BasicTabs(props) {
             aria-label="basic tabs example"
           >
             {TabsData[props.headingName].map((tab, index) => (
-              <Tab className="" label={tab} {...a11yProps(index)} />
+              <Tab key={index} className="" label={tab} {...a11yProps(index)} />
             ))}
           </Tabs>
         )}
