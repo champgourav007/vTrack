@@ -61,44 +61,49 @@ export default function Sidebar({ changePage, pageName }) {
           {userData && Object.keys(userData.data.tabs).map((moduleName, index) => {
             let module = ModuleList.find(e=>e.key === moduleName);
             let sidebarClass = getSidebarClass(module.id);
-            return (
-              <div
-                key={index}
-                className={sidebarClass}
-                onClick={() => {
-                  changePage(module.name);
-                  setSelected(module.id);
-                }}
-                onMouseOver={() => setMouseHover(module.id)}
-                onMouseOut={() => setMouseHover(-1)}
-                style={{
-                  display:
-                    pageName === "Dashboard" && module.id !== "1" ? "none" : "",
-                }}
-              >
-                <img
-                  className="itemImage"
-                  src={
-                    mouseHover === module.id || selected === module.id
-                      ? module.imgHover
-                      : module.img
-                  }
-                  alt=""
-                />
-                {collapse === false ? (
-                  <div className="itemName">{module.name}</div>
-                ) : (
-                  ""
-                )}
-              </div>
-            );
+            if(module.id !== "9") {
+              return (
+                <div
+                  key={index}
+                  className={sidebarClass}
+                  onClick={() => {
+                    changePage(module.name);
+                    setSelected(module.id);
+                  }}
+                  onMouseOver={() => setMouseHover(module.id)}
+                  onMouseOut={() => setMouseHover(-1)}
+                  style={{
+                    display:
+                      pageName === "Dashboard" && module.id !== "1" ? "none" : "",
+                  }}
+                >
+                  <img
+                    className="itemImage"
+                    src={
+                      mouseHover === module.id || selected === module.id
+                        ? module.imgHover
+                        : module.img
+                    }
+                    alt=""
+                  />
+                  {collapse === false ? (
+                    <div className="itemName">{module.name}</div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              )
+            }
           })}
         </div>
         <div className="bottomItems">
           <div className="divider" />
           <div
             className={
-              selected === "settings" ? "sidebarItemsSelected" : "sidebarItems"
+              selected === "settings" ? 
+              `sidebarItemsSelected ${userData?.data?.roleName === "Admin" ? "" : "displayNone"}` : 
+              `sidebarItems ${userData?.data?.roleName === "Admin" ? "" : "displayNone"}`
+              
             }
             onClick={() => {
               changePage("settings");

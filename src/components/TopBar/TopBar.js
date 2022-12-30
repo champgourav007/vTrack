@@ -20,7 +20,7 @@ export const TopBar = () => {
         firstName: userData.data.activeUsers.firstName,
         photo: userData.data.activeUsers.photo === "" ? "" : userData.data.activeUsers.photo,
       });
-      setActiveUserRole(userData.roleName);
+      setActiveUserRole(userData.data.roleName);
     }
   }, [userData]);
 

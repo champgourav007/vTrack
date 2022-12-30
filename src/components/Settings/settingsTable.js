@@ -144,7 +144,7 @@ export const SettingsTable = ({ rolesData, searchData }) => {
                                         <div className='actions'>
                                             <Tooltip title="Edit">
                                                 <button
-                                                    onClick={() =>
+                                                    onClick={() => 
                                                         handleUserUpdate(user.userId)
                                                     }
                                                     className="buttonBackgroundBorder cursorPointer"
