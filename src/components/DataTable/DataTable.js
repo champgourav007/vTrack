@@ -870,6 +870,7 @@ export const DataTable = ({
                                   )
                                 ) : null}
                                 {tabName !== 'PENDING APPROVAL' && 
+                                tabName !== 'REPORTEES' && 
                                 row.status !== 'Approved' && 
                                 row.status !== 'Submitted' && 
                                 row.status !== 'Rejected' && 
@@ -890,7 +891,7 @@ export const DataTable = ({
                                 row.status !== 'Approved' && 
                                 row.status !== 'Submitted' && 
                                 row.status !== 'Rejected' && 
-                                tabName !== 'PENDING APPROVAL' && (
+                                tabName !== 'PENDING APPROVAL' && tabName !== 'REPORTEES' && (
                                   <Tooltip title="Delete">
                                     <img
                                       src={deleteIcon}
@@ -949,7 +950,7 @@ export const DataTable = ({
                             </TableCell>
                           );
                         }
-                        else if(tabName === "PENDING APPROVAL" && col.id === 'status'){
+                        else if(tabName === "PENDING APPROVAL" && tabName === "REPORTEES" && col.id === 'status'){
                           return null;
                         }
                         return col.id !==

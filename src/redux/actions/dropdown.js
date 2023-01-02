@@ -11,7 +11,9 @@ export const DropdownType = {
     GET_ALL_PROJECTS_DATA: 'GET_ALL_PROJECTS_DATA',
     SET_ALL_PROJECTS_DATA: 'SET_ALL_PROJECTS_DATA',
     GET_ASSIGNED_PROJECTS_DATA: 'GET_ASSIGNED_PROJECTS_DATA',
-    SET_ASSIGNED_PROJECTS_DATA: 'SET_ASSIGNED_PROJECTS_DATA'
+    SET_ASSIGNED_PROJECTS_DATA: 'SET_ASSIGNED_PROJECTS_DATA',
+    GET_REPORTEES: 'GET_REPORTEES',
+    SET_REPORTEES: 'SET_REPORTEES'
   }
   
 export const getClientsData = () => 
@@ -77,5 +79,17 @@ export const getAssignedProjects = () =>
 export const setAssignedProjects = (data) => 
   ({
     type: DropdownType.SET_ASSIGNED_PROJECTS_DATA,
+    payload: data,
+  }); 
+  
+export const getReportees = (data) => 
+  ({
+    type: DropdownType.GET_REPORTEES,
+    payload: data
+  });
+
+export const setReportees = (data) => 
+  ({
+    type: DropdownType.SET_REPORTEES,
     payload: data,
   }); 

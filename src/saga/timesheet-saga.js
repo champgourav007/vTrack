@@ -19,7 +19,7 @@ function* workerTimeSheetSaga({ payload }) {
         getTimeSheetDetails,
         payload.periodWeek ? payload.periodWeek : timesheetPeriodWeek,
         payload.projectId ? payload.projectId : "",
-        payload.employeeId ? payload.employeeId : employeeID
+        payload.employeeId === 'null' ? "" : payload.employeeId ? payload.employeeId : employeeID
     );
     // const timeSheetDetails = timeSheetData;
     yield put(setTimeSheetData(timeSheetDetails));

@@ -22,8 +22,11 @@ import {
   getProjectAdminData,
   getProjectAllocationData,
   getProjectTasks,
+  getReportees,
   getTimeSheetData,
   saveTimeSheetPeriodData,
+  setSelectedEmployeeId,
+  setSelectedProjectId,
   setTimeSheetPeriodWeek,
   submitPeriodForApproval
 } from "../../redux/actions";
@@ -46,7 +49,7 @@ const getPeriods = () => {
 };
 
 export const TabsTable = ({ headingName, tabName, status, projectId }) => {
-  const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData, mappedProjectManagementData } = useSelector(({ MODULES }) => MODULES);
+  const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData, mappedProjectManagementData, selectedProjectId, reportees } = useSelector(({ MODULES }) => MODULES);
   const { allUserDetails } = useSelector(({ USER }) => USER);
   const { allTasks, listItems, clientsData } = useSelector(({ MODULES }) => MODULES);
   const dispatch = useDispatch();
@@ -66,7 +69,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const [ selectedEmployee, setSelectedEmployee ] = useState({});
 
   useEffect(()=>{
-    if(timeSheetData === null && headingName === Modules.TIMESHEET){
+    if(timeSheetData === null && headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
       dispatch(
         saveTimeSheetPeriodData({
           periodWeek: moment().startOf('isoweek').format('DD MMM') + ' - ' + moment().add(7,'days').startOf('week').format('DD MMM'),
@@ -76,7 +79,29 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       );
       dispatch(setTimeSheetPeriodWeek(moment().startOf('isoweek').format('DD MMM') + ' - ' + moment().add(7,'days').startOf('week').format('DD MMM')));  
     }
-  },[headingName]);
+    if(headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
+      dispatch(
+        getTimeSheetData({
+          periodWeek:
+            selectedPeriodWeek.startDate.format("DD MMM") +
+            " - " +
+            selectedPeriodWeek.endDate.format("DD MMM"),
+        })
+      );
+    }
+    else if(headingName === Modules.TIMESHEET){
+      dispatch(
+        getTimeSheetData({
+          periodWeek:
+            selectedPeriodWeek.startDate.format("DD MMM") +
+            " - " +
+            selectedPeriodWeek.endDate.format("DD MMM"),
+          employeeId: "null",
+          projectId: null
+        })
+      );
+    }
+  },[headingName,tabName]);
   
   const handleSetColumnsData = (data) => {
     const temp = [];
@@ -109,7 +134,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         };
       }
       else if(col === 'status' && headingName === Modules.TIMESHEET){
-        if(tabName === 'MY TIMESHEET'){
+        if(tabName === 'MY TIMESHEET' || tabName === 'REPORTEES'){
           status = {
             id: col,
             label: getLabel(col, headingName),
@@ -130,8 +155,8 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       } else if (col === 'employeeId' && tabName !== "MY TIMESHEET") {
         temp.push({
           id: 'employeeName',
-          label: tabName === 'PENDING APPROVAL' ? 'Emp Name' : getLabel('employeeName', headingName),
-          minWidth: tabName === 'PENDING APPROVAL' ? '12rem' : getMinWidth('employeeName', headingName),
+          label: tabName === 'PENDING APPROVAL' || tabName === 'REPORTEES' ? 'Emp Name' : getLabel('employeeName', headingName),
+          minWidth: tabName === 'PENDING APPROVAL' || tabName === 'REPORTEES' ? '12rem' : getMinWidth('employeeName', headingName),
           sortDir: "DESC",
           align: "left",
         });
@@ -140,25 +165,37 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     if (headingName === Modules.PROJECT_ALLOCATION) {
       setColumns([...temp]);
     } else {
-      totalHrs ? setColumns([
-        ...temp, totalHrs, 
-        {
-          id: "actions",
-          label: "Actions",
-          minWidth: 60,
-          sortDir: "",
-          align: "left",
-        },status,
-      ]) : setColumns([
-        ...temp,
-        {
-          id: "actions",
-          label: "Actions",
-          minWidth: 100,
-          sortDir: "",
-          align: "left",
-        },
-      ]);
+      if(totalHrs){
+        if(tabName === 'REPORTEES'){
+          setColumns([
+            ...temp, totalHrs,status,
+          ])
+        }
+        else{
+          setColumns([
+            ...temp, totalHrs, 
+            {
+              id: "actions",
+              label: "Actions",
+              minWidth: 60,
+              sortDir: "",
+              align: "left",
+            },status,
+          ]);
+        }
+      }
+      else{
+        setColumns([
+          ...temp,
+          {
+            id: "actions",
+            label: "Actions",
+            minWidth: 100,
+            sortDir: "",
+            align: "left",
+          },
+        ]);
+      }
     }
   };
 
@@ -373,16 +410,6 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           })
         );
         break;
-      case Modules.TIMESHEET:
-        dispatch(
-          getTimeSheetData({
-            periodWeek:
-              selectedPeriodWeek.startDate.format("DD MMM") +
-              " - " +
-              selectedPeriodWeek.endDate.format("DD MMM"),
-          })
-        );
-        break;
       default:
         break;
     }
@@ -397,6 +424,14 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     }
     if (headingName === Modules.PROJECT_ADMIN || headingName === Modules.TIMESHEET || headingName === Modules.PROJECT_MANAGEMENT) {
       dispatch(getAssignedProjects());
+    }
+    if(headingName === Modules.TIMESHEET){
+      if(selectedProjectId){
+        dispatch(getReportees(selectedProjectId));
+      }
+      else{
+        dispatch(getReportees(null));
+      }
     }
     setSearchData("");
     setIsAddButtonClicked(false);
@@ -487,10 +522,12 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                       <MenuItem
                         key={option.projectId}
                         value={option.projectName}
-                        onClick={() =>
-                          setSelectedProject({
-                            projectId: option.projectId,projectName: option.projectName
-                          })
+                        onClick={() =>{
+                            setSelectedProject({
+                              projectId: option.projectId,projectName: option.projectName
+                            });
+                            dispatch(setSelectedProjectId(option.projectId));
+                          }
                         }
                       >
                         {option.projectName}
@@ -510,14 +547,16 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                     }
                   }}
                 >
-                  {allUserDetails && allUserDetails.data.map((option) => (
+                  {reportees && reportees.map((option) => (
                     <MenuItem
                       key={option.id}
                       value={`${option.firstName} ${option.lastName}`}
-                      onClick={() =>
-                        setSelectedEmployee({
-                          employeeId: option.id,employeeName: `${option.firstName} ${option.lastName}`
-                        })
+                      onClick={() =>{
+                          setSelectedEmployee({
+                            employeeId: option.id,employeeName: `${option.firstName} ${option.lastName}`
+                          });
+                          dispatch(setSelectedEmployeeId(option.id));
+                        }
                       }
                     >
                       {`${option.firstName} ${option.lastName}`}
