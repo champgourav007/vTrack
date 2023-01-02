@@ -29,7 +29,6 @@ export const tableColumnsData = {
     { id: "businessOwner", label: "Veersa Business Owner", minWidth: 100, type: 'select' },
     { id: "paymentTerms", label: "Payment Terms", minWidth: 80, type: 'textfield' },
     { id: "deliveryOfficer", label: "Veersa Delivery Officer", minWidth: 100, type: 'select' },
-    // { id: "msaDoc", label: "Actions", minWidth: 50, align: "left", type: 'none' },
   ],
   'ProjectAllocation': [
     { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select' },
@@ -42,8 +41,6 @@ export const tableColumnsData = {
   ], 
   'ProjectManagement': [
     { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select' },
-    // { id: 'projectName', label: 'Project Name', minWidth: 100, type: 'select' },
-    // { id: 'projectManagerName', label: 'Project Manager', minWidth: 100, type: 'select' },
     { id: 'startDate', label: 'Start Date', minWidth: 110, type: 'date' },
     { id: "endDate", label: "End Date", minWidth: 120, type: 'date' },
     { id: 'billRate', label: 'Bill Rate', minWidth: 80, type: 'textfield' },
