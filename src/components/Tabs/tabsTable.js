@@ -3,6 +3,7 @@ import TextField from "@mui/material/TextField";
 import moment from 'moment';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import { Modules } from "../../common/constants/sidebar";
 import { searchIcon } from "../../common/icons";
 import { getLabel, getMinWidth, tableColumnsData } from "../../common/utils/datatable";
@@ -19,10 +20,12 @@ import {
   getProjectTasks,
   getTimeSheetData,
   saveTimeSheetPeriodData,
-  setTimeSheetPeriodWeek
+  setTimeSheetPeriodWeek,
+  submitPeriodForApproval
 } from "../../redux/actions";
 import { getProjectManagementData } from "../../redux/actions/project-management";
 import { DataTable } from "../DataTable/DataTable";
+import { toastOptions } from "../../common/utils/toasterOptions";
 import "./tabsTable.css";
 
 const getPeriods = () => {
@@ -39,7 +42,7 @@ const getPeriods = () => {
 }
 
 export const TabsTable = ({ headingName, tabName, status, projectId }) => {
-  const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData, allProjectsData } = useSelector(({ MODULES }) => MODULES);
+  const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData, mappedProjectManagementData } = useSelector(({ MODULES }) => MODULES);
   const { allUserDetails } = useSelector(({ USER }) => USER);
   const dispatch = useDispatch();
 
@@ -50,31 +53,37 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const [ totalRecord, setTotalRecord ] = useState(0);
   const [ searchData, setSearchData ] = useState("");
   const periodWeeks = getPeriods();
-  const [ selectedPeriodWeek, setSelectedPriodWeek ] = useState(periodWeeks ? periodWeeks[0] : null);
+  const [ selectedPeriodWeek, setSelectedPriodWeek ] = useState({
+    startDate : moment().startOf('isoweek'),
+    endDate : moment().add(7,'days').startOf('week')
+  });
   const [ selectedProject, setSelectedProject ] = useState({});
   const [ selectedEmployee, setSelectedEmployee ] = useState({});
 
   useEffect(()=>{
-    dispatch(
-      saveTimeSheetPeriodData({
-        periodWeek: moment().subtract(42,'days').startOf('isoweek').format('DD MMM') + ' - ' + moment().subtract(35,'days').startOf('week').format('DD MMM'),
-        startDT: periodWeeks[0].startDate.format(),
-        endDT: periodWeeks[0].endDate.format(),
-      })
-    );
-    dispatch(setTimeSheetPeriodWeek(moment().subtract(42,'days').startOf('isoweek').format('DD MMM') + ' - ' + moment().subtract(35,'days').startOf('week').format('DD MMM')));  
-  },[]);
+    if(timeSheetData === null && headingName === Modules.TIMESHEET){
+      dispatch(
+        saveTimeSheetPeriodData({
+          periodWeek: moment().startOf('isoweek').format('DD MMM') + ' - ' + moment().add(7,'days').startOf('week').format('DD MMM'),
+          startDT: moment().startOf('isoweek').format(),
+          endDT: moment().add(7,'days').startOf('week').format(),
+        })
+      );
+      dispatch(setTimeSheetPeriodWeek(moment().startOf('isoweek').format('DD MMM') + ' - ' + moment().add(7,'days').startOf('week').format('DD MMM')));  
+    }
+  },[headingName]);
   
   const handleSetColumnsData = (data) => {
     const temp = [];
-    let totalHrs = null;
+    let totalHrs = {};
+    let status = {};
     Object.keys(data).forEach((col) => {
       if(col === 'dateHours'){
         data[col].forEach((dateHour,index)=>{
           let month = {
             isDate: true
           };
-          if(index === 0 || moment(dateHour.date).format('DD') === '01') month['day'] = moment(dateHour.date).format('MMM')
+          if(index === 0 || moment(dateHour.date).format('DD') === '01') month['day'] = moment(dateHour.date).format('MMM');
           temp.push({
             id: moment(dateHour.date).format('ddd DD'),
             label: moment(dateHour.date).format('ddd DD'),
@@ -87,13 +96,24 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         })
       }
       else if(col === 'totalHrs'){
-        totalHrs = {
+        totalHrs ={
           id: col,
           label: getLabel(col, headingName),
           minWidth: getMinWidth(col, headingName),
           sortDir: "DESC",
           align: "left",
         };
+      }
+      else if(col === 'status' && headingName === Modules.TIMESHEET){
+        if(tabName === 'MY TIMESHEET'){
+          status = {
+            id: col,
+            label: getLabel(col, headingName),
+            minWidth: getMinWidth(col, headingName),
+            sortDir: "DESC",
+            align: "left",
+          };
+        }
       }
       else if (!col.includes('Id') && getLabel(col, headingName) !== '') {
         temp.push({
@@ -103,11 +123,11 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           sortDir: "DESC",
           align: "left",
         });
-      } else if (col === 'employeeId') {
+      } else if (col === 'employeeId' && tabName !== "MY TIMESHEET") {
         temp.push({
           id: 'employeeName',
-          label: getLabel('employeeName', headingName),
-          minWidth: getMinWidth('employeeName', headingName),
+          label: tabName === 'PENDING APPROVAL' ? 'Emp Name' : getLabel('employeeName', headingName),
+          minWidth: tabName === 'PENDING APPROVAL' ? '12rem' : getMinWidth('employeeName', headingName),
           sortDir: "DESC",
           align: "left",
         });
@@ -117,14 +137,14 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       setColumns([ ...temp ]);
     } else {
       totalHrs ? setColumns([
-        ...temp, totalHrs,
+        ...temp, totalHrs, 
         {
           id: "actions",
           label: "Actions",
-          minWidth: 100,
+          minWidth: 60,
           sortDir: "",
           align: "left",
-        },
+        },status,
       ]) : setColumns([
         ...temp,
         {
@@ -146,7 +166,11 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
 
   const handleSetRows = (tableData) => {
     let rowsData = [];
-    tableData.forEach((row)=>{
+    let rowsToShow = [...tableData];
+    if(tabName === 'PENDING APPROVAL'){
+      rowsToShow = rowsToShow.filter(i => i.status === 'Submitted');
+    }
+    rowsToShow.forEach((row)=>{
       let rowData = {};
       Object.keys(row).forEach((col) => {
         if(col === 'dateHours'){
@@ -160,7 +184,6 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       });
       rowsData.push(rowData);
     });
-    console.log(rowsData)
     setRows([...rowsData]);
   }
 
@@ -213,6 +236,10 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     } else {
       if (tableColumnsData[headingName.replace(' ', '')]) {
         let temp = [...tableColumnsData[headingName.replace(' ', '')]];
+        let status;
+        if(headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
+          status = temp.pop();
+        }
         if(headingName === Modules.TIMESHEET){
           let totalHrs = temp.pop();
           let date = moment(selectedPeriodWeek.startDate);
@@ -235,10 +262,11 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           {
             id: "actions",
             label: "Actions",
-            minWidth: 100,
+            minWidth: 60,
             sortDir: "",
             align: "left",
           },
+          {...status}
         ]);
       }
       else {
@@ -361,7 +389,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                   <TextField
                     select
                     sx={{minWidth: '15rem'}}
-                    defaultValue={periodWeeks[0].startDate.format('DD MMM') + ' - ' + periodWeeks[0].endDate.format('DD MMM')}
+                    defaultValue={periodWeeks[6].startDate.format('DD MMM') + ' - ' + periodWeeks[6].endDate.format('DD MMM')}
                   >
                     {getDateItems(true)}
                   </TextField>
@@ -383,8 +411,16 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                         ? "disableAddButton"
                         : "addBtn"
                     }
+                    onClick={()=>{
+                      let sum = 0;
+                      rows.forEach(row=>{
+                        if(row.status === 'Open') sum+=parseInt(row.totalHrs);
+                      })
+                      if(sum >= 40) dispatch(submitPeriodForApproval());
+                      else toast.error("Total Hours must be grater than or equal to 40", toastOptions);
+                    }}
                   >
-                      Submit For Approval
+                    Submit For Approval
                   </button>
                 </div> 
               </>
@@ -401,19 +437,21 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                     }
                   }}
                 >
-                  {allProjectsData && allProjectsData.map((option) => (
-                    <MenuItem
-                      key={option.projectId}
-                      value={option.projectName}
-                      onClick={() =>
-                        setSelectedProject({
-                          projectId: option.projectId,projectName: option.projectName
-                        })
-                      }
-                    >
-                      {option.projectName}
-                    </MenuItem>
-                  ))}
+                  {mappedProjectManagementData && mappedProjectManagementData.map(data=>
+                    data.projects.map((option) => (
+                      <MenuItem
+                        key={option.projectId}
+                        value={option.projectName}
+                        onClick={() =>
+                          setSelectedProject({
+                            projectId: option.projectId,projectName: option.projectName
+                          })
+                        }
+                      >
+                        {option.projectName}
+                      </MenuItem>
+                    ))
+                  )}
                 </TextField>
                 <TextField
                   select
@@ -433,7 +471,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                       value={`${option.firstName} ${option.lastName}`}
                       onClick={() =>
                         setSelectedEmployee({
-                          employeeId: option.projectId,employeeName: `${option.firstName} ${option.lastName}`
+                          employeeId: option.id,employeeName: `${option.firstName} ${option.lastName}`
                         })
                       }
                     >
@@ -444,7 +482,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                 <TextField
                   select
                   sx={{minWidth: '15rem'}}
-                  defaultValue={periodWeeks[0].startDate.format('DD MMM') + ' - ' + periodWeeks[0].endDate.format('DD MMM')}
+                  defaultValue={periodWeeks[6].startDate.format('DD MMM') + ' - ' + periodWeeks[6].endDate.format('DD MMM')}
                 >
                   {getDateItems(false)}
                 </TextField>

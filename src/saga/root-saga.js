@@ -24,6 +24,7 @@ import { saveProjectManagementSaga } from "./save-project-management-data";
 import { saveTimeSheetPeriodSaga } from "./save-timesheet-period-saga";
 import { saveTimeSheetSaga } from "./save-timesheet-saga";
 import { saveUserRoleSaga } from "./save-user-roles-setting-saga";
+import { submitPeriodSaga } from "./submit-period-saga";
 import { timeSheetSaga } from "./timesheet-saga";
 import { updateClientAdminSaga } from "./update-client-admin-saga";
 import { updateProjectAdminSaga } from "./update-project-admin-saga";
@@ -37,6 +38,7 @@ export function* rootSaga() {
   yield all([
     fork(clientAdminSaga),
     fork(timeSheetSaga),
+    fork(submitPeriodSaga),
     fork(saveClientAdminSaga),
     fork(saveTimeSheetSaga),
     fork(saveTimeSheetPeriodSaga),

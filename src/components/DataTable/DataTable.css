@@ -150,3 +150,19 @@ div:has(> .approveRejectIcon){
   display: flex;
   gap: 1.5rem;
 }
+
+.rowStatus{
+  font-family: "Montserrat";
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.25rem;
+}
+
+.dateHeading:nth-child(8n),.dateHeading:nth-child(9n){
+  color: rgba(23, 115, 188, 0.5);
+}
+
+.timeField:nth-child(8n),.timeField:nth-child(9n){
+  opacity: 0.4;
+  /* background-color: yellow; */
+}
