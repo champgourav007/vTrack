@@ -28,7 +28,7 @@ export const SelectedModule = ({ headingName }) => {
   }, [headingName]);
 
  useEffect(()=>{
-  if(headingName === Modules.PROJECT_MANAGEMENT) dispatch(getMappedProjectManagementData());
+  if(headingName === Modules.PROJECT_MANAGEMENT || headingName === Modules.TIMESHEET) dispatch(getMappedProjectManagementData());
  }, [headingName]);
 
  useEffect(() => {

@@ -10,7 +10,8 @@ function* workerMappedProjectManagementSaga() {
   try {
     yield put(setVtrackLoader(true));
     const projectManagementDetails = yield call(getMappedProjectManagementData);
-    yield put(setMappedProjectManagementData(projectManagementDetails));
+    if(projectManagementDetails)
+      yield put(setMappedProjectManagementData(projectManagementDetails));
     yield put(setVtrackLoader(false));
   } catch (err) {
     console.log(err);
