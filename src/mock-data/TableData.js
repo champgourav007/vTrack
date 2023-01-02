@@ -252,6 +252,7 @@ export const initialData = (headingName ,selectedPeriodWeek) => {
         projectName:'',
         taskName:'',
         totalHrs:'',
+        status:'',
         ...dates
       };
     case 'Project Management':

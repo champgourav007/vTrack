@@ -52,6 +52,7 @@ export const tableColumnsData = {
     { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
     { id: "taskName", label: "Task", minWidth: 100, type: 'select' },
     { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
+    { id: "status", label: "Status", minWidth: 60, type: 'empty' },
   ], 
 };
 

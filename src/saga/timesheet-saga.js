@@ -18,7 +18,7 @@ function* workerTimeSheetSaga({ payload }) {
     const timeSheetDetails = yield call(
         getTimeSheetDetails,
         payload.periodWeek ? payload.periodWeek : timesheetPeriodWeek,
-        payload.projectId ? payload.projectId : 0,
+        payload.projectId ? payload.projectId : "",
         payload.employeeId ? payload.employeeId : employeeID
     );
     // const timeSheetDetails = timeSheetData;

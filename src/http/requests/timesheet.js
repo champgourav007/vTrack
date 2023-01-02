@@ -2,9 +2,9 @@ import { HttpMethod } from "../../common/constants/http-requests";
 import { httpRequest } from "../../common/utils/http-request";
 import { TIMESHEET_API } from "../api";
 
-export const getTimeSheetDetails = (timesheetPeriodWeek,projectId = 0,employeeId = "") =>
+export const getTimeSheetDetails = (timesheetPeriodWeek,projectId,employeeId) =>
   httpRequest({
-    url: `${TIMESHEET_API}/get-timesheet-detail/${timesheetPeriodWeek}/${projectId}?employeeId=${employeeId}`,
+    url: `${TIMESHEET_API}/get-timesheet-detail?employeeId=${employeeId}&periodWeek=${timesheetPeriodWeek}&projectId=${projectId}`,
     method: HttpMethod.GET,
   });
 
@@ -38,6 +38,13 @@ export const deleteTimeSheetDetails = (timesheetDetailId) =>
 export const updateTimeSheetStatusDetails = (data) =>
   httpRequest({
     url: `${TIMESHEET_API}/update-timesheet-status`,
+    method: HttpMethod.PUT,
+    data: data
+  });
+
+export const submitPeriodForApproval = (data) =>
+  httpRequest({
+    url: `${TIMESHEET_API}/submit-period-for-approval`,
     method: HttpMethod.PUT,
     data: data
   });
