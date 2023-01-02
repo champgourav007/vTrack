@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { deleteClientAdminDetails } from "../http/requests/client-admin";
-import { ClientAdminType, getClientAdminData, setVtrackLoader } from "../redux/actions";
+import { ClientAdminType, getClientAdminData, getClientsData, setVtrackLoader } from "../redux/actions";
 import { toastOptions } from "../common/utils/toasterOptions";
 import { toast } from "react-toastify";
 
@@ -18,6 +18,7 @@ function* workerDeleteClientAdminSaga({ payload }) {
         searchData: ''
       })
     );
+    yield put(getClientsData());
     yield put(setVtrackLoader(false));
   } catch (err) {
     console.log(err);

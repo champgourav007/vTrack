@@ -12,10 +12,15 @@ import "./common/fonts/Kumbh_Sans/static/KumbhSans-Regular.ttf";
 import { useWindowSize } from "./common/hooks";
 import { Dashboard } from "./pages/Dashboard/dashboard";
 import {Settings} from "./components/Settings/settings";
+import { checkMsalExpiration } from "./config/authConfig";
+import { useEffect } from "react";
 
 function App() {
   useWindowSize();
 
+  useEffect(() => {
+    checkMsalExpiration();
+  }, []);
   return (
     <BrowserRouter>
       <Routes>

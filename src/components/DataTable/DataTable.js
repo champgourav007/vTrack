@@ -88,7 +88,6 @@ export const DataTable = ({
     useState(false);
 
   const saveDataHandler = () => {
-    console.log(isEditButtonClicked)
     if (!isEditButtonClicked) {
       if (headingName === Modules.CLIENT_ADMIN) {
         dispatch(saveClientAdminData(newRowAdded));
@@ -337,7 +336,7 @@ export const DataTable = ({
 
   const displayMenuItem = (col) => {
     if (col === "clientName") {
-      return clientsData.map((option) => (
+      return clientsData && clientsData.map((option) => (
         <MenuItem
           key={option.id}
           value={option.name}
@@ -431,16 +430,16 @@ export const DataTable = ({
         allUserDetails.data.map((option) => (
           <MenuItem
             key={option.id}
-            value={`${option.firstName} ${option.lastName}`}
+            value={getFullName(option.firstName, option.lastName)}
             onClick={() =>
               setNewRowAdded({
                 ...newRowAdded,
-                [col]: `${option.firstName} ${option.lastName}`,
+                [col]: getFullName(option.firstName, option.lastName),
                 employeeId: option.id,
               })
             }
           >
-            {`${option.firstName} ${option.lastName}`}
+            {getFullName(option.firstName, option.lastName)}
           </MenuItem>
         ))
       );
@@ -581,18 +580,24 @@ export const DataTable = ({
               <AttachFileIcon />
             </IconButton>
             }
-            {newRowAdded.clientName !== "" ? (
-              <img
-                src={AddEnableIcon}
-                onClick={saveDataHandler}
-                className="cursorPointer editDeleteIcon"
-                alt=""
-              />
-            ) : (
-              <button disable className="buttonBackgroundBorder">
-                <img src={AddDisableIcon} className="editDeleteIcon" alt="" />
-              </button>
-            )}
+            {
+              (newRowAdded.clientName === "" || 
+                (headingName===Modules.TIMESHEET && 
+                  (newRowAdded.projectName==="" || newRowAdded.taskName==="" || !isDateAdded())
+                )
+              ) ? (
+                <button disable className="buttonBackgroundBorder">
+                  <img src={AddDisableIcon} className="editDeleteIcon" alt="" />
+                </button>
+              ) : (
+                <img
+                  src={AddEnableIcon}
+                  onClick={saveDataHandler}
+                  className="cursorPointer editDeleteIcon"
+                  alt=""
+                />
+              )
+            }
             <img
               src={crossIcon}
               className="cursorPointer editDeleteIcon"
@@ -604,19 +609,20 @@ export const DataTable = ({
       );
     }
     else if(col.isDate){
+      let date = Object.keys(newRowAdded).find(i=>moment(i).isValid() && moment(i).format('DD') === moment(col.date).format('DD'));
       return (
-        <TableCell key={col.id}>
+        <TableCell key={col.id} className="timeField">
           <TextField
             label={"Time"}
             type="number"
-            value={newRowAdded[col.date] === '-' ? 0 : newRowAdded[col.date]}
+            value={newRowAdded[date] === '-' ? 0 : newRowAdded[date]}
             style={{maxWidth:'6rem'}}
             sx={{
             "& label": {
               lineHeight: '0.8rem'
             }
           }}
-            onChange={(e) => inputFieldHandler(e, col.date)}
+            onChange={(e) => inputFieldHandler(e, date)}
           />
         </TableCell>
       );
@@ -678,7 +684,7 @@ export const DataTable = ({
       allUserDetails.data.length &&
       allUserDetails.data.forEach((user) => {
         if (user.id === id) {
-          employeeName = `${user.firstName} ${user.lastName}`;
+          employeeName = getFullName(user.firstName, user.lastName);
         }
       });
     return employeeName;
@@ -688,6 +694,14 @@ export const DataTable = ({
     setDeleteRow(rowData);
     setShowDialogBox(true);
   };
+
+  const isDateAdded = () =>{
+    let isAdded = false;
+    Object.keys(newRowAdded).forEach(key=>{
+      if(moment(key).isValid() && newRowAdded[key] !== "") isAdded = true;
+    });
+    return isAdded;
+  }
 
   React.useEffect(() => {
     setRowToBeUpdated({});
@@ -726,33 +740,37 @@ export const DataTable = ({
               <TableRow>
                 {columns.map(
                   (column) =>
-                    column.id !== UniqueIds[headingName.replace(" ", "")] && (
-                      <TableCell
-                        key={column.id}
-                        align={column.align}
-                        style={{ minWidth: column.minWidth, position: 'relative',maxWidth:column.maxWidth ? column.maxWidth : 'auto'  }}
-                        sx={{
-                          backgroundColor: "#1773bc0d",
-                          color: "#1773bc",
-                          fontWeight: 700,
-                        }}
-                      >
-                        <div className="table-header-cell">
-                          <span>{column.label}</span>
-                          {!column.isDate && headingName !== Modules.TIMESHEET && column.id !== 'actions' &&
-                            <img
-                              src={TableArrows}
-                              alt=""
-                              className="tableArrows"
-                              onClick={() => handleSortBy(column.id)}
-                            />
-                          }
-                          {column.day && 
-                            <div className="month">{column.day}</div>
-                          }
-                        </div>
-                      </TableCell>
-                    )
+                    { 
+                      if(!column.id) return null;
+                      return column.id !== UniqueIds[headingName.replace(" ", "")] && (
+                        <TableCell
+                          key={column.id}
+                          align={column.align}
+                          style={{ minWidth: column.minWidth, position: 'relative',maxWidth:column.maxWidth ? column.maxWidth : 'auto'  }}
+                          sx={{
+                            backgroundColor: "#1773bc0d",
+                            color: "#1773bc",
+                            fontWeight: 700,
+                          }}
+                          className={column.isDate ? 'dateHeading' : ''}
+                        >
+                          <div className="table-header-cell">
+                            <span>{column.label}</span>
+                            {!column.isDate && headingName !== Modules.TIMESHEET && column.id !== 'actions' &&
+                              <img
+                                src={TableArrows}
+                                alt=""
+                                className="tableArrows"
+                                onClick={() => handleSortBy(column.id)}
+                              />
+                            }
+                            {column.day && 
+                              <div className="month">{column.day}</div>
+                            }
+                          </div>
+                        </TableCell>
+                      )
+                    }
                 )}
               </TableRow>
             </TableHead>
@@ -776,7 +794,8 @@ export const DataTable = ({
                         })}
                       </TableRow>
                     );
-                  } else {
+                  }
+                   else {
                     return (
                       <TableRow
                         hover
@@ -785,6 +804,7 @@ export const DataTable = ({
                         key={row[headingName.replace(" ", "")]}
                       >
                         {columns.map((col) => {
+                          if(!col.id) return null;
                           if (col.id === "actions") {
                             return (
                             <TableCell key={col.id}>
@@ -849,18 +869,29 @@ export const DataTable = ({
                                     </IconButton>
                                   )
                                 ) : null}
-                                {tabName !== 'PENDING APPROVAL' && <Tooltip title="Edit">
-                                  <button
-                                    onClick={() =>
-                                      editButtonClicked(row[UniqueIds[headingName.replace(" ", "")]])
-                                    }
-                                    className="buttonBackgroundBorder cursorPointer"
-                                    disabled={isAddButtonClicked}
-                                  >
-                                    <img src={editIcon} className="editDeleteIcon" alt="" />
-                                  </button>
-                                </Tooltip>}
-                                {headingName !== Modules.PROJECT_ALLOCATION && headingName !== Modules.PROJECT_MANAGEMENT && tabName !== 'PENDING APPROVAL' && (
+                                {tabName !== 'PENDING APPROVAL' && 
+                                tabName !== 'REPORTEES' && 
+                                row.status !== 'Approved' && 
+                                row.status !== 'Submitted' && 
+                                row.status !== 'Rejected' && 
+                                  <Tooltip title="Edit">
+                                    <button
+                                      onClick={() =>
+                                        editButtonClicked(row[UniqueIds[headingName.replace(" ", "")]])
+                                      }
+                                      className="buttonBackgroundBorder cursorPointer"
+                                      disabled={isAddButtonClicked}
+                                    >
+                                      <img src={editIcon} className="editDeleteIcon" alt="" />
+                                    </button>
+                                  </Tooltip>
+                                }
+                                {headingName !== Modules.PROJECT_ALLOCATION && 
+                                headingName !== Modules.PROJECT_MANAGEMENT && 
+                                row.status !== 'Approved' && 
+                                row.status !== 'Submitted' && 
+                                row.status !== 'Rejected' && 
+                                tabName !== 'PENDING APPROVAL' && tabName !== 'REPORTEES' && (
                                   <Tooltip title="Delete">
                                     <img
                                       src={deleteIcon}
@@ -912,12 +943,15 @@ export const DataTable = ({
                             </TableCell>
                           );
                         } 
-                        else if (col.id.includes("Date")) {
+                        else if (col.id?.includes("Date")) {
                           return (
                             <TableCell key={col.id} style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
                               {convertDateToDDMYYYY(row[col.id])}
                             </TableCell>
                           );
+                        }
+                        else if(tabName === "PENDING APPROVAL" && tabName === "REPORTEES" && col.id === 'status'){
+                          return null;
                         }
                         return col.id !==
                           UniqueIds[headingName.replace(" ", "")] ? (

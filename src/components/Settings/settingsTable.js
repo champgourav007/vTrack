@@ -104,15 +104,14 @@ export const SettingsTable = ({ rolesData, searchData }) => {
                                         <FormControl sx={{ m: 1, width: "80%", margin: 0 }}>
                                             <InputLabel id="demo-multiple-checkbox-label">Role</InputLabel>
                                             <Select
-                                                defaultValue={user.roleID}
+                                                defaultValue={user.userId}
                                                 labelId="demo-multiple-checkbox-label"
                                                 id="demo-multiple-checkbox"
-                                                onChange={(e) => setSelectedRole(e.target.value)}
                                                 input={<OutlinedInput label="Select Role" />}
                                             >
                                                 {rolesData.map((roles) => (
                                                     <MenuItem key={roles.roleID} value={roles.roleID}>
-                                                        <ListItemText primary={roles.roleName} />
+                                                        <ListItemText primary={roles.roleName} onClick={()=>setSelectedRole(roles.roleID)}/>
                                                     </MenuItem>
                                                 ))}
                                             </Select>

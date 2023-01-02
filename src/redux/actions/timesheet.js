@@ -9,7 +9,10 @@ export const TimeSheetType = {
     DELETE_TIMESHEET_DATA: 'DELETE_TIMESHEET_DATA',
     GET_PROJECT_TASKS_DATA: 'GET_PROJECT_TASKS_DATA',
     SET_PROJECT_TASKS_DATA: 'SET_PROJECT_TASKS_DATA',
-    UPDATE_TIMESHEET_STATUS: 'UPDATE_TIMESHEET_STATUS'
+    UPDATE_TIMESHEET_STATUS: 'UPDATE_TIMESHEET_STATUS',
+    SUBMIT_PERIOD_FOR_APPROVAL: 'SUBMIT_PERIOD_FOR_APPROVAL',
+    SET_SELECTED_EMPLOYEE_ID: 'SET_SELECTED_EMPLOYEE_ID',
+    SET_SELECTED_PROJECT_ID: 'SET_SELECTED_PROJECT_ID',
   }
   
   export const getTimeSheetData = (data) => 
@@ -74,6 +77,23 @@ export const TimeSheetType = {
   export const updateTimeSheetStatus = (data) => 
   ({
     type: TimeSheetType.UPDATE_TIMESHEET_STATUS,
+    payload: data,
+  });
+
+  export const submitPeriodForApproval = () => 
+  ({
+    type: TimeSheetType.SUBMIT_PERIOD_FOR_APPROVAL,
+  });
+
+  export const setSelectedProjectId = (data) => 
+  ({
+    type: TimeSheetType.SET_SELECTED_PROJECT_ID,
+    payload: data,
+  });
+
+  export const setSelectedEmployeeId = (data) => 
+  ({
+    type: TimeSheetType.SET_SELECTED_EMPLOYEE_ID,
     payload: data,
   });
   

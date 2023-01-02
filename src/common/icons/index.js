@@ -39,6 +39,7 @@ import vTrackIcon from "./vTrackIcon.svg";
 import downloadIcon from "./downloadIcon.svg";
 import approveIcon from "./Approve.svg";
 import rejectIcon from "./Reject.svg";
+import nonEmployeeIcon from "./non-employee.svg";
 
 export {
   downloadIcon,
@@ -81,5 +82,6 @@ export {
   dashboardBlueIcon,
   announcementIcon,
   approveIcon,
-  rejectIcon
+  rejectIcon,
+  nonEmployeeIcon
 };
