@@ -6,14 +6,16 @@ import { useNavigate } from "react-router-dom";
 import { dashboardURL } from "../../routes/routes";
 import { Settings } from "../Settings/settings";
 import SelectBar from "../SelectBar/selectBar";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getMappedProjectManagementData, getProjectManagementData } from "../../redux/actions/project-management";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Modules } from "../../common/constants/sidebar";
 
 export const SelectedModule = ({ headingName }) => {
   const [selectedClient, setSelectedClient] = useState('')
   const [selectedProjectName, setSelectedProjectName] = useState('')
+  const { projectManagementData } = useSelector(({ MODULES }) => MODULES);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
@@ -26,12 +28,13 @@ export const SelectedModule = ({ headingName }) => {
   }, [headingName]);
 
  useEffect(()=>{
-  dispatch(getMappedProjectManagementData());
+  if(headingName === Modules.PROJECT_MANAGEMENT) dispatch(getMappedProjectManagementData());
  }, [headingName]);
 
  useEffect(() => {
   if (selectedClient && selectedClient.projects && selectedClient.projects.length) {
     setSelectedProjectName(selectedClient.projects[0].projectName);
+    if(headingName === Modules.PROJECT_MANAGEMENT)
     dispatch(
       getProjectManagementData({
         projectId: selectedClient.projects[0].projectId,

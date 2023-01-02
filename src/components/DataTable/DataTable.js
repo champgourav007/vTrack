@@ -337,7 +337,7 @@ export const DataTable = ({
 
   const displayMenuItem = (col) => {
     if (col === "clientName") {
-      return clientsData.map((option) => (
+      return clientsData && clientsData.map((option) => (
         <MenuItem
           key={option.id}
           value={option.name}
