@@ -293,16 +293,21 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           }
           temp.push(totalHrs);
         }
-        setColumns([
-          ...temp,
-          {
-            id: "actions",
-            label: "Actions",
-            minWidth: 100,
-            sortDir: "",
-            align: "left",
-          },
-        ]);
+        if (headingName === Modules.PROJECT_ALLOCATION) {
+          setColumns([ ...temp ]);
+        }
+        else {
+          setColumns([
+            ...temp,
+            {
+              id: "actions",
+              label: "Actions",
+              minWidth: 100,
+              sortDir: "",
+              align: "left",
+            },
+          ]);
+        }
       } else {
         setColumns([]);
       }
@@ -315,7 +320,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     projectAllocationData,
     projectManagementData,
     timeSheetData,
-    headingName,
+    headingName
   ]);
 
   useEffect(() => {

@@ -37,7 +37,7 @@ export const tableColumnsData = {
     { id: "startDate", label: "Start Date", minWidth: 100, type: 'date' },
     { id: "endDate", label: "End Date", minWidth: 110, type: 'date' },
     { id: 'allocation', label: 'Allocation', minWidth: 100, type: 'textfield' },
-    { id: 'status', label: 'Status', minWidth: 100, type: 'textfield' }
+    // { id: 'status', label: 'Status', minWidth: 100, type: 'textfield' }
   ], 
   'ProjectManagement': [
     { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select' },

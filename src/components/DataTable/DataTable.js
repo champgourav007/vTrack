@@ -88,7 +88,6 @@ export const DataTable = ({
     useState(false);
 
   const saveDataHandler = () => {
-    console.log(isEditButtonClicked)
     if (!isEditButtonClicked) {
       if (headingName === Modules.CLIENT_ADMIN) {
         dispatch(saveClientAdminData(newRowAdded));
