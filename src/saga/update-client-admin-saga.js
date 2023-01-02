@@ -4,6 +4,7 @@ import { updateClientAdminDetails } from "../http/requests/client-admin";
 import {
   ClientAdminType,
   getClientAdminData,
+  getClientsData,
   setVtrackLoader,
 } from "../redux/actions";
 import { toastOptions } from "../common/utils/toasterOptions";
@@ -22,6 +23,7 @@ function* workerUpdateClientAdminSaga({ payload }) {
         searchData: ''
       })
     );
+    yield put(getClientsData());
     yield put(setVtrackLoader(false));
   } catch (err) {
     toast.error("Something Went Wrong", toastOptions)

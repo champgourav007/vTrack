@@ -337,7 +337,7 @@ export const DataTable = ({
 
   const displayMenuItem = (col) => {
     if (col === "clientName") {
-      return clientsData.map((option) => (
+      return clientsData && clientsData.map((option) => (
         <MenuItem
           key={option.id}
           value={option.name}
@@ -431,16 +431,16 @@ export const DataTable = ({
         allUserDetails.data.map((option) => (
           <MenuItem
             key={option.id}
-            value={`${option.firstName} ${option.lastName}`}
+            value={getFullName(option.firstName, option.lastName)}
             onClick={() =>
               setNewRowAdded({
                 ...newRowAdded,
-                [col]: `${option.firstName} ${option.lastName}`,
+                [col]: getFullName(option.firstName, option.lastName),
                 employeeId: option.id,
               })
             }
           >
-            {`${option.firstName} ${option.lastName}`}
+            {getFullName(option.firstName, option.lastName)}
           </MenuItem>
         ))
       );
@@ -685,7 +685,7 @@ export const DataTable = ({
       allUserDetails.data.length &&
       allUserDetails.data.forEach((user) => {
         if (user.id === id) {
-          employeeName = `${user.firstName} ${user.lastName}`;
+          employeeName = getFullName(user.firstName, user.lastName);
         }
       });
     return employeeName;
