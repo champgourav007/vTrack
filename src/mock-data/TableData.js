@@ -207,7 +207,7 @@ export const dropDownMockData = {
   projectManagerName: ['Amar', 'Sahil', 'Gaurav'], 
   employeeId: ['Arsalan', 'Arvind', 'Aditya'],
   projectName: ['duly', 'kipu'],
-  billStatus: ['billable', 'non-billable']
+  billStatus: ['Billable', 'Non-Billable']
 };
 
 export const initialData = (headingName ,selectedPeriodWeek) => {
