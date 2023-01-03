@@ -6,7 +6,8 @@ import {
   TimeSheetType, 
   setTimeSheetData,
   setVtrackLoader,
-  getTimeSheetData
+  getTimeSheetData,
+  getMyTimeSheetData
 } from "../redux/actions";
 
 function* workerSubmitPeriodSaga() {
@@ -24,7 +25,7 @@ function* workerSubmitPeriodSaga() {
         }
     );
     yield put(
-        getTimeSheetData({
+        getMyTimeSheetData({
           pageNo: 1,
           pageSize: 10,
           sortDir: "ASC",

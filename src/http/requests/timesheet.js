@@ -8,6 +8,12 @@ export const getTimeSheetDetails = (timesheetPeriodWeek,projectId,employeeId) =>
     method: HttpMethod.GET,
   });
 
+export const getMyTimeSheetDetails = (timesheetPeriodWeek,projectId,employeeId) =>
+    httpRequest({
+        url: `${TIMESHEET_API}/my-timesheets?periodWeek=${timesheetPeriodWeek}`,
+        method: HttpMethod.GET,
+    });
+  
 export const postTimeSheetPeriod = (data) =>
   httpRequest({
     url: `${TIMESHEET_API}/create-timesheet-period`,

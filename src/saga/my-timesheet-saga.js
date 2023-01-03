@@ -1,23 +1,19 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
-import { getTimeSheetDetails } from "../http/requests/timesheet";
-import { timeSheetData } from "../mock-data/TableData";
-// import { getTimeSheetDetails } from "../http/requests/client-admin";
+import { getMyTimeSheetDetails } from "../http/requests/timesheet";
 import {
   TimeSheetType, 
   setTimeSheetData,
   setVtrackLoader
 } from "../redux/actions";
 
-function* workerTimeSheetSaga({ payload }) {
+function* workerMyTimeSheetSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
     const timesheetPeriodWeek = yield select(state=>
         state.MODULES.timesheetPeriodWeek);
     const timeSheetDetails = yield call(
-        getTimeSheetDetails,
+        getMyTimeSheetDetails,
         payload.periodWeek ? payload.periodWeek : timesheetPeriodWeek,
-        payload.projectId ? payload.projectId : "",
-        payload.employeeId ? payload.employeeId : ""
     );
     // const timeSheetDetails = timeSheetData;
     yield put(setTimeSheetData(timeSheetDetails));
@@ -28,9 +24,9 @@ function* workerTimeSheetSaga({ payload }) {
   }
 };
 
-export function* timeSheetSaga() {
+export function* myTimeSheetSaga() {
   yield takeLatest(
-    TimeSheetType.GET_TIMESHEET_DATA,
-    workerTimeSheetSaga
+    TimeSheetType.GET_MY_TIMESHEET_DATA,
+    workerMyTimeSheetSaga
   );
 };

@@ -1,5 +1,6 @@
 export const TimeSheetType = {
     GET_TIMESHEET_DATA: 'GET_TIMESHEET_DATA',
+    GET_MY_TIMESHEET_DATA: 'GET_MY_TIMESHEET_DATA',
     SET_TIMESHEET_DATA: 'SET_TIMESHEET_DATA',
     SET_TIMESHEET_PERIOD_ID: 'SET_TIMESHEET_PERIOD_ID',
     SET_TIMESHEET_PERIOD_WEEK: 'SET_TIMESHEET_PERIOD_WEEK',
@@ -18,6 +19,12 @@ export const TimeSheetType = {
   export const getTimeSheetData = (data) => 
   ({
     type: TimeSheetType.GET_TIMESHEET_DATA,
+    payload: data,
+  });
+
+  export const getMyTimeSheetData = (data) => 
+  ({
+    type: TimeSheetType.GET_MY_TIMESHEET_DATA,
     payload: data,
   });
   

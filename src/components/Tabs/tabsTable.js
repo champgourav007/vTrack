@@ -19,6 +19,7 @@ import {
   getClientAdminData,
   getClientsData,
   getListItems,
+  getMyTimeSheetData,
   getProjectAdminData,
   getProjectAllocationData,
   getProjectTasks,
@@ -81,7 +82,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     }
     if(headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
       dispatch(
-        getTimeSheetData({
+        getMyTimeSheetData({
           periodWeek:
             selectedPeriodWeek.startDate.format("DD MMM") +
             " - " +
@@ -96,7 +97,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
             selectedPeriodWeek.startDate.format("DD MMM") +
             " - " +
             selectedPeriodWeek.endDate.format("DD MMM"),
-          employeeId: "null",
+          employeeId: null,
           projectId: null
         })
       );
