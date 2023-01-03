@@ -1,6 +1,6 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
 import { postTimeSheetDetails } from "../http/requests/timesheet";
-import { TimeSheetType, getTimeSheetData, setVtrackLoader } from "../redux/actions";
+import { TimeSheetType, getTimeSheetData, setVtrackLoader, getMyTimeSheetData } from "../redux/actions";
 import { toastOptions } from "../common/utils/toasterOptions";
 import { toast } from "react-toastify";
 
@@ -19,7 +19,7 @@ function* workerSaveTimeSheetSaga({ payload }) {
     });
     toast.success("Data Saved", toastOptions)
     yield put(
-      getTimeSheetData({
+      getMyTimeSheetData({
         // periodWeek: periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM'),
         pageNo: 1,
         pageSize: 10,

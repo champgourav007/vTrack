@@ -48,7 +48,7 @@ import {
   updateClientAdminData
 } from "../../redux/actions/client-admin";
 import { getProjectManagementData, saveProjectManagementData, updateProjectManagementData } from "../../redux/actions/project-management";
-import { deleteTimeSheetData, getTimeSheetData, saveTimeSheetData, updateTimeSheetData, updateTimeSheetStatus } from "../../redux/actions/timesheet";
+import { deleteTimeSheetData, saveTimeSheetData, updateTimeSheetData, updateTimeSheetStatus } from "../../redux/actions/timesheet";
 import DialogBox from "../DialogBox/dialogBox";
 import Loader from "../Loader";
 import "./DataTable.css";
@@ -203,13 +203,6 @@ export const DataTable = ({
         })
       );
     }
-    else if (headingName === Modules.TIMESHEET) {
-      dispatch(
-        getTimeSheetData({
-          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
-        })
-      );
-    }
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -254,12 +247,6 @@ export const DataTable = ({
           sortBy: sortBy,
           sortDir: "ASC",
           searchData: searchData,
-        })
-      );
-    } else if (headingName === Modules.TIMESHEET) {
-      dispatch(
-        getTimeSheetData({
-          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
         })
       );
     }
@@ -323,12 +310,6 @@ export const DataTable = ({
           sortBy: colName,
           sortDir: sortDirection,
           searchData: searchData,
-        })
-      );
-    } else if (headingName === Modules.TIMESHEET) {
-      dispatch(
-        getTimeSheetData({
-          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
         })
       );
     }

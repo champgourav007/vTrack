@@ -1,6 +1,6 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
 import { postTimeSheetPeriod } from "../http/requests/timesheet";
-import { TimeSheetType, getTimeSheetData, setVtrackLoader, setTimeSheetPeriodId } from "../redux/actions";
+import { TimeSheetType, getTimeSheetData, setVtrackLoader, setTimeSheetPeriodId, getMyTimeSheetData } from "../redux/actions";
 import { toastOptions } from "../common/utils/toasterOptions";
 import { toast } from "react-toastify";
 
@@ -14,7 +14,7 @@ function* workerSaveTimeSheetPeriodSaga({ payload }) {
     const data = yield call(postTimeSheetPeriod, { ...payload.data, employeeID: employeeID});
     yield put(setTimeSheetPeriodId(data.timesheetPeriodId))
     yield put(
-      getTimeSheetData({
+      getMyTimeSheetData({
         periodWeek: payload.data.periodWeek,
       })
     );

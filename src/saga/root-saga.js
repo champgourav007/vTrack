@@ -17,6 +17,7 @@ import { getReporteesSaga } from "./get-reportees-saga";
 import { getSettingTableDataSaga } from "./get-setting-table-data";
 import { getUnRegisteredUsersSaga } from "./get-unregistered-user-details-saga";
 import { getRolesSaga } from "./get-user-roles-setting-saga";
+import { myTimeSheetSaga } from "./my-timesheet-saga";
 import { projectAdminSaga } from "./project-admin-saga";
 import { projectAllocationSaga } from "./project-allocation-saga";
 import { saveClientAdminSaga } from "./save-client-admin-saga";
@@ -39,6 +40,7 @@ export function* rootSaga() {
   yield all([
     fork(clientAdminSaga),
     fork(getReporteesSaga),
+    fork(myTimeSheetSaga),
     fork(timeSheetSaga),
     fork(submitPeriodSaga),
     fork(saveClientAdminSaga),
