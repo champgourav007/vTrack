@@ -126,6 +126,14 @@
   min-width: 15rem;
 }
 
+.searchWrapperSpan{
+  font-family: "Montserrat";
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.25rem;
+  color: grey;
+}
+
 .searchWrapperText{
   font-family: "Montserrat";
   font-weight: 600;

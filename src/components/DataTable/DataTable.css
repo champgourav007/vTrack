@@ -157,12 +157,10 @@ div:has(> .approveRejectIcon){
   font-size: 1.25rem;
   line-height: 1.25rem;
 }
-
-.dateHeading:nth-child(8n),.dateHeading:nth-child(9n){
+.timesheetTable .dateHeading:nth-child(8n),.timesheetTable .dateHeading:nth-child(9n){
   color: rgba(23, 115, 188, 0.5);
 }
 
-.timeField:nth-child(8n),.timeField:nth-child(9n){
+.timesheetTable .timeField:nth-child(8n),.timesheetTable .timeField:nth-child(9n){
   opacity: 0.4;
-  /* background-color: yellow; */
 }
