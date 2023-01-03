@@ -16,7 +16,7 @@ function* workerUpdateTimeSheetStatusSaga({ payload }) {
     const selectedEmployeeId = yield select(state=>
         state.MODULES.selectedEmployeeId);
     const selectedProjectId = yield select(state=>
-        state.MODULES.selectedEmployeeId);
+        state.MODULES.selectedProjectId);
     yield put(
         getTimeSheetData({
           // periodWeek: periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM'),
