@@ -244,7 +244,6 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         }
         onClick={() => {
           if (fromMyTimeSheet) {
-            setSelectedPriodWeek(periodWeek);
             dispatch(
               saveTimeSheetPeriodData({
                 periodWeek:
@@ -256,6 +255,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
               })
             );
           }
+          setSelectedPriodWeek(periodWeek);
           dispatch(
             setTimeSheetPeriodWeek(
               periodWeek.startDate.format("DD MMM") +
@@ -437,6 +437,10 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     setSearchData("");
     setIsAddButtonClicked(false);
     setIsEditButtonClicked(false);
+    if(headingName!==Modules.TIMESHEET){
+      dispatch(setSelectedEmployeeId(null));
+      dispatch(setSelectedProjectId(null))
+    }
   }, [ headingName ]);
 
   useEffect(() => {
@@ -445,7 +449,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   }, []);
 
   return (
-    <div className="tableDiv">
+    <div className={`tableDiv ${tabName === 'MY TIMESHEET' ? "timesheetTable" : ""}`}>
       <div className="searchHeader">
         {headingName !== Modules.TIMESHEET && <div className="searchWrapper">
           <img src={searchIcon} className="searchIcon" alt="" />
@@ -463,7 +467,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
               <>
                 {(timeSheetData && timeSheetData.length) ?
                   <div className="searchWrapperText">
-                    TimeSheet Period Status : {timeSheetData[0].periodStatus}
+                    <span className="searchWrapperSpan">TimeSheet Period Status : </span>{timeSheetData[0].periodStatus}
                   </div> : null
                 }
                 <div className="button-flex">
@@ -475,7 +479,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                     {getDateItems(true)}
                   </TextField>
                   <button
-                    disabled={isAddButtonClicked || isEditButtonClicked}
+                    disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved'))}
                     className={
                       isAddButtonClicked || isEditButtonClicked
                         ? "disableAddButton"
@@ -488,14 +492,14 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                   <button
                     disabled={isAddButtonClicked || isEditButtonClicked}
                     className={
-                      isAddButtonClicked || isEditButtonClicked
+                      isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved' || timeSheetData[0].periodStatus === 'Submitted') )
                         ? "disableAddButton"
                         : "addBtn"
                     }
                     onClick={()=>{
                       let sum = 0;
                       rows.forEach(row=>{
-                        if(row.status === 'Open') sum+=parseInt(row.totalHrs);
+                        if(row.status !== 'Rejected') sum+=parseInt(row.totalHrs);
                       })
                       if(sum >= 40) dispatch(submitPeriodForApproval());
                       else toast.error("Total Hours must be greater than or equal to 40", toastOptions);
@@ -510,7 +514,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                 <TextField
                   select
                   label={"Projects"}
-                  value={selectedProject.projectName}
+                  value={selectedProject.projectName ? selectedProject.projectName : ""}
                   sx={{
                     minWidth: '15rem',
                     "& label": {
@@ -539,7 +543,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                 <TextField
                   select
                   label={"Emp"}
-                  value={selectedEmployee.employeeName}
+                  value={selectedEmployee.employeeName ? selectedEmployee.employeeName : ""}
                   sx={{
                     minWidth: '15rem',
                     "& label": {
@@ -584,6 +588,17 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                   }}
                 >
                   Show Data
+                </button>
+                <button 
+                  className={(selectedEmployee.employeeId || selectedProject.projectId) ? "addBtn showDataBtn" : "disableAddButton"}
+                  onClick={()=>{
+                    setSelectedEmployee({});
+                    dispatch(setSelectedEmployeeId(null));
+                    setSelectedProject({});
+                    dispatch(setSelectedProjectId(null));
+                  }}
+                >
+                  Clear Selection
                 </button>
               </div>
           ) : headingName !== Modules.PROJECT_ALLOCATION ? (
