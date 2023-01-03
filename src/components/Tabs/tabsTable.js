@@ -498,7 +498,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                         if(row.status === 'Open') sum+=parseInt(row.totalHrs);
                       })
                       if(sum >= 40) dispatch(submitPeriodForApproval());
-                      else toast.error("Total Hours must be grater than or equal to 40", toastOptions);
+                      else toast.error("Total Hours must be greater than or equal to 40", toastOptions);
                     }}
                   >
                     Submit For Approval
