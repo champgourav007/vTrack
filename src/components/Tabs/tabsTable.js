@@ -31,7 +31,7 @@ import {
   setTimeSheetPeriodWeek,
   submitPeriodForApproval
 } from "../../redux/actions";
-import { getProjectManagementData } from "../../redux/actions/project-management";
+import { getMappedProjectManagementData, getProjectManagementData } from "../../redux/actions/project-management";
 import { DataTable } from "../DataTable/DataTable";
 import { toastOptions } from "../../common/utils/toasterOptions";
 import "./tabsTable.css";
@@ -202,7 +202,6 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
 
   const setTableData = (tableData) => {
     handleSetColumnsData(tableData.data[0]);
-    // setRows(tableData.data);
     setTotalRecord(tableData.totalCount);
   };
 
@@ -273,40 +272,20 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   };
 
   useEffect(() => {
-    if (
-      headingName === Modules.CLIENT_ADMIN &&
-      clientAdminData &&
-      clientAdminData.totalCount
-    ) {
+    if (headingName === Modules.CLIENT_ADMIN && clientAdminData && clientAdminData.totalCount) {
       setTableData(clientAdminData);
       setRows(clientAdminData.data);
-    } else if (
-      headingName === Modules.PROJECT_ADMIN &&
-      projectAdminData &&
-      projectAdminData.totalCount
-    ) {
+    } else if (headingName === Modules.PROJECT_ADMIN && projectAdminData && projectAdminData.totalCount) {
       setTableData(projectAdminData);
       setRows(projectAdminData.data);
-    } else if (
-      headingName === Modules.PROJECT_ALLOCATION &&
-      projectAllocationData &&
-      projectAllocationData.totalCount
-    ) {
+    } else if (headingName === Modules.PROJECT_ALLOCATION && projectAllocationData && projectAllocationData.totalCount) {
       setTableData(projectAllocationData);
       setRows(projectAllocationData.data);
-    } else if (
-      headingName === Modules.TIMESHEET &&
-      timeSheetData &&
-      timeSheetData.length
-    ) {
+    } else if (headingName === Modules.TIMESHEET && timeSheetData && timeSheetData.length) {
       handleSetColumnsData(timeSheetData[0]);
       setTotalRecord(timeSheetData.length);
       handleSetRows(timeSheetData);
-    } else if (
-      headingName === Modules.PROJECT_MANAGEMENT &&
-      projectManagementData &&
-      projectManagementData.totalCount
-    ) {
+    } else if (headingName === Modules.PROJECT_MANAGEMENT && projectManagementData && projectManagementData.totalCount) {
       setTableData(projectManagementData);
       setRows(projectManagementData.data);
     } else {
@@ -354,14 +333,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       setRows([]);
       setTotalRecord(0);
     }
-  }, [
-    clientAdminData,
-    projectAdminData,
-    projectAllocationData,
-    projectManagementData,
-    timeSheetData,
-    headingName
-  ]);
+  }, [ clientAdminData, projectAdminData, projectAllocationData, projectManagementData, timeSheetData, headingName ]);
 
   useEffect(() => {
     switch (headingName) {
