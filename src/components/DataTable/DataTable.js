@@ -69,7 +69,7 @@ export const DataTable = ({
   selectedPeriodWeek,
   projectId
 }) => {
-  const { clientsData, allTasks, listItems, allUsers, allProjectsData, assignedProjects } =
+  const { clientsData, allTasks, listItems, assignedProjects } =
     useSelector(({ MODULES }) => MODULES);
   const { allUserDetails } = useSelector(({ USER }) => USER);
   const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);

@@ -55,11 +55,6 @@
     align-items: center;
 }
 
-.logo {
-    height: 4rem;
-    width: 3rem;
-}
-
 .loginBtn {
     background: #1773BC;
     border-radius: 0.625rem;
@@ -71,4 +66,9 @@
     font-size: 2rem;
     line-height: 2.5rem;
     padding: 0.5rem 2rem;
+}
+
+.login-logo {
+    height: 10rem;
+    width: 10rem;
 }

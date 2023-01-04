@@ -25,7 +25,7 @@ export const LoginPage = () => {
           <div className="mainHeading">
             Welcome to
             <br />
-            VTrack
+            vTrack
           </div>
           <div className="subHeading1">Nice to see you again</div>
           <div className="subHeading2">
@@ -36,7 +36,7 @@ export const LoginPage = () => {
         </div>
       </div>
       <div className="rightDiv">
-        <img src={veersaLogo} alt="" />
+        <img src={veersaLogo} alt="" className="login-logo" />
         <button className="loginBtn" onClick={() => handleLogin()}>
           Log in
         </button>
