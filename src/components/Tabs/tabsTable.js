@@ -1,7 +1,7 @@
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import moment from "moment";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Modules } from "../../common/constants/sidebar";
@@ -12,9 +12,7 @@ import {
   tableColumnsData,
 } from "../../common/utils/datatable";
 import {
-  getAllProjectsData,
   getAllUserDetails,
-  getAllUsersData,
   getAssignedProjects,
   getClientAdminData,
   getClientsData,
@@ -31,7 +29,7 @@ import {
   setTimeSheetPeriodWeek,
   submitPeriodForApproval
 } from "../../redux/actions";
-import { getMappedProjectManagementData, getProjectManagementData } from "../../redux/actions/project-management";
+import { getProjectManagementData } from "../../redux/actions/project-management";
 import { DataTable } from "../DataTable/DataTable";
 import { toastOptions } from "../../common/utils/toasterOptions";
 import "./tabsTable.css";
@@ -51,7 +49,7 @@ const getPeriods = () => {
 
 export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData, mappedProjectManagementData, selectedProjectId, reportees } = useSelector(({ MODULES }) => MODULES);
-  const { allUserDetails } = useSelector(({ USER }) => USER);
+  const { allUserDetails, userData } = useSelector(({ USER }) => USER);
   const { allTasks, listItems, clientsData } = useSelector(({ MODULES }) => MODULES);
   const dispatch = useDispatch();
 
@@ -103,13 +101,32 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       );
     }
   },[headingName,tabName]);
+
+  useEffect(() => {
+    if (headingName === Modules.PROJECT_MANAGEMENT) {
+      dispatch(
+        getProjectManagementData({
+          projectId: projectId,
+          pageNo: 1,
+          pageSize: 10,
+          sortBy: "projectName",
+          sortDir: "ASC",
+          searchData: searchData,
+        })
+      );
+    }
+  }, [ tabName ]);
   
   const handleSetColumnsData = (data) => {
     const temp = [];
     let totalHrs = {};
     let status = {};
+    if (headingName !== Modules.TIMESHEET) {
+      setColumns(tableColumnsData[headingName.replace(' ', '')]);
+    }
+    else {
     Object.keys(data).forEach((col) => {
-      if (col === "dateHours") {
+      if (col === "dateHours" && tabName !== 'REPORTEES') {
         data[col].forEach((dateHour, index) => {
           let month = {
             isDate: true,
@@ -169,7 +186,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       if(totalHrs){
         if(tabName === 'REPORTEES'){
           setColumns([
-            ...temp, totalHrs,status,
+            ...temp,
+            { id: "viewDetails", label: "View Details", minWidth: 80, type: 'action' },
+            totalHrs,status,
           ])
         }
         else{
@@ -197,6 +216,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           },
         ]);
       }
+    }
     }
   };
 
@@ -298,6 +318,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         if(headingName === Modules.TIMESHEET){
           let totalHrs = temp.pop();
           let date = moment(selectedPeriodWeek.startDate);
+          if (tabName !== 'REPORTEES')
           for (let i = 0; i < 7; i++) {
             temp.push({
               id: moment(date).format("ddd DD"),
@@ -312,20 +333,8 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           }
           temp.push(totalHrs);
         }
-        if (headingName === Modules.PROJECT_ALLOCATION) {
-          setColumns([ ...temp ]);
-        }
-        else {
-          setColumns([
-            ...temp,
-            {
-              id: "actions",
-              label: "Actions",
-              minWidth: 100,
-              sortDir: "",
-              align: "left",
-            },
-          ]);
+        else { 
+          setColumns([ ...temp ]); 
         }
       } else {
         setColumns([]);
@@ -453,7 +462,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                   <button
                     disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved'))}
                     className={
-                      isAddButtonClicked || isEditButtonClicked
+                      isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved'))
                         ? "disableAddButton"
                         : "addBtn"
                     }

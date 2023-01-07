@@ -1,4 +1,5 @@
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import { Checkbox, FormControl, InputLabel, ListItemText, OutlinedInput, Select } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
@@ -24,9 +25,12 @@ import {
   AddDisableIcon,
   AddEnableIcon, approveIcon, crossIcon, deleteIcon, downloadIcon, editIcon, rejectIcon, TableArrows
 } from "../../common/icons";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import {
   convertDateToDDMYYYY,
   fileHandler,
+  getApprovers,
+  getApproversIds,
   getFullName,
   getLabel,
   getTypeofColumn,
@@ -52,6 +56,18 @@ import { deleteTimeSheetData, saveTimeSheetData, updateTimeSheetData, updateTime
 import DialogBox from "../DialogBox/dialogBox";
 import Loader from "../Loader";
 import "./DataTable.css";
+import { TimeSheetDetailView } from "../TimeSheetDetailView/timeSheetDetailView";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 300,
+    },
+  },
+};
 
 export const DataTable = ({
   headingName,
@@ -86,13 +102,16 @@ export const DataTable = ({
   const [deleteRow, setDeleteRow] = useState();
   const [dialogDeleteButtonClicked, setDialogDeleteButtonClicked] =
     useState(false);
+  const [ viewDetails, setViewDetails ] = useState(false);
+  const [ selectedEmpId, setSelectedEmpId ] = useState('');
 
   const saveDataHandler = () => {
     if (!isEditButtonClicked) {
       if (headingName === Modules.CLIENT_ADMIN) {
         dispatch(saveClientAdminData(newRowAdded));
       } else if (headingName === Modules.PROJECT_ADMIN) {
-        dispatch(saveProjectAdminData(newRowAdded));
+        let approverIds = getApproversIds(newRowAdded.approvers);
+        dispatch(saveProjectAdminData({ ...newRowAdded, projectApprovers: approverIds}));
       } else if (headingName === Modules.PROJECT_MANAGEMENT) {
         dispatch(saveProjectManagementData({ ...newRowAdded, projectId: projectId }));
       } 
@@ -117,7 +136,8 @@ export const DataTable = ({
             headingName
           );
         }
-        dispatch(updateProjectAdminData(newRowAdded));
+        let approverIds = getApproversIds(newRowAdded.approvers);
+        dispatch(updateProjectAdminData({ ...newRowAdded, projectApprovers: approverIds}));
       } else if (headingName === Modules.PROJECT_MANAGEMENT) {
         dispatch(updateProjectManagementData({ ...newRowAdded, projectId: projectId }));
       } 
@@ -253,7 +273,6 @@ export const DataTable = ({
   };
 
   const inputFieldHandler = (event, col) => {
-    console.log(col,event.target.value,newRowAdded)
     setNewRowAdded({ ...newRowAdded, [col]: event.target.value });
   };
 
@@ -313,6 +332,16 @@ export const DataTable = ({
         })
       );
     }
+  };
+
+  const handleChange = (event) => {
+    let tempList = event.target.value;
+    let idx = tempList.findIndex(ele => ele.approverId === tempList[tempList.length - 1].approverId);
+    if (idx !== tempList.length - 1) {
+      tempList.pop();
+      tempList.splice(idx, 1);
+    }
+    setNewRowAdded({ ...newRowAdded, approvers: tempList });
   };
 
   const displayMenuItem = (col) => {
@@ -420,7 +449,7 @@ export const DataTable = ({
               })
             }
           >
-            {getFullName(option.firstName, option.lastName)}
+            {`${getFullName(option.firstName, option.lastName)} (${option.email})`}
           </MenuItem>
         ))
       );
@@ -489,8 +518,7 @@ export const DataTable = ({
           />
         </TableCell>
       );
-    }
-    else if (getTypeofColumn(col.id, headingName) === "textfield") {
+    } else if (getTypeofColumn(col.id, headingName) === "textfield") {
       return (
         <TableCell key={col.id} style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
           <TextField
@@ -505,6 +533,31 @@ export const DataTable = ({
           }}
             onChange={(e) => inputFieldHandler(e, col.id)}
           />
+        </TableCell>
+      );
+    } else if (getTypeofColumn(col.id, headingName) === "multi-select") {
+      return (
+        <TableCell key={col.id}  style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
+          <FormControl sx={{ m: 1, width: 150 }}>
+              <InputLabel id="demo-multiple-checkbox-label">Approvers</InputLabel>
+              <Select
+                labelId="demo-multiple-checkbox-label"
+                id="demo-multiple-checkbox"
+                multiple
+                value={newRowAdded[col.id]}
+                onChange={handleChange}
+                input={<OutlinedInput label="Approvers" />}
+                renderValue={() => getApprovers(newRowAdded[col.id])}
+                MenuProps={MenuProps}
+              >
+                {allUserDetails && allUserDetails.data.map(user => ({approverId: user.id, approverName: getFullName(user.firstName, user.lastName), approverEmail: user.email})).map((approver, index) => (
+                  <MenuItem key={index} value={approver} className="no-left-margin">
+                    <Checkbox checked={ newRowAdded[col.id].findIndex(app => app.approverId === approver.approverId) > -1 } />
+                    <ListItemText primary={`${approver.approverName} (${approver.approverEmail})`} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
         </TableCell>
       );
     } else if (getTypeofColumn(col.id, headingName) === "select") {
@@ -636,7 +689,6 @@ export const DataTable = ({
         }
       })
       rowData['timesheetDetailID'] = rows[idx]['timesheetDetailID'];
-      console.log(rowData);
       setRowToBeUpdated(rowData);
       setNewRowAdded(rowData);
     }
@@ -659,7 +711,6 @@ export const DataTable = ({
   };
 
   const getEmployeeName = (id) => {
-    console.log(id);
     let employeeName = "";
     allUserDetails &&
       allUserDetails.data.length &&
@@ -682,7 +733,12 @@ export const DataTable = ({
       if(moment(key).isValid() && newRowAdded[key] !== "") isAdded = true;
     });
     return isAdded;
-  }
+  };
+
+  const handleViewDetails = (empId) => {
+    setViewDetails(true);
+    setSelectedEmpId(empId);
+  };
 
   React.useEffect(() => {
     setRowToBeUpdated({});
@@ -708,6 +764,7 @@ export const DataTable = ({
   return (
     <>
       {vTrackLoader && <Loader />}
+      <TimeSheetDetailView viewDetails={viewDetails} setViewDetails={setViewDetails} selectedEmpId={selectedEmpId} selectedPeriodWeek={selectedPeriodWeek} />
       {showDialogBox && (
         <DialogBox
           setShowDialogBox={setShowDialogBox}
@@ -950,7 +1007,8 @@ export const DataTable = ({
                                 </div>
                                 <div>{row[col.id]}</div>
                               </div>
-                            ) : (
+                            ) : col.id === 'approvers' ? ( getApprovers(row[col.id]) ) : 
+                            col.id === 'viewDetails' ? ( <IconButton color="primary" onClick={() => handleViewDetails(row['employeeId'])} ><VisibilityIcon /></IconButton>) : (
                               row[col.id]
                             )}
                           </TableCell>

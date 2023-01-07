@@ -19,6 +19,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import { SettingsTable } from "./settingsTable";
 import { searchIcon } from "../../common/icons";
+import { getFullName } from "../../common/utils/datatable";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -74,8 +75,6 @@ export function Settings() {
     return tempUsers;
   };
   const submitHandler = () => {
-    console.log(selectedRole);
-    console.log(selectedUsers);
     dispatch(
       saveUserRoleData({
         roleID: selectedRole.roleID,
@@ -134,23 +133,8 @@ export function Settings() {
               >
                 {userData.map((user) => (
                   <MenuItem key={user.id} value={user} className="no-left-margin">
-                    <Checkbox
-                      checked={
-                        selectedUsers.findIndex(
-                          (person) => person.id === user.id
-                        ) > -1
-                      }
-                    />
-                    <ListItemText
-                      primary={
-                        user.firstName +
-                        " " +
-                        user.lastName +
-                        " (" +
-                        user.email +
-                        ")"
-                      }
-                    />
+                    <Checkbox checked={ selectedUsers.findIndex( (person) => person.id === user.id ) > -1 } />
+                    <ListItemText primary={ getFullName(user.firstName, user.lastName) + " (" +user.email + ")" } />
                   </MenuItem>
                 ))}
               </Select>

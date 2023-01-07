@@ -22,7 +22,8 @@ export const modulesState = {
   assignedProjects: null,
   reportees: null,
   selectedEmployeeId: null,
-  selectedProjectId: null
+  selectedProjectId: null,
+  detailedTimeSheetData: null
 }
 
 export const modulesReducer = (state = modulesState, action) => {
@@ -123,10 +124,14 @@ export const modulesReducer = (state = modulesState, action) => {
         assignedProjects: action.payload
       }
     case DropdownType.SET_REPORTEES:
-      console.log(action.payload);
       return {
         ...state,
         reportees: action.payload
+      }
+    case TimeSheetType.SET_DETAILED_TIMESHEET_DATA:
+      return {
+        ...state,
+        detailedTimeSheetData: action.payload
       }
     default: return state;
   }

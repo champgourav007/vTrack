@@ -2,9 +2,9 @@ import { HttpMethod } from "../../common/constants/http-requests";
 import { httpRequest } from "../../common/utils/http-request";
 import { TIMESHEET_API } from "../api";
 
-export const getTimeSheetDetails = (timesheetPeriodWeek,projectId,employeeId) =>
+export const getTimeSheetDetails = (timesheetPeriodWeek,projectId,employeeId,projectManagerId) =>
   httpRequest({
-    url: `${TIMESHEET_API}/get-timesheet-detail?employeeId=${employeeId}&periodWeek=${timesheetPeriodWeek}&projectId=${projectId}`,
+    url: `${TIMESHEET_API}/get-timesheet-detail?employeeId=${employeeId}&periodWeek=${timesheetPeriodWeek}&projectId=${projectId}&projectManagerId=${projectManagerId}`,
     method: HttpMethod.GET,
   });
 
