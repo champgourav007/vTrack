@@ -993,7 +993,7 @@ export const DataTable = ({
                         }
                         return col.id !==
                           UniqueIds[headingName.replace(" ", "")] ? (
-                          <TableCell key={col.id} style={{textAlign: col.isDate || col.id === 'totalHrs' ? "center" : "auto",maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
+                          <TableCell key={col.id} style={{textAlign: col.isDate || col.id === 'totalHrs' ? "left" : "auto",maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
                             {col.id === "employeeName" ? (
                               getEmployeeName(row["employeeId"])
                             ) : col.id.toLowerCase().includes("allocation") && row[col.id] ? (

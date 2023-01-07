@@ -106,7 +106,7 @@ export default function Sidebar({ changePage, pageName }) {
               
             }
             onClick={() => {
-              changePage("settings");
+              changePage("Settings");
               setSelected("settings");
             }}
             onMouseOver={() => setMouseHover("settings")}

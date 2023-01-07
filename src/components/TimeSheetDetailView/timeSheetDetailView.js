@@ -49,6 +49,7 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
           ...month,
         });
       });
+      temp.push({ id: 'totalHrs', label: 'Total', align: 'left' });
       temp.push({ id: 'status', label: 'Status', align: 'left' });
       temp.push({ id: 'approvedBy', label: 'Approved By', align: 'left' });
       setColumns([ ...temp ]);
@@ -142,6 +143,11 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
               </Table>
             </TableContainer>
           </Paper>
+          { detailedTimeSheetData && detailedTimeSheetData.length ?
+            <div className="totalWorkingHrs">
+              {`Total Working Hours: ${detailedTimeSheetData[0].totalHrs}`}
+            </div> : null
+          }
         </DialogContent>
         <DialogActions>
           <Button variant="contained" onClick={() => setViewDetails(false)} >Close</Button>
