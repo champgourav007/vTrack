@@ -622,6 +622,11 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         selectedPeriodWeek={selectedPeriodWeek}
         projectId={projectId}
       />
+      { headingName === Modules.TIMESHEET && tabName === "MY TIMESHEET" && timeSheetData && timeSheetData.length ?
+        <div className="totalWorkingHrs">
+          {`Total Working Hours: ${timeSheetData[0].totalHrs}`}
+        </div> : null
+      }
     </div>
   );
 };

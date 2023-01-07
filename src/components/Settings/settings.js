@@ -90,6 +90,11 @@ export function Settings() {
     if(e.target.value.length > 2 || e.target.value.length === 0) {
       setSearchData(e.target.value)
     }
+  };
+
+  const getRoles = () => {
+    if (selectedRole) return selectedRole.roleName;
+    return selectedRole;
   }
 
   useEffect(() => {
@@ -151,6 +156,7 @@ export function Settings() {
                 id="demo-multiple-checkbox"
                 onChange={(e) => setSelectedRole(e.target.value)}
                 input={<OutlinedInput label="Select Role" />}
+                renderValue={() => getRoles()}
               >
                 {rolesData.map((roles) => (
                   <MenuItem key={roles.roleID} value={roles}>
@@ -162,7 +168,7 @@ export function Settings() {
           </div>
         </div>
         <div className="buttonClass">
-          <Button variant="contained" onClick={submitHandler} 
+          <Button variant="contained" disabled={!(selectedUsers && selectedUsers.length && selectedRole)} onClick={submitHandler} 
     className="addUserBtn">
             Add Role
           </Button>
