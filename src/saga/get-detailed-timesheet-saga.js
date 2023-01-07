@@ -2,25 +2,23 @@ import { call, put, select, takeLatest } from "redux-saga/effects";
 import { getTimeSheetDetails } from "../http/requests/timesheet";
 import {
   TimeSheetType, 
-  setTimeSheetData,
-  setVtrackLoader
+  setVtrackLoader,
+  setDetailedTimeSheetData
 } from "../redux/actions";
 
-function* workerTimeSheetSaga({ payload }) {
+function* workerDetailedTimeSheetSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
     const timesheetPeriodWeek = yield select(state=>
         state.MODULES.timesheetPeriodWeek);
-    const projectManagerId = yield select(state => 
-      state.USER.userData.data.activeUsers.id);
-    const timeSheetDetails = yield call(
+    const detailedTimeSheetDetails = yield call(
         getTimeSheetDetails,
         payload.periodWeek ? payload.periodWeek : timesheetPeriodWeek,
         payload.projectId ? payload.projectId : 0,
         payload.employeeId ? payload.employeeId : "",
-        projectManagerId ? projectManagerId : ""
+        payload.projectManagerId ? payload.projectManagerId: ""
     );
-    yield put(setTimeSheetData(timeSheetDetails));
+    yield put(setDetailedTimeSheetData(detailedTimeSheetDetails));
     yield put(setVtrackLoader(false));
   } catch (err) {
     console.log(err);
@@ -28,9 +26,9 @@ function* workerTimeSheetSaga({ payload }) {
   }
 };
 
-export function* timeSheetSaga() {
+export function* detailedTimeSheetSaga() {
   yield takeLatest(
-    TimeSheetType.GET_TIMESHEET_DATA,
-    workerTimeSheetSaga
+    TimeSheetType.GET_DETAILED_TIMESHEET_DATA,
+    workerDetailedTimeSheetSaga
   );
 };

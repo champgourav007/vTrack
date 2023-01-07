@@ -49,6 +49,7 @@ export default function BasicTabs(props) {
   const [value, setValue] = React.useState(0);
   const [status, setStatus] = React.useState("All")
   const { mappedProjectManagementData  } = useSelector(({ MODULES }) => MODULES);
+  let counter = 0, count = 0;
 
   const handleChange = (event, newValue) => {
     if(props.headingName === Modules.PROJECT_ALLOCATION){
@@ -79,9 +80,9 @@ export default function BasicTabs(props) {
             onChange={handleChange}
             aria-label="basic tabs example"
           >
-            { mappedProjectManagementData && mappedProjectManagementData.map((client, index) =>
-              client.projects.map((project, idx) => {
-                return <Tab key={index * 10 + idx} className="tabs-table" label={`${client.clientName} / ${project.projectName}`} {...a11yProps(index * 10 + idx)} />
+            { mappedProjectManagementData && mappedProjectManagementData.map((client) =>
+              client.projects.map((project) => {
+                return <Tab key={`${client.clientName} / ${project.projectName}`} className="tabs-table" label={`${client.clientName} / ${project.projectName}`} {...a11yProps(count++)} />
               })
             )}
           </Tabs> :
@@ -112,9 +113,9 @@ export default function BasicTabs(props) {
       }
       </Box>
       {props.headingName === Modules.PROJECT_MANAGEMENT ? 
-        mappedProjectManagementData && mappedProjectManagementData.map((client, index) =>
-        client.projects.map((project, idx) => {
-          return <TabPanel key={index * 10 + idx} value={value} index={index * 10 + idx} >
+        mappedProjectManagementData && mappedProjectManagementData.map((client) =>
+        client.projects.map((project) => {
+          return <TabPanel key={`${client.clientName} / ${project.projectName}`} value={value} index={counter++} >
             <TabsTable headingName={props.headingName} tabName={project} status={status} projectId={project.projectId} />
           </TabPanel>
         })) :

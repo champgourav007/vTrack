@@ -14,6 +14,8 @@ export const TimeSheetType = {
     SUBMIT_PERIOD_FOR_APPROVAL: 'SUBMIT_PERIOD_FOR_APPROVAL',
     SET_SELECTED_EMPLOYEE_ID: 'SET_SELECTED_EMPLOYEE_ID',
     SET_SELECTED_PROJECT_ID: 'SET_SELECTED_PROJECT_ID',
+    GET_DETAILED_TIMESHEET_DATA: 'GET_DETAILED_TIMESHEET_DATA',
+    SET_DETAILED_TIMESHEET_DATA: 'SET_DETAILED_TIMESHEET_DATA',
   }
   
   export const getTimeSheetData = (data) => 
@@ -101,6 +103,18 @@ export const TimeSheetType = {
   export const setSelectedEmployeeId = (data) => 
   ({
     type: TimeSheetType.SET_SELECTED_EMPLOYEE_ID,
+    payload: data,
+  });
+
+  export const getDetailedTimeSheetData = (data) =>
+  ({
+    type: TimeSheetType.GET_DETAILED_TIMESHEET_DATA,
+    payload: data,
+  });
+
+  export const setDetailedTimeSheetData = (data) =>
+  ({
+    type: TimeSheetType.SET_DETAILED_TIMESHEET_DATA,
     payload: data,
   });
   

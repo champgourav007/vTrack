@@ -8,6 +8,7 @@ import { allProjectsSaga } from "./get-all-projects-saga";
 import { allUsersSaga } from "./get-all-user-saga";
 import { assignedProjectsSaga } from "./get-assigned-projects-saga";
 import { allClientsSaga } from "./get-client-saga";
+import { detailedTimeSheetSaga } from "./get-detailed-timesheet-saga";
 import { listItemsSaga } from "./get-list-items-saga";
 import { mappedProjectManagementSaga } from "./get-mapped-project-management-data";
 import { projectManagementSaga } from "./get-project-management-saga";
@@ -74,6 +75,7 @@ export function* rootSaga() {
     fork(mappedProjectManagementSaga),
     fork(getUnRegisteredUsersSaga),
     fork(projectTasksSaga),
-    fork(assignedProjectsSaga)
+    fork(assignedProjectsSaga),
+    fork(detailedTimeSheetSaga)
   ]);
 }

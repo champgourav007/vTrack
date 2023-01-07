@@ -11,6 +11,8 @@ import { toastOptions } from "../common/utils/toasterOptions";
 function* workerUpdateTimeSheetStatusSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
+    const projectManagerId = yield select(state=>
+      state.USER.userData.data.activeUsers.id);
     yield call(updateTimeSheetStatusDetails, payload);
     toast.success("Data Updated", toastOptions);
     const selectedEmployeeId = yield select(state=>
@@ -21,7 +23,8 @@ function* workerUpdateTimeSheetStatusSaga({ payload }) {
         getTimeSheetData({
           // periodWeek: periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM'),
           employeeId: selectedEmployeeId,
-          projectId: selectedProjectId
+          projectId: selectedProjectId,
+          projectManagerId: projectManagerId
         })
     );
     yield put(setVtrackLoader(false));

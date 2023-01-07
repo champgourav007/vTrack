@@ -207,7 +207,8 @@ export const dropDownMockData = {
   projectManagerName: ['Amar', 'Sahil', 'Gaurav'], 
   employeeId: ['Arsalan', 'Arvind', 'Aditya'],
   projectName: ['duly', 'kipu'],
-  billStatus: ['Billable', 'Non-Billable']
+  billStatus: ['Billable', 'Non-Billable'],
+  site: ['Offshore', 'Onshore']
 };
 
 export const initialData = (headingName ,selectedPeriodWeek) => {
@@ -231,7 +232,8 @@ export const initialData = (headingName ,selectedPeriodWeek) => {
         type: '',
         sowStartDate: '',
         sowEndDate: '',
-        projectManagerName: ''
+        projectManagerName: '',
+        approvers: []
       };
     case 'Project Allocation':
       return {

@@ -38,7 +38,7 @@ export const LoginPage = () => {
       <div className="rightDiv">
         <img src={veersaLogo} alt="" className="login-logo" />
         <button className="loginBtn" onClick={() => handleLogin()}>
-          Log in
+          Login
         </button>
       </div>
     </div>
