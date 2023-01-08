@@ -617,7 +617,7 @@ export const DataTable = ({
             {
               (newRowAdded.clientName === "" || 
                 (headingName===Modules.TIMESHEET && 
-                  (newRowAdded.projectName==="" || newRowAdded.taskName==="" || !isDateAdded())
+                  (newRowAdded.projectName==="" || newRowAdded.task==="" || !isDateAdded())
                 )
               ) ? (
                 <button disable className="buttonBackgroundBorder">
