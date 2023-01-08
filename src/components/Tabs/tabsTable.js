@@ -62,7 +62,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const periodWeeks = getPeriods();
   const [ selectedPeriodWeek, setSelectedPriodWeek ] = useState({
     startDate : moment().startOf('isoweek'),
-    endDate : moment().add(7,'days').startOf('week')
+    endDate : moment().day() === 0 ? moment().startOf('week') : moment().add(7,'days').startOf('week')
   });
   const [ selectedProject, setSelectedProject ] = useState({});
   const [ selectedEmployee, setSelectedEmployee ] = useState({});
