@@ -333,6 +333,18 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           }
           temp.push(totalHrs);
         }
+        if (headingName === Modules.TIMESHEET) {
+          setColumns([
+            ...temp,
+            {
+              id: "actions",
+              label: "Actions",
+              minWidth: 100,
+              sortDir: "",
+              align: "left",
+            },
+          ])
+        }
         else { 
           setColumns([ ...temp ]); 
         }
