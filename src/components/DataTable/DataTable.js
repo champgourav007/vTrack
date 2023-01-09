@@ -694,7 +694,12 @@ export const DataTable = ({
     }
     else{
       setRowToBeUpdated(rows[idx]);
-      setNewRowAdded(rows[idx]);
+      if (rows[idx].employeeId) {
+        setNewRowAdded({ ...rows[idx], employeeName: getEmployeeName(rows[idx].employeeId)});
+      }
+      else {
+        setNewRowAdded(rows[idx]);
+      }
     }
     setIsEditButtonClicked(true);
   };
