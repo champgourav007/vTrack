@@ -2,7 +2,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Table
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getFullName } from "../../common/utils/datatable";
+import { getFullName, getTotalHrs } from "../../common/utils/datatable";
 import { getDetailedTimeSheetData } from "../../redux/actions";
 import "./timeSheetDetailView.css";
 
@@ -51,7 +51,7 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
       });
       temp.push({ id: 'totalHrs', label: 'Total', align: 'left' });
       temp.push({ id: 'status', label: 'Status', align: 'left' });
-      temp.push({ id: 'approvedBy', label: 'Approved By', align: 'left' });
+      temp.push({ id: 'approver', label: 'Approved By', align: 'left' });
       setColumns([ ...temp ]);
       let rowsData = [];
       let rowsToShow = [...detailedTimeSheetData];
@@ -145,7 +145,7 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
           </Paper>
           { detailedTimeSheetData && detailedTimeSheetData.length ?
             <div className="totalWorkingHrs">
-              {`Total Working Hours: ${detailedTimeSheetData[0].totalHrs}`}
+              {`Total Working Hours: ${getTotalHrs(detailedTimeSheetData)}`}
             </div> : null
           }
         </DialogContent>
