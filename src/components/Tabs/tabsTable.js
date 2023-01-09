@@ -9,6 +9,7 @@ import { searchIcon } from "../../common/icons";
 import {
   getLabel,
   getMinWidth,
+  getTotalHrs,
   tableColumnsData,
 } from "../../common/utils/datatable";
 import {
@@ -173,7 +174,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       } else if (col === 'employeeId' && tabName !== "MY TIMESHEET") {
         temp.push({
           id: 'employeeName',
-          label: tabName === 'PENDING APPROVAL' || tabName === 'REPORTEES' ? 'Emp Name' : getLabel('employeeName', headingName),
+          label: tabName === 'PENDING APPROVAL' || tabName === 'REPORTEES' ? 'Employee Name' : getLabel('employeeName', headingName),
           minWidth: tabName === 'PENDING APPROVAL' || tabName === 'REPORTEES' ? '12rem' : getMinWidth('employeeName', headingName),
           sortDir: "DESC",
           align: "left",
@@ -187,8 +188,8 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         if(tabName === 'REPORTEES'){
           setColumns([
             ...temp,
-            { id: "viewDetails", label: "View Details", minWidth: 80, type: 'action' },
             totalHrs,status,
+            { id: "viewDetails", label: "View Details", minWidth: 80, type: 'action' },
           ])
         }
         else{
@@ -636,7 +637,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       />
       { headingName === Modules.TIMESHEET && tabName === "MY TIMESHEET" && timeSheetData && timeSheetData.length ?
         <div className="totalWorkingHrs">
-          {`Total Working Hours: ${timeSheetData[0].totalHrs}`}
+          {`Total Working Hours: ${getTotalHrs(timeSheetData)}`}
         </div> : null
       }
     </div>

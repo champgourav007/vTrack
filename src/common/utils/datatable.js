@@ -75,7 +75,7 @@ export const tableColumnsData = {
   'PendingApproval': [
     { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
     { id: "task", label: "Task", minWidth: 100, type: 'textfield' },
-    { id: "employeeName", label: "Emp Name", minWidth: 100, type: 'select' },
+    { id: "employeeName", label: "Employee Name", minWidth: 100, type: 'select' },
     { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
     { id: "status", label: "Status", minWidth: 60, type: 'empty' },
     { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', align: 'left'}
@@ -182,4 +182,12 @@ export const getApproversIds = (approvers) => {
     }
   }
   return approverIds;
+};
+
+export const getTotalHrs = (timesheetData) => {
+  let totalHrs = 0;
+  for (const data of timesheetData) {
+    totalHrs += data.totalHrs
+  }
+  return totalHrs;
 };
