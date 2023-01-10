@@ -19,7 +19,7 @@ export const tableColumnsData = {
     { id: "sowStartDate", label: "SOW Start Date", minWidth: 100, type: 'date', sortDir: '', align: 'left' },
     { id: "sowEndDate", label: "SOW End Date", minWidth: 110, type: 'date', sortDir: '', align: 'left' },
     { id: 'projectManagerName', label: 'Veersa Project Manager', minWidth: 100, type: 'select', sortDir: '', align: 'left' },
-    { id: 'approvers', label: 'Approvers', minWidth: 100, type: 'multi-select', sortDir: '', align: 'left' },
+    { id: 'approvers', label: 'Approvers', minWidth: 100, maxWidth: 120, type: 'multi-select', sortDir: '', align: 'left' },
     { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left'}
   ],
   'ClientAdmin': [
@@ -183,6 +183,11 @@ export const getApproversIds = (approvers) => {
   }
   return approverIds;
 };
+
+export const getApproversWithIds = (approvers) => {
+  return (<div>{approvers.map((approver)=>(<div>{`${approver.approverName} (${approver.approverEmail})`}</div>))}</div>);
+};
+
 
 export const getTotalHrs = (timesheetData) => {
   let totalHrs = 0;
