@@ -1,5 +1,5 @@
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { Checkbox, FormControl, InputLabel, ListItemText, OutlinedInput, Select } from "@mui/material";
+import { Checkbox, FormControl, InputLabel, ListItemText, OutlinedInput, Select, styled } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
@@ -12,7 +12,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
-import Tooltip from "@mui/material/Tooltip";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -31,6 +31,7 @@ import {
   fileHandler,
   getApprovers,
   getApproversIds,
+  getApproversWithIds,
   getFullName,
   getLabel,
   getTypeofColumn,
@@ -68,6 +69,14 @@ const MenuProps = {
     },
   },
 };
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    fontSize: theme.typography.pxToRem(18),
+  },
+}));
 
 export const DataTable = ({
   headingName,
@@ -998,7 +1007,14 @@ export const DataTable = ({
                         }
                         return col.id !==
                           UniqueIds[headingName.replace(" ", "")] ? (
-                          <TableCell key={col.id} style={{textAlign: col.isDate || col.id === 'totalHrs' ? "left" : "auto",maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
+                          <TableCell 
+                            key={col.id} 
+                            style={{
+                              textAlign: col.isDate || col.id === 'totalHrs' ? "left" : "auto",
+                              maxWidth: col.maxWidth ? col.maxWidth : 'auto',
+                              whiteSpace: col.maxWidth ? 'nowrap' : 'normal',
+                            }}
+                          >
                             {col.id === "employeeName" ? (
                               getEmployeeName(row["employeeId"])
                             ) : col.id.toLowerCase().includes("allocation") && row[col.id] ? (
@@ -1012,7 +1028,16 @@ export const DataTable = ({
                                 </div>
                                 <div>{row[col.id]}</div>
                               </div>
-                            ) : col.id === 'approvers' ? ( getApprovers(row[col.id]) ) : 
+                            ) : col.id === 'approvers' ? 
+                            ( 
+                              <HtmlTooltip title={getApproversWithIds(row[col.id])}>
+                                <div 
+                                  style={{ overflow: 'hidden', textOverflow: 'ellipsis'}}
+                                >
+                                  {getApprovers(row[col.id])}
+                                </div>
+                              </HtmlTooltip> 
+                            ) : 
                             col.id === 'viewDetails' ? ( <IconButton color="primary" onClick={() => handleViewDetails(row['employeeId'])} ><VisibilityIcon /></IconButton>) : (
                               row[col.id]
                             )}

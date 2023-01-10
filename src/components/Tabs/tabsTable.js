@@ -473,9 +473,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                     {getDateItems(true)}
                   </TextField>
                   <button
-                    disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved'))}
+                    disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved' || timeSheetData[0].periodStatus === 'Submitted' || timeSheetData[0].periodStatus === 'Partially Approved'))}
                     className={
-                      isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved'))
+                      isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved' || timeSheetData[0].periodStatus === 'Submitted' || timeSheetData[0].periodStatus === 'Partially Approved'))
                         ? "disableAddButton"
                         : "addBtn"
                     }
@@ -484,9 +484,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                       Add
                   </button>
                   <button
-                    disabled={isAddButtonClicked || isEditButtonClicked}
+                    disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved' || timeSheetData[0].periodStatus === 'Submitted' || timeSheetData[0].periodStatus === 'Partially Approved'))}
                     className={
-                      isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved' || timeSheetData[0].periodStatus === 'Submitted') )
+                      isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved' || timeSheetData[0].periodStatus === 'Submitted' || timeSheetData[0].periodStatus === 'Partially Approved') )
                         ? "disableAddButton"
                         : "addBtn"
                     }
