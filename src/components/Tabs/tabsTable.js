@@ -461,7 +461,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
               <>
                 {(timeSheetData && timeSheetData.length) ?
                   <div className="searchWrapperText">
-                    <span className="searchWrapperSpan">TimeSheet Period Status : </span>{timeSheetData[0].periodStatus}
+                    <span className="searchWrapperSpan">Timesheet Period Status : </span>{timeSheetData[0].periodStatus}
                   </div> : null
                 }
                 <div className="button-flex">
@@ -637,7 +637,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       />
       { headingName === Modules.TIMESHEET && tabName === "MY TIMESHEET" && timeSheetData && timeSheetData.length ?
         <div className="totalWorkingHrs">
-          {`Total Working Hours: ${getTotalHrs(timeSheetData)}`}
+          {`Total Hours: ${getTotalHrs(timeSheetData)}`}
         </div> : null
       }
     </div>

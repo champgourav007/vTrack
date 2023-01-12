@@ -1,4 +1,5 @@
 import moment from "moment";
+import { Modules } from "../common/constants/sidebar";
 
 export function createData(
   Id,
@@ -213,7 +214,7 @@ export const dropDownMockData = {
 
 export const initialData = (headingName ,selectedPeriodWeek) => {
   switch(headingName) {
-    case 'Client Admin':
+    case Modules.CLIENT_ADMIN:
       return {
         clientName: "",
         location: "",
@@ -225,7 +226,7 @@ export const initialData = (headingName ,selectedPeriodWeek) => {
         deliveryOfficer: "",
         msaDoc: "",
       };
-    case 'Project Admin':
+    case Modules.PROJECT_ADMIN:
       return {
         projectName: '',
         clientName: '',
@@ -235,7 +236,7 @@ export const initialData = (headingName ,selectedPeriodWeek) => {
         projectManagerName: '',
         approvers: []
       };
-    case 'Project Allocation':
+    case Modules.PROJECT_ALLOCATION:
       return {
         employeeName: '',
         projectName: '',
@@ -243,7 +244,7 @@ export const initialData = (headingName ,selectedPeriodWeek) => {
         endDate: '',
         allocation: ''
       };
-    case 'TimeSheet':
+    case Modules.TIMESHEET:
       let dates = {};
       let date = moment(selectedPeriodWeek.startDate);
       for (let i=0;i<7;i++){
@@ -257,7 +258,7 @@ export const initialData = (headingName ,selectedPeriodWeek) => {
         status:'',
         ...dates
       };
-    case 'Project Management':
+    case Modules.PROJECT_MANAGEMENT:
       return {
         employeeName: '',
         endDate: '',

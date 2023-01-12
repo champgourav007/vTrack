@@ -1,7 +1,8 @@
 .title{
     font-weight: 600 !important;
     font-size: 2rem !important;
-    line-height: 2rem !important;
+    line-height: 2.5rem !important;
+    text-align: center;
 }
 .dialogActions{
     justify-content: flex-end !important;

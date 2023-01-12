@@ -82,7 +82,7 @@ export default function BasicTabs(props) {
           >
             { mappedProjectManagementData && mappedProjectManagementData.map((client) =>
               client.projects.map((project) => {
-                return <Tab key={`${client.clientName} / ${project.projectName}`} className="tabs-table" label={`${client.clientName} / ${project.projectName}`} {...a11yProps(count++)} />
+                return <Tab key={`${client.clientName} / ${project.projectName}`} className="tabs-table" label={`${project.projectName} (${client.clientName})`} {...a11yProps(count++)} />
               })
             )}
           </Tabs> :

@@ -114,6 +114,16 @@ export const DataTable = ({
   const [ viewDetails, setViewDetails ] = useState(false);
   const [ selectedEmpId, setSelectedEmpId ] = useState('');
 
+  const setDialogBoxText = () => {
+    if(headingName === Modules.PROJECT_ADMIN) {
+      return 'Delete action on Project  will impact all active allocations for this project.  Are you sure you want to delete?';
+    }
+    else if(headingName === Modules.CLIENT_ADMIN) {
+      return 'Delete action on Client data will delete all active projects for this client. Are you sure you want to delete?';
+    }
+    return 'Are you sure you want to Delete?';
+  }
+
   const saveDataHandler = () => {
     if (!isEditButtonClicked) {
       if (headingName === Modules.CLIENT_ADMIN) {
@@ -162,7 +172,7 @@ export const DataTable = ({
             date: key,
             hours: newRowAdded[key]
           });
-          if(newRowAdded[key] !== "") totalHrs += parseInt(newRowAdded[key]);
+          if(newRowAdded[key] !== "") totalHrs += parseFloat(newRowAdded[key]);
         }
         else{
           restProps[key] = newRowAdded[key];
@@ -783,6 +793,7 @@ export const DataTable = ({
         <DialogBox
           setShowDialogBox={setShowDialogBox}
           setDialogDeleteButtonClicked={setDialogDeleteButtonClicked}
+          header={setDialogBoxText()}
         />
       )}
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
