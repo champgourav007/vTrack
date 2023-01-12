@@ -7,7 +7,7 @@ export const UniqueIds = {
   ProjectAdmin: 'projectId',
   ClientAdmin: 'clientId',
   ProjectAllocation: 'projectAllocationId',
-  TimeSheet: 'timesheetDetailID',
+  Timesheet: 'timesheetDetailID',
   ProjectManagement: 'projectAllocationId'
 };
 
@@ -53,7 +53,7 @@ export const tableColumnsData = {
     { id: 'costAllocation', label: 'Cost Allocation', minWidth: 100, type: 'textfield', sortDir: '', align: 'left' },
     { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left'}
   ], 
-  'TimeSheet': [
+  'Timesheet': [
     { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
     { id: "task", label: "Task", minWidth: 100, type: 'textfield' },
     { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
