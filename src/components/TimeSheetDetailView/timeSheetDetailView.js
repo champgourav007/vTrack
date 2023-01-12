@@ -232,6 +232,7 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
             label={getLabel(col.id, headingName)}
             placeholder=""
             value={newRowAdded[col.id]}
+            required ={col.isRequired}
             sx={{
             "& label": {
               lineHeight: '0.8rem'
@@ -249,6 +250,7 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
             select
             label={getLabel(col.id, headingName)}
             value={newRowAdded[col.id]}
+            required ={col.isRequired}
             sx={{
             "& label": {
               lineHeight: '0.8rem'
@@ -362,8 +364,8 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
   useEffect(() => {
     if (detailedTimeSheetData && detailedTimeSheetData.length) {
       let temp = [ 
-        { id: 'projectName', label: 'Project Name', align: 'left', type: 'select' },
-        { id: 'task', label: 'Task', align: 'left', type: 'textfield' },
+        { id: 'projectName', label: 'Project Name', align: 'left', type: 'select', isRequired: true },
+        { id: 'task', label: 'Task', align: 'left', type: 'textfield', isRequired: true },
       ];
       detailedTimeSheetData[0]['dateHours'].forEach((dateHour, index) => {
         let month = {
@@ -479,7 +481,7 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
                       { columns.map((col, colIdx) => {
                         return <TableCell key={col.id}>
                           {
-                            col.id === 'actions' && row.projectManagerID === userData?.data.activeUsers.id ?
+                            col.id === 'actions' && row.projectManagerID === userData?.data.activeUsers.id && row.status !== 'Approved'  ?
                               <button className="buttonBackgroundBorder cursorPointer">
                                 <img src={editIcon} className="editDeleteIcon" alt="" 
                                   onClick={() =>

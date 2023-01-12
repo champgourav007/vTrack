@@ -11,11 +11,13 @@ function* workerListItemsSaga() {
     yield put(setVtrackLoader(true));
     const currency = yield call(getListItems, 'currency');
     const location = yield call(getListItems, 'clientLocation');
-    const type = yield call(getListItems, 'projectType')
+    const type = yield call(getListItems, 'projectType');
+    const status = yield call(getListItems, 'projectStatus');
     let listItems = {
       'currency': currency,
       'location': location,
-      'type': type
+      'type': type,
+      'status': status
     };
     yield put(setListItems(listItems));
     yield put(setVtrackLoader(false));

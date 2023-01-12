@@ -380,7 +380,7 @@ export const DataTable = ({
           {option.name}
         </MenuItem>
       ));
-    } else if(col === "currency" || col === "paymentTerms" || col === 'location') {
+    } else if(col === "currency" || col === "paymentTerms" || col === 'location' || col === 'status') {
       return listItems && listItems[col].map((option) => (
         <MenuItem
           key={option.id}
@@ -477,6 +477,7 @@ export const DataTable = ({
         <MenuItem
           key={option.id}
           value={option.name}
+          required={col.isRequired}
           onClick={() =>
             setNewRowAdded({
               ...newRowAdded,
@@ -528,6 +529,7 @@ export const DataTable = ({
             label={getLabel(col.id, headingName)}
             placeholder=""
             value={newRowAdded[col.id]}
+            required={col.isRequired}
             onChange={(e) => inputFieldHandler(e, col.id)}
             sx={{
               "& label": {
@@ -545,6 +547,7 @@ export const DataTable = ({
             label={getLabel(col.id, headingName)}
             placeholder=""
             value={newRowAdded[col.id]}
+            required={col.isRequired}
             sx={{
             "& label": {
               lineHeight: '0.8rem'
@@ -565,6 +568,7 @@ export const DataTable = ({
                 multiple
                 value={newRowAdded[col.id]}
                 onChange={handleChange}
+                required={col.isRequired}
                 input={<OutlinedInput label="Approvers" />}
                 renderValue={() => getApprovers(newRowAdded[col.id])}
                 MenuProps={MenuProps}
@@ -587,6 +591,7 @@ export const DataTable = ({
             select
             label={getLabel(col.id, headingName)}
             value={newRowAdded[col.id]}
+            required={col.isRequired}
             sx={{
             "& label": {
               lineHeight: '0.8rem'
@@ -609,6 +614,7 @@ export const DataTable = ({
                 setNewRowAdded({ ...newRowAdded, [col.id]: newValue });
               }}
               placeholder="Date"
+              required={col.isRequired}
               renderInput={(params) => <TextField {...params} error={false} />}
             />
           </LocalizationProvider>
@@ -629,6 +635,7 @@ export const DataTable = ({
                 accept="*"
                 type="file"
                 onChange={(e) => setFileState(e.target.files[0])}
+                required={col.isRequired}
               />
               <AttachFileIcon />
             </IconButton>
@@ -670,6 +677,7 @@ export const DataTable = ({
             type="number"
             value={newRowAdded[date] === '-' ? 0 : newRowAdded[date]}
             style={{maxWidth:'6rem'}}
+            required={col.isRequired}
             sx={{
             "& label": {
               lineHeight: '0.8rem'
@@ -936,7 +944,7 @@ export const DataTable = ({
                                 tabName !== 'REPORTEES' && 
                                 row.status !== 'Approved' && 
                                 row.status !== 'Submitted' && 
-                                row.status !== 'Rejected' && 
+                                // row.status !== 'Rejected' && 
                                   <Tooltip title="Edit">
                                     <button
                                       onClick={() =>
@@ -953,7 +961,7 @@ export const DataTable = ({
                                 headingName !== Modules.PROJECT_MANAGEMENT && 
                                 row.status !== 'Approved' && 
                                 row.status !== 'Submitted' && 
-                                row.status !== 'Rejected' && 
+                                // row.status !== 'Rejected' && 
                                 tabName !== 'PENDING APPROVAL' && tabName !== 'REPORTEES' && (
                                   <Tooltip title="Delete">
                                     <img
