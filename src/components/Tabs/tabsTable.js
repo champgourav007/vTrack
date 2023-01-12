@@ -159,7 +159,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
             label: getLabel(col, headingName),
             minWidth: getMinWidth(col, headingName),
             sortDir: "DESC",
-            align: "left",
+            align: "left"
           };
         }
       }
@@ -170,6 +170,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           minWidth: getMinWidth(col, headingName),
           sortDir: "DESC",
           align: "left",
+          isRequired:true
         });
       } else if (col === 'employeeId' && tabName !== "MY TIMESHEET") {
         temp.push({
@@ -343,6 +344,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
               minWidth: 100,
               sortDir: "",
               align: "left",
+              isRequired:true
             },
           ])
         }
@@ -521,6 +523,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                       <MenuItem
                         key={option.projectId}
                         value={option.projectName}
+                        required
                         onClick={() =>{
                             setSelectedProject({
                               projectId: option.projectId,projectName: option.projectName

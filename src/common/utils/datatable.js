@@ -13,17 +13,18 @@ export const UniqueIds = {
 
 export const tableColumnsData = {
   'ProjectAdmin': [
-    { id: "projectName", label: "Project Name", minWidth: 100, type: 'textfield', sortDir: '', align: 'left' },
-    { id: "clientName", label: "Client Name", minWidth: 100, type: 'select', sortDir: '', align: 'left' },
+    { id: "projectName", label: "Project Name", minWidth: 100, type: 'textfield', sortDir: '', align: 'left',isRequired: true },
+    { id: "clientName", label: "Client Name", minWidth: 100, type: 'select', sortDir: '', align: 'left',isRequired: true },
     { id: "type", label: "Type", minWidth: 80, type: 'select', sortDir: '', align: 'left' },
     { id: "sowStartDate", label: "SOW Start Date", minWidth: 100, type: 'date', sortDir: '', align: 'left' },
     { id: "sowEndDate", label: "SOW End Date", minWidth: 110, type: 'date', sortDir: '', align: 'left' },
     { id: 'projectManagerName', label: 'Veersa Project Manager', minWidth: 100, type: 'select', sortDir: '', align: 'left' },
+    {id: 'status', label:'Status', minWidth: 100, type: 'select', align: 'left'},
     { id: 'approvers', label: 'Approvers', minWidth: 100, maxWidth: 120, type: 'multi-select', sortDir: '', align: 'left' },
     { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left'}
   ],
   'ClientAdmin': [
-    { id: "clientName", label: "Client Name", minWidth: 100, type: 'textfield', sortDir: '', align: 'left' },
+    { id: "clientName", label: "Client Name", minWidth: 100, type: 'textfield', sortDir: '', align: 'left',isRequired: true },
     { id: "location", label: "Client Location", minWidth: 80, type: 'select', sortDir: '', align: 'left' },
     { id: "currency", label: "Currency", minWidth: 80, type: 'select', sortDir: '', align: 'left' },
     { id: "msaStartDate", label: "MSA Start Date", minWidth: 100, type: 'date', sortDir: '', align: 'left' },
@@ -54,8 +55,8 @@ export const tableColumnsData = {
     { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left'}
   ], 
   'Timesheet': [
-    { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
-    { id: "task", label: "Task", minWidth: 100, type: 'textfield' },
+    { id: "projectName", label: "Project Name", minWidth: 110, type: 'select',isRequired: true },
+    { id: "task", label: "Task", minWidth: 100, type: 'textfield',isRequired: true },
     { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
     { id: "status", label: "Status", minWidth: 60, type: 'empty' },
   ], 
