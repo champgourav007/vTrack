@@ -63,7 +63,9 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
       });
       restProps['dateHours'] = [...dateHours];
       restProps['totalHrs'] = totalHrs.toString();
-      restProps['periodWeek'] = selectedPeriodWeek;
+      restProps['periodWeek'] = selectedPeriodWeek.startDate.format("DD MMM") +
+      " - " +
+      selectedPeriodWeek.endDate.format("DD MMM");
       restProps['employeeId'] = selectedEmpId;
       dispatch(updateTimeSheetData(restProps));
     }
