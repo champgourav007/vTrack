@@ -164,3 +164,7 @@ div:has(> .approveRejectIcon){
 .timesheetTable .timeField:nth-child(8n),.timesheetTable .timeField:nth-child(9n){
   opacity: 0.4;
 }
+
+.MuiInputLabel-asterisk{
+  color: red;
+}

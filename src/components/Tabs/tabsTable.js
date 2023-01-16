@@ -34,6 +34,8 @@ import { getProjectManagementData } from "../../redux/actions/project-management
 import { DataTable } from "../DataTable/DataTable";
 import { toastOptions } from "../../common/utils/toasterOptions";
 import "./tabsTable.css";
+import { Select } from "@mui/material";
+import { CalendarMonth, CalendarMonthRounded, Person } from "@mui/icons-material";
 
 const getPeriods = () => {
   let date = moment().subtract(42, "days");
@@ -467,13 +469,21 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                   </div> : null
                 }
                 <div className="button-flex">
-                  <TextField
+                <Select
+                  IconComponent = {CalendarMonthRounded}
+                  defaultValue={periodWeeks[6].startDate.format('DD MMM') + ' - ' + periodWeeks[6].endDate.format('DD MMM')}
+                  sx={{minWidth: '15rem'}}
+                  className={"select-date"}
+                >{getDateItems(true)}
+                </Select>
+                  {/* <TextField
                     select
                     sx={{minWidth: '15rem'}}
+                    
                     defaultValue={periodWeeks[6].startDate.format('DD MMM') + ' - ' + periodWeeks[6].endDate.format('DD MMM')}
                   >
                     {getDateItems(true)}
-                  </TextField>
+                  </TextField> */}
                   <button
                     disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved' || timeSheetData[0].periodStatus === 'Submitted' || timeSheetData[0].periodStatus === 'Partially Approved'))}
                     className={

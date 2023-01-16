@@ -481,7 +481,7 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
                       { columns.map((col, colIdx) => {
                         return <TableCell key={col.id}>
                           {
-                            col.id === 'actions' && row.projectManagerID === userData?.data.activeUsers.id && row.status !== 'Approved'  ?
+                            col.id === 'actions' && row.projectManagerID === userData?.data?.activeUsers?.id && row.status !== 'Approved'  ?
                               <button className="buttonBackgroundBorder cursorPointer">
                                 <img src={editIcon} className="editDeleteIcon" alt="" 
                                   onClick={() =>

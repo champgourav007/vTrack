@@ -153,3 +153,13 @@
   line-height: 1.25rem;
   margin-right: 24rem;
 }
+
+.select-date .MuiSelect-select{
+  padding-top: 0.875rem;
+  padding-bottom: 0.875rem;
+}
+
+.select-date .MuiSvgIcon-root{
+  transform: none;
+  color: #1773bc;
+}

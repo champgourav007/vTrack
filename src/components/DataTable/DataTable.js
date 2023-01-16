@@ -544,15 +544,17 @@ export const DataTable = ({
         <TableCell key={col.id} style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
           <TextField
             id="outlined-required"
+            type={col.fieldType}
             label={getLabel(col.id, headingName)}
             placeholder=""
             value={newRowAdded[col.id]}
             required={col.isRequired}
             sx={{
-            "& label": {
-              lineHeight: '0.8rem'
-            }
-          }}
+              "& label": {
+                lineHeight: '0.8rem'
+              }
+            }}
+            disabled={col.id === 'costAllocation'? true : false}
             onChange={(e) => inputFieldHandler(e, col.id)}
           />
         </TableCell>
@@ -560,7 +562,7 @@ export const DataTable = ({
     } else if (getTypeofColumn(col.id, headingName) === "multi-select") {
       return (
         <TableCell key={col.id}  style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
-          <FormControl sx={{ m: 1, width: 150 }}>
+          <FormControl sx={{ m: 1, width: 120, margin:'0' }}>
               <InputLabel id="demo-multiple-checkbox-label">Approvers</InputLabel>
               <Select
                 labelId="demo-multiple-checkbox-label"
@@ -1042,10 +1044,10 @@ export const DataTable = ({
                                   <CircularProgress
                                     className="allocationProgress"
                                     variant="determinate"
-                                    value={row[col.id].replace('%', '')}
+                                    value={row[col.id]}
                                   />
                                 </div>
-                                <div>{row[col.id]}</div>
+                                <div>{row[col.id]}%</div>
                               </div>
                             ) : col.id === 'approvers' ? 
                             ( 
