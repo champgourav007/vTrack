@@ -2,8 +2,11 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { veersaLogo } from "../../common/icons";
 import { useAzureADAuth } from "../../config/use-azure-ad";
-import { dashboardURL } from "../../routes/routes";
+import { VTrackURL } from "../../routes/routes";
 import "./loginPage.css";
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 export const LoginPage = () => {
   const { loginAzureADPopup } = useAzureADAuth();
@@ -14,8 +17,9 @@ export const LoginPage = () => {
   };
 
   useEffect(() => {
-    let User = sessionStorage.getItem("userInformation");
-    if (User != null) navigate(dashboardURL);
+    const accessToken = cookies.get('userInformation');
+    // let User = localStorage.getItem("userInformation");
+    if (accessToken) navigate(VTrackURL);
   }, []);
 
   return (

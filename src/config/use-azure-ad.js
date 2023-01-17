@@ -4,11 +4,13 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { removeLocalStorageItem, setLocalStorageItem } from "../common/utils/local-storage";
 import { ACCESS_TOKEN, ACCOUNT, EXPIRES_ON, TIME_OF_AUTO_LOGOUT } from "../common/constants/local-storage-keys";
-import { dashboardURL } from "../routes/routes";
+import { VTrackURL } from "../routes/routes";
+import Cookies from 'universal-cookie';
 
 export const useAzureADAuth = () => {
   const { instance } = useMsal();
   const navigate = useNavigate();
+  const cookies = new Cookies();
 
   const loginAzureADPopup = useCallback(() => {
     instance
@@ -16,8 +18,10 @@ export const useAzureADAuth = () => {
       .then((e) => {
         console.log(e);
         setLocalStorageItem(ACCESS_TOKEN, e.accessToken);
-        sessionStorage.setItem("userInformation", JSON.stringify(e));
-        navigate(dashboardURL);
+        localStorage.setItem("userInformation", JSON.stringify(e));
+        cookies.set('userInformation', e.accessToken, { path: '/'});
+
+        navigate(VTrackURL);
       })
       .catch((e) => {
         console.log(e);
@@ -33,8 +37,8 @@ export const useAzureADAuth = () => {
       .logoutPopup(logoutRequest)
       .then(() => {
         navigate("/");
-        console.log("logout successful");
-        sessionStorage.removeItem("userInformation");
+        cookies.remove('userInformation', {path: "/", sameSite: false });
+        localStorage.removeItem("userInformation");
       })
       .catch((e) => {
         console.log(e);

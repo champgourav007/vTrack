@@ -2,6 +2,7 @@ import axios from "axios";
 import { ACCESS_TOKEN } from "../constants/local-storage-keys";
 import { Modules } from "../constants/sidebar";
 import { getLocalStorageItem } from "./local-storage";
+import Cookies from 'universal-cookie';
 
 export const UniqueIds = {
   ProjectAdmin: 'projectId',
@@ -10,6 +11,8 @@ export const UniqueIds = {
   Timesheet: 'timesheetDetailID',
   ProjectManagement: 'projectAllocationId'
 };
+
+const cookies = new Cookies();
 
 export const tableColumnsData = {
   'ProjectAdmin': [
@@ -56,7 +59,7 @@ export const tableColumnsData = {
   ], 
   'Timesheet': [
     { id: "projectName", label: "Project Name", minWidth: 110, type: 'select',isRequired: true },
-    { id: "task", label: "Task", minWidth: 100,maxWidth: 500, type: 'textfield',isRequired: true },
+    { id: "task", label: "Task", minWidth: 100,maxWidth: 200, type: 'textfield',isRequired: true },
     { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
     { id: "status", label: "Status", minWidth: 60, type: 'empty' },
   ], 
@@ -115,7 +118,9 @@ export const getMinWidth = (col, moduleName) => {
 };
 
 export const fileHandler = (file, id, name, headingName) => {
-  const accessToken = getLocalStorageItem(ACCESS_TOKEN);
+  // const accessToken = getLocalStorageItem(ACCESS_TOKEN);
+  const accessToken = cookies.get('userInformation');
+
   if (file) {
     const formData = new FormData();
     formData.append("file", file);

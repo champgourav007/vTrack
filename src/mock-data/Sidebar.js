@@ -19,7 +19,7 @@ import {
 } from "../common/icons";
 
 export const ModuleList = [
-  { id: "1",key: 'dashboard', name: "Dashboard", img: dashboardImg, imgHover:dashboardBlueIcon },
+  // { id: "1",key: 'dashboard', name: "Dashboard", img: dashboardImg, imgHover:dashboardBlueIcon },
   { id: "2",key:'projectAllocation', name: "Project Allocation", img: projectAllocationImg, imgHover:projectAllocationBlueIcon },
   { id: "3",key:'timeSheet', name: Modules.TIMESHEET, img: timesheetImg, imgHover:timeSheetBlueIcon },
   { id: "4",key:'projectManagement', name: "Project Management", img: projectManagementImg, imgHover:projectManagementBlueIcon },

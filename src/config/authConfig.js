@@ -38,7 +38,7 @@ export const loginRequest = {
 };
 
 export const logoutRequest = (instance) => {
-  const userInfo = JSON.parse(sessionStorage.getItem('userInformation'));
+  const userInfo = JSON.parse(localStorage.getItem('userInformation'));
   const homeAccountId = userInfo.account.homeAccountId;
   return {     
     account: instance.getAccountByHomeId(homeAccountId),     
