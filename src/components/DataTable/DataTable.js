@@ -99,12 +99,10 @@ export const DataTable = ({
   const { allUserDetails } = useSelector(({ USER }) => USER);
   const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
   const dispatch = useDispatch();
-
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [newRowAdded, setNewRowAdded] = useState(initialData(headingName,selectedPeriodWeek));
   const [sortBy, setSortBy] = useState(initialSort[headingName]);
-
   const [rowToBeUpdated, setRowToBeUpdated] = useState({});
   const [fileState, setFileState] = useState("");
   const [showDialogBox, setShowDialogBox] = useState(false);
@@ -672,23 +670,54 @@ export const DataTable = ({
     }
     else if(col.isDate){
       let date = Object.keys(newRowAdded).find(i=>moment(i).isValid() && moment(i).format('DD') === moment(col.date).format('DD'));
-      return (
-        <TableCell key={col.id} className="timeField">
-          <TextField
-            label={"Time"}
-            type="number"
-            value={newRowAdded[date] === '-' ? 0 : newRowAdded[date]}
-            style={{maxWidth:'6rem'}}
-            required={col.isRequired}
-            sx={{
-            "& label": {
-              lineHeight: '0.8rem'
-            }
-          }}
-            onChange={(e) => inputFieldHandler(e, date)}
-          />
-        </TableCell>
-      );
+      const selctedProjectForUser = newRowAdded.projectId;
+      let startDate = null;
+      let endDate = null;
+      assignedProjects.forEach((data) => {
+        if(data.projectId === selctedProjectForUser){
+          startDate = data.sowStartDate;
+          endDate = data.sowEndDate;
+        }
+      });
+      if(date >= startDate && date <= endDate)
+      {
+        return (
+          <TableCell key={col.id} className="timeField">
+            <TextField
+              label={"Time"}
+              type="number"
+              value={newRowAdded[date] === '-' ? 0 : newRowAdded[date]}
+              style={{maxWidth:'6rem'}}
+              required={col.isRequired}
+              sx={{
+              "& label": {
+                lineHeight: '0.8rem'
+              }
+            }}
+              onChange={(e) => inputFieldHandler(e, date)}
+            />
+          </TableCell>
+        );
+      }else{
+        return (
+          <TableCell key={col.id} className="timeField">
+            <TextField
+              label={"Time"}
+              type="number"
+              disabled
+              value={newRowAdded[date] === '-' ? 0 : newRowAdded[date]}
+              style={{maxWidth:'6rem'}}
+              required={col.isRequired}
+              sx={{
+              "& label": {
+                lineHeight: '0.8rem'
+              }
+            }}
+              onChange={(e) => inputFieldHandler(e, date)}
+            />
+          </TableCell>
+        );
+      }
     }
     else if(getTypeofColumn(col.id, headingName) === "empty"){
       return (
