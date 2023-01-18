@@ -181,17 +181,17 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
     } else if (col === "projectName") {
       return assignedProjects && assignedProjects.map((option) => (
         <MenuItem
-          key={option.id}
-          value={option.name}
+          key={option.projectId}
+          value={option.projectName}
           onClick={() =>
             setNewRowAdded({
               ...newRowAdded,
-              [col]: option.name,
-              projectId: option.id,
+              [col]: option.projectName,
+              projectId: option.projectId,
             })
           }
         >
-          {option.name}
+          {option.projectName}
         </MenuItem>
       ))
     } else if (col === "taskName"){
