@@ -168,3 +168,7 @@ div:has(> .approveRejectIcon){
 .MuiInputLabel-asterisk{
   color: red;
 }
+
+td.css-dsuxgy-MuiTableCell-root{
+  word-break: break-word;
+}

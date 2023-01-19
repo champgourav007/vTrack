@@ -59,7 +59,7 @@ export const tableColumnsData = {
   ], 
   'Timesheet': [
     { id: "projectName", label: "Project Name", minWidth: 110, type: 'select',isRequired: true },
-    { id: "task", label: "Task", minWidth: 100,maxWidth: 200, type: 'textfield',isRequired: true },
+    { id: "task", label: "Task", minWidth: 100,maxWidth: 150, type: 'textfield',isRequired: true },
     { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
     { id: "status", label: "Status", minWidth: 60, type: 'empty' },
   ], 

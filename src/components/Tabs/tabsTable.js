@@ -24,6 +24,7 @@ import {
   getProjectTasks,
   getReportees,
   getTimeSheetData,
+  getTimeSheetReportee,
   saveTimeSheetPeriodData,
   setSelectedEmployeeId,
   setSelectedProjectId,
@@ -36,6 +37,7 @@ import { toastOptions } from "../../common/utils/toasterOptions";
 import "./tabsTable.css";
 import { Select } from "@mui/material";
 import { CalendarMonth, CalendarMonthRounded, Person } from "@mui/icons-material";
+import { assignedProjectsSaga } from "../../saga/get-assigned-projects-saga";
 
 const getPeriods = () => {
   let date = moment().subtract(42, "days");
@@ -92,33 +94,46 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       );
     }
     else if(headingName === Modules.TIMESHEET){
-      dispatch(
-        getTimeSheetData({
-          periodWeek:
-            selectedPeriodWeek.startDate.format("DD MMM") +
-            " - " +
-            selectedPeriodWeek.endDate.format("DD MMM"),
-          employeeId: null,
-          projectId: null
-        })
-      );
+      if(tabName === 'REPORTEES'){
+        dispatch(
+          getTimeSheetReportee({
+            periodWeek:
+              selectedPeriodWeek.startDate.format("DD MMM") +
+              " - " +
+              selectedPeriodWeek.endDate.format("DD MMM")
+          })
+        );
+      }
+      else{
+        dispatch(
+          getTimeSheetData({
+            periodWeek:
+              selectedPeriodWeek.startDate.format("DD MMM") +
+              " - " +
+              selectedPeriodWeek.endDate.format("DD MMM"),
+            employeeId: null,
+            projectId: null
+          })
+        );
+      }
     }
   },[headingName,tabName]);
 
-  useEffect(() => {
-    if (headingName === Modules.PROJECT_MANAGEMENT) {
-      dispatch(
-        getProjectManagementData({
-          projectId: projectId,
-          pageNo: 1,
-          pageSize: 10,
-          sortBy: "projectName",
-          sortDir: "ASC",
-          searchData: searchData,
-        })
-      );
-    }
-  }, [ tabName ]);
+  // useEffect(() => {
+  //   console.log("hello - 1");
+  //   if (headingName === Modules.PROJECT_MANAGEMENT) {
+  //     dispatch(
+  //       getProjectManagementData({
+  //         projectId: projectId,
+  //         pageNo: 1,
+  //         pageSize: 10,
+  //         sortBy: "projectName",
+  //         sortDir: "ASC",
+  //         searchData: searchData,
+  //       })
+  //     );
+  //   }
+  // }, [ tabName ]);
   
   const handleSetColumnsData = (data) => {
     const temp = [];
@@ -188,7 +203,22 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       setColumns([...temp]);
     } else {
       if(totalHrs){
+        var removeByAttr = function(arr, attr, value){
+        var i = arr.length;
+        while(i--){
+          if( arr[i] 
+              && arr[i].hasOwnProperty(attr) 
+              && (arguments.length > 2 && arr[i][attr] === value ) ){ 
+
+              arr.splice(i,1);
+
+          }
+        }
+        return arr;
+}
         if(tabName === 'REPORTEES'){
+          removeByAttr(temp, 'id', 'task');
+          removeByAttr(temp, 'id', 'projectName');
           setColumns([
             ...temp,
             totalHrs,status,
@@ -421,7 +451,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     if ((headingName === Modules.PROJECT_ADMIN || headingName === Modules.CLIENT_ADMIN) && listItems === null) {
       dispatch(getListItems());
     }
-    if (headingName === Modules.PROJECT_ADMIN || headingName === Modules.TIMESHEET || headingName === Modules.PROJECT_MANAGEMENT) {
+    if (headingName === Modules.PROJECT_ADMIN || headingName === Modules.TIMESHEET || headingName === Modules.PROJECT_MANAGEMENT && projectManagementData === null) {
       dispatch(getAssignedProjects());
     }
     if(headingName === Modules.TIMESHEET){
@@ -442,7 +472,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   }, [ headingName ]);
 
   useEffect(() => {
-    if(allTasks === null) dispatch(getProjectTasks());
+    // if(allTasks === null) dispatch(getProjectTasks());
     if(allUserDetails === null) dispatch(getAllUserDetails());
   }, []);
 
@@ -585,13 +615,22 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                 <button 
                   className={"addBtn showDataBtn"}
                   onClick={()=>{
-                    dispatch(
-                      getTimeSheetData({
-                        periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
-                        employeeId: selectedEmployee.employeeId,
-                        projectId: selectedProject.projectId
-                      })
-                    );
+                    if(tabName === 'REPORTEES'){
+                      dispatch(
+                        getTimeSheetReportee({
+                          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM')
+                        })
+                      );
+                    }
+                    else{
+                      dispatch(
+                        getTimeSheetData({
+                          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
+                          employeeId: selectedEmployee.employeeId,
+                          projectId: selectedProject.projectId
+                        })
+                      );
+                    }
                   }}
                 >
                   Show Data

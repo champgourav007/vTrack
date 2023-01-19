@@ -96,6 +96,7 @@ export const DataTable = ({
 }) => {
   const { clientsData, allTasks, listItems, assignedProjects } =
     useSelector(({ MODULES }) => MODULES);
+  
   const { allUserDetails } = useSelector(({ USER }) => USER);
   const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
   const dispatch = useDispatch();
@@ -111,7 +112,6 @@ export const DataTable = ({
     useState(false);
   const [ viewDetails, setViewDetails ] = useState(false);
   const [ selectedEmpId, setSelectedEmpId ] = useState('');
-
   const setDialogBoxText = () => {
     if(headingName === Modules.PROJECT_ADMIN) {
       return 'Delete action on Project  will impact all active allocations for this project.  Are you sure you want to delete?';
@@ -217,7 +217,7 @@ export const DataTable = ({
           searchData: searchData,
         })
       );
-    } else if (headingName === Modules.PROJECT_ALLOCATION) {
+    } else if (headingName === Modules.PROJECT_ALLOCATION && assignedProjects === null) {
       dispatch(
         getProjectAllocationData({
           pageNo: newPage + 1,
@@ -264,7 +264,7 @@ export const DataTable = ({
           searchData: searchData,
         })
       );
-    } else if (headingName === Modules.PROJECT_ALLOCATION) {
+    } else if (headingName === Modules.PROJECT_ALLOCATION && assignedProjects === null) {
       dispatch(
         getProjectAllocationData({
           pageNo: page + 1,
@@ -326,7 +326,7 @@ export const DataTable = ({
           searchData: searchData,
         })
       );
-    } else if (headingName === Modules.PROJECT_ALLOCATION) {
+    } else if (headingName === Modules.PROJECT_ALLOCATION && assignedProjects === null) {
       dispatch(
         getProjectAllocationData({
           pageNo: page + 1,
@@ -542,6 +542,7 @@ export const DataTable = ({
         <TableCell key={col.id} style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
           <TextField
             id="outlined-required"
+            inputProps={{ maxLength: 100 }}
             type={col.fieldType}
             label={getLabel(col.id, headingName)}
             placeholder=""
@@ -670,7 +671,7 @@ export const DataTable = ({
     }
     else if(col.isDate){
       let date = Object.keys(newRowAdded).find(i=>moment(i).isValid() && moment(i).format('DD') === moment(col.date).format('DD'));
-      const selctedProjectForUser = newRowAdded.projectId;
+      const selctedProjectForUser = newRowAdded.projectId !== undefined ? newRowAdded.projectId : newRowAdded.projectID;
       let startDate = null;
       let endDate = null;
       assignedProjects.forEach((data) => {
@@ -679,6 +680,7 @@ export const DataTable = ({
           endDate = data.sowEndDate;
         }
       });
+
       if(date >= startDate && date <= endDate)
       {
         return (
@@ -705,7 +707,7 @@ export const DataTable = ({
               label={"Time"}
               type="number"
               disabled
-              value={newRowAdded[date] === '-' ? 0 : newRowAdded[date]}
+              value={0}
               style={{maxWidth:'6rem'}}
               required={col.isRequired}
               sx={{

@@ -408,6 +408,7 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
   }, [detailedTimeSheetData]);
 
   useEffect(() => {
+    if (headingName === Modules.TIMESHEET && viewDetails)
     dispatch(
       getDetailedTimeSheetData({
         periodWeek:

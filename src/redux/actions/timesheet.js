@@ -16,6 +16,7 @@ export const TimeSheetType = {
     SET_SELECTED_PROJECT_ID: 'SET_SELECTED_PROJECT_ID',
     GET_DETAILED_TIMESHEET_DATA: 'GET_DETAILED_TIMESHEET_DATA',
     SET_DETAILED_TIMESHEET_DATA: 'SET_DETAILED_TIMESHEET_DATA',
+    GET_TIMESHEET_REPORTEE: 'GET_TIMESHEET_REPORTEE'
   }
   
   export const getTimeSheetData = (data) => 
@@ -27,6 +28,12 @@ export const TimeSheetType = {
   export const getMyTimeSheetData = (data) => 
   ({
     type: TimeSheetType.GET_MY_TIMESHEET_DATA,
+    payload: data,
+  });
+
+  export const getTimeSheetReportee = (data) => 
+  ({
+    type: TimeSheetType.GET_TIMESHEET_REPORTEE,
     payload: data,
   });
   
