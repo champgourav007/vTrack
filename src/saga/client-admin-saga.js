@@ -19,7 +19,7 @@ function* workerClientAdminSaga({ payload }) {
       payload.searchData
     );
     yield put(setClientAdminData(clientAdminDetails));
-    yield put(getClientsData());
+    // yield put(getClientsData());
     yield put(setVtrackLoader(false));
   } catch (err) {
     console.log(err);

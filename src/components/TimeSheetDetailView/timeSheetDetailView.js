@@ -67,6 +67,7 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
       " - " +
       selectedPeriodWeek.endDate.format("DD MMM");
       restProps['employeeId'] = selectedEmpId;
+      restProps['fromDetailView'] = true;
       dispatch(updateTimeSheetData(restProps));
     }
     setRowToBeUpdated({});

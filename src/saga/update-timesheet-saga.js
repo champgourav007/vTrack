@@ -7,6 +7,7 @@ import {
   setVtrackLoader,
   getMyTimeSheetData,
   setDetailedTimeSheetData,
+  getTimeSheetReportee,
 } from "../redux/actions";
 import { toastOptions } from "../common/utils/toasterOptions";
 
@@ -17,14 +18,22 @@ function* workerUpdateTimeSheetSaga({ payload }) {
       state.MODULES.timesheetPeriodWeek);
     yield call(updateTimeSheetDetails, payload.data);
     toast.success("Data Saved", toastOptions)
-    yield put(
-        getMyTimeSheetData({
-          // periodWeek: periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM'),
-          pageNo: 1,
-          pageSize: 10,
-          sortDir: "ASC",
-        })
-    );
+    if(payload.data.fromDetailView){
+      yield put(
+        getTimeSheetReportee({
+        periodWeek : timesheetPeriodWeek
+      }))
+    }
+    else{
+      yield put(
+          getMyTimeSheetData({
+            // periodWeek: periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM'),
+            pageNo: 1,
+            pageSize: 10,
+            sortDir: "ASC",
+          })
+      );
+    }
     const detailedTimeSheetDetails = yield call(
       getTimeSheetDetails,
       payload.data.periodWeek ? payload.data.periodWeek : timesheetPeriodWeek,

@@ -451,10 +451,10 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     if ((headingName === Modules.PROJECT_ADMIN || headingName === Modules.CLIENT_ADMIN) && listItems === null) {
       dispatch(getListItems());
     }
-    if (headingName === Modules.PROJECT_ADMIN || headingName === Modules.TIMESHEET || headingName === Modules.PROJECT_MANAGEMENT && projectManagementData === null) {
+    if (headingName === Modules.TIMESHEET || headingName === Modules.PROJECT_MANAGEMENT && projectManagementData === null) {
       dispatch(getAssignedProjects());
     }
-    if(headingName === Modules.TIMESHEET){
+    if(headingName === Modules.TIMESHEET && tabName !== 'MY TIMESHEET'){
       if(selectedProjectId){
         dispatch(getReportees(selectedProjectId));
       }
