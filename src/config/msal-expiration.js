@@ -1,3 +1,4 @@
+import Cookies from "universal-cookie";
 import { ACCESS_TOKEN, ACCOUNT, EXPIRES_ON, TIME_OF_AUTO_LOGOUT } from "../common/constants/local-storage-keys";
 import { getLocalStorageItem, removeLocalStorageItem } from "../common/utils/local-storage";
 
@@ -8,6 +9,7 @@ export function setExpirationTimeout (
   request,
   expiresOnString
 ) {
+  const cookies = new Cookies();
   if (expirationTimeoutId) {
     clearTimeout(expirationTimeoutId);
   }
@@ -19,6 +21,7 @@ export function setExpirationTimeout (
     removeLocalStorageItem(ACCOUNT);
     removeLocalStorageItem(EXPIRES_ON);
     removeLocalStorageItem(TIME_OF_AUTO_LOGOUT);
+    cookies.remove('userInformation', {path: "/", sameSite: false });
     instance.loginRedirect(request)
       .catch((error) => {
         console.error(error);
