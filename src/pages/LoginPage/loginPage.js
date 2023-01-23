@@ -31,8 +31,7 @@ export const LoginPage = () => {
             <br />
             vTrack
           </div>
-          <div className="subHeading1">Nice to see you again</div>
-          <div className="subHeading2">
+          <div className="subHeading1">
             One stop shop for project
             <br />
             management

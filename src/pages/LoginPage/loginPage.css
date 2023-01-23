@@ -38,15 +38,6 @@
     line-height: 1.8125rem;
 }
 
-.subHeading2 {
-    margin-top: 1.6875rem;
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 1.5rem;
-    line-height: 1.8125rem;
-}
-
 .rightDiv {
     display: flex;
     flex-direction: column;

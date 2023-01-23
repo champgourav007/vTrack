@@ -244,10 +244,11 @@ export const DataTable = ({
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(event.target.value);
+    setPage(0);
     if (headingName === Modules.CLIENT_ADMIN) {
       dispatch(
         getClientAdminData({
-          pageNo: page + 1,
+          pageNo: 1,
           pageSize: event.target.value,
           sortBy: sortBy,
           sortDir: "ASC",
@@ -257,7 +258,7 @@ export const DataTable = ({
     } else if (headingName === Modules.PROJECT_ADMIN) {
       dispatch(
         getProjectAdminData({
-          pageNo: page + 1,
+          pageNo: 1,
           pageSize: event.target.value,
           sortBy: sortBy,
           sortDir: "ASC",
@@ -267,7 +268,7 @@ export const DataTable = ({
     } else if (headingName === Modules.PROJECT_ALLOCATION && assignedProjects === null) {
       dispatch(
         getProjectAllocationData({
-          pageNo: page + 1,
+          pageNo: 1,
           pageSize: event.target.value,
           sortBy: sortBy,
           sortDir: "ASC",
@@ -279,7 +280,7 @@ export const DataTable = ({
       dispatch(
         getProjectManagementData({
           projectId: projectId,
-          pageNo: page + 1,
+          pageNo: 1,
           pageSize: event.target.value,
           sortBy: sortBy,
           sortDir: "ASC",
