@@ -623,13 +623,14 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                     </MenuItem>
                   ))}
                 </TextField>
-                <TextField
-                  select
-                  sx={{minWidth: '15rem'}}
+                <Select
+                  IconComponent = {CalendarMonthRounded}
                   defaultValue={periodWeeks[6].startDate.format('DD MMM') + ' - ' + periodWeeks[6].endDate.format('DD MMM')}
+                  sx={{minWidth: '15rem'}}
+                  className={"select-date"}
                 >
                   {getDateItems(false)}
-                </TextField>
+                </Select>
                 <button 
                   className={"addBtn showDataBtn"}
                   onClick={()=>{
