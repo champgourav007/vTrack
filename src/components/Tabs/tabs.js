@@ -61,8 +61,8 @@ export default function BasicTabs(props) {
   };
 
   React.useEffect(() => {
-    setValue(0);
-    setStatus("All");
+    setValue(1);
+    setStatus("Active");
   }, [ props.headingName ]);
 
   React.useEffect(() => {
