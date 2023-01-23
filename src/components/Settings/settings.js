@@ -81,9 +81,8 @@ export function Settings() {
         data: convertIdToAzureId(selectedUsers),
       })
     );
-    setSelectedRole("");
+    setSelectedRole([]);
     setSelectedUsers([]);
-   
   };
 
   const setSearchDataHelper = (e) => {
@@ -154,6 +153,7 @@ export function Settings() {
               <Select
                 labelId="demo-multiple-checkbox-label"
                 id="demo-multiple-checkbox"
+                value={selectedRole}
                 onChange={(e) => setSelectedRole(e.target.value)}
                 input={<OutlinedInput label="Select Role" />}
                 renderValue={() => getRoles()}
