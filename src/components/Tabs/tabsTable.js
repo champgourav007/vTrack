@@ -354,15 +354,33 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           let date = moment(selectedPeriodWeek.startDate);
           if (tabName !== 'REPORTEES')
           for (let i = 0; i < 7; i++) {
-            temp.push({
-              id: moment(date).format("ddd DD"),
-              label: moment(date).format("ddd DD"),
-              date: moment(date).format(),
-              minWidth: 55,
-              sortDir: "",
-              align: "left",
-              isDate: true,
-            });
+            if(i===0) {              
+              let tempDate = moment(date).format()
+              let month = {
+                isDate: true,
+              };
+              month['day'] = moment(tempDate).format('MMM');
+              temp.push({
+                id: moment(date).format("ddd DD"),
+                label: moment(date).format("ddd DD"),
+                date: moment(date).format(),
+                minWidth: 55,
+                sortDir: "",
+                align: "left",
+                isDate: true,
+                ...month
+              });
+            } else {
+              temp.push({
+                id: moment(date).format("ddd DD"),
+                label: moment(date).format("ddd DD"),
+                date: moment(date).format(),
+                minWidth: 55,
+                sortDir: "",
+                align: "left",
+                isDate: true,
+              });
+            }
             date.add(1, "days");
           }
           temp.push(totalHrs);

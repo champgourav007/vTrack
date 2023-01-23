@@ -11,7 +11,7 @@ export const TopBar = () => {
   const [ activeUserRole, setActiveUserRole ] = useState('');
 
   useEffect(() => {
-    if(userData === null) dispatch(getUserDetails());
+    dispatch(getUserDetails());
   }, []);
 
   useEffect(() => {
