@@ -19,7 +19,11 @@ export const modulesState = {
   projectManagementData: null,
   settingTableData:null,
   mappedProjectManagementData:null,
-  assignedProjects: null
+  assignedProjects: null,
+  reportees: null,
+  selectedEmployeeId: null,
+  selectedProjectId: null,
+  detailedTimeSheetData: null
 }
 
 export const modulesReducer = (state = modulesState, action) => {
@@ -104,10 +108,30 @@ export const modulesReducer = (state = modulesState, action) => {
         ...state,
         allTasks: action.payload
       }
+    case TimeSheetType.SET_SELECTED_PROJECT_ID:
+      return {
+        ...state,
+        selectedProjectId: action.payload
+      }
+    case TimeSheetType.SET_SELECTED_EMPLOYEE_ID:
+      return {
+        ...state,
+        selectedEmployeeId: action.payload
+      }
     case DropdownType.SET_ASSIGNED_PROJECTS_DATA:
       return {
         ...state,
         assignedProjects: action.payload
+      }
+    case DropdownType.SET_REPORTEES:
+      return {
+        ...state,
+        reportees: action.payload
+      }
+    case TimeSheetType.SET_DETAILED_TIMESHEET_DATA:
+      return {
+        ...state,
+        detailedTimeSheetData: action.payload
       }
     default: return state;
   }

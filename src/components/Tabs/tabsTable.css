@@ -126,10 +126,40 @@
   min-width: 15rem;
 }
 
+.searchWrapperSpan{
+  font-family: "Montserrat";
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.25rem;
+  color: grey;
+}
+
 .searchWrapperText{
   font-family: "Montserrat";
   font-weight: 600;
   font-size: 1.25rem;
   line-height: 1.25rem;
+  color: #1773bc;
+}
+
+.totalWorkingHrs {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+  color: #1773bc;
+  font-family: "Montserrat";
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.25rem;
+  margin-right: 24rem;
+}
+
+.select-date .MuiSelect-select{
+  padding-top: 0.875rem;
+  padding-bottom: 0.875rem;
+}
+
+.select-date .MuiSvgIcon-root{
+  transform: none;
   color: #1773bc;
 }

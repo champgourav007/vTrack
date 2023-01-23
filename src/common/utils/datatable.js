@@ -2,57 +2,88 @@ import axios from "axios";
 import { ACCESS_TOKEN } from "../constants/local-storage-keys";
 import { Modules } from "../constants/sidebar";
 import { getLocalStorageItem } from "./local-storage";
+import Cookies from 'universal-cookie';
 
 export const UniqueIds = {
   ProjectAdmin: 'projectId',
   ClientAdmin: 'clientId',
   ProjectAllocation: 'projectAllocationId',
-  TimeSheet: 'timesheetDetailID',
+  Timesheet: 'timesheetDetailID',
   ProjectManagement: 'projectAllocationId'
 };
 
+const cookies = new Cookies();
+
 export const tableColumnsData = {
   'ProjectAdmin': [
-    { id: "projectName", label: "Project Name", minWidth: 100, type: 'textfield' },
-    { id: "clientName", label: "Client Name", minWidth: 100, type: 'select' },
-    { id: "type", label: "Type", minWidth: 80, type: 'select' },
-    { id: "sowStartDate", label: "SOW Start Date", minWidth: 100, type: 'date' },
-    { id: "sowEndDate", label: "SOW End Date", minWidth: 110, type: 'date' },
-    { id: 'projectManagerName', label: 'Veersa Project Manager', minWidth: 100, type: 'select' }
+    { id: "projectName", label: "Project Name", minWidth: 100, type: 'textfield', sortDir: '', align: 'left',isRequired: true },
+    { id: "clientName", label: "Client Name", minWidth: 100, type: 'select', sortDir: '', align: 'left',isRequired: true },
+    { id: "type", label: "Type", minWidth: 80, type: 'select', sortDir: '', align: 'left' },
+    { id: "sowStartDate", label: "SOW Start Date", minWidth: 100, type: 'date', sortDir: '', align: 'left' },
+    { id: "sowEndDate", label: "SOW End Date", minWidth: 110, type: 'date', sortDir: '', align: 'left' },
+    { id: 'projectManagerName', label: 'Veersa Project Manager', minWidth: 100, type: 'select', sortDir: '', align: 'left' },
+    {id: 'status', label:'Status', minWidth: 100, type: 'select', align: 'left'},
+    { id: 'approvers', label: 'Approvers', minWidth: 100, maxWidth: 120, type: 'multi-select', sortDir: '', align: 'left' },
+    { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left'}
   ],
   'ClientAdmin': [
-    { id: "clientName", label: "Client Name", minWidth: 100, type: 'textfield' },
-    { id: "location", label: "Client Location", minWidth: 80, type: 'select' },
-    { id: "currency", label: "Currency", minWidth: 80, type: 'select' },
-    { id: "msaStartDate", label: "MSA Start Date", minWidth: 100, type: 'date' },
-    { id: "msaEndDate", label: "MSA End Date", minWidth: 110, type: 'date' },
-    { id: "businessOwner", label: "Veersa Business Owner", minWidth: 100, type: 'select' },
-    { id: "paymentTerms", label: "Payment Terms", minWidth: 80, type: 'textfield' },
-    { id: "deliveryOfficer", label: "Veersa Delivery Officer", minWidth: 100, type: 'select' },
+    { id: "clientName", label: "Client Name", minWidth: 100, type: 'textfield', sortDir: '', align: 'left',isRequired: true },
+    { id: "location", label: "Client Location", minWidth: 80, type: 'select', sortDir: '', align: 'left' },
+    { id: "currency", label: "Currency", minWidth: 80, type: 'select', sortDir: '', align: 'left' },
+    { id: "msaStartDate", label: "MSA Start Date", minWidth: 100, type: 'date', sortDir: '', align: 'left' },
+    { id: "msaEndDate", label: "MSA End Date", minWidth: 110, type: 'date', sortDir: '', align: 'left' },
+    { id: "businessOwner", label: "Veersa Business Owner", minWidth: 100, type: 'select', sortDir: '', align: 'left' },
+    { id: "paymentTerms", label: "Payment Terms", minWidth: 80, type: 'textfield', sortDir: '', align: 'left' },
+    { id: "deliveryOfficer", label: "Veersa Delivery Officer", minWidth: 100, type: 'select', sortDir: '', align: 'left' },
+    { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left' }
   ],
   'ProjectAllocation': [
-    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select' },
-    { id: "projectName", label: "Project Name", minWidth: 100, type: 'select' },
-    { id: "projectManagerName", label: "Project Manager", minWidth: 80, type: 'select' },
-    { id: "startDate", label: "Start Date", minWidth: 100, type: 'date' },
-    { id: "endDate", label: "End Date", minWidth: 110, type: 'date' },
-    { id: 'allocation', label: 'Allocation', minWidth: 100, type: 'textfield' },
-    { id: 'status', label: 'Status', minWidth: 100, type: 'textfield' }
+    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select',  sortDir: '', align: 'left' },
+    { id: "projectName", label: "Project Name", minWidth: 100, type: 'select', sortDir: '', align: 'left' },
+    { id: "projectManagerName", label: "Project Manager", minWidth: 80, type: 'select', sortDir: '', align: 'left' },
+    { id: "startDate", label: "Start Date", minWidth: 100, type: 'date', sortDir: '', align: 'left' },
+    { id: "endDate", label: "End Date", minWidth: 110, type: 'date', sortDir: '', align: 'left' },
+    { id: 'allocation', label: 'Allocation', minWidth: 100, type: 'textfield', sortDir: '', align: 'left' },
+    // { id: 'status', label: 'Status', minWidth: 100, type: 'textfield' }
   ], 
   'ProjectManagement': [
-    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select' },
-    { id: 'startDate', label: 'Start Date', minWidth: 110, type: 'date' },
-    { id: "endDate", label: "End Date", minWidth: 120, type: 'date' },
-    { id: 'billRate', label: 'Bill Rate', minWidth: 80, type: 'textfield' },
-    { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, type: 'textfield' },
-    { id: 'billStatus', label: 'Bill Status', minWidth: 80, type: 'select' },
-    { id: 'costAllocation', label: 'Cost Allocation', minWidth: 100, type: 'textfield' },
+    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select', sortDir: '', align: 'left' },
+    { id: "site", label: "Offshore/Onshore", minWidth: 110, type: 'select', sortDir: '', align: 'left' },
+    { id: 'startDate', label: 'Start Date', minWidth: 110, type: 'date', sortDir: '', align: 'left' },
+    { id: "endDate", label: "End Date", minWidth: 120, type: 'date', sortDir: '', align: 'left' },
+    { id: 'billRate', label: 'Bill Rate', minWidth: 80, type: 'textfield', sortDir: '', align: 'left' },
+    { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, type: 'textfield', fieldType:'number', sortDir: '', align: 'left' },
+    { id: 'billStatus', label: 'Bill Status', minWidth: 80, type: 'select', sortDir: '', align: 'left' },
+    { id: 'costAllocation', label: 'Cost Allocation', minWidth: 100, type: 'textfield', sortDir: '', align: 'left' },
+    { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left'}
   ], 
-  'TimeSheet': [
-    { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
-    { id: "taskName", label: "Task", minWidth: 100, type: 'select' },
+  'Timesheet': [
+    { id: "projectName", label: "Project Name", minWidth: 110, type: 'select',isRequired: true },
+    { id: "task", label: "Task", minWidth: 100,maxWidth: 150, type: 'textfield',isRequired: true },
     { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
+    { id: "status", label: "Status", minWidth: 60, type: 'empty' },
   ], 
+  'MyTimeSheet': [
+    { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
+    { id: "task", label: "Task", minWidth: 100, type: 'textfield' },
+    { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
+    { id: "status", label: "Status", minWidth: 60, type: 'empty' },
+  ],
+  'Reportees': [
+    { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
+    { id: "task", label: "Task", minWidth: 100, type: 'textfield' },
+    { id: "viewDetails", label: "View Details", minWidth: 80, type: 'action' },
+    { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
+    { id: "status", label: "Status", minWidth: 60, type: 'empty' },
+  ],
+  'PendingApproval': [
+    { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
+    { id: "task", label: "Task", minWidth: 100, type: 'textfield' },
+    { id: "employeeName", label: "Employee Name", minWidth: 100, type: 'select' },
+    { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
+    { id: "status", label: "Status", minWidth: 60, type: 'empty' },
+    { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', align: 'left'}
+  ]
 };
 
 export const getTypeofColumn = (col, moduleName) => {
@@ -87,7 +118,9 @@ export const getMinWidth = (col, moduleName) => {
 };
 
 export const fileHandler = (file, id, name, headingName) => {
-  const accessToken = getLocalStorageItem(ACCESS_TOKEN);
+  // const accessToken = getLocalStorageItem(ACCESS_TOKEN);
+  const accessToken = cookies.get('userInformation');
+
   if (file) {
     const formData = new FormData();
     formData.append("file", file);
@@ -107,6 +140,7 @@ export const fileHandler = (file, id, name, headingName) => {
 };
 
 export const convertDateToDDMYYYY = (data) => {
+  if (!data) return ''; 
   let date = new Date(data.split("T")[0]);
   let MM = date.toLocaleString("default", {
     month: "long",
@@ -121,7 +155,7 @@ export const initialSort = {
   'Project Admin': 'projectName',
   'Project Allocation': 'projectName',
   'Project Management': 'projectName',
-}
+};
 
 export const getFullName = (firstName, lastName) => {
   let fullName = "";
@@ -132,4 +166,39 @@ export const getFullName = (firstName, lastName) => {
     fullName += " " + lastName
   }
   return fullName;
-}
+};
+
+export const getApprovers = (approvers) => {
+  let approverList = '';
+  for (let i = 0; i < approvers.length; i++) {
+    approverList += approvers[i].approverName;
+    if (i !== approvers.length - 1) {
+      approverList += ', ';
+    }
+  }
+  return approverList;
+};
+
+export const getApproversIds = (approvers) => {
+  let approverIds = '';
+  for (let i = 0; i < approvers.length; i++) {
+    approverIds += approvers[i].approverId;
+    if (i !== approvers.length - 1) {
+      approverIds += ',';
+    }
+  }
+  return approverIds;
+};
+
+export const getApproversWithIds = (approvers) => {
+  return (<div>{approvers.map((approver)=>(<div>{`${approver.approverName} (${approver.approverEmail})`}</div>))}</div>);
+};
+
+
+export const getTotalHrs = (timesheetData) => {
+  let totalHrs = 0;
+  for (const data of timesheetData) {
+    totalHrs += data.totalHrs
+  }
+  return totalHrs;
+};

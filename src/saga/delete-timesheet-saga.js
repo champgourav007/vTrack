@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { deleteTimeSheetDetails } from "../http/requests/timesheet";
-import { TimeSheetType, getTimeSheetData, setVtrackLoader } from "../redux/actions";
+import { TimeSheetType, getTimeSheetData, setVtrackLoader, getMyTimeSheetData } from "../redux/actions";
 import { toastOptions } from "../common/utils/toasterOptions";
 import { toast } from "react-toastify";
 
@@ -10,7 +10,7 @@ function* workerDeleteTimeSheetSaga({ payload }) {
     yield call(deleteTimeSheetDetails, payload.timeSheetDetailId);
     toast.success("Data Deleted", toastOptions)
     yield put(
-        getTimeSheetData({
+        getMyTimeSheetData({
           // periodWeek: periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM'),
           pageNo: 1,
           pageSize: 10,

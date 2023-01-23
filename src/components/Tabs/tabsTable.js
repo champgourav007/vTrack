@@ -1,33 +1,43 @@
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import moment from "moment";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import { Modules } from "../../common/constants/sidebar";
 import { searchIcon } from "../../common/icons";
 import {
   getLabel,
   getMinWidth,
+  getTotalHrs,
   tableColumnsData,
 } from "../../common/utils/datatable";
 import {
-  getAllProjectsData,
   getAllUserDetails,
-  getAllUsersData,
   getAssignedProjects,
   getClientAdminData,
   getClientsData,
   getListItems,
+  getMyTimeSheetData,
   getProjectAdminData,
   getProjectAllocationData,
   getProjectTasks,
+  getReportees,
   getTimeSheetData,
+  getTimeSheetReportee,
   saveTimeSheetPeriodData,
+  setSelectedEmployeeId,
+  setSelectedProjectId,
   setTimeSheetPeriodWeek,
+  submitPeriodForApproval
 } from "../../redux/actions";
 import { getProjectManagementData } from "../../redux/actions/project-management";
 import { DataTable } from "../DataTable/DataTable";
+import { toastOptions } from "../../common/utils/toasterOptions";
 import "./tabsTable.css";
+import { Select } from "@mui/material";
+import { CalendarMonth, CalendarMonthRounded, Person } from "@mui/icons-material";
+import { assignedProjectsSaga } from "../../saga/get-assigned-projects-saga";
 
 const getPeriods = () => {
   let date = moment().subtract(42, "days");
@@ -43,19 +53,9 @@ const getPeriods = () => {
 };
 
 export const TabsTable = ({ headingName, tabName, status, projectId }) => {
-  const {
-    clientAdminData,
-    projectAdminData,
-    projectAllocationData,
-    timeSheetData,
-    projectManagementData,
-    allProjectsData,
-    listItems,
-    allUsers,
-    clientsData
-  } = useSelector(({ MODULES }) => MODULES);
-  const { allUserDetails } = useSelector(({ USER }) => USER);
-  const { allTasks } = useSelector(({ MODULES }) => MODULES);
+  const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData, mappedProjectManagementData, selectedProjectId, reportees } = useSelector(({ MODULES }) => MODULES);
+  const { allUserDetails, userData } = useSelector(({ USER }) => USER);
+  const { allTasks, listItems, clientsData } = useSelector(({ MODULES }) => MODULES);
   const dispatch = useDispatch();
 
   const [isAddButtonClicked, setIsAddButtonClicked] = useState(false);
@@ -65,45 +65,91 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const [totalRecord, setTotalRecord] = useState(0);
   const [searchData, setSearchData] = useState("");
   const periodWeeks = getPeriods();
-  const [selectedPeriodWeek, setSelectedPriodWeek] = useState(
-    periodWeeks ? periodWeeks[0] : null
-  );
-  const [selectedProject, setSelectedProject] = useState({});
-  const [selectedEmployee, setSelectedEmployee] = useState({});
+  const [ selectedPeriodWeek, setSelectedPriodWeek ] = useState({
+    startDate : moment().startOf('isoweek'),
+    endDate : moment().day() === 0 ? moment().startOf('week') : moment().add(7,'days').startOf('week')
+  });
+  const [ selectedProject, setSelectedProject ] = useState({});
+  const [ selectedEmployee, setSelectedEmployee ] = useState({});
 
-  useEffect(() => {
-    if(timeSheetData===null && headingName === Modules.TIMESHEET) {
+  useEffect(()=>{
+    if(timeSheetData === null && headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
       dispatch(
         saveTimeSheetPeriodData({
-          periodWeek:
-            moment().subtract(42, "days").startOf("isoweek").format("DD MMM") +
-            " - " +
-            moment().subtract(35, "days").startOf("week").format("DD MMM"),
-          startDT: periodWeeks[0].startDate.format(),
-          endDT: periodWeeks[0].endDate.format(),
+          periodWeek: moment().startOf('isoweek').format('DD MMM') + ' - ' + moment().add(7,'days').startOf('week').format('DD MMM'),
+          startDT: moment().startOf('isoweek').format(),
+          endDT: moment().add(7,'days').startOf('week').format(),
         })
       );
+      dispatch(setTimeSheetPeriodWeek(moment().startOf('isoweek').format('DD MMM') + ' - ' + moment().add(7,'days').startOf('week').format('DD MMM')));  
+    }
+    if(headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
       dispatch(
-        setTimeSheetPeriodWeek(
-          moment().subtract(42, "days").startOf("isoweek").format("DD MMM") +
+        getMyTimeSheetData({
+          periodWeek:
+            selectedPeriodWeek.startDate.format("DD MMM") +
             " - " +
-            moment().subtract(35, "days").startOf("week").format("DD MMM")
-        )
+            selectedPeriodWeek.endDate.format("DD MMM"),
+        })
       );
     }
-  }, [headingName]);
+    else if(headingName === Modules.TIMESHEET){
+      if(tabName === 'REPORTEES'){
+        dispatch(
+          getTimeSheetReportee({
+            periodWeek:
+              selectedPeriodWeek.startDate.format("DD MMM") +
+              " - " +
+              selectedPeriodWeek.endDate.format("DD MMM")
+          })
+        );
+      }
+      else{
+        dispatch(
+          getTimeSheetData({
+            periodWeek:
+              selectedPeriodWeek.startDate.format("DD MMM") +
+              " - " +
+              selectedPeriodWeek.endDate.format("DD MMM"),
+            employeeId: null,
+            projectId: null
+          })
+        );
+      }
+    }
+  },[headingName,tabName]);
 
+  // useEffect(() => {
+  //   console.log("hello - 1");
+  //   if (headingName === Modules.PROJECT_MANAGEMENT) {
+  //     dispatch(
+  //       getProjectManagementData({
+  //         projectId: projectId,
+  //         pageNo: 1,
+  //         pageSize: 10,
+  //         sortBy: "projectName",
+  //         sortDir: "ASC",
+  //         searchData: searchData,
+  //       })
+  //     );
+  //   }
+  // }, [ tabName ]);
+  
   const handleSetColumnsData = (data) => {
     const temp = [];
-    let totalHrs = null;
+    let totalHrs = {};
+    let status = {};
+    if (headingName !== Modules.TIMESHEET) {
+      setColumns(tableColumnsData[headingName.replace(' ', '')]);
+    }
+    else {
     Object.keys(data).forEach((col) => {
-      if (col === "dateHours") {
+      if (col === "dateHours" && tabName !== 'REPORTEES') {
         data[col].forEach((dateHour, index) => {
           let month = {
             isDate: true,
           };
-          if (index === 0 || moment(dateHour.date).format("DD") === "01")
-            month["day"] = moment(dateHour.date).format("MMM");
+          if(index === 0 || moment(dateHour.date).format('DD') === '01') month['day'] = moment(dateHour.date).format('MMM');
           temp.push({
             id: moment(dateHour.date).format("ddd DD"),
             label: moment(dateHour.date).format("ddd DD"),
@@ -122,19 +168,32 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           sortDir: "DESC",
           align: "left",
         };
-      } else if (!col.includes("Id") && getLabel(col, headingName) !== "") {
+      }
+      else if(col === 'status' && headingName === Modules.TIMESHEET){
+        if(tabName === 'MY TIMESHEET' || tabName === 'REPORTEES'){
+          status = {
+            id: col,
+            label: getLabel(col, headingName),
+            minWidth: getMinWidth(col, headingName),
+            sortDir: "DESC",
+            align: "left"
+          };
+        }
+      }
+      else if (!col.includes('Id') && getLabel(col, headingName) !== '') {
         temp.push({
           id: col,
           label: getLabel(col, headingName),
           minWidth: getMinWidth(col, headingName),
           sortDir: "DESC",
           align: "left",
+          isRequired:true
         });
-      } else if (col === "employeeId") {
+      } else if (col === 'employeeId' && tabName !== "MY TIMESHEET") {
         temp.push({
-          id: "employeeName",
-          label: getLabel("employeeName", headingName),
-          minWidth: getMinWidth("employeeName", headingName),
+          id: 'employeeName',
+          label: tabName === 'PENDING APPROVAL' || tabName === 'REPORTEES' ? 'Employee Name' : getLabel('employeeName', headingName),
+          minWidth: tabName === 'PENDING APPROVAL' || tabName === 'REPORTEES' ? '12rem' : getMinWidth('employeeName', headingName),
           sortDir: "DESC",
           align: "left",
         });
@@ -143,40 +202,70 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     if (headingName === Modules.PROJECT_ALLOCATION) {
       setColumns([...temp]);
     } else {
-      totalHrs
-        ? setColumns([
+      if(totalHrs){
+        var removeByAttr = function(arr, attr, value){
+        var i = arr.length;
+        while(i--){
+          if( arr[i] 
+              && arr[i].hasOwnProperty(attr) 
+              && (arguments.length > 2 && arr[i][attr] === value ) ){ 
+
+              arr.splice(i,1);
+
+          }
+        }
+        return arr;
+}
+        if(tabName === 'REPORTEES'){
+          removeByAttr(temp, 'id', 'task');
+          removeByAttr(temp, 'id', 'projectName');
+          setColumns([
             ...temp,
-            totalHrs,
-            {
-              id: "actions",
-              label: "Actions",
-              minWidth: 100,
-              sortDir: "",
-              align: "left",
-            },
+            totalHrs,status,
+            { id: "viewDetails", label: "View Details", minWidth: 80, type: 'action' },
           ])
-        : setColumns([
-            ...temp,
+        }
+        else{
+          setColumns([
+            ...temp, totalHrs, 
             {
               id: "actions",
               label: "Actions",
-              minWidth: 100,
+              minWidth: 60,
               sortDir: "",
               align: "left",
-            },
+            },status,
           ]);
+        }
+      }
+      else{
+        setColumns([
+          ...temp,
+          {
+            id: "actions",
+            label: "Actions",
+            minWidth: 100,
+            sortDir: "",
+            align: "left",
+          },
+        ]);
+      }
+    }
     }
   };
 
   const setTableData = (tableData) => {
     handleSetColumnsData(tableData.data[0]);
-    // setRows(tableData.data);
     setTotalRecord(tableData.totalCount);
   };
 
   const handleSetRows = (tableData) => {
     let rowsData = [];
-    tableData.forEach((row) => {
+    let rowsToShow = [...tableData];
+    if(tabName === 'PENDING APPROVAL'){
+      rowsToShow = rowsToShow.filter(i => i.status === 'Submitted');
+    }
+    rowsToShow.forEach((row)=>{
       let rowData = {};
       Object.keys(row).forEach((col) => {
         if (col === "dateHours") {
@@ -208,7 +297,6 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         }
         onClick={() => {
           if (fromMyTimeSheet) {
-            setSelectedPriodWeek(periodWeek);
             dispatch(
               saveTimeSheetPeriodData({
                 periodWeek:
@@ -220,6 +308,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
               })
             );
           }
+          setSelectedPriodWeek(periodWeek);
           dispatch(
             setTimeSheetPeriodWeek(
               periodWeek.startDate.format("DD MMM") +
@@ -237,48 +326,33 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   };
 
   useEffect(() => {
-    if (
-      headingName === Modules.CLIENT_ADMIN &&
-      clientAdminData &&
-      clientAdminData.totalCount
-    ) {
+    if (headingName === Modules.CLIENT_ADMIN && clientAdminData && clientAdminData.totalCount) {
       setTableData(clientAdminData);
       setRows(clientAdminData.data);
-    } else if (
-      headingName === Modules.PROJECT_ADMIN &&
-      projectAdminData &&
-      projectAdminData.totalCount
-    ) {
+    } else if (headingName === Modules.PROJECT_ADMIN && projectAdminData && projectAdminData.totalCount) {
       setTableData(projectAdminData);
       setRows(projectAdminData.data);
-    } else if (
-      headingName === Modules.PROJECT_ALLOCATION &&
-      projectAllocationData &&
-      projectAllocationData.totalCount
-    ) {
+    } else if (headingName === Modules.PROJECT_ALLOCATION && projectAllocationData && projectAllocationData.totalCount) {
       setTableData(projectAllocationData);
       setRows(projectAllocationData.data);
-    } else if (
-      headingName === Modules.TIMESHEET &&
-      timeSheetData &&
-      timeSheetData.length
-    ) {
+    } else if (headingName === Modules.TIMESHEET && timeSheetData && timeSheetData.length) {
       handleSetColumnsData(timeSheetData[0]);
       setTotalRecord(timeSheetData.length);
       handleSetRows(timeSheetData);
-    } else if (
-      headingName === Modules.PROJECT_MANAGEMENT &&
-      projectManagementData &&
-      projectManagementData.totalCount
-    ) {
+    } else if (headingName === Modules.PROJECT_MANAGEMENT && projectManagementData && projectManagementData.totalCount) {
       setTableData(projectManagementData);
       setRows(projectManagementData.data);
     } else {
-      if (tableColumnsData[headingName.replace(" ", "")]) {
-        let temp = [...tableColumnsData[headingName.replace(" ", "")]];
-        if (headingName === Modules.TIMESHEET) {
+      if (tableColumnsData[headingName.replace(' ', '')]) {
+        let temp = [...tableColumnsData[headingName.replace(' ', '')]];
+        let status;
+        if(headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
+          status = temp.pop();
+        }
+        if(headingName === Modules.TIMESHEET){
           let totalHrs = temp.pop();
           let date = moment(selectedPeriodWeek.startDate);
+          if (tabName !== 'REPORTEES')
           for (let i = 0; i < 7; i++) {
             temp.push({
               id: moment(date).format("ddd DD"),
@@ -293,30 +367,29 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           }
           temp.push(totalHrs);
         }
-        setColumns([
-          ...temp,
-          {
-            id: "actions",
-            label: "Actions",
-            minWidth: 100,
-            sortDir: "",
-            align: "left",
-          },
-        ]);
+        if (headingName === Modules.TIMESHEET) {
+          setColumns([
+            ...temp,
+            {
+              id: "actions",
+              label: "Actions",
+              minWidth: 100,
+              sortDir: "",
+              align: "left",
+              isRequired:true
+            },
+          ])
+        }
+        else { 
+          setColumns([ ...temp ]); 
+        }
       } else {
         setColumns([]);
       }
       setRows([]);
       setTotalRecord(0);
     }
-  }, [
-    clientAdminData,
-    projectAdminData,
-    projectAllocationData,
-    projectManagementData,
-    timeSheetData,
-    headingName,
-  ]);
+  }, [ clientAdminData, projectAdminData, projectAllocationData, projectManagementData, timeSheetData, headingName ]);
 
   useEffect(() => {
     switch (headingName) {
@@ -366,16 +439,6 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           })
         );
         break;
-      case Modules.TIMESHEET:
-        dispatch(
-          getTimeSheetData({
-            periodWeek:
-              selectedPeriodWeek.startDate.format("DD MMM") +
-              " - " +
-              selectedPeriodWeek.endDate.format("DD MMM"),
-          })
-        );
-        break;
       default:
         break;
     }
@@ -388,184 +451,225 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     if ((headingName === Modules.PROJECT_ADMIN || headingName === Modules.CLIENT_ADMIN) && listItems === null) {
       dispatch(getListItems());
     }
-    if (headingName === Modules.PROJECT_ADMIN || headingName === Modules.TIMESHEET || headingName === Modules.PROJECT_MANAGEMENT) {
+    if (headingName === Modules.TIMESHEET || headingName === Modules.PROJECT_MANAGEMENT && projectManagementData === null) {
       dispatch(getAssignedProjects());
+    }
+    if(headingName === Modules.TIMESHEET && tabName !== 'MY TIMESHEET'){
+      if(selectedProjectId){
+        dispatch(getReportees(selectedProjectId));
+      }
+      else{
+        dispatch(getReportees(null));
+      }
     }
     setSearchData("");
     setIsAddButtonClicked(false);
     setIsEditButtonClicked(false);
+    if(headingName!==Modules.TIMESHEET){
+      dispatch(setSelectedEmployeeId(null));
+      dispatch(setSelectedProjectId(null))
+    }
   }, [ headingName ]);
 
   useEffect(() => {
-    if(allTasks === null) dispatch(getProjectTasks());
+    // if(allTasks === null) dispatch(getProjectTasks());
     if(allUserDetails === null) dispatch(getAllUserDetails());
   }, []);
 
   return (
-    <div className="tableDiv">
+    <div className={`tableDiv ${tabName === 'MY TIMESHEET' ? "timesheetTable" : ""}`}>
       <div className="searchHeader">
-        {headingName !== Modules.TIMESHEET && (
-          <div className="searchWrapper">
-            <img src={searchIcon} className="searchIcon" alt="" />
-            <input
-              className="searchBox"
-              type="search"
-              placeholder="Search"
-              onChange={setSearchDataHelper}
-            />
-          </div>
-        )}
-        {headingName === Modules.TIMESHEET ? (
-          tabName === "MY TIMESHEET" ? (
-            <>
-              {timeSheetData && timeSheetData.length ? (
-                <div className="searchWrapperText">
-                  TimeSheet Period Status : {timeSheetData[0].periodStatus}
-                </div>
-              ) : null}
-              <div className="button-flex">
+        {headingName !== Modules.TIMESHEET && <div className="searchWrapper">
+          <img src={searchIcon} className="searchIcon" alt="" />
+          <input
+            className="searchBox"
+            type="search"
+            placeholder="Search"
+            onChange={setSearchDataHelper}
+          />
+        </div>
+        }
+        {
+          headingName === Modules.TIMESHEET ? (
+            tabName === 'MY TIMESHEET' ? 
+              <>
+                {(timeSheetData && timeSheetData.length) ?
+                  <div className="searchWrapperText">
+                    <span className="searchWrapperSpan">Timesheet Period Status : </span>{timeSheetData[0].periodStatus}
+                  </div> : null
+                }
+                <div className="button-flex">
+                <Select
+                  IconComponent = {CalendarMonthRounded}
+                  defaultValue={periodWeeks[6].startDate.format('DD MMM') + ' - ' + periodWeeks[6].endDate.format('DD MMM')}
+                  sx={{minWidth: '15rem'}}
+                  className={"select-date"}
+                >{getDateItems(true)}
+                </Select>
+                  {/* <TextField
+                    select
+                    sx={{minWidth: '15rem'}}
+                    
+                    defaultValue={periodWeeks[6].startDate.format('DD MMM') + ' - ' + periodWeeks[6].endDate.format('DD MMM')}
+                  >
+                    {getDateItems(true)}
+                  </TextField> */}
+                  <button
+                    disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved' || timeSheetData[0].periodStatus === 'Submitted' || timeSheetData[0].periodStatus === 'Partially Approved'))}
+                    className={
+                      isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved' || timeSheetData[0].periodStatus === 'Submitted' || timeSheetData[0].periodStatus === 'Partially Approved'))
+                        ? "disableAddButton"
+                        : "addBtn"
+                    }
+                    onClick={() => setIsAddButtonClicked(true)}
+                  >
+                      Add
+                  </button>
+                  <button
+                    disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved' || timeSheetData[0].periodStatus === 'Submitted' || timeSheetData[0].periodStatus === 'Partially Approved'))}
+                    className={
+                      isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved' || timeSheetData[0].periodStatus === 'Submitted' || timeSheetData[0].periodStatus === 'Partially Approved') )
+                        ? "disableAddButton"
+                        : "addBtn"
+                    }
+                    onClick={()=>{
+                      let sum = 0;
+                      rows.forEach(row=>{
+                        if(row.status !== 'Rejected') sum+=parseInt(row.totalHrs);
+                      })
+                      if(sum >= 40) dispatch(submitPeriodForApproval());
+                      else toast.error("Total Hours must be greater than or equal to 40", toastOptions);
+                    }}
+                  >
+                    Submit For Approval
+                  </button>
+                </div> 
+              </>
+            :
+              <div className="pendingApprovalDiv">
                 <TextField
                   select
-                  sx={{ minWidth: "15rem" }}
-                  defaultValue={
-                    periodWeeks[0].startDate.format("DD MMM") +
-                    " - " +
-                    periodWeeks[0].endDate.format("DD MMM")
-                  }
+                  label={"Projects"}
+                  value={selectedProject.projectName ? selectedProject.projectName : ""}
+                  sx={{
+                    minWidth: '15rem',
+                    "& label": {
+                      lineHeight: '0.8rem'
+                    }
+                  }}
                 >
-                  {getDateItems(true)}
+                  {mappedProjectManagementData && mappedProjectManagementData.map(data=>
+                    data.projects.map((option) => (
+                      <MenuItem
+                        key={option.projectId}
+                        value={option.projectName}
+                        required
+                        onClick={() =>{
+                            setSelectedProject({
+                              projectId: option.projectId,projectName: option.projectName
+                            });
+                            dispatch(setSelectedProjectId(option.projectId));
+                          }
+                        }
+                      >
+                        {option.projectName}
+                      </MenuItem>
+                    ))
+                  )}
                 </TextField>
-                <button
-                  disabled={isAddButtonClicked || isEditButtonClicked}
-                  className={
-                    isAddButtonClicked || isEditButtonClicked
-                      ? "disableAddButton"
-                      : "addBtn"
-                  }
-                  onClick={() => setIsAddButtonClicked(true)}
+                <TextField
+                  select
+                  label={"Emp"}
+                  value={selectedEmployee.employeeName ? selectedEmployee.employeeName : ""}
+                  sx={{
+                    minWidth: '15rem',
+                    "& label": {
+                      lineHeight: '1rem',
+                      marginTop: '-0.1rem'
+                    }
+                  }}
                 >
-                  Add
-                </button>
-                <button
-                  disabled={isAddButtonClicked || isEditButtonClicked}
-                  className={
-                    isAddButtonClicked || isEditButtonClicked
-                      ? "disableAddButton"
-                      : "addBtn"
-                  }
-                >
-                  Submit For Approval
-                </button>
-              </div>
-            </>
-          ) : (
-            <div className="pendingApprovalDiv">
-              <TextField
-                select
-                label={"Projects"}
-                value={selectedProject.projectName}
-                sx={{
-                  minWidth: "15rem",
-                  "& label": {
-                    lineHeight: "0.8rem",
-                  },
-                }}
-              >
-                {allProjectsData &&
-                  allProjectsData.map((option) => (
-                    <MenuItem
-                      key={option.projectId}
-                      value={option.projectName}
-                      onClick={() =>
-                        setSelectedProject({
-                          projectId: option.projectId,
-                          projectName: option.projectName,
-                        })
-                      }
-                    >
-                      {option.projectName}
-                    </MenuItem>
-                  ))}
-              </TextField>
-              <TextField
-                select
-                label={"Emp"}
-                value={selectedEmployee.employeeName}
-                sx={{
-                  minWidth: "15rem",
-                  "& label": {
-                    lineHeight: "1rem",
-                    marginTop: "-0.1rem",
-                  },
-                }}
-              >
-                {allUserDetails &&
-                  allUserDetails.data.map((option) => (
+                  {reportees && reportees.map((option) => (
                     <MenuItem
                       key={option.id}
                       value={`${option.firstName} ${option.lastName}`}
-                      onClick={() =>
-                        setSelectedEmployee({
-                          employeeId: option.projectId,
-                          employeeName: `${option.firstName} ${option.lastName}`,
-                        })
+                      onClick={() =>{
+                          setSelectedEmployee({
+                            employeeId: option.id,employeeName: `${option.firstName} ${option.lastName}`
+                          });
+                          dispatch(setSelectedEmployeeId(option.id));
+                        }
                       }
                     >
                       {`${option.firstName} ${option.lastName}`}
                     </MenuItem>
                   ))}
-              </TextField>
-              <TextField
-                select
-                sx={{ minWidth: "15rem" }}
-                defaultValue={
-                  periodWeeks[0].startDate.format("DD MMM") +
-                  " - " +
-                  periodWeeks[0].endDate.format("DD MMM")
+                </TextField>
+                <TextField
+                  select
+                  sx={{minWidth: '15rem'}}
+                  defaultValue={periodWeeks[6].startDate.format('DD MMM') + ' - ' + periodWeeks[6].endDate.format('DD MMM')}
+                >
+                  {getDateItems(false)}
+                </TextField>
+                <button 
+                  className={"addBtn showDataBtn"}
+                  onClick={()=>{
+                    if(tabName === 'REPORTEES'){
+                      dispatch(
+                        getTimeSheetReportee({
+                          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM')
+                        })
+                      );
+                    }
+                    else{
+                      dispatch(
+                        getTimeSheetData({
+                          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
+                          employeeId: selectedEmployee.employeeId,
+                          projectId: selectedProject.projectId
+                        })
+                      );
+                    }
+                  }}
+                >
+                  Show Data
+                </button>
+                <button 
+                  className={(selectedEmployee.employeeId || selectedProject.projectId) ? "addBtn showDataBtn" : "disableAddButton"}
+                  onClick={()=>{
+                    setSelectedEmployee({});
+                    dispatch(setSelectedEmployeeId(null));
+                    setSelectedProject({});
+                    dispatch(setSelectedProjectId(null));
+                  }}
+                >
+                  Clear Selection
+                </button>
+              </div>
+          ) : headingName !== Modules.PROJECT_ALLOCATION ? (
+            <button
+                disabled={isAddButtonClicked || isEditButtonClicked}
+                className={
+                  isAddButtonClicked || isEditButtonClicked
+                    ? "disableAddButton"
+                    : "addBtn"
                 }
+                onClick={() => setIsAddButtonClicked(true)}
               >
-                {getDateItems(false)}
-              </TextField>
-              <button
-                className={"addBtn showDataBtn"}
-                onClick={() => {
-                  dispatch(
-                    getTimeSheetData({
-                      periodWeek:
-                        selectedPeriodWeek.startDate.format("DD MMM") +
-                        " - " +
-                        selectedPeriodWeek.endDate.format("DD MMM"),
-                      employeeId: selectedEmployee.employeeId,
-                      projectId: selectedProject.projectId,
-                    })
-                  );
-                }}
-              >
-                Show Data
+                <div
+                  className={
+                    isAddButtonClicked || isEditButtonClicked
+                      ? "disableAddButtonText"
+                      : "btnText"
+                  }
+                >
+                  Add
+                </div>
               </button>
-            </div>
-          )
-        ) : headingName !== Modules.PROJECT_ALLOCATION ? (
-          <button
-            disabled={isAddButtonClicked || isEditButtonClicked}
-            className={
-              isAddButtonClicked || isEditButtonClicked
-                ? "disableAddButton"
-                : "addBtn"
-            }
-            onClick={() => setIsAddButtonClicked(true)}
-          >
-            <div
-              className={
-                isAddButtonClicked || isEditButtonClicked
-                  ? "disableAddButtonText"
-                  : "btnText"
-              }
-            >
-              Add
-            </div>
-          </button>
-        ) : null}
+          ) : null
+        }
+        
       </div>
       <DataTable
         rows={rows}
@@ -583,6 +687,11 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         selectedPeriodWeek={selectedPeriodWeek}
         projectId={projectId}
       />
+      { headingName === Modules.TIMESHEET && tabName === "MY TIMESHEET" && timeSheetData && timeSheetData.length ?
+        <div className="totalWorkingHrs">
+          {`Total Hours: ${getTotalHrs(timeSheetData)}`}
+        </div> : null
+      }
     </div>
   );
 };

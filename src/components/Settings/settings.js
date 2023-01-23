@@ -19,6 +19,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import { SettingsTable } from "./settingsTable";
 import { searchIcon } from "../../common/icons";
+import { getFullName } from "../../common/utils/datatable";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -74,8 +75,6 @@ export function Settings() {
     return tempUsers;
   };
   const submitHandler = () => {
-    console.log(selectedRole);
-    console.log(selectedUsers);
     dispatch(
       saveUserRoleData({
         roleID: selectedRole.roleID,
@@ -91,6 +90,11 @@ export function Settings() {
     if(e.target.value.length > 2 || e.target.value.length === 0) {
       setSearchData(e.target.value)
     }
+  };
+
+  const getRoles = () => {
+    if (selectedRole) return selectedRole.roleName;
+    return selectedRole;
   }
 
   useEffect(() => {
@@ -134,23 +138,8 @@ export function Settings() {
               >
                 {userData.map((user) => (
                   <MenuItem key={user.id} value={user} className="no-left-margin">
-                    <Checkbox
-                      checked={
-                        selectedUsers.findIndex(
-                          (person) => person.id === user.id
-                        ) > -1
-                      }
-                    />
-                    <ListItemText
-                      primary={
-                        user.firstName +
-                        " " +
-                        user.lastName +
-                        " (" +
-                        user.email +
-                        ")"
-                      }
-                    />
+                    <Checkbox checked={ selectedUsers.findIndex( (person) => person.id === user.id ) > -1 } />
+                    <ListItemText primary={ getFullName(user.firstName, user.lastName) + " (" +user.email + ")" } />
                   </MenuItem>
                 ))}
               </Select>
@@ -167,6 +156,7 @@ export function Settings() {
                 id="demo-multiple-checkbox"
                 onChange={(e) => setSelectedRole(e.target.value)}
                 input={<OutlinedInput label="Select Role" />}
+                renderValue={() => getRoles()}
               >
                 {rolesData.map((roles) => (
                   <MenuItem key={roles.roleID} value={roles}>
@@ -178,7 +168,7 @@ export function Settings() {
           </div>
         </div>
         <div className="buttonClass">
-          <Button variant="contained" onClick={submitHandler} 
+          <Button variant="contained" disabled={!(selectedUsers && selectedUsers.length && selectedRole)} onClick={submitHandler} 
     className="addUserBtn">
             Add Role
           </Button>

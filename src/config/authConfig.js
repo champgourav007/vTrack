@@ -1,3 +1,26 @@
+import {
+  PublicClientApplication, EventType
+} from '@azure/msal-browser';
+import { ACCESS_TOKEN, ACCOUNT, EXPIRES_ON } from '../common/constants/local-storage-keys';
+import { getLocalStorageItem, setLocalStorageItem } from '../common/utils/local-storage';
+import { setExpirationTimeout } from './msal-expiration';
+
+let USE_SILENT_MODE = false;
+
+function abandonSilentMode() {
+  console.log('MSAL back to NOT silent SSO'); // TODO: remove after tests
+  USE_SILENT_MODE = false;
+}
+
+function resetSilentMode() {
+  USE_SILENT_MODE = (window?.env?.SSO_SILENT_LOGIN_ACTIVE || '').toLowerCase() === 'true';
+}
+
+resetSilentMode();
+
+export function msalUseSilentMode() {
+  return USE_SILENT_MODE;
+}
 export const msalConfig = {
   auth: {
     clientId: process.env.REACT_APP_CLIENT_ID,
@@ -15,12 +38,12 @@ export const loginRequest = {
 };
 
 export const logoutRequest = (instance) => {
-  const userInfo = JSON.parse(sessionStorage.getItem('userInformation'));
+  const userInfo = JSON.parse(localStorage.getItem('userInformation'));
   const homeAccountId = userInfo.account.homeAccountId;
   return {     
     account: instance.getAccountByHomeId(homeAccountId),     
-    mainWindowRedirectUri: "your_app_main_window_redirect_uri",     
-    postLogoutRedirectUri: "your_app_logout_redirect_uri",   
+    mainWindowRedirectUri: "https://localhost:3000",     
+    postLogoutRedirectUri: "https://localhost:3000",   
   }
 };
 
@@ -28,3 +51,45 @@ export const logoutRequest = (instance) => {
 export const graphConfig = {
   graphMeEndpoint: "Enter_the_Graph_Endpoint_Here/v1.0/me",
 };
+
+export const msalClient = new PublicClientApplication(msalConfig);
+
+msalClient.addEventCallback((message) => {
+  const { eventType, payload } = message;
+  
+  const successEvents = [
+    EventType.ACQUIRE_TOKEN_SUCCESS,
+    EventType.LOGIN_SUCCESS,
+    EventType.SSO_SILENT_SUCCESS,
+  ];
+  if (successEvents.includes(eventType)) {
+    const data = payload;
+    if (data && data.account) {
+      resetSilentMode();
+      const expiresOnFromResponse = String(data.expiresOn);
+      setLocalStorageItem(ACCESS_TOKEN, data.accessToken);
+      setLocalStorageItem(ACCOUNT, JSON.stringify(data.account));
+      setLocalStorageItem(EXPIRES_ON, expiresOnFromResponse);
+      setExpirationTimeout(msalClient, loginRequest, expiresOnFromResponse);
+    }
+  }
+
+  if (eventType === EventType.SSO_SILENT_FAILURE) {
+    // There is also can be not only InteractionRequiredAuthError but another type of error
+    // after which is better to switch to normal flow
+    abandonSilentMode();
+  }
+});
+
+window.addEventListener('storage', ({ key, newValue, oldValue }) =>{
+  if (key === ACCESS_TOKEN && !newValue && oldValue) {
+    // removing ACCESS_TOKEN from storage means that user logged out from another tab
+    // user should be redirected to the auth page
+    window.location.reload(true);
+  }
+});
+
+export function checkMsalExpiration() {
+  const expiresOnFromStorage = getLocalStorageItem(EXPIRES_ON);
+  expiresOnFromStorage && setExpirationTimeout(msalClient, loginRequest, expiresOnFromStorage);
+}

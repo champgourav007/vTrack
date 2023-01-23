@@ -1,4 +1,5 @@
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import { Checkbox, FormControl, InputLabel, ListItemText, OutlinedInput, Select, styled } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
@@ -11,7 +12,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
-import Tooltip from "@mui/material/Tooltip";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -24,9 +25,13 @@ import {
   AddDisableIcon,
   AddEnableIcon, approveIcon, crossIcon, deleteIcon, downloadIcon, editIcon, rejectIcon, TableArrows
 } from "../../common/icons";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import {
   convertDateToDDMYYYY,
   fileHandler,
+  getApprovers,
+  getApproversIds,
+  getApproversWithIds,
   getFullName,
   getLabel,
   getTypeofColumn,
@@ -48,10 +53,30 @@ import {
   updateClientAdminData
 } from "../../redux/actions/client-admin";
 import { getProjectManagementData, saveProjectManagementData, updateProjectManagementData } from "../../redux/actions/project-management";
-import { deleteTimeSheetData, getTimeSheetData, saveTimeSheetData, updateTimeSheetData, updateTimeSheetStatus } from "../../redux/actions/timesheet";
+import { deleteTimeSheetData, saveTimeSheetData, updateTimeSheetData, updateTimeSheetStatus } from "../../redux/actions/timesheet";
 import DialogBox from "../DialogBox/dialogBox";
 import Loader from "../Loader";
 import "./DataTable.css";
+import { TimeSheetDetailView } from "../TimeSheetDetailView/timeSheetDetailView";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 300,
+    },
+  },
+};
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    fontSize: theme.typography.pxToRem(18),
+  },
+}));
 
 export const DataTable = ({
   headingName,
@@ -69,31 +94,41 @@ export const DataTable = ({
   selectedPeriodWeek,
   projectId
 }) => {
-  const { clientsData, allTasks, listItems, allUsers, allProjectsData, assignedProjects } =
+  const { clientsData, allTasks, listItems, assignedProjects } =
     useSelector(({ MODULES }) => MODULES);
+  
   const { allUserDetails } = useSelector(({ USER }) => USER);
   const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
   const dispatch = useDispatch();
-
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [newRowAdded, setNewRowAdded] = useState(initialData(headingName,selectedPeriodWeek));
   const [sortBy, setSortBy] = useState(initialSort[headingName]);
-
   const [rowToBeUpdated, setRowToBeUpdated] = useState({});
   const [fileState, setFileState] = useState("");
   const [showDialogBox, setShowDialogBox] = useState(false);
   const [deleteRow, setDeleteRow] = useState();
   const [dialogDeleteButtonClicked, setDialogDeleteButtonClicked] =
     useState(false);
+  const [ viewDetails, setViewDetails ] = useState(false);
+  const [ selectedEmpId, setSelectedEmpId ] = useState('');
+  const setDialogBoxText = () => {
+    if(headingName === Modules.PROJECT_ADMIN) {
+      return 'Delete action on Project  will impact all active allocations for this project.  Are you sure you want to delete?';
+    }
+    else if(headingName === Modules.CLIENT_ADMIN) {
+      return 'Delete action on Client data will delete all active projects for this client. Are you sure you want to delete?';
+    }
+    return 'Are you sure you want to Delete?';
+  }
 
   const saveDataHandler = () => {
-    console.log(isEditButtonClicked)
     if (!isEditButtonClicked) {
       if (headingName === Modules.CLIENT_ADMIN) {
         dispatch(saveClientAdminData(newRowAdded));
       } else if (headingName === Modules.PROJECT_ADMIN) {
-        dispatch(saveProjectAdminData(newRowAdded));
+        let approverIds = getApproversIds(newRowAdded.approvers);
+        dispatch(saveProjectAdminData({ ...newRowAdded, projectApprovers: approverIds}));
       } else if (headingName === Modules.PROJECT_MANAGEMENT) {
         dispatch(saveProjectManagementData({ ...newRowAdded, projectId: projectId }));
       } 
@@ -118,7 +153,8 @@ export const DataTable = ({
             headingName
           );
         }
-        dispatch(updateProjectAdminData(newRowAdded));
+        let approverIds = getApproversIds(newRowAdded.approvers);
+        dispatch(updateProjectAdminData({ ...newRowAdded, projectApprovers: approverIds}));
       } else if (headingName === Modules.PROJECT_MANAGEMENT) {
         dispatch(updateProjectManagementData({ ...newRowAdded, projectId: projectId }));
       } 
@@ -134,7 +170,7 @@ export const DataTable = ({
             date: key,
             hours: newRowAdded[key]
           });
-          if(newRowAdded[key] !== "") totalHrs += parseInt(newRowAdded[key]);
+          if(newRowAdded[key] !== "") totalHrs += parseFloat(newRowAdded[key]);
         }
         else{
           restProps[key] = newRowAdded[key];
@@ -181,7 +217,7 @@ export const DataTable = ({
           searchData: searchData,
         })
       );
-    } else if (headingName === Modules.PROJECT_ALLOCATION) {
+    } else if (headingName === Modules.PROJECT_ALLOCATION && assignedProjects === null) {
       dispatch(
         getProjectAllocationData({
           pageNo: newPage + 1,
@@ -201,13 +237,6 @@ export const DataTable = ({
           sortBy: sortBy,
           sortDir: "ASC",
           searchData: searchData,
-        })
-      );
-    }
-    else if (headingName === Modules.TIMESHEET) {
-      dispatch(
-        getTimeSheetData({
-          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
         })
       );
     }
@@ -235,7 +264,7 @@ export const DataTable = ({
           searchData: searchData,
         })
       );
-    } else if (headingName === Modules.PROJECT_ALLOCATION) {
+    } else if (headingName === Modules.PROJECT_ALLOCATION && assignedProjects === null) {
       dispatch(
         getProjectAllocationData({
           pageNo: page + 1,
@@ -257,17 +286,10 @@ export const DataTable = ({
           searchData: searchData,
         })
       );
-    } else if (headingName === Modules.TIMESHEET) {
-      dispatch(
-        getTimeSheetData({
-          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
-        })
-      );
     }
   };
 
   const inputFieldHandler = (event, col) => {
-    console.log(col,event.target.value,newRowAdded)
     setNewRowAdded({ ...newRowAdded, [col]: event.target.value });
   };
 
@@ -304,7 +326,7 @@ export const DataTable = ({
           searchData: searchData,
         })
       );
-    } else if (headingName === Modules.PROJECT_ALLOCATION) {
+    } else if (headingName === Modules.PROJECT_ALLOCATION && assignedProjects === null) {
       dispatch(
         getProjectAllocationData({
           pageNo: page + 1,
@@ -326,13 +348,17 @@ export const DataTable = ({
           searchData: searchData,
         })
       );
-    } else if (headingName === Modules.TIMESHEET) {
-      dispatch(
-        getTimeSheetData({
-          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
-        })
-      );
     }
+  };
+
+  const handleChange = (event) => {
+    let tempList = event.target.value;
+    let idx = tempList.findIndex(ele => ele.approverId === tempList[tempList.length - 1].approverId);
+    if (idx !== tempList.length - 1) {
+      tempList.pop();
+      tempList.splice(idx, 1);
+    }
+    setNewRowAdded({ ...newRowAdded, approvers: tempList });
   };
 
   const displayMenuItem = (col) => {
@@ -352,7 +378,7 @@ export const DataTable = ({
           {option.name}
         </MenuItem>
       ));
-    } else if(col === "currency" || col === "paymentTerms" || col === 'location') {
+    } else if(col === "currency" || col === "paymentTerms" || col === 'location' || col === 'status') {
       return listItems && listItems[col].map((option) => (
         <MenuItem
           key={option.id}
@@ -431,33 +457,34 @@ export const DataTable = ({
         allUserDetails.data.map((option) => (
           <MenuItem
             key={option.id}
-            value={`${option.firstName} ${option.lastName}`}
+            value={getFullName(option.firstName, option.lastName)}
             onClick={() =>
               setNewRowAdded({
                 ...newRowAdded,
-                [col]: `${option.firstName} ${option.lastName}`,
+                [col]: getFullName(option.firstName, option.lastName),
                 employeeId: option.id,
               })
             }
           >
-            {`${option.firstName} ${option.lastName}`}
+            {`${getFullName(option.firstName, option.lastName)} (${option.email})`}
           </MenuItem>
         ))
       );
     } else if (col === "projectName") {
       return assignedProjects && assignedProjects.map((option) => (
         <MenuItem
-          key={option.id}
-          value={option.name}
+          key={option.projectId}
+          value={option.projectName}
+          required={col.isRequired}
           onClick={() =>
             setNewRowAdded({
               ...newRowAdded,
-              [col]: option.name,
-              projectId: option.id,
+              [col]: option.projectName,
+              projectId: option.projectId,
             })
           }
         >
-          {option.name}
+          {option.projectName}
         </MenuItem>
       ))
     } else if (col === "taskName"){
@@ -500,6 +527,7 @@ export const DataTable = ({
             label={getLabel(col.id, headingName)}
             placeholder=""
             value={newRowAdded[col.id]}
+            required={col.isRequired}
             onChange={(e) => inputFieldHandler(e, col.id)}
             sx={{
               "& label": {
@@ -509,22 +537,51 @@ export const DataTable = ({
           />
         </TableCell>
       );
-    }
-    else if (getTypeofColumn(col.id, headingName) === "textfield") {
+    } else if (getTypeofColumn(col.id, headingName) === "textfield") {
       return (
         <TableCell key={col.id} style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
           <TextField
             id="outlined-required"
+            inputProps={{ maxLength: 100 }}
+            type={col.fieldType}
             label={getLabel(col.id, headingName)}
             placeholder=""
             value={newRowAdded[col.id]}
+            required={col.isRequired}
             sx={{
-            "& label": {
-              lineHeight: '0.8rem'
-            }
-          }}
+              "& label": {
+                lineHeight: '0.8rem'
+              }
+            }}
+            disabled={col.id === 'costAllocation'? true : false}
             onChange={(e) => inputFieldHandler(e, col.id)}
           />
+        </TableCell>
+      );
+    } else if (getTypeofColumn(col.id, headingName) === "multi-select") {
+      return (
+        <TableCell key={col.id}  style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
+          <FormControl sx={{ m: 1, width: 120, margin:'0' }}>
+              <InputLabel id="demo-multiple-checkbox-label">Approvers</InputLabel>
+              <Select
+                labelId="demo-multiple-checkbox-label"
+                id="demo-multiple-checkbox"
+                multiple
+                value={newRowAdded[col.id]}
+                onChange={handleChange}
+                required={col.isRequired}
+                input={<OutlinedInput label="Approvers" />}
+                renderValue={() => getApprovers(newRowAdded[col.id])}
+                MenuProps={MenuProps}
+              >
+                {allUserDetails && allUserDetails.data.map(user => ({approverId: user.id, approverName: getFullName(user.firstName, user.lastName), approverEmail: user.email})).map((approver, index) => (
+                  <MenuItem key={index} value={approver} className="no-left-margin">
+                    <Checkbox checked={ newRowAdded[col.id].findIndex(app => app.approverId === approver.approverId) > -1 } />
+                    <ListItemText primary={`${approver.approverName} (${approver.approverEmail})`} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
         </TableCell>
       );
     } else if (getTypeofColumn(col.id, headingName) === "select") {
@@ -535,6 +592,7 @@ export const DataTable = ({
             select
             label={getLabel(col.id, headingName)}
             value={newRowAdded[col.id]}
+            required={col.isRequired}
             sx={{
             "& label": {
               lineHeight: '0.8rem'
@@ -557,6 +615,7 @@ export const DataTable = ({
                 setNewRowAdded({ ...newRowAdded, [col.id]: newValue });
               }}
               placeholder="Date"
+              required={col.isRequired}
               renderInput={(params) => <TextField {...params} error={false} />}
             />
           </LocalizationProvider>
@@ -577,22 +636,29 @@ export const DataTable = ({
                 accept="*"
                 type="file"
                 onChange={(e) => setFileState(e.target.files[0])}
+                required={col.isRequired}
               />
               <AttachFileIcon />
             </IconButton>
             }
-            {newRowAdded.clientName !== "" ? (
-              <img
-                src={AddEnableIcon}
-                onClick={saveDataHandler}
-                className="cursorPointer editDeleteIcon"
-                alt=""
-              />
-            ) : (
-              <button disable className="buttonBackgroundBorder">
-                <img src={AddDisableIcon} className="editDeleteIcon" alt="" />
-              </button>
-            )}
+            {
+              (newRowAdded.clientName === "" || 
+                (headingName===Modules.TIMESHEET && 
+                  (newRowAdded.projectName==="" || newRowAdded.task==="" || !isDateAdded())
+                )
+              ) ? (
+                <button disable className="buttonBackgroundBorder">
+                  <img src={AddDisableIcon} className="editDeleteIcon" alt="" />
+                </button>
+              ) : (
+                <img
+                  src={AddEnableIcon}
+                  onClick={saveDataHandler}
+                  className="cursorPointer editDeleteIcon"
+                  alt=""
+                />
+              )
+            }
             <img
               src={crossIcon}
               className="cursorPointer editDeleteIcon"
@@ -604,22 +670,56 @@ export const DataTable = ({
       );
     }
     else if(col.isDate){
-      return (
-        <TableCell key={col.id}>
-          <TextField
-            label={"Time"}
-            type="number"
-            value={newRowAdded[col.date] === '-' ? 0 : newRowAdded[col.date]}
-            style={{maxWidth:'6rem'}}
-            sx={{
-            "& label": {
-              lineHeight: '0.8rem'
-            }
-          }}
-            onChange={(e) => inputFieldHandler(e, col.date)}
-          />
-        </TableCell>
-      );
+      let date = Object.keys(newRowAdded).find(i=>moment(i).isValid() && moment(i).format('DD') === moment(col.date).format('DD'));
+      const selctedProjectForUser = newRowAdded.projectId !== undefined ? newRowAdded.projectId : newRowAdded.projectID;
+      let startDate = null;
+      let endDate = null;
+      assignedProjects.forEach((data) => {
+        if(data.projectId === selctedProjectForUser){
+          startDate = data.sowStartDate;
+          endDate = data.sowEndDate;
+        }
+      });
+
+      if(date >= startDate && date <= endDate)
+      {
+        return (
+          <TableCell key={col.id} className="timeField">
+            <TextField
+              label={"Time"}
+              type="number"
+              value={newRowAdded[date] === '-' ? 0 : newRowAdded[date]}
+              style={{maxWidth:'6rem'}}
+              required={col.isRequired}
+              sx={{
+              "& label": {
+                lineHeight: '0.8rem'
+              }
+            }}
+              onChange={(e) => inputFieldHandler(e, date)}
+            />
+          </TableCell>
+        );
+      }else{
+        return (
+          <TableCell key={col.id} className="timeField">
+            <TextField
+              label={"Time"}
+              type="number"
+              disabled
+              value={0}
+              style={{maxWidth:'6rem'}}
+              required={col.isRequired}
+              sx={{
+              "& label": {
+                lineHeight: '0.8rem'
+              }
+            }}
+              onChange={(e) => inputFieldHandler(e, date)}
+            />
+          </TableCell>
+        );
+      }
     }
     else if(getTypeofColumn(col.id, headingName) === "empty"){
       return (
@@ -649,13 +749,17 @@ export const DataTable = ({
         }
       })
       rowData['timesheetDetailID'] = rows[idx]['timesheetDetailID'];
-      console.log(rowData);
       setRowToBeUpdated(rowData);
       setNewRowAdded(rowData);
     }
     else{
       setRowToBeUpdated(rows[idx]);
-      setNewRowAdded(rows[idx]);
+      if (rows[idx].employeeId) {
+        setNewRowAdded({ ...rows[idx], employeeName: getEmployeeName(rows[idx].employeeId)});
+      }
+      else {
+        setNewRowAdded(rows[idx]);
+      }
     }
     setIsEditButtonClicked(true);
   };
@@ -672,13 +776,12 @@ export const DataTable = ({
   };
 
   const getEmployeeName = (id) => {
-    console.log(id);
     let employeeName = "";
     allUserDetails &&
       allUserDetails.data.length &&
       allUserDetails.data.forEach((user) => {
         if (user.id === id) {
-          employeeName = `${user.firstName} ${user.lastName}`;
+          employeeName = getFullName(user.firstName, user.lastName);
         }
       });
     return employeeName;
@@ -687,6 +790,19 @@ export const DataTable = ({
   const dialogBoxHandler = (rowData) => {
     setDeleteRow(rowData);
     setShowDialogBox(true);
+  };
+
+  const isDateAdded = () =>{
+    let isAdded = false;
+    Object.keys(newRowAdded).forEach(key=>{
+      if(moment(key).isValid() && newRowAdded[key] !== "") isAdded = true;
+    });
+    return isAdded;
+  };
+
+  const handleViewDetails = (empId) => {
+    setViewDetails(true);
+    setSelectedEmpId(empId);
   };
 
   React.useEffect(() => {
@@ -713,10 +829,12 @@ export const DataTable = ({
   return (
     <>
       {vTrackLoader && <Loader />}
+      <TimeSheetDetailView viewDetails={viewDetails} setViewDetails={setViewDetails} selectedEmpId={selectedEmpId} selectedPeriodWeek={selectedPeriodWeek} />
       {showDialogBox && (
         <DialogBox
           setShowDialogBox={setShowDialogBox}
           setDialogDeleteButtonClicked={setDialogDeleteButtonClicked}
+          header={setDialogBoxText()}
         />
       )}
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -726,33 +844,37 @@ export const DataTable = ({
               <TableRow>
                 {columns.map(
                   (column) =>
-                    column.id !== UniqueIds[headingName.replace(" ", "")] && (
-                      <TableCell
-                        key={column.id}
-                        align={column.align}
-                        style={{ minWidth: column.minWidth, position: 'relative',maxWidth:column.maxWidth ? column.maxWidth : 'auto'  }}
-                        sx={{
-                          backgroundColor: "#1773bc0d",
-                          color: "#1773bc",
-                          fontWeight: 700,
-                        }}
-                      >
-                        <div className="table-header-cell">
-                          <span>{column.label}</span>
-                          {!column.isDate && headingName !== Modules.TIMESHEET && column.id !== 'actions' &&
-                            <img
-                              src={TableArrows}
-                              alt=""
-                              className="tableArrows"
-                              onClick={() => handleSortBy(column.id)}
-                            />
-                          }
-                          {column.day && 
-                            <div className="month">{column.day}</div>
-                          }
-                        </div>
-                      </TableCell>
-                    )
+                    { 
+                      if(!column.id) return null;
+                      return column.id !== UniqueIds[headingName.replace(" ", "")] && (
+                        <TableCell
+                          key={column.id}
+                          align={column.align}
+                          style={{ minWidth: column.minWidth, position: 'relative',maxWidth:column.maxWidth ? column.maxWidth : 'auto'  }}
+                          sx={{
+                            backgroundColor: "#1773bc0d",
+                            color: "#1773bc",
+                            fontWeight: 700,
+                          }}
+                          className={column.isDate ? 'dateHeading' : ''}
+                        >
+                          <div className="table-header-cell">
+                            <span>{column.label}</span>
+                            {!column.isDate && headingName !== Modules.TIMESHEET && column.id !== 'actions' &&
+                              <img
+                                src={TableArrows}
+                                alt=""
+                                className="tableArrows"
+                                onClick={() => handleSortBy(column.id)}
+                              />
+                            }
+                            {column.day && 
+                              <div className="month">{column.day}</div>
+                            }
+                          </div>
+                        </TableCell>
+                      )
+                    }
                 )}
               </TableRow>
             </TableHead>
@@ -776,7 +898,8 @@ export const DataTable = ({
                         })}
                       </TableRow>
                     );
-                  } else {
+                  }
+                   else {
                     return (
                       <TableRow
                         hover
@@ -785,6 +908,7 @@ export const DataTable = ({
                         key={row[headingName.replace(" ", "")]}
                       >
                         {columns.map((col) => {
+                          if(!col.id) return null;
                           if (col.id === "actions") {
                             return (
                             <TableCell key={col.id}>
@@ -849,18 +973,29 @@ export const DataTable = ({
                                     </IconButton>
                                   )
                                 ) : null}
-                                {tabName !== 'PENDING APPROVAL' && <Tooltip title="Edit">
-                                  <button
-                                    onClick={() =>
-                                      editButtonClicked(row[UniqueIds[headingName.replace(" ", "")]])
-                                    }
-                                    className="buttonBackgroundBorder cursorPointer"
-                                    disabled={isAddButtonClicked}
-                                  >
-                                    <img src={editIcon} className="editDeleteIcon" alt="" />
-                                  </button>
-                                </Tooltip>}
-                                {headingName !== Modules.PROJECT_ALLOCATION && headingName !== Modules.PROJECT_MANAGEMENT && tabName !== 'PENDING APPROVAL' && (
+                                {tabName !== 'PENDING APPROVAL' && 
+                                tabName !== 'REPORTEES' && 
+                                row.status !== 'Approved' && 
+                                row.status !== 'Submitted' && 
+                                // row.status !== 'Rejected' && 
+                                  <Tooltip title="Edit">
+                                    <button
+                                      onClick={() =>
+                                        editButtonClicked(row[UniqueIds[headingName.replace(" ", "")]])
+                                      }
+                                      className="buttonBackgroundBorder cursorPointer"
+                                      disabled={isAddButtonClicked}
+                                    >
+                                      <img src={editIcon} className="editDeleteIcon" alt="" />
+                                    </button>
+                                  </Tooltip>
+                                }
+                                {headingName !== Modules.PROJECT_ALLOCATION && 
+                                headingName !== Modules.PROJECT_MANAGEMENT && 
+                                row.status !== 'Approved' && 
+                                row.status !== 'Submitted' && 
+                                // row.status !== 'Rejected' && 
+                                tabName !== 'PENDING APPROVAL' && tabName !== 'REPORTEES' && (
                                   <Tooltip title="Delete">
                                     <img
                                       src={deleteIcon}
@@ -912,16 +1047,26 @@ export const DataTable = ({
                             </TableCell>
                           );
                         } 
-                        else if (col.id.includes("Date")) {
+                        else if (col.id?.includes("Date")) {
                           return (
                             <TableCell key={col.id} style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
                               {convertDateToDDMYYYY(row[col.id])}
                             </TableCell>
                           );
                         }
+                        else if(tabName === "PENDING APPROVAL" && tabName === "REPORTEES" && col.id === 'status'){
+                          return null;
+                        }
                         return col.id !==
                           UniqueIds[headingName.replace(" ", "")] ? (
-                          <TableCell key={col.id} style={{textAlign: col.isDate || col.id === 'totalHrs' ? "center" : "auto",maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
+                          <TableCell 
+                            key={col.id} 
+                            style={{
+                              textAlign: col.isDate || col.id === 'totalHrs' ? "left" : "auto",
+                              maxWidth: col.maxWidth ? col.maxWidth : 'auto',
+                              whiteSpace: col.maxWidth ? 'nowrap' : 'normal',
+                            }}
+                          >
                             {col.id === "employeeName" ? (
                               getEmployeeName(row["employeeId"])
                             ) : col.id.toLowerCase().includes("allocation") && row[col.id] ? (
@@ -930,12 +1075,22 @@ export const DataTable = ({
                                   <CircularProgress
                                     className="allocationProgress"
                                     variant="determinate"
-                                    value={row[col.id].replace('%', '')}
+                                    value={row[col.id]}
                                   />
                                 </div>
-                                <div>{row[col.id]}</div>
+                                <div>{row[col.id]}%</div>
                               </div>
-                            ) : (
+                            ) : col.id === 'approvers' ? 
+                            ( 
+                              <HtmlTooltip title={getApproversWithIds(row[col.id])}>
+                                <div 
+                                  style={{ overflow: 'hidden', textOverflow: 'ellipsis'}}
+                                >
+                                  {getApprovers(row[col.id])}
+                                </div>
+                              </HtmlTooltip> 
+                            ) : 
+                            col.id === 'viewDetails' ? ( <IconButton color="primary" onClick={() => handleViewDetails(row['employeeId'])} ><VisibilityIcon /></IconButton>) : (
                               row[col.id]
                             )}
                           </TableCell>

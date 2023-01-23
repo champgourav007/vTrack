@@ -5,10 +5,17 @@ import { SelectedModule } from "../../components/SelectedModule/selected-module"
 import Sidebar from "../../components/Sidebar/Sidebar";
 import { ModuleList } from "../../mock-data/Sidebar";
 import "./VTrack.css";
+import Cookies from 'universal-cookie';
 
 export const VTrack = () => {
   const [headingName, setHeadingName] = useState("");
   const navigate = useNavigate();
+  const cookies = new Cookies();
+  useEffect(()=>{
+    if(!cookies.get("userInformation")){
+      navigate("/");
+    }
+  })
 
   const { userData } = useSelector(({ USER }) => USER);
 
@@ -23,8 +30,10 @@ export const VTrack = () => {
   },[userData]);
 
   useEffect(() => {
-    let User = sessionStorage.getItem("userInformation");
-    if (User == null) navigate("/");
+    // let User = localStorage.getItem("userInformation");
+    let User = cookies.get("userInformation");
+
+    if (!User) navigate("/");
   }, []);
 
   return (

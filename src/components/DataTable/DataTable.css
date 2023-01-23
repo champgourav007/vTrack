@@ -150,3 +150,25 @@ div:has(> .approveRejectIcon){
   display: flex;
   gap: 1.5rem;
 }
+
+.rowStatus{
+  font-family: "Montserrat";
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.25rem;
+}
+.timesheetTable .dateHeading:nth-child(8n),.timesheetTable .dateHeading:nth-child(9n){
+  color: rgba(23, 115, 188, 0.5);
+}
+
+.timesheetTable .timeField:nth-child(8n),.timesheetTable .timeField:nth-child(9n){
+  opacity: 0.4;
+}
+
+.MuiInputLabel-asterisk{
+  color: red;
+}
+
+td.css-dsuxgy-MuiTableCell-root{
+  word-break: break-word;
+}

@@ -8,14 +8,18 @@ import { allProjectsSaga } from "./get-all-projects-saga";
 import { allUsersSaga } from "./get-all-user-saga";
 import { assignedProjectsSaga } from "./get-assigned-projects-saga";
 import { allClientsSaga } from "./get-client-saga";
+import { detailedTimeSheetSaga } from "./get-detailed-timesheet-saga";
 import { listItemsSaga } from "./get-list-items-saga";
 import { mappedProjectManagementSaga } from "./get-mapped-project-management-data";
 import { projectManagementSaga } from "./get-project-management-saga";
 import { projectManagersSaga } from "./get-project-managers-saga";
 import { projectTasksSaga } from "./get-project-tasks";
+import { getReporteesSaga } from "./get-reportees-saga";
 import { getSettingTableDataSaga } from "./get-setting-table-data";
+import { timeSheetReporteeSaga } from "./get-timesheet-reportee-saga";
 import { getUnRegisteredUsersSaga } from "./get-unregistered-user-details-saga";
 import { getRolesSaga } from "./get-user-roles-setting-saga";
+import { myTimeSheetSaga } from "./my-timesheet-saga";
 import { projectAdminSaga } from "./project-admin-saga";
 import { projectAllocationSaga } from "./project-allocation-saga";
 import { saveClientAdminSaga } from "./save-client-admin-saga";
@@ -24,6 +28,7 @@ import { saveProjectManagementSaga } from "./save-project-management-data";
 import { saveTimeSheetPeriodSaga } from "./save-timesheet-period-saga";
 import { saveTimeSheetSaga } from "./save-timesheet-saga";
 import { saveUserRoleSaga } from "./save-user-roles-setting-saga";
+import { submitPeriodSaga } from "./submit-period-saga";
 import { timeSheetSaga } from "./timesheet-saga";
 import { updateClientAdminSaga } from "./update-client-admin-saga";
 import { updateProjectAdminSaga } from "./update-project-admin-saga";
@@ -36,7 +41,10 @@ import { allUserDetailSaga, userSaga } from "./user-saga";
 export function* rootSaga() {
   yield all([
     fork(clientAdminSaga),
+    fork(getReporteesSaga),
+    fork(myTimeSheetSaga),
     fork(timeSheetSaga),
+    fork(submitPeriodSaga),
     fork(saveClientAdminSaga),
     fork(saveTimeSheetSaga),
     fork(saveTimeSheetPeriodSaga),
@@ -68,6 +76,8 @@ export function* rootSaga() {
     fork(mappedProjectManagementSaga),
     fork(getUnRegisteredUsersSaga),
     fork(projectTasksSaga),
-    fork(assignedProjectsSaga)
+    fork(assignedProjectsSaga),
+    fork(detailedTimeSheetSaga),
+    fork(timeSheetReporteeSaga),
   ]);
 }

@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
 import { updateTimeSheetStatusDetails } from "../http/requests/timesheet";
 import {
   TimeSheetType,
@@ -11,14 +11,20 @@ import { toastOptions } from "../common/utils/toasterOptions";
 function* workerUpdateTimeSheetStatusSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
+    const projectManagerId = yield select(state=>
+      state.USER.userData.data.activeUsers.id);
     yield call(updateTimeSheetStatusDetails, payload);
-    toast.success("Data Updated", toastOptions)
+    toast.success("Data Updated", toastOptions);
+    const selectedEmployeeId = yield select(state=>
+        state.MODULES.selectedEmployeeId);
+    const selectedProjectId = yield select(state=>
+        state.MODULES.selectedProjectId);
     yield put(
         getTimeSheetData({
           // periodWeek: periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM'),
-          pageNo: 1,
-          pageSize: 10,
-          sortDir: "ASC",
+          employeeId: selectedEmployeeId,
+          projectId: selectedProjectId,
+          projectManagerId: projectManagerId
         })
     );
     yield put(setVtrackLoader(false));

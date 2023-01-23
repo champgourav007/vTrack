@@ -1,0 +1,22 @@
+.empName-period {
+    display: flex;
+    gap: 5rem;
+} 
+
+.namePeriodDiv {
+    display: flex;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-family: 'Montserrat';
+    padding: 1rem;
+}
+
+.namePeriodLabel {
+    color: grey;
+    margin-right: 1rem;
+
+}
+
+.namePeriodField {
+    color: #1773bc;
+}

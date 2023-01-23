@@ -43,3 +43,10 @@ export const getAssignedProjectsDetails = () =>
     url: `${DROPDOWN}/get-projects-assigned-to-user`,
     method: HttpMethod.GET,
   });
+
+export const getReportees = (projectId) => {
+  let query = projectId === null ? "" : `?projectId=${projectId}`
+  return httpRequest({
+    url: `${DROPDOWN}/get-reportees${query}`,
+    method: HttpMethod.GET,
+  })};

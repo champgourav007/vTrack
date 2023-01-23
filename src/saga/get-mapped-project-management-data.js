@@ -1,6 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { getMappedProjectManagementData } from "../http/requests/project-management";
-import { mappedProjectManagementData } from "../mock-data/ProjectManagement";
 import {
   setVtrackLoader
 } from "../redux/actions";
@@ -10,7 +9,11 @@ function* workerMappedProjectManagementSaga() {
   try {
     yield put(setVtrackLoader(true));
     const projectManagementDetails = yield call(getMappedProjectManagementData);
-    yield put(setMappedProjectManagementData(projectManagementDetails));
+    if(projectManagementDetails)
+      yield put(setMappedProjectManagementData(projectManagementDetails));
+    else {
+      yield put(setMappedProjectManagementData(null));
+    }
     yield put(setVtrackLoader(false));
   } catch (err) {
     console.log(err);

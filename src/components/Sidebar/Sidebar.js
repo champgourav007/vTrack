@@ -60,6 +60,7 @@ export default function Sidebar({ changePage, pageName }) {
         <div className="topItems">
           {userData && Object.keys(userData.data.tabs).map((moduleName, index) => {
             let module = ModuleList.find(e=>e.key === moduleName);
+            if (module) {
             let sidebarClass = getSidebarClass(module.id);
             if(module.id !== "9") {
               return (
@@ -93,7 +94,7 @@ export default function Sidebar({ changePage, pageName }) {
                   )}
                 </div>
               )
-            }
+            }}
           })}
         </div>
         <div className="bottomItems">
@@ -106,7 +107,7 @@ export default function Sidebar({ changePage, pageName }) {
               
             }
             onClick={() => {
-              changePage("settings");
+              changePage("Settings");
               setSelected("settings");
             }}
             onMouseOver={() => setMouseHover("settings")}

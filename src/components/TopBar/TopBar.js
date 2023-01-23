@@ -3,6 +3,7 @@ import "./TopBar.css";
 import props from "../../mock-data/TopBarMock";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserDetails } from "../../redux/actions";
+import { nonEmployeeIcon } from "../../common/icons";
 export const TopBar = () => {
   const dispatch = useDispatch();
   const { userData } = useSelector(({ USER }) => USER);
@@ -41,7 +42,7 @@ export const TopBar = () => {
               <img
                   alt=""
                   className="image"
-                  src={`data:image/jpeg;base64,${personData.photo}`}
+                  src={personData.photo ? `data:image/jpeg;base64,${personData.photo}` : nonEmployeeIcon}
                 />
             </div>
             <div className="userNameRoleWrapper">
