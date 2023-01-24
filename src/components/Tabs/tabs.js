@@ -61,8 +61,12 @@ export default function BasicTabs(props) {
   };
 
   React.useEffect(() => {
-    setValue(0);
-    setStatus("All");
+    if(props.headingName === Modules.PROJECT_ALLOCATION){
+      setValue(1);
+    }
+    else{
+      setValue(0);
+    }
   }, [ props.headingName ]);
 
   React.useEffect(() => {
