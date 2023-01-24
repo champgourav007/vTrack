@@ -488,7 +488,7 @@ export const DataTable = ({
           {option.projectName}
         </MenuItem>
       ))
-    } else if (col === "taskName"){
+    } else if (col === "task"){
       return allTasks ? allTasks.map((option,index) => (
         <MenuItem
           key={index}
@@ -600,6 +600,7 @@ export const DataTable = ({
             }}}
             // onChange={(e) => inputFieldHandler(e, col.id)}
             style={{ width: "80%" }}
+            disabled={isEditButtonClicked && col.id==="employeeName"}
           >
             {displayMenuItem(col.id)}
           </TextField>

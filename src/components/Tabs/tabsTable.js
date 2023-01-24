@@ -209,9 +209,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           if( arr[i] 
               && arr[i].hasOwnProperty(attr) 
               && (arguments.length > 2 && arr[i][attr] === value ) ){ 
-
               arr.splice(i,1);
-
           }
         }
         return arr;
@@ -490,7 +488,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   }, [ headingName ]);
 
   useEffect(() => {
-    // if(allTasks === null) dispatch(getProjectTasks());
+    if(allTasks === null) dispatch(getProjectTasks());
     if(allUserDetails === null) dispatch(getAllUserDetails());
   }, []);
 
