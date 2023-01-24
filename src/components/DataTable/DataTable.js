@@ -1,5 +1,5 @@
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { Checkbox, FormControl, InputLabel, ListItemText, OutlinedInput, Select, styled } from "@mui/material";
+import { Checkbox, FormControl, InputLabel, ListItemText, ListSubheader, OutlinedInput, Select, styled } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
@@ -96,13 +96,13 @@ export const DataTable = ({
 }) => {
   const { clientsData, allTasks, listItems, assignedProjects } =
     useSelector(({ MODULES }) => MODULES);
-  
+
   const { allUserDetails } = useSelector(({ USER }) => USER);
   const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
   const dispatch = useDispatch();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [newRowAdded, setNewRowAdded] = useState(initialData(headingName,selectedPeriodWeek));
+  const [newRowAdded, setNewRowAdded] = useState(initialData(headingName, selectedPeriodWeek));
   const [sortBy, setSortBy] = useState(initialSort[headingName]);
   const [rowToBeUpdated, setRowToBeUpdated] = useState({});
   const [fileState, setFileState] = useState("");
@@ -110,17 +110,27 @@ export const DataTable = ({
   const [deleteRow, setDeleteRow] = useState();
   const [dialogDeleteButtonClicked, setDialogDeleteButtonClicked] =
     useState(false);
-  const [ viewDetails, setViewDetails ] = useState(false);
-  const [ selectedEmpId, setSelectedEmpId ] = useState('');
+  const [viewDetails, setViewDetails] = useState(false);
+  const [selectedEmpId, setSelectedEmpId] = useState('');
+  const [teamMembers, setTeamMembers] = useState(allUserDetails)
   const setDialogBoxText = () => {
-    if(headingName === Modules.PROJECT_ADMIN) {
+    if (headingName === Modules.PROJECT_ADMIN) {
       return 'Delete action on Project  will impact all active allocations for this project.  Are you sure you want to delete?';
     }
-    else if(headingName === Modules.CLIENT_ADMIN) {
+    else if (headingName === Modules.CLIENT_ADMIN) {
       return 'Delete action on Client data will delete all active projects for this client. Are you sure you want to delete?';
     }
     return 'Are you sure you want to Delete?';
   }
+
+  const filterNamesHandler = (e) => {
+    console.log(e);
+    setTeamMembers({ ...allUserDetails, data: allUserDetails.data.filter(i => i.firstName.toLowerCase().includes(e.toLowerCase())) });
+  }
+
+  React.useEffect(() => {
+    console.log(teamMembers);
+  }, [teamMembers])
 
   const saveDataHandler = () => {
     if (!isEditButtonClicked) {
@@ -128,10 +138,10 @@ export const DataTable = ({
         dispatch(saveClientAdminData(newRowAdded));
       } else if (headingName === Modules.PROJECT_ADMIN) {
         let approverIds = getApproversIds(newRowAdded.approvers);
-        dispatch(saveProjectAdminData({ ...newRowAdded, projectApprovers: approverIds}));
+        dispatch(saveProjectAdminData({ ...newRowAdded, projectApprovers: approverIds }));
       } else if (headingName === Modules.PROJECT_MANAGEMENT) {
         dispatch(saveProjectManagementData({ ...newRowAdded, projectId: projectId }));
-      } 
+      }
     }
     else {
       if (headingName === Modules.CLIENT_ADMIN) {
@@ -154,25 +164,25 @@ export const DataTable = ({
           );
         }
         let approverIds = getApproversIds(newRowAdded.approvers);
-        dispatch(updateProjectAdminData({ ...newRowAdded, projectApprovers: approverIds}));
+        dispatch(updateProjectAdminData({ ...newRowAdded, projectApprovers: approverIds }));
       } else if (headingName === Modules.PROJECT_MANAGEMENT) {
         dispatch(updateProjectManagementData({ ...newRowAdded, projectId: projectId }));
-      } 
+      }
       setIsEditButtonClicked(false);
     }
-    if (headingName === Modules.TIMESHEET){
+    if (headingName === Modules.TIMESHEET) {
       const dateHours = [];
       const restProps = {};
       let totalHrs = 0;
-      Object.keys(newRowAdded).forEach(key=>{
-        if(moment(key).isValid()){
+      Object.keys(newRowAdded).forEach(key => {
+        if (moment(key).isValid()) {
           dateHours.push({
             date: key,
             hours: newRowAdded[key]
           });
-          if(newRowAdded[key] !== "") totalHrs += parseFloat(newRowAdded[key]);
+          if (newRowAdded[key] !== "") totalHrs += parseFloat(newRowAdded[key]);
         }
-        else{
+        else {
           restProps[key] = newRowAdded[key];
         }
       });
@@ -182,7 +192,7 @@ export const DataTable = ({
     }
     setIsAddButtonClicked(false);
     setRowToBeUpdated({});
-    setNewRowAdded(initialData(headingName,selectedPeriodWeek));
+    setNewRowAdded(initialData(headingName, selectedPeriodWeek));
   };
 
   const closeButtonHandler = () => {
@@ -192,7 +202,7 @@ export const DataTable = ({
       setIsEditButtonClicked(false);
     }
     setRowToBeUpdated({});
-    setNewRowAdded(initialData(headingName,selectedPeriodWeek));
+    setNewRowAdded(initialData(headingName, selectedPeriodWeek));
   };
 
   const handleChangePage = (event, newPage) => {
@@ -379,7 +389,7 @@ export const DataTable = ({
           {option.name}
         </MenuItem>
       ));
-    } else if(col === "currency" || col === "paymentTerms" || col === 'location' || col === 'status') {
+    } else if (col === "currency" || col === "paymentTerms" || col === 'location' || col === 'status') {
       return listItems && listItems[col].map((option) => (
         <MenuItem
           key={option.id}
@@ -416,8 +426,8 @@ export const DataTable = ({
       );
     } else if (col === "projectManagerName") {
       return (
-        allUserDetails &&
-        allUserDetails.data.map((option) => (
+        teamMembers &&
+        teamMembers.data.map((option) => (
           <MenuItem
             key={option.id}
             value={getFullName(option.firstName, option.lastName)}
@@ -435,8 +445,8 @@ export const DataTable = ({
       );
     } else if (col === "businessOwner" || col === "deliveryOfficer") {
       return (
-        allUserDetails &&
-        allUserDetails.data.map((option) => (
+        teamMembers &&
+        teamMembers.data.map((option) => (
           <MenuItem
             key={option.id}
             value={getFullName(option.firstName, option.lastName)}
@@ -454,8 +464,8 @@ export const DataTable = ({
       );
     } else if (col === "employeeName") {
       return (
-        allUserDetails &&
-        allUserDetails.data.map((option) => (
+        teamMembers &&
+        teamMembers.data.map((option) => (
           <MenuItem
             key={option.id}
             value={getFullName(option.firstName, option.lastName)}
@@ -488,8 +498,8 @@ export const DataTable = ({
           {option.projectName}
         </MenuItem>
       ))
-    } else if (col === "task"){
-      return allTasks ? allTasks.map((option,index) => (
+    } else if (col === "task") {
+      return allTasks ? allTasks.map((option, index) => (
         <MenuItem
           key={index}
           value={option.taskName}
@@ -518,11 +528,11 @@ export const DataTable = ({
   };
 
   const createInputField = (col) => {
-    if(col.id === "paymentTerms"){
+    if (col.id === "paymentTerms") {
       return (
         <TableCell key={col.id}>
           <TextField
-          className="numberInput"
+            className="numberInput"
             type="number"
             id="outlined-required"
             label={getLabel(col.id, headingName)}
@@ -540,7 +550,7 @@ export const DataTable = ({
       );
     } else if (getTypeofColumn(col.id, headingName) === "textfield") {
       return (
-        <TableCell key={col.id} style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
+        <TableCell key={col.id} style={{ maxWidth: col.maxWidth ? col.maxWidth : 'auto' }}>
           <TextField
             id="outlined-required"
             inputProps={{ maxLength: 100 }}
@@ -554,40 +564,40 @@ export const DataTable = ({
                 lineHeight: '0.8rem'
               }
             }}
-            disabled={col.id === 'costAllocation'? true : false}
+            disabled={col.id === 'costAllocation' ? true : false}
             onChange={(e) => inputFieldHandler(e, col.id)}
           />
         </TableCell>
       );
     } else if (getTypeofColumn(col.id, headingName) === "multi-select") {
       return (
-        <TableCell key={col.id}  style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
-          <FormControl sx={{ m: 1, width: 120, margin:'0' }}>
-              <InputLabel id="demo-multiple-checkbox-label">Approvers</InputLabel>
-              <Select
-                labelId="demo-multiple-checkbox-label"
-                id="demo-multiple-checkbox"
-                multiple
-                value={newRowAdded[col.id]}
-                onChange={handleChange}
-                required={col.isRequired}
-                input={<OutlinedInput label="Approvers" />}
-                renderValue={() => getApprovers(newRowAdded[col.id])}
-                MenuProps={MenuProps}
-              >
-                {allUserDetails && allUserDetails.data.map(user => ({approverId: user.id, approverName: getFullName(user.firstName, user.lastName), approverEmail: user.email})).map((approver, index) => (
-                  <MenuItem key={index} value={approver} className="no-left-margin">
-                    <Checkbox checked={ newRowAdded[col.id].findIndex(app => app.approverId === approver.approverId) > -1 } />
-                    <ListItemText primary={`${approver.approverName} (${approver.approverEmail})`} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+        <TableCell key={col.id} style={{ maxWidth: col.maxWidth ? col.maxWidth : 'auto' }}>
+          <FormControl sx={{ m: 1, width: 120, margin: '0' }}>
+            <InputLabel id="demo-multiple-checkbox-label">Approvers</InputLabel>
+            <Select
+              labelId="demo-multiple-checkbox-label"
+              id="demo-multiple-checkbox"
+              multiple
+              value={newRowAdded[col.id]}
+              onChange={handleChange}
+              required={col.isRequired}
+              input={<OutlinedInput label="Approvers" />}
+              renderValue={() => getApprovers(newRowAdded[col.id])}
+              MenuProps={MenuProps}
+            >
+              {allUserDetails && allUserDetails.data.map(user => ({ approverId: user.id, approverName: getFullName(user.firstName, user.lastName), approverEmail: user.email })).map((approver, index) => (
+                <MenuItem key={index} value={approver} className="no-left-margin">
+                  <Checkbox checked={newRowAdded[col.id].findIndex(app => app.approverId === approver.approverId) > -1} />
+                  <ListItemText primary={`${approver.approverName} (${approver.approverEmail})`} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </TableCell>
       );
     } else if (getTypeofColumn(col.id, headingName) === "select") {
       return (
-        <TableCell key={col.id}  style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
+        <TableCell key={col.id} style={{ maxWidth: col.maxWidth ? col.maxWidth : 'auto' }}>
           <TextField
             id="outlined-select-currency"
             select
@@ -595,20 +605,28 @@ export const DataTable = ({
             value={newRowAdded[col.id]}
             required={col.isRequired}
             sx={{
-            "& label": {
-              lineHeight: '0.8rem'
-            }}}
-            // onChange={(e) => inputFieldHandler(e, col.id)}
+              "& label": {
+                lineHeight: '0.8rem'
+              }
+            }}
+            autoComplete={false}
+            autoFocus={false}
+            MenuProps={{ autoFocus: false }}
             style={{ width: "80%" }}
-            disabled={isEditButtonClicked && col.id==="employeeName"}
+            disabled={isEditButtonClicked && col.id === "employeeName"}
           >
+            <ListSubheader className="subheader">
+              <TextField placeholder="Search Here..." className="subheader-field" onKeyDown={(e) => {
+                e.stopPropagation();
+              }} autoFocus={true} onChange={(e) => filterNamesHandler(e.target.value)} />
+            </ListSubheader>
             {displayMenuItem(col.id)}
           </TextField>
         </TableCell>
       );
     } else if (getTypeofColumn(col.id, headingName) === "date") {
       return (
-        <TableCell key={col.id} style={{maxWidth: '7rem'}}>
+        <TableCell key={col.id} style={{ maxWidth: '7rem' }}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label=""
@@ -627,26 +645,26 @@ export const DataTable = ({
       return (
         <TableCell key={col.id}>
           <div className="attachmentContainer">
-            {(headingName === Modules.PROJECT_ADMIN || headingName === Modules.CLIENT_ADMIN) && isEditButtonClicked && 
+            {(headingName === Modules.PROJECT_ADMIN || headingName === Modules.CLIENT_ADMIN) && isEditButtonClicked &&
               <IconButton
-              color="primary"
-              aria-label="upload picture"
-              component="label"
-            >
-              <input
-                hidden
-                accept="*"
-                type="file"
-                onChange={(e) => setFileState(e.target.files[0])}
-                required={col.isRequired}
-              />
-              <AttachFileIcon />
-            </IconButton>
+                color="primary"
+                aria-label="upload picture"
+                component="label"
+              >
+                <input
+                  hidden
+                  accept="*"
+                  type="file"
+                  onChange={(e) => setFileState(e.target.files[0])}
+                  required={col.isRequired}
+                />
+                <AttachFileIcon />
+              </IconButton>
             }
             {
-              (newRowAdded.clientName === "" || 
-                (headingName===Modules.TIMESHEET && 
-                  (newRowAdded.projectName==="" || newRowAdded.task==="" || !isDateAdded())
+              (newRowAdded.clientName === "" ||
+                (headingName === Modules.TIMESHEET &&
+                  (newRowAdded.projectName === "" || newRowAdded.task === "" || !isDateAdded())
                 )
               ) ? (
                 <button disable className="buttonBackgroundBorder">
@@ -671,38 +689,37 @@ export const DataTable = ({
         </TableCell>
       );
     }
-    else if(col.isDate){
-      let date = Object.keys(newRowAdded).find(i=>moment(i).isValid() && moment(i).format('DD') === moment(col.date).format('DD'));
+    else if (col.isDate) {
+      let date = Object.keys(newRowAdded).find(i => moment(i).isValid() && moment(i).format('DD') === moment(col.date).format('DD'));
       const selctedProjectForUser = newRowAdded.projectId !== undefined ? newRowAdded.projectId : newRowAdded.projectID;
       let startDate = null;
       let endDate = null;
       assignedProjects.forEach((data) => {
-        if(data.projectId === selctedProjectForUser){
+        if (data.projectId === selctedProjectForUser) {
           startDate = data.sowStartDate;
           endDate = data.sowEndDate;
         }
       });
 
-      if(date >= startDate && date <= endDate)
-      {
+      if (date >= startDate && date <= endDate) {
         return (
           <TableCell key={col.id} className="timeField">
             <TextField
               label={"Time"}
               type="number"
               value={newRowAdded[date] === '-' ? 0 : newRowAdded[date]}
-              style={{maxWidth:'6rem'}}
+              style={{ maxWidth: '6rem' }}
               required={col.isRequired}
               sx={{
-              "& label": {
-                lineHeight: '0.8rem'
-              }
-            }}
+                "& label": {
+                  lineHeight: '0.8rem'
+                }
+              }}
               onChange={(e) => inputFieldHandler(e, date)}
             />
           </TableCell>
         );
-      }else{
+      } else {
         return (
           <TableCell key={col.id} className="timeField">
             <TextField
@@ -710,22 +727,22 @@ export const DataTable = ({
               type="number"
               disabled
               value={0}
-              style={{maxWidth:'6rem'}}
+              style={{ maxWidth: '6rem' }}
               required={col.isRequired}
               sx={{
-              "& label": {
-                lineHeight: '0.8rem'
-              }
-            }}
+                "& label": {
+                  lineHeight: '0.8rem'
+                }
+              }}
               onChange={(e) => inputFieldHandler(e, date)}
             />
           </TableCell>
         );
       }
     }
-    else if(getTypeofColumn(col.id, headingName) === "empty"){
+    else if (getTypeofColumn(col.id, headingName) === "empty") {
       return (
-        <TableCell key={col.id}/>
+        <TableCell key={col.id} />
       );
     }
   };
@@ -734,18 +751,18 @@ export const DataTable = ({
     let idx = rows.findIndex(
       (row) => row[UniqueIds[headingName.replace(" ", "")]] === id
     );
-    if(headingName===Modules.TIMESHEET){
-      let rowData = initialData(headingName,selectedPeriodWeek);
-      Object.keys(rows[idx]).forEach(key=>{
-        if(Object.keys(rowData).includes(key)){
+    if (headingName === Modules.TIMESHEET) {
+      let rowData = initialData(headingName, selectedPeriodWeek);
+      Object.keys(rows[idx]).forEach(key => {
+        if (Object.keys(rowData).includes(key)) {
           rowData[key] = rows[idx][key];
         }
-        else{
-          let keys = Object.keys(rowData).filter(i=>moment(i).isValid());
-          if(keys.map(i=>moment(i).format('DD')).includes(key.slice(-2)) && rows[idx][key]!=='-'){
-            rowData[keys.find(i=>moment(i).format('DD') === key.slice(-2))] = rows[idx][key].toString();
+        else {
+          let keys = Object.keys(rowData).filter(i => moment(i).isValid());
+          if (keys.map(i => moment(i).format('DD')).includes(key.slice(-2)) && rows[idx][key] !== '-') {
+            rowData[keys.find(i => moment(i).format('DD') === key.slice(-2))] = rows[idx][key].toString();
           }
-          else if(!keys.map(i=>moment(i).format('DD')).includes(key.slice(-2))){
+          else if (!keys.map(i => moment(i).format('DD')).includes(key.slice(-2))) {
             rowData[key] = rows[idx][key];
           }
         }
@@ -754,10 +771,10 @@ export const DataTable = ({
       setRowToBeUpdated(rowData);
       setNewRowAdded(rowData);
     }
-    else{
+    else {
       setRowToBeUpdated(rows[idx]);
       if (rows[idx].employeeId) {
-        setNewRowAdded({ ...rows[idx], employeeName: getEmployeeName(rows[idx].employeeId)});
+        setNewRowAdded({ ...rows[idx], employeeName: getEmployeeName(rows[idx].employeeId) });
       }
       else {
         setNewRowAdded(rows[idx]);
@@ -794,10 +811,10 @@ export const DataTable = ({
     setShowDialogBox(true);
   };
 
-  const isDateAdded = () =>{
+  const isDateAdded = () => {
     let isAdded = false;
-    Object.keys(newRowAdded).forEach(key=>{
-      if(moment(key).isValid() && newRowAdded[key] !== "") isAdded = true;
+    Object.keys(newRowAdded).forEach(key => {
+      if (moment(key).isValid() && newRowAdded[key] !== "") isAdded = true;
     });
     return isAdded;
   };
@@ -809,7 +826,7 @@ export const DataTable = ({
 
   React.useEffect(() => {
     setRowToBeUpdated({});
-    setNewRowAdded(initialData(headingName,selectedPeriodWeek));
+    setNewRowAdded(initialData(headingName, selectedPeriodWeek));
     setSortBy(initialSort[headingName]);
     setPage(0);
     setRowsPerPage(10);
@@ -824,7 +841,7 @@ export const DataTable = ({
 
   React.useEffect(() => {
     if (selectedPeriodWeek) {
-      setNewRowAdded(initialData(headingName,selectedPeriodWeek));
+      setNewRowAdded(initialData(headingName, selectedPeriodWeek));
     }
   }, [selectedPeriodWeek]);
 
@@ -845,38 +862,37 @@ export const DataTable = ({
             <TableHead>
               <TableRow>
                 {columns.map(
-                  (column) =>
-                    { 
-                      if(!column.id) return null;
-                      return column.id !== UniqueIds[headingName.replace(" ", "")] && (
-                        <TableCell
-                          key={column.id}
-                          align={column.align}
-                          style={{ minWidth: column.minWidth, position: 'relative',maxWidth:column.maxWidth ? column.maxWidth : 'auto'  }}
-                          sx={{
-                            backgroundColor: "#1773bc0d",
-                            color: "#1773bc",
-                            fontWeight: 700,
-                          }}
-                          className={column.isDate ? 'dateHeading' : ''}
-                        >
-                          <div className="table-header-cell">
-                            <span>{column.label}</span>
-                            {!column.isDate && headingName !== Modules.TIMESHEET && column.id !== 'actions' &&
-                              <img
-                                src={TableArrows}
-                                alt=""
-                                className="tableArrows"
-                                onClick={() => handleSortBy(column.id)}
-                              />
-                            }
-                            {column.day && 
-                              <div className="month">{column.day}</div>
-                            }
-                          </div>
-                        </TableCell>
-                      )
-                    }
+                  (column) => {
+                    if (!column.id) return null;
+                    return column.id !== UniqueIds[headingName.replace(" ", "")] && (
+                      <TableCell
+                        key={column.id}
+                        align={column.align}
+                        style={{ minWidth: column.minWidth, position: 'relative', maxWidth: column.maxWidth ? column.maxWidth : 'auto' }}
+                        sx={{
+                          backgroundColor: "#1773bc0d",
+                          color: "#1773bc",
+                          fontWeight: 700,
+                        }}
+                        className={column.isDate ? 'dateHeading' : ''}
+                      >
+                        <div className="table-header-cell">
+                          <span>{column.label}</span>
+                          {!column.isDate && headingName !== Modules.TIMESHEET && column.id !== 'actions' &&
+                            <img
+                              src={TableArrows}
+                              alt=""
+                              className="tableArrows"
+                              onClick={() => handleSortBy(column.id)}
+                            />
+                          }
+                          {column.day &&
+                            <div className="month">{column.day}</div>
+                          }
+                        </div>
+                      </TableCell>
+                    )
+                  }
                 )}
               </TableRow>
             </TableHead>
@@ -888,38 +904,38 @@ export const DataTable = ({
                   })}
                 </TableRow>
               )}
-                {rows.map((row, rowIdx) => {
-                  if (
-                    rowToBeUpdated[UniqueIds[headingName.replace(" ", "")]] ===
-                    row[UniqueIds[headingName.replace(" ", "")]]
-                  ) {
-                    return (
-                      <TableRow id="new_row" key={rowIdx}>
-                        {columns.map((col) => {
-                          return createInputField(col);
-                        })}
-                      </TableRow>
-                    );
-                  }
-                   else {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={row[headingName.replace(" ", "")]}
-                      >
-                        {columns.map((col) => {
-                          if(!col.id) return null;
-                          if (col.id === "actions") {
-                            return (
+              {rows.map((row, rowIdx) => {
+                if (
+                  rowToBeUpdated[UniqueIds[headingName.replace(" ", "")]] ===
+                  row[UniqueIds[headingName.replace(" ", "")]]
+                ) {
+                  return (
+                    <TableRow id="new_row" key={rowIdx}>
+                      {columns.map((col) => {
+                        return createInputField(col);
+                      })}
+                    </TableRow>
+                  );
+                }
+                else {
+                  return (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row[headingName.replace(" ", "")]}
+                    >
+                      {columns.map((col) => {
+                        if (!col.id) return null;
+                        if (col.id === "actions") {
+                          return (
                             <TableCell key={col.id}>
                               <div className="attachmentContainer">
                                 {headingName === Modules.CLIENT_ADMIN || headingName === Modules.PROJECT_ADMIN ? (
                                   (headingName === Modules.CLIENT_ADMIN &&
                                     row.msaDocLink) ||
-                                  (headingName === Modules.PROJECT_ADMIN &&
-                                    row.sowAttachmentLink) ? (
+                                    (headingName === Modules.PROJECT_ADMIN &&
+                                      row.sowAttachmentLink) ? (
                                     <a
                                       href={
                                         headingName === Modules.PROJECT_ADMIN
@@ -963,7 +979,7 @@ export const DataTable = ({
                                             fileHandler(
                                               e.target.files[0],
                                               row.projectId,
-                                              row.projectName, 
+                                              row.projectName,
                                               headingName
                                             )
                                           }
@@ -975,11 +991,11 @@ export const DataTable = ({
                                     </IconButton>
                                   )
                                 ) : null}
-                                {tabName !== 'PENDING APPROVAL' && 
-                                tabName !== 'REPORTEES' && 
-                                row.status !== 'Approved' && 
-                                row.status !== 'Submitted' && 
-                                // row.status !== 'Rejected' && 
+                                {tabName !== 'PENDING APPROVAL' &&
+                                  tabName !== 'REPORTEES' &&
+                                  row.status !== 'Approved' &&
+                                  row.status !== 'Submitted' &&
+                                  // row.status !== 'Rejected' && 
                                   <Tooltip title="Edit">
                                     <button
                                       onClick={() =>
@@ -992,29 +1008,29 @@ export const DataTable = ({
                                     </button>
                                   </Tooltip>
                                 }
-                                {headingName !== Modules.PROJECT_ALLOCATION && 
-                                headingName !== Modules.PROJECT_MANAGEMENT && 
-                                row.status !== 'Approved' && 
-                                row.status !== 'Submitted' && 
-                                // row.status !== 'Rejected' && 
-                                tabName !== 'PENDING APPROVAL' && tabName !== 'REPORTEES' && (
-                                  <Tooltip title="Delete">
-                                    <img
-                                      src={deleteIcon}
-                                      className="editDeleteIcon cursorPointer"
-                                      onClick={() =>
-                                        dialogBoxHandler(
-                                          row[
+                                {headingName !== Modules.PROJECT_ALLOCATION &&
+                                  headingName !== Modules.PROJECT_MANAGEMENT &&
+                                  row.status !== 'Approved' &&
+                                  row.status !== 'Submitted' &&
+                                  // row.status !== 'Rejected' && 
+                                  tabName !== 'PENDING APPROVAL' && tabName !== 'REPORTEES' && (
+                                    <Tooltip title="Delete">
+                                      <img
+                                        src={deleteIcon}
+                                        className="editDeleteIcon cursorPointer"
+                                        onClick={() =>
+                                          dialogBoxHandler(
+                                            row[
                                             UniqueIds[
-                                              headingName.replace(" ", "")
+                                            headingName.replace(" ", "")
                                             ]
-                                          ]
-                                        )
-                                      }
-                                      alt=""
-                                    />
-                                  </Tooltip>
-                                )}
+                                            ]
+                                          )
+                                        }
+                                        alt=""
+                                      />
+                                    </Tooltip>
+                                  )}
                                 {tabName === 'PENDING APPROVAL' && (
                                   <>
                                     <Tooltip title="Approve">
@@ -1048,21 +1064,21 @@ export const DataTable = ({
                               </div>
                             </TableCell>
                           );
-                        } 
+                        }
                         else if (col.id?.includes("Date")) {
                           return (
-                            <TableCell key={col.id} style={{maxWidth:col.maxWidth ? col.maxWidth : 'auto'}}>
+                            <TableCell key={col.id} style={{ maxWidth: col.maxWidth ? col.maxWidth : 'auto' }}>
                               {convertDateToDDMYYYY(row[col.id])}
                             </TableCell>
                           );
                         }
-                        else if(tabName === "PENDING APPROVAL" && tabName === "REPORTEES" && col.id === 'status'){
+                        else if (tabName === "PENDING APPROVAL" && tabName === "REPORTEES" && col.id === 'status') {
                           return null;
                         }
                         return col.id !==
                           UniqueIds[headingName.replace(" ", "")] ? (
-                          <TableCell 
-                            key={col.id} 
+                          <TableCell
+                            key={col.id}
                             style={{
                               textAlign: col.isDate || col.id === 'totalHrs' ? "left" : "auto",
                               maxWidth: col.maxWidth ? col.maxWidth : 'auto',
@@ -1082,19 +1098,19 @@ export const DataTable = ({
                                 </div>
                                 <div>{row[col.id]}%</div>
                               </div>
-                            ) : col.id === 'approvers' ? 
-                            ( 
-                              <HtmlTooltip title={getApproversWithIds(row[col.id])}>
-                                <div 
-                                  style={{ overflow: 'hidden', textOverflow: 'ellipsis'}}
-                                >
-                                  {getApprovers(row[col.id])}
-                                </div>
-                              </HtmlTooltip> 
-                            ) : 
-                            col.id === 'viewDetails' ? ( <IconButton color="primary" onClick={() => handleViewDetails(row['employeeId'])} ><VisibilityIcon /></IconButton>) : (
-                              row[col.id]
-                            )}
+                            ) : col.id === 'approvers' ?
+                              (
+                                <HtmlTooltip title={getApproversWithIds(row[col.id])}>
+                                  <div
+                                    style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+                                  >
+                                    {getApprovers(row[col.id])}
+                                  </div>
+                                </HtmlTooltip>
+                              ) :
+                              col.id === 'viewDetails' ? (<IconButton color="primary" onClick={() => handleViewDetails(row['employeeId'])} ><VisibilityIcon /></IconButton>) : (
+                                row[col.id]
+                              )}
                           </TableCell>
                         ) : null;
                       })}
@@ -1105,7 +1121,7 @@ export const DataTable = ({
             </TableBody>
           </Table>
         </TableContainer>
-        { headingName !== Modules.TIMESHEET &&
+        {headingName !== Modules.TIMESHEET &&
           <TablePagination
             rowsPerPageOptions={[10, 25, 100]}
             component="div"
