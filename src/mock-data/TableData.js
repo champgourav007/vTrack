@@ -208,7 +208,7 @@ export const dropDownMockData = {
   projectManagerName: ['Amar', 'Sahil', 'Gaurav'], 
   employeeId: ['Arsalan', 'Arvind', 'Aditya'],
   projectName: ['duly', 'kipu'],
-  billStatus: ['Billable', 'Non-Billable'],
+  billStatus: ['Billable', 'Shadow'],
   site: ['Offshore', 'Onshore']
 };
 

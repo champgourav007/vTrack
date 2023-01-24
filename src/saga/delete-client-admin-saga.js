@@ -22,7 +22,7 @@ function* workerDeleteClientAdminSaga({ payload }) {
     yield put(setVtrackLoader(false));
   } catch (err) {
     console.log(err);
-    toast.error("Something Went Wrong", toastOptions)
+    toast.error(err.data.errorMessage, toastOptions)
     yield put(setVtrackLoader(false));
   }
 };
