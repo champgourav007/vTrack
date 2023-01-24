@@ -1,7 +1,7 @@
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Modules } from "../../common/constants/sidebar";
@@ -71,6 +71,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   });
   const [ selectedProject, setSelectedProject ] = useState({});
   const [ selectedEmployee, setSelectedEmployee ] = useState({});
+  const inputRef = useRef("")
 
   useEffect(()=>{
     if(timeSheetData === null && headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
@@ -280,6 +281,10 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     setRows([...rowsData]);
   };
 
+  const resetSearchData = () => {
+    setSearchData("")
+    inputRef.current.value = ""
+  }
   const setSearchDataHelper = (e) => {
     if (e.target.value.length > 2 || e.target.value.length === 0)
       setSearchData(e.target.value);
@@ -488,7 +493,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   }, [ headingName ]);
 
   useEffect(() => {
-    // if(allTasks === null) dispatch(getProjectTasks());
+    if(allTasks === null) dispatch(getProjectTasks());
     if(allUserDetails === null) dispatch(getAllUserDetails());
   }, []);
 
@@ -501,6 +506,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
             className="searchBox"
             type="search"
             placeholder="Search"
+            ref={inputRef}
             onChange={setSearchDataHelper}
           />
         </div>
@@ -700,6 +706,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         isEditButtonClicked={isEditButtonClicked}
         setIsEditButtonClicked={setIsEditButtonClicked}
         searchData={searchData}
+        resetSearchData={resetSearchData}
         projectStatus={status}
         selectedPeriodWeek={selectedPeriodWeek}
         projectId={projectId}
