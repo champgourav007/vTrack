@@ -600,6 +600,7 @@ export const DataTable = ({
             }}}
             // onChange={(e) => inputFieldHandler(e, col.id)}
             style={{ width: "80%" }}
+            disabled={isEditButtonClicked && col.id==="employeeName"}
           >
             {displayMenuItem(col.id)}
           </TextField>
