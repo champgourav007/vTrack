@@ -66,7 +66,8 @@ export const tableColumnsData = {
   ], 
   'MyTimeSheet': [
     { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
-    { id: "task", label: "Task", minWidth: 100, type: 'textfield' },
+    { id: "task", label: "Task", minWidth: 100,maxWidth: 150, type: 'select',isRequired: true },
+    { id: "notes", label: "Notes", minWidth: 100,maxWidth: 150, type: 'textfield',isRequired: false },
     { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
     { id: "status", label: "Status", minWidth: 60, type: 'empty' },
   ],

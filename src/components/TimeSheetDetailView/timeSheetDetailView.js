@@ -195,7 +195,7 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
           {option.projectName}
         </MenuItem>
       ))
-    } else if (col === "taskName"){
+    } else if (col === "task"){
       return allTasks ? allTasks.map((option,index) => (
         <MenuItem
           key={index}
@@ -313,29 +313,57 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
     }
     else if(col.isDate){
       let date = Object.keys(newRowAdded).find(i=>moment(i).isValid() && moment(i).format('DD') === moment(col.date).format('DD'));
-      return (
-        <TableCell key={col.id} className="timeField">
-          <TextField
-            label={"Time"}
-            type="number"
-            value={newRowAdded[date] === '-' ? 0 : newRowAdded[date]}
-            style={{maxWidth:'6rem'}}
-            sx={{
-            "& label": {
-              lineHeight: '0.8rem'
-            }
-          }}
-            onChange={(e) => inputFieldHandler(e, date)}
-          />
-        </TableCell>
-      );
-    }
-    else if(getTypeofColumn(col.id, headingName) === "empty"){
-      return (
-        <TableCell key={col.id}/>
-      );
-    }
-  };
+      const selctedProjectForUser = newRowAdded.projectId !== undefined ? newRowAdded.projectId : newRowAdded.projectID;
+      let startDate = null;
+      let endDate = null;
+      assignedProjects.forEach((data) => {
+        if(data.projectId === selctedProjectForUser){
+          startDate = data.sowStartDate;
+          endDate = data.sowEndDate;
+        }
+      });
+
+      if(date >= startDate && date <= endDate)
+      {
+        return (
+          <TableCell key={col.id} className="timeField">
+            <TextField
+              label={"Time"}
+              type="number"
+              value={newRowAdded[date] === '-' ? 0 : newRowAdded[date]}
+              style={{maxWidth:'6rem'}}
+              required={col.isRequired}
+              sx={{
+              "& label": {
+                lineHeight: '0.8rem'
+              }
+            }}
+              onChange={(e) => inputFieldHandler(e, date)}
+            />
+          </TableCell>
+        );
+      }else{
+        return (
+          <TableCell key={col.id} className="timeField">
+            <TextField
+              label={"Time"}
+              type="number"
+              disabled
+              value={0}
+              style={{maxWidth:'6rem'}}
+              required={col.isRequired}
+              sx={{
+              "& label": {
+                lineHeight: '0.8rem'
+              }
+            }}
+              onChange={(e) => inputFieldHandler(e, date)}
+            />
+          </TableCell>
+        );
+      }
+    };
+  }
 
   const editButtonClicked = (id) => {
     let idx = rows.findIndex(
@@ -366,7 +394,8 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
     if (detailedTimeSheetData && detailedTimeSheetData.length) {
       let temp = [ 
         { id: 'projectName', label: 'Project Name', align: 'left', type: 'select', isRequired: true },
-        { id: 'task', label: 'Task', align: 'left', type: 'textfield', isRequired: true },
+        { id: "task", label: "Task", minWidth: 100,maxWidth: 150, type: 'select',isRequired: true },
+        { id: "notes", label: "Notes", minWidth: 100,maxWidth: 150, type: 'textfield',isRequired: false },
       ];
       detailedTimeSheetData[0]['dateHours'].forEach((dateHour, index) => {
         let month = {

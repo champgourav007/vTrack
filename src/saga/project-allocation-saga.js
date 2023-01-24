@@ -9,6 +9,7 @@ import {
 function* workerProjectAllocationSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
+    yield put(setProjectAllocationData(null));
     const projectAllocationDetails = yield call(
       getProjectAllocationDetails,
       payload.pageNo,

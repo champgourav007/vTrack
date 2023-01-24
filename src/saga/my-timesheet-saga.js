@@ -9,6 +9,7 @@ import {
 function* workerMyTimeSheetSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
+    yield put(setTimeSheetData(null));
     const timesheetPeriodWeek = yield select(state=>
         state.MODULES.timesheetPeriodWeek);
     const timeSheetDetails = yield call(

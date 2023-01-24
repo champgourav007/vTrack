@@ -172,3 +172,10 @@ div:has(> .approveRejectIcon){
 td.css-dsuxgy-MuiTableCell-root{
   word-break: break-word;
 }
+.subheader{
+  padding: 1rem;
+  line-height: auto;
+}
+.subheader-field{
+  width: 100%;
+}
