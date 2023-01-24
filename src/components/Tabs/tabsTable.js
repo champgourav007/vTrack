@@ -328,6 +328,13 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     ));
   };
 
+  const getTimesheetStatus = (timeSheetData) => {
+    for(let i=0; i<timeSheetData.length; i++) {
+      if(timeSheetData[i].status === "Open") return false;
+    }
+    return true;
+  }
+
   useEffect(() => {
     if (headingName === Modules.CLIENT_ADMIN && clientAdminData && clientAdminData.totalCount) {
       setTableData(clientAdminData);
@@ -548,9 +555,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                       Add
                   </button>
                   <button
-                    disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved' || timeSheetData[0].periodStatus === 'Submitted' || timeSheetData[0].periodStatus === 'Partially Approved'))}
+                    disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && getTimesheetStatus(timeSheetData))}
                     className={
-                      isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved' || timeSheetData[0].periodStatus === 'Submitted' || timeSheetData[0].periodStatus === 'Partially Approved') )
+                      isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && getTimesheetStatus(timeSheetData))
                         ? "disableAddButton"
                         : "addBtn"
                     }
