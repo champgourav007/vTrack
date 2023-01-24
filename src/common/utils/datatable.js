@@ -43,7 +43,7 @@ export const tableColumnsData = {
     { id: "projectManagerName", label: "Project Manager", minWidth: 80, type: 'select', sortDir: '', align: 'left' },
     { id: "startDate", label: "Start Date", minWidth: 100, type: 'date', sortDir: '', align: 'left' },
     { id: "endDate", label: "End Date", minWidth: 110, type: 'date', sortDir: '', align: 'left' },
-    { id: 'allocation', label: 'Allocation', minWidth: 100, type: 'textfield', sortDir: '', align: 'left' },
+    { id: 'billStatus', label: 'Bill Status', minWidth: 100, type: 'textfield', sortDir: '', align: 'left' },
     // { id: 'status', label: 'Status', minWidth: 100, type: 'textfield' }
   ], 
   'ProjectManagement': [
@@ -59,7 +59,8 @@ export const tableColumnsData = {
   ], 
   'Timesheet': [
     { id: "projectName", label: "Project Name", minWidth: 110, type: 'select',isRequired: true },
-    { id: "task", label: "Task", minWidth: 100,maxWidth: 150, type: 'textfield',isRequired: true },
+    { id: "task", label: "Task", minWidth: 100,maxWidth: 150, type: 'select',isRequired: true },
+    { id: "notes", label: "Notes", minWidth: 100,maxWidth: 150, type: 'textfield',isRequired: false },
     { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
     { id: "status", label: "Status", minWidth: 60, type: 'empty' },
   ], 

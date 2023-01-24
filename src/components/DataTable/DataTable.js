@@ -488,7 +488,7 @@ export const DataTable = ({
           {option.projectName}
         </MenuItem>
       ))
-    } else if (col === "taskName"){
+    } else if (col === "task"){
       return allTasks ? allTasks.map((option,index) => (
         <MenuItem
           key={index}
