@@ -126,7 +126,11 @@ export const DataTable = ({
 
   const filterNamesHandler = (e) => {
     console.log(e);
-    setTeamMembers({ ...allUserDetails, data: allUserDetails.data.filter(i => i.firstName.toLowerCase().includes(e.toLowerCase())) });
+    setTeamMembers({ ...allUserDetails, data: allUserDetails.data.filter(i => (
+      i.firstName?.toLowerCase().includes(e.toLowerCase()) || 
+      i.lastName?.toLowerCase().includes(e.toLowerCase()) ||
+      i.email?.toLowerCase().includes(e.toLowerCase())
+    )) });
   }
 
   React.useEffect(() => {
@@ -600,21 +604,18 @@ export const DataTable = ({
     } else if (getTypeofColumn(col.id, headingName) === "select") {
       return (
         <TableCell key={col.id} style={{ maxWidth: col.maxWidth ? col.maxWidth : 'auto' }}>
-          <TextField
+        <FormControl fullWidth>
+          <InputLabel className="select-label" id={`label-for-${col.id}`}>{getLabel(col.id, headingName)}</InputLabel>
+          <Select
             id="outlined-select-currency"
-            select
+            labelId={`label-for-${col.id}`}
             label={getLabel(col.id, headingName)}
             value={newRowAdded[col.id]}
             required={col.isRequired}
-            sx={{
-              "& label": {
-                lineHeight: '0.8rem'
-              }
-            }}
+            className={"select-input"}
             autoComplete={false}
             autoFocus={false}
-            MenuProps={{ autoFocus: false }}
-            style={{ width: "80%" }}
+            MenuProps={{ autoFocus: false, PaperProps: { sx: { maxHeight: 300 } } }}
             disabled={isEditButtonClicked && col.id === "employeeName"}
           >
             <ListSubheader className="subheader">
@@ -623,7 +624,8 @@ export const DataTable = ({
               }} autoFocus={true} onChange={(e) => filterNamesHandler(e.target.value)} />
             </ListSubheader>
             {displayMenuItem(col.id)}
-          </TextField>
+          </Select>
+          </FormControl>
         </TableCell>
       );
     } else if (getTypeofColumn(col.id, headingName) === "date") {
