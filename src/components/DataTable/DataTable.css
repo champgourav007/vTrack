@@ -174,7 +174,7 @@ td.css-dsuxgy-MuiTableCell-root{
 }
 .subheader{
   padding: 1rem;
-  line-height: auto !important;
+  line-height: unset !important;
 }
 .subheader-field{
   width: 100%;
