@@ -90,6 +90,7 @@ export const DataTable = ({
   isEditButtonClicked,
   setIsEditButtonClicked,
   searchData,
+  resetSearchData,
   projectStatus,
   selectedPeriodWeek,
   projectId
@@ -190,6 +191,7 @@ export const DataTable = ({
       restProps['totalHrs'] = totalHrs.toString();
       isEditButtonClicked ? dispatch(updateTimeSheetData(restProps)) : dispatch(saveTimeSheetData(restProps));
     }
+    resetSearchData()
     setIsAddButtonClicked(false);
     setRowToBeUpdated({});
     setNewRowAdded(initialData(headingName, selectedPeriodWeek));

@@ -24,7 +24,8 @@ function* workerSaveProjectManagementSaga({ payload }) {
     );
     yield put(setVtrackLoader(false));
   } catch (err) {
-    toast.error("Something Went Wrong", toastOptions)
+    console.log(err);
+    toast.error(err.data.errorMessage, toastOptions)
     yield put(setVtrackLoader(false));
   }
 }
