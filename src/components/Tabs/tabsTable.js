@@ -1,7 +1,7 @@
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Modules } from "../../common/constants/sidebar";
@@ -24,6 +24,7 @@ import {
   getProjectTasks,
   getReportees,
   getTimeSheetData,
+  getTimesheetProjects,
   getTimeSheetReportee,
   saveTimeSheetPeriodData,
   setSelectedEmployeeId,
@@ -55,7 +56,8 @@ const getPeriods = () => {
 export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData, mappedProjectManagementData, selectedProjectId, reportees } = useSelector(({ MODULES }) => MODULES);
   const { allUserDetails, userData } = useSelector(({ USER }) => USER);
-  const { allTasks, listItems, clientsData } = useSelector(({ MODULES }) => MODULES);
+  const { allTasks, listItems, clientsData, timeSheetProjects } = useSelector(({ MODULES }) => MODULES);
+  console.log(timeSheetProjects, mappedProjectManagementData)
   const dispatch = useDispatch();
 
   const [isAddButtonClicked, setIsAddButtonClicked] = useState(false);
@@ -71,6 +73,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   });
   const [ selectedProject, setSelectedProject ] = useState({});
   const [ selectedEmployee, setSelectedEmployee ] = useState({});
+  const inputRef = useRef("")
 
   useEffect(()=>{
     if(timeSheetData === null && headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
@@ -280,6 +283,10 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     setRows([...rowsData]);
   };
 
+  const resetSearchData = () => {
+    setSearchData("")
+    inputRef.current.value = ""
+  }
   const setSearchDataHelper = (e) => {
     if (e.target.value.length > 2 || e.target.value.length === 0)
       setSearchData(e.target.value);
@@ -322,6 +329,13 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       </MenuItem>
     ));
   };
+
+  const getTimesheetStatus = (timeSheetData) => {
+    for(let i=0; i<timeSheetData.length; i++) {
+      if(timeSheetData[i].status === "Open") return false;
+    }
+    return true;
+  }
 
   useEffect(() => {
     if (headingName === Modules.CLIENT_ADMIN && clientAdminData && clientAdminData.totalCount) {
@@ -455,6 +469,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           })
         );
         break;
+      case Modules.TIMESHEET:
+        dispatch(getTimesheetProjects());
+        break;
       default:
         break;
     }
@@ -501,6 +518,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
             className="searchBox"
             type="search"
             placeholder="Search"
+            ref={inputRef}
             onChange={setSearchDataHelper}
           />
         </div>
@@ -542,9 +560,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                       Add
                   </button>
                   <button
-                    disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved' || timeSheetData[0].periodStatus === 'Submitted' || timeSheetData[0].periodStatus === 'Partially Approved'))}
+                    disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && getTimesheetStatus(timeSheetData))}
                     className={
-                      isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved' || timeSheetData[0].periodStatus === 'Submitted' || timeSheetData[0].periodStatus === 'Partially Approved') )
+                      isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && getTimesheetStatus(timeSheetData))
                         ? "disableAddButton"
                         : "addBtn"
                     }
@@ -574,23 +592,23 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                     }
                   }}
                 >
-                  {mappedProjectManagementData && mappedProjectManagementData.map(data=>
-                    data.projects.map((option) => (
+                  {timeSheetProjects && timeSheetProjects.map(option=>
+                    // data.map((option) => (
                       <MenuItem
-                        key={option.projectId}
-                        value={option.projectName}
+                        key={option.id}
+                        value={option.name}
                         required
                         onClick={() =>{
                             setSelectedProject({
-                              projectId: option.projectId,projectName: option.projectName
+                              projectId: option.id,projectName: option.name
                             });
-                            dispatch(setSelectedProjectId(option.projectId));
+                            dispatch(setSelectedProjectId(option.id));
                           }
                         }
                       >
-                        {option.projectName}
+                        {option.name}
                       </MenuItem>
-                    ))
+                    // ))
                   )}
                 </TextField>
                 <TextField
@@ -700,6 +718,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         isEditButtonClicked={isEditButtonClicked}
         setIsEditButtonClicked={setIsEditButtonClicked}
         searchData={searchData}
+        resetSearchData={resetSearchData}
         projectStatus={status}
         selectedPeriodWeek={selectedPeriodWeek}
         projectId={projectId}

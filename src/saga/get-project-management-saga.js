@@ -1,3 +1,4 @@
+import set from "date-fns/fp/set/index";
 import { call, put, takeLatest } from "redux-saga/effects";
 import { getProjectManagementDetails } from "../http/requests/project-management";
 import {
@@ -8,6 +9,7 @@ import { ProjectManagementType, setProjectManagementData } from "../redux/action
 function* workerProjectManagementSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
+    yield put(setProjectManagementData(null));
     const projectManagementDetails = yield call(
       getProjectManagementDetails,
       payload.projectId,

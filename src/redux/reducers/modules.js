@@ -23,7 +23,8 @@ export const modulesState = {
   reportees: null,
   selectedEmployeeId: null,
   selectedProjectId: null,
-  detailedTimeSheetData: null
+  detailedTimeSheetData: null,
+  timeSheetProjects: null
 }
 
 export const modulesReducer = (state = modulesState, action) => {
@@ -127,6 +128,11 @@ export const modulesReducer = (state = modulesState, action) => {
       return {
         ...state,
         reportees: action.payload
+      }
+    case DropdownType.SET_TIMESHEET_PROJECTS:
+      return {
+        ...state,
+        timeSheetProjects: action.payload
       }
     case TimeSheetType.SET_DETAILED_TIMESHEET_DATA:
       return {

@@ -14,7 +14,7 @@ function* workerSaveUserRoleSaga({ payload }) {
     yield put(setVtrackLoader(false));
   } catch (err) {
     yield put(setVtrackLoader(false));
-    toast.error("Something Went Wrong", toastOptions)
+    toast.error(err.data.errorMessage, toastOptions)
   }
 };
 
