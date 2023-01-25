@@ -191,10 +191,10 @@ export const DataTable = ({
       restProps['totalHrs'] = totalHrs.toString();
       isEditButtonClicked ? dispatch(updateTimeSheetData(restProps)) : dispatch(saveTimeSheetData(restProps));
     }
-    resetSearchData()
     setIsAddButtonClicked(false);
     setRowToBeUpdated({});
     setNewRowAdded(initialData(headingName, selectedPeriodWeek));
+    resetSearchData()
   };
 
   const closeButtonHandler = () => {
@@ -634,7 +634,8 @@ export const DataTable = ({
               label=""
               value={newRowAdded[col.id]}
               onChange={(newValue) => {
-                setNewRowAdded({ ...newRowAdded, [col.id]: newValue });
+                let value = newValue.toISOString()
+                setNewRowAdded({ ...newRowAdded, [col.id]: value.split('.')[0] });
               }}
               placeholder="Date"
               required={col.isRequired}

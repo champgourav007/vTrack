@@ -24,6 +24,7 @@ import {
   getProjectTasks,
   getReportees,
   getTimeSheetData,
+  getTimesheetProjects,
   getTimeSheetReportee,
   saveTimeSheetPeriodData,
   setSelectedEmployeeId,
@@ -55,7 +56,8 @@ const getPeriods = () => {
 export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData, mappedProjectManagementData, selectedProjectId, reportees } = useSelector(({ MODULES }) => MODULES);
   const { allUserDetails, userData } = useSelector(({ USER }) => USER);
-  const { allTasks, listItems, clientsData } = useSelector(({ MODULES }) => MODULES);
+  const { allTasks, listItems, clientsData, timeSheetProjects } = useSelector(({ MODULES }) => MODULES);
+  console.log(timeSheetProjects, mappedProjectManagementData)
   const dispatch = useDispatch();
 
   const [isAddButtonClicked, setIsAddButtonClicked] = useState(false);
@@ -467,6 +469,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           })
         );
         break;
+      case Modules.TIMESHEET:
+        dispatch(getTimesheetProjects());
+        break;
       default:
         break;
     }
@@ -587,23 +592,23 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                     }
                   }}
                 >
-                  {mappedProjectManagementData && mappedProjectManagementData.map(data=>
-                    data.projects.map((option) => (
+                  {timeSheetProjects && timeSheetProjects.map(option=>
+                    // data.map((option) => (
                       <MenuItem
-                        key={option.projectId}
-                        value={option.projectName}
+                        key={option.id}
+                        value={option.name}
                         required
                         onClick={() =>{
                             setSelectedProject({
-                              projectId: option.projectId,projectName: option.projectName
+                              projectId: option.id,projectName: option.name
                             });
-                            dispatch(setSelectedProjectId(option.projectId));
+                            dispatch(setSelectedProjectId(option.id));
                           }
                         }
                       >
-                        {option.projectName}
+                        {option.name}
                       </MenuItem>
-                    ))
+                    // ))
                   )}
                 </TextField>
                 <TextField
