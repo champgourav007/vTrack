@@ -14,7 +14,7 @@ import { toastOptions } from "../common/utils/toasterOptions";
 function* workerUpdateTimeSheetSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
-    yield put(setDetailedTimeSheetData(null));
+    // yield put(setDetailedTimeSheetData(null));
     const timesheetPeriodWeek = yield select(state=>
       state.MODULES.timesheetPeriodWeek);
     yield call(updateTimeSheetDetails, payload.data);

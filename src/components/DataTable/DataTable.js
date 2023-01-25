@@ -238,7 +238,11 @@ export const DataTable = ({
     setIsAddButtonClicked(false);
     setRowToBeUpdated({});
     setNewRowAdded(initialData(headingName, selectedPeriodWeek));
+<<<<<<< Updated upstream
     resetSearchData()
+=======
+    resetSearchData();
+>>>>>>> Stashed changes
   };
 
   const closeButtonHandler = () => {
@@ -983,7 +987,7 @@ export const DataTable = ({
               {rows.map((row, rowIdx) => {
                 if (
                   rowToBeUpdated[UniqueIds[headingName.replace(" ", "")]] ===
-                  row[UniqueIds[headingName.replace(" ", "")]]
+                  row[UniqueIds[headingName.replace(" ", "")]] && tabName !== "REPORTEES"
                 ) {
                   return (
                     <TableRow id="new_row" key={rowIdx}>
