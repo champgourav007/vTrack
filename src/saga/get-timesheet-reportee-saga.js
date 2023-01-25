@@ -14,7 +14,9 @@ function* workerTimeSheetReporteeSaga({ payload }) {
         state.MODULES.timesheetPeriodWeek);
     const timeSheetReporteeDetails = yield call(
         getTimesheetReportee,
-        payload.periodWeek ? payload.periodWeek : timesheetPeriodWeek
+        payload.periodWeek ? payload.periodWeek : timesheetPeriodWeek,
+        payload.projectId,
+        payload.employeeId
     );
 
     // yield delay(5000);

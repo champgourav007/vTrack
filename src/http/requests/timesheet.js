@@ -8,9 +8,9 @@ export const getTimeSheetDetails = (timesheetPeriodWeek,projectId,employeeId,pro
     method: HttpMethod.GET,
   });
 
-export const getTimesheetReportee = (timesheetPeriodWeek) =>
+export const getTimesheetReportee = (timesheetPeriodWeek, projectId, employeeId) =>
   httpRequest({
-    url : `${TIMESHEET_API}/get-timesheet-reportee?periodWeek=${timesheetPeriodWeek}`,
+    url : `${TIMESHEET_API}/get-timesheet-reportee?periodWeek=${timesheetPeriodWeek}&projectId=${projectId}&employeeId=${employeeId}`,
     method : HttpMethod.GET,
   });
 

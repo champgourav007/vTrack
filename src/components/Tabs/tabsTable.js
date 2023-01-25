@@ -102,7 +102,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
             periodWeek:
               selectedPeriodWeek.startDate.format("DD MMM") +
               " - " +
-              selectedPeriodWeek.endDate.format("DD MMM")
+              selectedPeriodWeek.endDate.format("DD MMM"),
+            projectId: "",
+            employeeId: ""
           })
         );
       }
@@ -652,9 +654,12 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                   className={"addBtn showDataBtn"}
                   onClick={()=>{
                     if(tabName === 'REPORTEES'){
+                      console.log(selectedProject)
                       dispatch(
                         getTimeSheetReportee({
-                          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM')
+                          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
+                          projectId: selectedProject.projectId ? selectedProject.projectId : "",
+                          employeeId: selectedEmployee.employeeId ? selectedEmployee.employeeId : ""
                         })
                       );
                     }
