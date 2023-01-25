@@ -285,7 +285,8 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const resetSearchData = () => {
     setSearchData("")
     inputRef.current.value = ""
-  }
+  };
+  
   const setSearchDataHelper = (e) => {
     if (e.target.value.length > 2 || e.target.value.length === 0)
       setSearchData(e.target.value);
@@ -494,7 +495,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         dispatch(getReportees(null));
       }
     }
-    setSearchData("");
+    resetSearchData();
     setIsAddButtonClicked(false);
     setIsEditButtonClicked(false);
     if(headingName!==Modules.TIMESHEET){
