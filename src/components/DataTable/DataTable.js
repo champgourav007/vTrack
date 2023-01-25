@@ -130,7 +130,6 @@ export const DataTable = ({
 
   const filterNamesHandler = (e, col) => 
   {
-    console.log(e, col);
     if(col === "employeeName")
     {
       setTeamMembers({ ...allUserDetails, data: allUserDetails.data.filter(i => (
@@ -238,11 +237,7 @@ export const DataTable = ({
     setIsAddButtonClicked(false);
     setRowToBeUpdated({});
     setNewRowAdded(initialData(headingName, selectedPeriodWeek));
-<<<<<<< Updated upstream
-    resetSearchData()
-=======
     resetSearchData();
->>>>>>> Stashed changes
   };
 
   const closeButtonHandler = () => {
