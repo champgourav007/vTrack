@@ -57,7 +57,6 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData, mappedProjectManagementData, selectedProjectId, reportees } = useSelector(({ MODULES }) => MODULES);
   const { allUserDetails, userData } = useSelector(({ USER }) => USER);
   const { allTasks, listItems, clientsData, timeSheetProjects } = useSelector(({ MODULES }) => MODULES);
-  console.log(timeSheetProjects, mappedProjectManagementData)
   const dispatch = useDispatch();
 
   const [isAddButtonClicked, setIsAddButtonClicked] = useState(false);
@@ -284,8 +283,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   };
 
   const resetSearchData = () => {
-    setSearchData("")
-    inputRef.current.value = ""
+    setSearchData("");
+    if(inputRef && inputRef.current)
+    inputRef.current.value = "";
   };
   
   const setSearchDataHelper = (e) => {

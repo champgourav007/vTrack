@@ -130,7 +130,6 @@ export const DataTable = ({
 
   const filterNamesHandler = (e, col) => 
   {
-    console.log(e, col);
     if(col === "employeeName")
     {
       setTeamMembers({ ...allUserDetails, data: allUserDetails.data.filter(i => (
@@ -172,10 +171,6 @@ export const DataTable = ({
 
       }
   }
-
-  React.useEffect(() => {
-    console.log(teamMembers);
-  }, [teamMembers])
 
   const saveDataHandler = () => {
     if (!isEditButtonClicked) {

@@ -9,10 +9,6 @@ function* workerSaveTimeSheetSaga({ payload }) {
     yield put(setVtrackLoader(true));
     const timesheetPeriodId = yield select(state=>
         state.MODULES.timesheetPeriodId);
-    console.log({
-        ...payload.data,
-        timesheetPeriodId: timesheetPeriodId
-    });
     yield call(postTimeSheetDetails, {
         ...payload.data,
         timesheetPeriodId: timesheetPeriodId
