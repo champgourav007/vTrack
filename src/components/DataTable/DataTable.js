@@ -114,6 +114,10 @@ export const DataTable = ({
   const [viewDetails, setViewDetails] = useState(false);
   const [selectedEmpId, setSelectedEmpId] = useState('');
   const [teamMembers, setTeamMembers] = useState(allUserDetails)
+  const [managerTeam, setManagerTeam] = useState(allUserDetails)
+  const [ownerTeam, setOwnerTeam] = useState(allUserDetails)
+  const [deliveryOfficerTeam, setDeliveryOfficerTeam] = useState(allUserDetails)
+  const [approversTeam, setApproversTeam] = useState(allUserDetails)
   const setDialogBoxText = () => {
     if (headingName === Modules.PROJECT_ADMIN) {
       return 'Delete action on Project  will impact all active allocations for this project.  Are you sure you want to delete?';
@@ -124,9 +128,49 @@ export const DataTable = ({
     return 'Are you sure you want to Delete?';
   }
 
-  const filterNamesHandler = (e) => {
-    console.log(e);
-    setTeamMembers({ ...allUserDetails, data: allUserDetails.data.filter(i => i.firstName.toLowerCase().includes(e.toLowerCase())) });
+  const filterNamesHandler = (e, col) => 
+  {
+    console.log(e, col);
+    if(col === "employeeName")
+    {
+      setTeamMembers({ ...allUserDetails, data: allUserDetails.data.filter(i => (
+        i.firstName?.toLowerCase().includes(e.toLowerCase()) || 
+        i.lastName?.toLowerCase().includes(e.toLowerCase()) ||
+        i.email?.toLowerCase().includes(e.toLowerCase())
+      ))})
+    }
+      else if(col === "projectManagerName")
+      {
+
+        setManagerTeam({ ...allUserDetails, data: allUserDetails.data.filter(i => (
+          i.firstName?.toLowerCase().includes(e.toLowerCase()) || 
+          i.lastName?.toLowerCase().includes(e.toLowerCase()) ||
+          i.email?.toLowerCase().includes(e.toLowerCase())
+        ))})
+      }
+    else if(col === "businessOwner"){
+      setOwnerTeam({ ...allUserDetails, data: allUserDetails.data.filter(i => (
+        i.firstName?.toLowerCase().includes(e.toLowerCase()) || 
+        i.lastName?.toLowerCase().includes(e.toLowerCase()) ||
+        i.email?.toLowerCase().includes(e.toLowerCase())
+        ))})
+    }
+      else if(col === "deliveryOfficer"){
+        setDeliveryOfficerTeam({ ...allUserDetails, data: allUserDetails.data.filter(i => (
+          i.firstName?.toLowerCase().includes(e.toLowerCase()) || 
+          i.lastName?.toLowerCase().includes(e.toLowerCase()) ||
+          i.email?.toLowerCase().includes(e.toLowerCase())
+          ))})
+
+      }
+      else if(col === "approvers"){
+        setApproversTeam({ ...allUserDetails, data: allUserDetails.data.filter(i => (
+          i.firstName?.toLowerCase().includes(e.toLowerCase()) || 
+          i.lastName?.toLowerCase().includes(e.toLowerCase()) ||
+          i.email?.toLowerCase().includes(e.toLowerCase())
+          ))})
+
+      }
   }
 
   React.useEffect(() => {
@@ -428,8 +472,8 @@ export const DataTable = ({
       );
     } else if (col === "projectManagerName") {
       return (
-        teamMembers &&
-        teamMembers.data.map((option) => (
+        managerTeam &&
+        managerTeam.data.map((option) => (
           <MenuItem
             key={option.id}
             value={getFullName(option.firstName, option.lastName)}
@@ -445,10 +489,10 @@ export const DataTable = ({
           </MenuItem>
         ))
       );
-    } else if (col === "businessOwner" || col === "deliveryOfficer") {
+    } else if (col === "businessOwner") {
       return (
-        teamMembers &&
-        teamMembers.data.map((option) => (
+        ownerTeam &&
+        ownerTeam.data.map((option) => (
           <MenuItem
             key={option.id}
             value={getFullName(option.firstName, option.lastName)}
@@ -464,7 +508,27 @@ export const DataTable = ({
           </MenuItem>
         ))
       );
-    } else if (col === "employeeName") {
+    } else if (col === "deliveryOfficer") {
+      return (
+        deliveryOfficerTeam &&
+        deliveryOfficerTeam.data.map((option) => (
+          <MenuItem
+            key={option.id}
+            value={getFullName(option.firstName, option.lastName)}
+            onClick={() =>
+              setNewRowAdded({
+                ...newRowAdded,
+                [col]: getFullName(option.firstName, option.lastName),
+                [`${col}Id`]: option.id,
+              })
+            }
+          >
+            {`${getFullName(option.firstName, option.lastName)} (${option.email})`}
+          </MenuItem>
+        ))
+      );
+    }
+     else if (col === "employeeName") {
       return (
         teamMembers &&
         teamMembers.data.map((option) => (
@@ -587,7 +651,15 @@ export const DataTable = ({
               renderValue={() => getApprovers(newRowAdded[col.id])}
               MenuProps={MenuProps}
             >
-              {allUserDetails && allUserDetails.data.map(user => ({ approverId: user.id, approverName: getFullName(user.firstName, user.lastName), approverEmail: user.email })).map((approver, index) => (
+              {(col.id === "approvers") &&
+            (
+                <ListSubheader className="subheader">
+                <TextField placeholder="Search Here..." className="subheader-field" onKeyDown={(e) => {
+                  e.stopPropagation();
+                }} autoFocus={true} onChange={(e) => filterNamesHandler(e.target.value, col.id)} />
+              </ListSubheader>
+            )}
+              {approversTeam && approversTeam.data.map(user => ({ approverId: user.id, approverName: getFullName(user.firstName, user.lastName), approverEmail: user.email })).map((approver, index) => (
                 <MenuItem key={index} value={approver} className="no-left-margin">
                   <Checkbox checked={newRowAdded[col.id].findIndex(app => app.approverId === approver.approverId) > -1} />
                   <ListItemText primary={`${approver.approverName} (${approver.approverEmail})`} />
@@ -600,30 +672,31 @@ export const DataTable = ({
     } else if (getTypeofColumn(col.id, headingName) === "select") {
       return (
         <TableCell key={col.id} style={{ maxWidth: col.maxWidth ? col.maxWidth : 'auto' }}>
-          <TextField
+        <FormControl fullWidth>
+          <InputLabel className="select-label" id={`label-for-${col.id}`}>{getLabel(col.id, headingName)}</InputLabel>
+          <Select
             id="outlined-select-currency"
-            select
+            labelId={`label-for-${col.id}`}
             label={getLabel(col.id, headingName)}
             value={newRowAdded[col.id]}
             required={col.isRequired}
-            sx={{
-              "& label": {
-                lineHeight: '0.8rem'
-              }
-            }}
+            className={"select-input"}
             autoComplete={false}
             autoFocus={false}
-            MenuProps={{ autoFocus: false }}
-            style={{ width: "80%" }}
+            MenuProps={{ autoFocus: false, PaperProps: { sx: { maxHeight: 300 } } }}
             disabled={isEditButtonClicked && col.id === "employeeName"}
           >
-            <ListSubheader className="subheader">
-              <TextField placeholder="Search Here..." className="subheader-field" onKeyDown={(e) => {
-                e.stopPropagation();
-              }} autoFocus={true} onChange={(e) => filterNamesHandler(e.target.value)} />
-            </ListSubheader>
+          {(col.id === "employeeName" || col.id === "projectManagerName" || col.id === "businessOwner" || col.id === "deliveryOfficer") &&
+            (
+                <ListSubheader className="subheader">
+                <TextField placeholder="Search Here..." className="subheader-field" onKeyDown={(e) => {
+                  e.stopPropagation();
+                }} autoFocus={true} onChange={(e) => filterNamesHandler(e.target.value, col.id)} />
+              </ListSubheader>
+            )}
             {displayMenuItem(col.id)}
-          </TextField>
+          </Select>
+          </FormControl>
         </TableCell>
       );
     } else if (getTypeofColumn(col.id, headingName) === "date") {

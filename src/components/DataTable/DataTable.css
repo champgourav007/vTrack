@@ -179,3 +179,15 @@ td.css-dsuxgy-MuiTableCell-root{
 .subheader-field{
   width: 100%;
 }
+
+.select-input{
+  width: 100%;
+}
+
+.select-input .MuiSelect-select{
+  padding: 7.5px 14px;
+}
+
+.select-label{
+  line-height: 0.8rem !important;
+}
