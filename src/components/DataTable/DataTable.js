@@ -172,10 +172,6 @@ export const DataTable = ({
       }
   }
 
-  React.useEffect(() => {
-    console.log(teamMembers);
-  }, [teamMembers])
-
   const saveDataHandler = () => {
     if (!isEditButtonClicked) {
       if (headingName === Modules.CLIENT_ADMIN) {
@@ -237,7 +233,7 @@ export const DataTable = ({
     setIsAddButtonClicked(false);
     setRowToBeUpdated({});
     setNewRowAdded(initialData(headingName, selectedPeriodWeek));
-    // resetSearchData();
+    resetSearchData();
   };
 
   const closeButtonHandler = () => {

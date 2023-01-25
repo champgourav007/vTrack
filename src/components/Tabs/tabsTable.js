@@ -283,8 +283,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   };
 
   const resetSearchData = () => {
-    setSearchData("")
-    inputRef.current.value = ""
+    setSearchData("");
+    if(inputRef && inputRef.current)
+    inputRef.current.value = "";
   };
   
   const setSearchDataHelper = (e) => {
