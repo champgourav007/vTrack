@@ -237,7 +237,7 @@ export const DataTable = ({
     setIsAddButtonClicked(false);
     setRowToBeUpdated({});
     setNewRowAdded(initialData(headingName, selectedPeriodWeek));
-    resetSearchData();
+    // resetSearchData();
   };
 
   const closeButtonHandler = () => {
