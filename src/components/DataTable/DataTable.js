@@ -477,13 +477,14 @@ export const DataTable = ({
           <MenuItem
             key={option.id}
             value={getFullName(option.firstName, option.lastName)}
-            onClick={() =>
+            onClick={() =>{
+              setManagerTeam(allUserDetails)
               setNewRowAdded({
                 ...newRowAdded,
                 [col]: getFullName(option.firstName, option.lastName),
                 projectManagerId: option.id,
               })
-            }
+            }}
           >
             {`${getFullName(option.firstName, option.lastName)} (${option.email})`}
           </MenuItem>
@@ -496,13 +497,14 @@ export const DataTable = ({
           <MenuItem
             key={option.id}
             value={getFullName(option.firstName, option.lastName)}
-            onClick={() =>
+            onClick={() => {
+              setOwnerTeam(allUserDetails)
               setNewRowAdded({
                 ...newRowAdded,
                 [col]: getFullName(option.firstName, option.lastName),
                 [`${col}Id`]: option.id,
               })
-            }
+            }}
           >
             {`${getFullName(option.firstName, option.lastName)} (${option.email})`}
           </MenuItem>
@@ -515,13 +517,14 @@ export const DataTable = ({
           <MenuItem
             key={option.id}
             value={getFullName(option.firstName, option.lastName)}
-            onClick={() =>
+            onClick={() =>{
+              setDeliveryOfficerTeam(allUserDetails)
               setNewRowAdded({
                 ...newRowAdded,
                 [col]: getFullName(option.firstName, option.lastName),
                 [`${col}Id`]: option.id,
               })
-            }
+            }}
           >
             {`${getFullName(option.firstName, option.lastName)} (${option.email})`}
           </MenuItem>
@@ -535,13 +538,14 @@ export const DataTable = ({
           <MenuItem
             key={option.id}
             value={getFullName(option.firstName, option.lastName)}
-            onClick={() =>
+            onClick={() =>{
+              setTeamMembers(allUserDetails)
               setNewRowAdded({
                 ...newRowAdded,
                 [col]: getFullName(option.firstName, option.lastName),
                 employeeId: option.id,
               })
-            }
+            }}
           >
             {`${getFullName(option.firstName, option.lastName)} (${option.email})`}
           </MenuItem>
@@ -857,6 +861,10 @@ export const DataTable = ({
       }
     }
     setIsEditButtonClicked(true);
+    setDeliveryOfficerTeam(allUserDetails);
+    setOwnerTeam(allUserDetails);
+    setManagerTeam(allUserDetails);
+    setApproversTeam(allUserDetails);
   };
 
   const deleteButtonClicked = (id) => {
