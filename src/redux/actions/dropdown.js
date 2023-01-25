@@ -13,7 +13,9 @@ export const DropdownType = {
     GET_ASSIGNED_PROJECTS_DATA: 'GET_ASSIGNED_PROJECTS_DATA',
     SET_ASSIGNED_PROJECTS_DATA: 'SET_ASSIGNED_PROJECTS_DATA',
     GET_REPORTEES: 'GET_REPORTEES',
-    SET_REPORTEES: 'SET_REPORTEES'
+    SET_REPORTEES: 'SET_REPORTEES',
+    GET_TIMESHEET_PROJECTS: 'GET_TIMESHEET_PROJECTS',
+    SET_TIMESHEET_PROJECTS: 'SET_TIMESHEET_PROJECTS',
   }
   
 export const getClientsData = () => 
@@ -93,3 +95,14 @@ export const setReportees = (data) =>
     type: DropdownType.SET_REPORTEES,
     payload: data,
   }); 
+
+export const getTimesheetProjects = () => 
+  ({
+    type: DropdownType.GET_TIMESHEET_PROJECTS
+  });
+  
+export const setTimesheetProjects = (data) => 
+  ({
+    type: DropdownType.SET_TIMESHEET_PROJECTS,
+    payload: data,
+  });

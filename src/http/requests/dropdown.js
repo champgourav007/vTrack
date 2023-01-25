@@ -50,3 +50,9 @@ export const getReportees = (projectId) => {
     url: `${DROPDOWN}/get-reportees${query}`,
     method: HttpMethod.GET,
   })};
+
+export const getTimesheetProjects = () => 
+  httpRequest({
+    url: `${DROPDOWN}/get-associated-projects`,
+    method: HttpMethod.GET,
+  });
