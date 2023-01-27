@@ -58,6 +58,7 @@ import DialogBox from "../DialogBox/dialogBox";
 import Loader from "../Loader";
 import "./DataTable.css";
 import { TimeSheetDetailView } from "../TimeSheetDetailView/timeSheetDetailView";
+import { toast } from "react-toastify";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -342,7 +343,12 @@ export const DataTable = ({
   };
 
   const inputFieldHandler = (event, col) => {
-    setNewRowAdded({ ...newRowAdded, [col]: event.target.value });
+    if(event.target.value < 0 || event.target.value > 24){
+      toast.info("Please Enter values between 0-24");
+    }
+    else{
+      setNewRowAdded({ ...newRowAdded, [col]: event.target.value });
+    }
   };
 
   const handleSortBy = (colName) => {
@@ -782,6 +788,7 @@ export const DataTable = ({
               type="number"
               value={newRowAdded[date] === '-' ? 0 : newRowAdded[date]}
               style={{ maxWidth: '6rem' }}
+              InputProps={{ inputProps: { min: 0, max: 24, step: "2" } }}
               required={col.isRequired}
               sx={{
                 "& label": {

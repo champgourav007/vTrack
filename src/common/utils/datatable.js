@@ -58,14 +58,14 @@ export const tableColumnsData = {
     { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left'}
   ], 
   'Timesheet': [
-    { id: "projectName", label: "Project Name", minWidth: 110, type: 'select',isRequired: true },
-    { id: "task", label: "Task", minWidth: 100,maxWidth: 150, type: 'select',isRequired: true },
-    { id: "notes", label: "Notes", minWidth: 100,maxWidth: 150, type: 'textfield',isRequired: false },
+    { id: "projectName", label: "Project Name", minWidth: 110, type: 'select', isRequired: true },
+    { id: "task", label: "Task", minWidth: 100, maxWidth: 150, type: 'select', isRequired: true },
+    { id: "notes", label: "Notes", minWidth: 100, maxWidth: 150, type: 'textfield', isRequired: false },
     { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
-    { id: "status", label: "Status", minWidth: 60, type: 'empty' },
+    { id: "status", label: "Status", minWidth: 60, type: 'empty' }
   ], 
   'MyTimeSheet': [
-    { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
+    { id: "projectName", label: "Project Name", minWidth: 110, type: 'select', isRequired: true },
     { id: "task", label: "Task", minWidth: 100,maxWidth: 150, type: 'select',isRequired: true },
     { id: "notes", label: "Notes", minWidth: 100,maxWidth: 150, type: 'textfield',isRequired: false },
     { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
@@ -76,7 +76,7 @@ export const tableColumnsData = {
     { id: "task", label: "Task", minWidth: 100, type: 'textfield' },
     { id: "viewDetails", label: "View Details", minWidth: 80, type: 'action' },
     { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
-    { id: "status", label: "Status", minWidth: 60, type: 'empty' },
+    { id: "status", label: "Status", minWidth: 60, type: 'empty' }
   ],
   'PendingApproval': [
     { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },

@@ -9,7 +9,6 @@ import { ProjectManagementType, setProjectManagementData } from "../redux/action
 function* workerProjectManagementSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
-    yield put(setProjectManagementData(null));
     const projectManagementDetails = yield call(
       getProjectManagementDetails,
       payload.projectId,

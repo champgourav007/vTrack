@@ -10,7 +10,7 @@ function* workerTimeSheetSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
     const timesheetPeriodWeek = yield select(state=>
-        state.MODULES.timesheetPeriodWeek);
+      state.MODULES.timesheetPeriodWeek);
     const projectManagerId = yield select(state => 
       state.USER.userData.data.activeUsers.id);
     const timeSheetDetails = yield call(
