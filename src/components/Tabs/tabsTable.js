@@ -354,6 +354,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       handleSetColumnsData(timeSheetData[0]);
       setTotalRecord(timeSheetData.length);
       handleSetRows(timeSheetData);
+      setIsAddButtonClicked(false)
     } else if (headingName === Modules.PROJECT_MANAGEMENT && projectManagementData && projectManagementData.totalCount) {
       setTableData(projectManagementData);
       setRows(projectManagementData.data);

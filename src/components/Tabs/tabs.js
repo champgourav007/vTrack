@@ -48,6 +48,7 @@ export default function BasicTabs(props) {
   const dispatch = useDispatch();
   const [value, setValue] = React.useState(0);
   const [status, setStatus] = React.useState("All")
+  const [noDataFound, setNoDataFound] = React.useState(false)
   const { mappedProjectManagementData  } = useSelector(({ MODULES }) => MODULES);
   let counter = 0, count = 0;
 
@@ -75,9 +76,15 @@ export default function BasicTabs(props) {
       dispatch(getMappedProjectManagementData());
     }
   }, [ props.headingName ]);
+
+  React.useEffect(() => {
+    if((mappedProjectManagementData===null || mappedProjectManagementData.length===0) && props.headingName === Modules.PROJECT_MANAGEMENT) setNoDataFound(true);
+    else setNoDataFound(false);
+  }, [mappedProjectManagementData, props.headingName])
   
   return (
     <Box sx={{ width: "100%" }}>
+      {noDataFound && props.headingName===Modules.PROJECT_MANAGEMENT && <h1 className="no-data">Currently you are not Project Manager in any Project. </h1>}
       <Box>
         {props.headingName === Modules.PROJECT_MANAGEMENT ? 
           <Tabs

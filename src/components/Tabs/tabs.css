@@ -27,3 +27,12 @@
   font-size: 1.125rem !important;
   line-height: 1.25rem !important;
 }
+
+.no-data {
+  color: #1773bc;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 18rem;
+}
