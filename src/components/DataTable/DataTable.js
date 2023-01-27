@@ -348,16 +348,14 @@ export const DataTable = ({
   const handleSortBy = (colName) => {
     setSortBy(colName);
     let sortDirection;
-    let tempColumnsData = JSON.parse(JSON.stringify([...columns]));
-    let idx = tempColumnsData.findIndex((col) => col.id === colName);
-    if (tempColumnsData[idx].sortDir === "ASC") {
-      tempColumnsData[idx].sortDir = "DESC";
+    let idx = columns.findIndex((col) => col.id === colName);
+    if (columns[idx].sortDir === "ASC") {
+      columns[idx].sortDir = "DESC";
       sortDirection = "DESC";
     } else {
-      tempColumnsData[idx].sortDir = "ASC";
+      columns[idx].sortDir = "ASC";
       sortDirection = "ASC";
     }
-    setColumns([...tempColumnsData]);
     if (headingName === Modules.CLIENT_ADMIN) {
       dispatch(
         getClientAdminData({

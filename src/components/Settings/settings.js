@@ -81,7 +81,7 @@ export function Settings() {
         data: convertIdToAzureId(selectedUsers),
       })
     );
-    setSelectedRole([]);
+    setSelectedRole("");
     setSelectedUsers([]);
   };
 
