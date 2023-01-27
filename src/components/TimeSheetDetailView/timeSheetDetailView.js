@@ -460,7 +460,7 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
         open={viewDetails && !vTrackLoader}
         onClose={handleClose}
       >
-        <DialogTitle sx={{ fontSize: '2.25rem', color: '#1773bc' }}>TimeSheet Detailed View</DialogTitle>
+        <DialogTitle sx={{ fontSize: '2.25rem', color: '#1773bc' }}>Timesheet Detailed View</DialogTitle>
         <DialogContent>
           <div className="empName-period">
             <div className="namePeriodDiv">

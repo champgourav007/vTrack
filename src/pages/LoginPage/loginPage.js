@@ -17,9 +17,7 @@ export const LoginPage = () => {
   };
 
   useEffect(() => {
-    const accessToken = cookies.get('userInformation');
-    // let User = localStorage.getItem("userInformation");
-    if (accessToken) navigate(VTrackURL);
+    handleLogin()
   }, []);
 
   return (
