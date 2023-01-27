@@ -22,7 +22,9 @@ function* workerUpdateTimeSheetSaga({ payload }) {
     if(payload.data.fromDetailView){
       yield put(
         getTimeSheetReportee({
-        periodWeek : timesheetPeriodWeek
+        periodWeek : timesheetPeriodWeek,
+        projectId: "",
+        employeeId: ""
       }))
     }
     else{

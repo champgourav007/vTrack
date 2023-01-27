@@ -191,7 +191,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           minWidth: getMinWidth(col, headingName),
           sortDir: "DESC",
           align: "left",
-          isRequired:true
+          isRequired:col.isRequired
         });
       } else if (col === 'employeeId' && tabName !== "MY TIMESHEET") {
         temp.push({
@@ -655,7 +655,6 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                   className={"addBtn showDataBtn"}
                   onClick={()=>{
                     if(tabName === 'REPORTEES'){
-                      console.log(selectedProject)
                       dispatch(
                         getTimeSheetReportee({
                           periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
