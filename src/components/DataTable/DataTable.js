@@ -343,6 +343,7 @@ export const DataTable = ({
   };
 
   const inputFieldHandler = (event, col) => {
+    console.log(event.target);
     if(event.target.value !== '' && (event.target.id === 'time' || col === 'billAllocation') && (parseInt(event.target.value) < parseInt(event.target.min) || parseInt(event.target.value) > parseInt(event.target.max))){
       toast.info(`Please Enter values between ${event.target.min}-${event.target.max}`);
     }
@@ -618,11 +619,12 @@ export const DataTable = ({
         </TableCell>
       );
     } else if (getTypeofColumn(col.id, headingName) === "textfield") {
+      console.log(col);
       return (
         <TableCell key={col.id} style={{ maxWidth: col.maxWidth ? col.maxWidth : 'auto' }}>
           <TextField
             id="outlined-required"
-            inputProps={{ maxLength: 100, min:col.min ? col.min : null, max:col.max ? col.max : null }}
+            inputProps={{ maxLength: 100, min:(col.min == 0 ? col.min : null), max:(col.max ? col.max : null )}}
             type={col.fieldType}
             label={getLabel(col.id, headingName)}
             placeholder=""

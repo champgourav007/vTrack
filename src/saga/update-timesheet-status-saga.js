@@ -21,7 +21,7 @@ function* workerUpdateTimeSheetStatusSaga({ payload }) {
         state.MODULES.selectedProjectId);
     yield put(
         getTimeSheetData({
-          // periodWeek: periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM'),
+          // periodWeek: periodWeek.startDate.format(DATE_FORMAT) + ' - ' + periodWeek.endDate.format(DATE_FORMAT),
           employeeId: selectedEmployeeId,
           projectId: selectedProjectId,
           projectManagerId: projectManagerId
