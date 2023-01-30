@@ -4,6 +4,7 @@ import {
 import { ACCESS_TOKEN, ACCOUNT, EXPIRES_ON } from '../common/constants/local-storage-keys';
 import { getLocalStorageItem, setLocalStorageItem } from '../common/utils/local-storage';
 import { setExpirationTimeout } from './msal-expiration';
+import Cookies from 'universal-cookie';
 
 let USE_SILENT_MODE = false;
 
@@ -56,6 +57,7 @@ export const msalClient = new PublicClientApplication(msalConfig);
 
 msalClient.addEventCallback((message) => {
   const { eventType, payload } = message;
+  const cookies = new Cookies();
   
   const successEvents = [
     EventType.ACQUIRE_TOKEN_SUCCESS,
@@ -68,6 +70,7 @@ msalClient.addEventCallback((message) => {
       resetSilentMode();
       const expiresOnFromResponse = String(data.expiresOn);
       setLocalStorageItem(ACCESS_TOKEN, data.accessToken);
+      cookies.set('userInformation', data.accessToken, { path: '/'});
       setLocalStorageItem(ACCOUNT, JSON.stringify(data.account));
       setLocalStorageItem(EXPIRES_ON, expiresOnFromResponse);
       setExpirationTimeout(msalClient, loginRequest, expiresOnFromResponse);
