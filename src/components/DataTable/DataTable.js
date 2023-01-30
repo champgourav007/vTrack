@@ -343,8 +343,8 @@ export const DataTable = ({
   };
 
   const inputFieldHandler = (event, col) => {
-    if(event.target.value < 0 || event.target.value > 24){
-      toast.info("Please Enter values between 0-24");
+    if(event.target.value !== '' && (event.target.id === 'time' || col === 'billAllocation') && (parseInt(event.target.value) < parseInt(event.target.min) || parseInt(event.target.value) > parseInt(event.target.max))){
+      toast.info(`Please Enter values between ${event.target.min}-${event.target.max}`);
     }
     else{
       setNewRowAdded({ ...newRowAdded, [col]: event.target.value });
@@ -622,7 +622,7 @@ export const DataTable = ({
         <TableCell key={col.id} style={{ maxWidth: col.maxWidth ? col.maxWidth : 'auto' }}>
           <TextField
             id="outlined-required"
-            inputProps={{ maxLength: 100 }}
+            inputProps={{ maxLength: 100, min:col.min ? col.min : null, max:col.max ? col.max : null }}
             type={col.fieldType}
             label={getLabel(col.id, headingName)}
             placeholder=""
@@ -785,6 +785,7 @@ export const DataTable = ({
           <TableCell key={col.id} className="timeField">
             <TextField
               label={"Time"}
+              id = "time"
               type="number"
               value={newRowAdded[date] === '-' ? 0 : newRowAdded[date]}
               style={{ maxWidth: '6rem' }}
@@ -804,6 +805,7 @@ export const DataTable = ({
           <TableCell key={col.id} className="timeField">
             <TextField
               label={"Time"}
+              id = "time"
               type="number"
               disabled
               value={0}

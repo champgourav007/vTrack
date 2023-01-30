@@ -52,7 +52,7 @@ export const tableColumnsData = {
     { id: 'startDate', label: 'Start Date', minWidth: 110, type: 'date', sortDir: '', align: 'left' },
     { id: "endDate", label: "End Date", minWidth: 120, type: 'date', sortDir: '', align: 'left' },
     { id: 'billRate', label: 'Bill Rate', minWidth: 80, type: 'textfield', sortDir: '', align: 'left' },
-    { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, type: 'textfield', fieldType:'number', sortDir: '', align: 'left' },
+    { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, min:0, max:100, type: 'textfield', fieldType:'number', sortDir: '', align: 'left' },
     { id: 'billStatus', label: 'Bill Status', minWidth: 80, type: 'select', sortDir: '', align: 'left' },
     { id: 'costAllocation', label: 'Cost Allocation', minWidth: 100, type: 'textfield', sortDir: '', align: 'left' },
     { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left'}
