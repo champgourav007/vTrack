@@ -78,9 +78,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     if(timeSheetData === null && headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
       dispatch(
         saveTimeSheetPeriodData({
-          periodWeek: moment().startOf('isoweek').format('DD MMM') + ' - ' + moment().add(7,'days').startOf('week').format('DD MMM'),
+          periodWeek: moment().startOf('isoweek').format('DD MMM YYYY') + ' - ' + moment().add(7,'days').startOf('week').format('DD MMM YYYY'),
           startDT: moment().startOf('isoweek').format(),
-          endDT: moment().add(7,'days').startOf('week').format(),
+          endDT: moment().endOf('isoweek').format(),
         })
       );
       dispatch(setTimeSheetPeriodWeek(moment().startOf('isoweek').format('DD MMM') + ' - ' + moment().add(7,'days').startOf('week').format('DD MMM')));  
@@ -308,11 +308,11 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
             dispatch(
               saveTimeSheetPeriodData({
                 periodWeek:
-                  periodWeek.startDate.format("DD MMM") +
+                  periodWeek.startDate.format("DD MMM YYYY") +
                   " - " +
-                  periodWeek.endDate.format("DD MMM"),
+                  periodWeek.endDate.format("DD MMM YYYY"),
                 startDT: periodWeek.startDate.format(),
-                endDT: periodWeek.endDate.format(),
+                endDT: periodWeek.endDate.endOf('isoweek').format(),
               })
             );
           }
