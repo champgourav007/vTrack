@@ -15,8 +15,8 @@ export const httpRequest = async (
   try {
     const isMethodGet = options.method === HttpMethod.GET;
 
-    // const accessToken = getLocalStorageItem(ACCESS_TOKEN);
-    const accessToken = cookies.get('userInformation');
+    const accessToken = getLocalStorageItem(ACCESS_TOKEN);
+    // const accessToken = cookies.get('userInformation');
 
     const authorization = accessToken ? `Bearer ${accessToken}` : '';
     const isOcpApimTrace = false;
