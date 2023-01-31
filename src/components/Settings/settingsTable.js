@@ -104,7 +104,7 @@ export const SettingsTable = ({ rolesData, searchData }) => {
                                         <FormControl sx={{ m: 1, width: "80%", margin: 0 }}>
                                             <InputLabel id="demo-multiple-checkbox-label">Role</InputLabel>
                                             <Select
-                                                defaultValue={user.userId}
+                                                defaultValue={user.roleId}
                                                 labelId="demo-multiple-checkbox-label"
                                                 id="demo-multiple-checkbox"
                                                 input={<OutlinedInput label="Select Role" />}
