@@ -41,6 +41,47 @@ import approveIcon from "./Approve.svg";
 import rejectIcon from "./Reject.svg";
 import nonEmployeeIcon from "./non-employee.svg";
 import calendarIcon from "./calendar-icon.svg";
+import accounts from "./accounts.svg";
+import announcements from "./announcements.svg";
+import files from "./files.svg";
+import hrSelfService from "./hrSelfService.svg";
+import itAssets from "./itAssets.svg";
+import leaveTracker from "./leaveTracker.svg";
+import oneDrive from "./oneDrive.svg";
+import outlook from "./outlook.svg";
+import payroll from "./payroll.svg";
+import reports from "./reports.svg";
+import sharepoint from "./sharepoint.svg";
+import teams from "./teams.svg";
+import vExpense from "./vExpense.svg";
+import vFlourish from "./vFlourish.svg";
+import vHire from "./vHire.svg";
+import vPerform from "./vPerform.svg";
+import vReward from "./vReward.svg";
+import vTrackLogo from "./vTrackLogo.svg";
+import vTravel from "./vTravel.svg";
+import yammer from "./yammer.svg";
+import dashboardImage from "./dashboardImage.svg"
+import whiteAccounts from "./whiteAccounts.svg"
+import whiteAnnouncements from "./whiteAnnouncements.svg"
+import whiteFiles from "./whiteFiles.svg"
+import whiteHrSelfService from "./whiteHrSelfService.svg"
+import whiteItAssets from "./whiteItAssets.svg"
+import whiteLeaveTracker from "./whiteLeaveTracker.svg"
+import whiteOneDrive from "./whiteOneDrive.svg"
+import whiteOutlook from "./whiteOutlook.svg"
+import whitePayroll from "./whitePayroll.svg"
+import whiteReports from "./whiteReports.svg"
+import whiteSharepoint from "./whiteSharepoint.svg"
+import whiteTeams from "./whiteTeams.svg"
+import whiteVExpense from "./whiteVExpense.svg"
+import whiteVFlourish from "./whiteVFlourish.svg"
+import whiteVHire from "./whiteVHire.svg"
+import whiteVPerform from "./whiteVPerform.svg"
+import whiteVReward from "./whiteVReward.svg"
+import whiteVTrackLogo from "./whiteVTrackLogo.svg"
+import whiteVTravel from "./whiteVTravel.svg"
+import whiteYammer from "./whiteYammer.svg"
 
 export {
   downloadIcon,
@@ -85,5 +126,46 @@ export {
   approveIcon,
   rejectIcon,
   nonEmployeeIcon,
-  calendarIcon
+  calendarIcon,
+  accounts,
+  announcements,
+  files,
+  hrSelfService,
+  itAssets,
+  leaveTracker,
+  oneDrive,
+  outlook,
+  reports,
+  payroll,
+  sharepoint,
+  teams,
+  vExpense,
+  vFlourish,
+  vHire,
+  vPerform,
+  vReward,
+  vTrackLogo,
+  vTravel,
+  yammer,
+  dashboardImage,
+  whiteAccounts,
+  whiteAnnouncements,
+  whiteFiles,
+  whiteHrSelfService,
+  whiteItAssets,
+  whiteLeaveTracker,
+  whiteOneDrive,
+  whiteOutlook,
+  whitePayroll,
+  whiteReports,
+  whiteSharepoint,
+  whiteTeams,
+  whiteVExpense,
+  whiteVFlourish,
+  whiteVHire,
+  whiteVPerform,
+  whiteVReward,
+  whiteVTrackLogo,
+  whiteVTravel,
+  whiteYammer
 };
