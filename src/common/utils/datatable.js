@@ -200,7 +200,7 @@ export const getApproversWithIds = (approvers) => {
 export const getTotalHrs = (timesheetData) => {
   let totalHrs = 0;
   for (const data of timesheetData) {
-    totalHrs += data.totalHrs
+    totalHrs += data.totalHrs;
   }
-  return totalHrs;
+  return (Math.round(totalHrs * 100) / 100).toFixed(2);
 };

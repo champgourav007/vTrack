@@ -228,7 +228,7 @@ export const DataTable = ({
         }
       });
       restProps['dateHours'] = [...dateHours];
-      restProps['totalHrs'] = totalHrs.toString();
+      restProps['totalHrs'] = (Math.round(totalHrs * 100) / 100).toFixed(2).toString();
       isEditButtonClicked ? dispatch(updateTimeSheetData(restProps)) : dispatch(saveTimeSheetData(restProps));
     }
     setIsAddButtonClicked(false);
@@ -356,7 +356,11 @@ export const DataTable = ({
   };
 
   const inputFieldHandler = (event, col) => {
-    if(event.target.value !== '' && (event.target.id === 'time' || col === 'billAllocation') && (parseInt(event.target.value) < parseInt(event.target.min) || parseInt(event.target.value) > parseInt(event.target.max))){
+    let valuesArray = event.target.value.split(".");
+    if(valuesArray.length !== 1 && valuesArray[1] >= 100){
+        toast.info(`You can not enter values after 2 decimal places`);
+    }
+    else if(event.target.value !== '' && (event.target.id === 'time' || col === 'billAllocation') && (parseInt(event.target.value) < parseInt(event.target.min) || parseInt(event.target.value) > parseInt(event.target.max))){
       toast.info(`Please Enter values between ${event.target.min}-${event.target.max}`);
     }
     else{

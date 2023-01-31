@@ -301,6 +301,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
               })
             );
           }
+          dispatch(getAssignedProjects());
           setSelectedPriodWeek(periodWeek);
           dispatch(
             setTimeSheetPeriodWeek(
@@ -459,7 +460,8 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         );
         break;
       case Modules.TIMESHEET:
-        dispatch(getTimesheetProjects());
+        if(tabName !== 'MY TIMESHEET')
+          dispatch(getTimesheetProjects());
         break;
       default:
         break;
