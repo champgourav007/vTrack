@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { removeLocalStorageItem, setLocalStorageItem } from "../common/utils/local-storage";
 import { ACCESS_TOKEN, ACCOUNT, EXPIRES_ON, TIME_OF_AUTO_LOGOUT } from "../common/constants/local-storage-keys";
-import { VTrackURL } from "../routes/routes";
+import { dashboardURL} from "../routes/routes";
 import Cookies from 'universal-cookie';
 
 export const useAzureADAuth = () => {
@@ -18,10 +18,10 @@ export const useAzureADAuth = () => {
       .then((e) => {
         console.log(e);
         setLocalStorageItem(ACCESS_TOKEN, e.accessToken);
-        localStorage.setItem("userInformation", JSON.stringify(e));
+        sessionStorage.setItem("userInformation", JSON.stringify(e));
         cookies.set('userInformation', e.accessToken, { path: '/'});
 
-        navigate(VTrackURL);
+        navigate(dashboardURL);
       })
       .catch((e) => {
         console.log(e);
@@ -36,7 +36,7 @@ export const useAzureADAuth = () => {
     instance
       .logoutPopup(logoutRequest)
       .then(() => {
-        navigate("/");
+        navigate("/dashboard");
         cookies.remove('userInformation', {path: "/", sameSite: false });
         localStorage.removeItem("userInformation");
       })

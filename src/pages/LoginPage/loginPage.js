@@ -2,46 +2,44 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { veersaLogo } from "../../common/icons";
 import { useAzureADAuth } from "../../config/use-azure-ad";
-import { VTrackURL } from "../../routes/routes";
+import { dashboardURL } from "../../routes/routes";
 import "./loginPage.css";
+import { dashboardImage } from "../../common/icons";
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
 
 export const LoginPage = () => {
   const { loginAzureADPopup } = useAzureADAuth();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleLogin = () => {
     loginAzureADPopup();
   };
 
   useEffect(() => {
-    handleLogin()
+    const accessToken = cookies.get('userInformation');
+    if (accessToken) navigate(dashboardURL);
   }, []);
 
   return (
     <div className="loginPage">
       <div className="leftDiv">
         <div className="leftDivText">
-          <div className="mainHeading">
-            Welcome to
-            <br />
-            vTrack
-          </div>
-          <div className="subHeading1">
-            One stop shop for project
-            <br />
-            management
-          </div>
+          <img src={veersaLogo} alt="" className="login-logo" />
+          <button className="loginBtn" onClick={() => handleLogin()}>
+            Login
+          </button>
         </div>
       </div>
       <div className="rightDiv">
-        <img src={veersaLogo} alt="" className="login-logo" />
-        <button className="loginBtn" onClick={() => handleLogin()}>
-          Login
-        </button>
-      </div>
+        <div className="mainHeading">
+          Welcome back
+          <br />
+        </div>
+        <div className="subHeading1">Nice to see you again</div>
+        <img src={dashboardImage} alt="" className="dashboard-image" />       
+        </div>
     </div>
   );
 };

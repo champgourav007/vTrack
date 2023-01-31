@@ -5,11 +5,12 @@
 }
 
 .leftDiv {
-    width: 30%;
+    width: 24%;
     background: #1773BC;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 10rem 12rem;
 }
 
 .rightDiv {
@@ -18,24 +19,34 @@
 }
 
 .leftDivText {
-    color: #FFFFFF;
+    height: 100%;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .mainHeading {
+
     font-family: 'Montserrat';
     font-style: normal;
     font-weight: 700;
-    font-size: 3.5rem;
-    line-height: 3.6875rem;
+    font-size: 6rem;
+    line-height: 4.87rem;    
+    color: #1773BC;
 }
 
 .subHeading1 {
-    margin-top: 2.625rem;
     font-family: 'Montserrat';
     font-style: normal;
     font-weight: 600;
-    font-size: 1.5rem;
-    line-height: 1.8125rem;
+    font-size: 3rem;
+    line-height: 2.75rem;    
+    color: #6E6F74;
+    
 }
 
 .rightDiv {
@@ -62,4 +73,9 @@
 .login-logo {
     height: 10rem;
     width: 10rem;
+}
+
+.dashboard-image{
+    height: 50rem;
+    width: 44rem;
 }
