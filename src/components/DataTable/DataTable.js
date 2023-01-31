@@ -247,6 +247,18 @@ export const DataTable = ({
     setNewRowAdded(initialData(headingName, selectedPeriodWeek));
   };
 
+  const dateCalc = (newValue) => {
+    let value = newValue.toISOString();
+    let date = new Date(value);
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    let time = 'T' + date.toLocaleTimeString('it-IT')
+    month = month<=9 ? '0'+month : month;
+    day = day<=9 ? '0'+day : day;
+    return year + '-' + month + '-' + day + time;
+  }
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
     if (headingName === Modules.CLIENT_ADMIN) {
@@ -343,6 +355,7 @@ export const DataTable = ({
   };
 
   const inputFieldHandler = (event, col) => {
+    console.log(event.target);
     if(event.target.value !== '' && (event.target.id === 'time' || col === 'billAllocation') && (parseInt(event.target.value) < parseInt(event.target.min) || parseInt(event.target.value) > parseInt(event.target.max))){
       toast.info(`Please Enter values between ${event.target.min}-${event.target.max}`);
     }
@@ -618,11 +631,12 @@ export const DataTable = ({
         </TableCell>
       );
     } else if (getTypeofColumn(col.id, headingName) === "textfield") {
+      console.log(col);
       return (
         <TableCell key={col.id} style={{ maxWidth: col.maxWidth ? col.maxWidth : 'auto' }}>
           <TextField
             id="outlined-required"
-            inputProps={{ maxLength: 100, min:col.min ? col.min : null, max:col.max ? col.max : null }}
+            inputProps={{ maxLength: 100, min:(col.min == 0 ? col.min : null), max:(col.max ? col.max : null )}}
             type={col.fieldType}
             label={getLabel(col.id, headingName)}
             placeholder=""
@@ -708,11 +722,11 @@ export const DataTable = ({
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label=""
-              value={newRowAdded[col.id]}
               onChange={(newValue) => {
-                let value = newValue.toISOString()
-                setNewRowAdded({ ...newRowAdded, [col.id]: value.split('.')[0] });
+                let formatedDate = dateCalc(newValue);
+                setNewRowAdded({ ...newRowAdded, [col.id]: formatedDate });
               }}
+              value={newRowAdded[col.id]}
               placeholder="Date"
               required={col.isRequired}
               renderInput={(params) => <TextField {...params} error={false} />}
