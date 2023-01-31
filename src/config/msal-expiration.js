@@ -8,11 +8,11 @@ export function setExpirationTimeout (
   instance,
   request,
   expiresOnString
-) {
-  const cookies = new Cookies();
-  if (expirationTimeoutId) {
-    clearTimeout(expirationTimeoutId);
-  }
+  ) {
+    const cookies = new Cookies();
+    if (expirationTimeoutId) {
+      clearTimeout(expirationTimeoutId);
+    }
 
   const TOKEN_SPARETIME_COEFFICIENT = 0.75;
   const tokenLifeTime = TOKEN_SPARETIME_COEFFICIENT * (+(new Date(expiresOnString)) - Date.now());
@@ -25,7 +25,7 @@ export function setExpirationTimeout (
     instance.loginRedirect(request)
       .catch((error) => {
         console.error(error);
-        window.location.reload(true);
+        window.location('/vTrack');
       });
     return;
   }

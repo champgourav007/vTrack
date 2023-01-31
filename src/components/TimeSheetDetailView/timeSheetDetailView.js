@@ -4,6 +4,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import { DATE_FORMAT } from "../../common/constants/extra-constants";
 import { Modules } from "../../common/constants/sidebar";
 import { AddDisableIcon, AddEnableIcon, crossIcon, editIcon } from "../../common/icons";
@@ -49,7 +50,7 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
     if (headingName === Modules.TIMESHEET){
       const dateHours = [];
       const restProps = {};
-      let totalHrs = 0;
+      let totalHrs = 0.00;
       Object.keys(newRowAdded).forEach(key=>{
         if(moment(key).isValid()){
           dateHours.push({
@@ -63,7 +64,7 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
         }
       });
       restProps['dateHours'] = [...dateHours];
-      restProps['totalHrs'] = totalHrs.toString();
+      restProps['totalHrs'] = (Math.round(totalHrs * 100) / 100).toFixed(2).toString();
       restProps['periodWeek'] = selectedPeriodWeek.startDate.format(DATE_FORMAT) +
       " - " +
       selectedPeriodWeek.endDate.format(DATE_FORMAT);
@@ -82,7 +83,16 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
   };
 
   const inputFieldHandler = (event, col) => {
-    setNewRowAdded({ ...newRowAdded, [col]: event.target.value });
+    let valuesArray = event.target.value.split(".");
+    if(valuesArray.length !== 1 && valuesArray[1] >= 100){
+      toast.info(`You can not enter values after 2 decimal places`);
+    }
+    else if(event.target.value !== '' && (event.target.id === 'time' || col === 'billAllocation') && (parseInt(event.target.value) < parseInt(event.target.min) || parseInt(event.target.value) > parseInt(event.target.max))){
+      toast.info(`Please Enter values between ${event.target.min}-${event.target.max}`);
+    }
+    else{
+      setNewRowAdded({ ...newRowAdded, [col]: event.target.value });
+    }
   };
 
   const isDateAdded = () =>{
@@ -330,7 +340,9 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
           <TableCell key={col.id} className="timeField">
             <TextField
               label={"Time"}
+              id="time"
               type="number"
+              inputProps={{min:0, max:24}}
               value={newRowAdded[date] === '-' ? 0 : newRowAdded[date]}
               style={{maxWidth:'6rem'}}
               required={col.isRequired}

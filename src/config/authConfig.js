@@ -93,6 +93,6 @@ window.addEventListener('storage', ({ key, newValue, oldValue }) =>{
 });
 
 export function checkMsalExpiration() {
-  const expiresOnFromStorage = getLocalStorageItem(EXPIRES_ON);
+  let expiresOnFromStorage = getLocalStorageItem(EXPIRES_ON);
   expiresOnFromStorage && setExpirationTimeout(msalClient, loginRequest, expiresOnFromStorage);
 }
