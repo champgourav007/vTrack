@@ -123,22 +123,6 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       }
     }
   },[headingName,tabName]);
-
-  // useEffect(() => {
-  //   console.log("hello - 1");
-  //   if (headingName === Modules.PROJECT_MANAGEMENT) {
-  //     dispatch(
-  //       getProjectManagementData({
-  //         projectId: projectId,
-  //         pageNo: 1,
-  //         pageSize: 10,
-  //         sortBy: "projectName",
-  //         sortDir: "ASC",
-  //         searchData: searchData,
-  //       })
-  //     );
-  //   }
-  // }, [ tabName ]);
   
   const handleSetColumnsData = (data) => {
     const temp = [];

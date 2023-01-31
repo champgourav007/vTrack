@@ -247,13 +247,14 @@ export const DataTable = ({
     setNewRowAdded(initialData(headingName, selectedPeriodWeek));
   };
 
-  const dateCalc = (newValue) => {
+  const dateCalc = (newValue, col) => {
+    let condition = col==="sowEndDate" || col==="msaEndDate" || col==="endDate" ? true : false;
     let value = newValue.toISOString();
     let date = new Date(value);
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
     let day = date.getDate();
-    let time = 'T' + date.toLocaleTimeString('it-IT')
+    let time = condition ? "T23:59:59" : "T00:00:00";
     month = month<=9 ? '0'+month : month;
     day = day<=9 ? '0'+day : day;
     return year + '-' + month + '-' + day + time;
@@ -355,7 +356,6 @@ export const DataTable = ({
   };
 
   const inputFieldHandler = (event, col) => {
-    console.log(event.target);
     if(event.target.value !== '' && (event.target.id === 'time' || col === 'billAllocation') && (parseInt(event.target.value) < parseInt(event.target.min) || parseInt(event.target.value) > parseInt(event.target.max))){
       toast.info(`Please Enter values between ${event.target.min}-${event.target.max}`);
     }
@@ -631,7 +631,6 @@ export const DataTable = ({
         </TableCell>
       );
     } else if (getTypeofColumn(col.id, headingName) === "textfield") {
-      console.log(col);
       return (
         <TableCell key={col.id} style={{ maxWidth: col.maxWidth ? col.maxWidth : 'auto' }}>
           <TextField
@@ -723,7 +722,7 @@ export const DataTable = ({
             <DatePicker
               label=""
               onChange={(newValue) => {
-                let formatedDate = dateCalc(newValue);
+                let formatedDate = dateCalc(newValue, col.id);
                 setNewRowAdded({ ...newRowAdded, [col.id]: formatedDate });
               }}
               value={newRowAdded[col.id]}
