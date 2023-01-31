@@ -247,6 +247,18 @@ export const DataTable = ({
     setNewRowAdded(initialData(headingName, selectedPeriodWeek));
   };
 
+  const dateCalc = (newValue) => {
+    let value = newValue.toISOString();
+    let date = new Date(value);
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    let time = 'T' + date.toLocaleTimeString('it-IT')
+    month = month<=9 ? '0'+month : month;
+    day = day<=9 ? '0'+day : day;
+    return year + '-' + month + '-' + day + time;
+  }
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
     if (headingName === Modules.CLIENT_ADMIN) {
@@ -708,11 +720,11 @@ export const DataTable = ({
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label=""
-              value={newRowAdded[col.id]}
               onChange={(newValue) => {
-                let value = newValue.toISOString()
-                setNewRowAdded({ ...newRowAdded, [col.id]: value.split('.')[0] });
+                let formatedDate = dateCalc(newValue);
+                setNewRowAdded({ ...newRowAdded, [col.id]: formatedDate });
               }}
+              value={newRowAdded[col.id]}
               placeholder="Date"
               required={col.isRequired}
               renderInput={(params) => <TextField {...params} error={false} />}
