@@ -39,6 +39,7 @@ import "./tabsTable.css";
 import { Select } from "@mui/material";
 import { CalendarMonth, CalendarMonthRounded, Person } from "@mui/icons-material";
 import { assignedProjectsSaga } from "../../saga/get-assigned-projects-saga";
+import { DATE_FORMAT } from "../../common/constants/extra-constants";
 
 const getPeriods = () => {
   let date = moment().subtract(42, "days");
@@ -78,20 +79,20 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     if(timeSheetData === null && headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
       dispatch(
         saveTimeSheetPeriodData({
-          periodWeek: moment().startOf('isoweek').format('DD MMM YYYY') + ' - ' + moment().add(7,'days').startOf('week').format('DD MMM YYYY'),
+          periodWeek: moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().add(7,'days').startOf('week').format(DATE_FORMAT),
           startDT: moment().startOf('isoweek').format(),
           endDT: moment().endOf('isoweek').format(),
         })
       );
-      dispatch(setTimeSheetPeriodWeek(moment().startOf('isoweek').format('DD MMM') + ' - ' + moment().add(7,'days').startOf('week').format('DD MMM')));  
+      dispatch(setTimeSheetPeriodWeek(moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().add(7,'days').startOf('week').format(DATE_FORMAT)));  
     }
     if(headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
       dispatch(
         getMyTimeSheetData({
           periodWeek:
-            selectedPeriodWeek.startDate.format("DD MMM") +
+            selectedPeriodWeek.startDate.format(DATE_FORMAT) +
             " - " +
-            selectedPeriodWeek.endDate.format("DD MMM"),
+            selectedPeriodWeek.endDate.format(DATE_FORMAT),
         })
       );
     }
@@ -100,9 +101,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         dispatch(
           getTimeSheetReportee({
             periodWeek:
-              selectedPeriodWeek.startDate.format("DD MMM") +
+              selectedPeriodWeek.startDate.format(DATE_FORMAT) +
               " - " +
-              selectedPeriodWeek.endDate.format("DD MMM"),
+              selectedPeriodWeek.endDate.format(DATE_FORMAT),
             projectId: "",
             employeeId: ""
           })
@@ -112,9 +113,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         dispatch(
           getTimeSheetData({
             periodWeek:
-              selectedPeriodWeek.startDate.format("DD MMM") +
+              selectedPeriodWeek.startDate.format(DATE_FORMAT) +
               " - " +
-              selectedPeriodWeek.endDate.format("DD MMM"),
+              selectedPeriodWeek.endDate.format(DATE_FORMAT),
             employeeId: null,
             projectId: null
           })
@@ -299,18 +300,18 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     return periodWeeks.map((periodWeek) => (
       <MenuItem
         value={
-          periodWeek.startDate.format("DD MMM") +
+          periodWeek.startDate.format(DATE_FORMAT) +
           " - " +
-          periodWeek.endDate.format("DD MMM")
+          periodWeek.endDate.format(DATE_FORMAT)
         }
         onClick={() => {
           if (fromMyTimeSheet) {
             dispatch(
               saveTimeSheetPeriodData({
                 periodWeek:
-                  periodWeek.startDate.format("DD MMM YYYY") +
+                  periodWeek.startDate.format(DATE_FORMAT) +
                   " - " +
-                  periodWeek.endDate.format("DD MMM YYYY"),
+                  periodWeek.endDate.format(DATE_FORMAT),
                 startDT: periodWeek.startDate.format(),
                 endDT: periodWeek.endDate.endOf('isoweek').format(),
               })
@@ -319,16 +320,16 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           setSelectedPriodWeek(periodWeek);
           dispatch(
             setTimeSheetPeriodWeek(
-              periodWeek.startDate.format("DD MMM") +
+              periodWeek.startDate.format(DATE_FORMAT) +
                 " - " +
-                periodWeek.endDate.format("DD MMM")
+                periodWeek.endDate.format(DATE_FORMAT)
             )
           );
         }}
       >
-        {periodWeek.startDate.format("DD MMM") +
+        {periodWeek.startDate.format(DATE_FORMAT) +
           " - " +
-          periodWeek.endDate.format("DD MMM")}
+          periodWeek.endDate.format(DATE_FORMAT)}
       </MenuItem>
     ));
   };
@@ -539,7 +540,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                 <div className="button-flex">
                 <Select
                   IconComponent = {CalendarMonthRounded}
-                  defaultValue={periodWeeks[6].startDate.format('DD MMM') + ' - ' + periodWeeks[6].endDate.format('DD MMM')}
+                  defaultValue={periodWeeks[6].startDate.format(DATE_FORMAT) + ' - ' + periodWeeks[6].endDate.format(DATE_FORMAT)}
                   sx={{minWidth: '15rem'}}
                   className={"select-date"}
                 >{getDateItems(true)}
@@ -548,14 +549,14 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                     select
                     sx={{minWidth: '15rem'}}
                     
-                    defaultValue={periodWeeks[6].startDate.format('DD MMM') + ' - ' + periodWeeks[6].endDate.format('DD MMM')}
+                    defaultValue={periodWeeks[6].startDate.format(DATE_FORMAT) + ' - ' + periodWeeks[6].endDate.format(DATE_FORMAT)}
                   >
                     {getDateItems(true)}
                   </TextField> */}
                   <button
                     disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved' || timeSheetData[0].periodStatus === 'Submitted' || timeSheetData[0].periodStatus === 'Partially Approved'))}
                     className={
-                      isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus === 'Approved' || timeSheetData[0].periodStatus === 'Submitted' || timeSheetData[0].periodStatus === 'Partially Approved'))
+                      isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus !== 'Open'))
                         ? "disableAddButton"
                         : "addBtn"
                     }
@@ -645,7 +646,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                 </TextField>
                 <Select
                   IconComponent = {CalendarMonthRounded}
-                  defaultValue={periodWeeks[6].startDate.format('DD MMM') + ' - ' + periodWeeks[6].endDate.format('DD MMM')}
+                  defaultValue={periodWeeks[6].startDate.format(DATE_FORMAT) + ' - ' + periodWeeks[6].endDate.format(DATE_FORMAT)}
                   sx={{minWidth: '15rem'}}
                   className={"select-date"}
                 >
@@ -657,7 +658,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                     if(tabName === 'REPORTEES'){
                       dispatch(
                         getTimeSheetReportee({
-                          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
+                          periodWeek: selectedPeriodWeek.startDate.format(DATE_FORMAT) + ' - ' + selectedPeriodWeek.endDate.format(DATE_FORMAT),
                           projectId: selectedProject.projectId ? selectedProject.projectId : "",
                           employeeId: selectedEmployee.employeeId ? selectedEmployee.employeeId : ""
                         })
@@ -666,7 +667,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                     else{
                       dispatch(
                         getTimeSheetData({
-                          periodWeek: selectedPeriodWeek.startDate.format('DD MMM') + ' - ' + selectedPeriodWeek.endDate.format('DD MMM'),
+                          periodWeek: selectedPeriodWeek.startDate.format(DATE_FORMAT) + ' - ' + selectedPeriodWeek.endDate.format(DATE_FORMAT),
                           employeeId: selectedEmployee.employeeId,
                           projectId: selectedProject.projectId
                         })

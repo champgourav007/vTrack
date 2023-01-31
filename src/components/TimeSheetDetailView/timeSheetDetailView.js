@@ -4,6 +4,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { DATE_FORMAT } from "../../common/constants/extra-constants";
 import { Modules } from "../../common/constants/sidebar";
 import { AddDisableIcon, AddEnableIcon, crossIcon, editIcon } from "../../common/icons";
 import { getApproversIds, getFullName, getLabel, getTotalHrs, UniqueIds } from "../../common/utils/datatable";
@@ -63,9 +64,9 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
       });
       restProps['dateHours'] = [...dateHours];
       restProps['totalHrs'] = totalHrs.toString();
-      restProps['periodWeek'] = selectedPeriodWeek.startDate.format("DD MMM") +
+      restProps['periodWeek'] = selectedPeriodWeek.startDate.format(DATE_FORMAT) +
       " - " +
-      selectedPeriodWeek.endDate.format("DD MMM");
+      selectedPeriodWeek.endDate.format(DATE_FORMAT);
       restProps['employeeId'] = selectedEmpId;
       restProps['fromDetailView'] = true;
       dispatch(updateTimeSheetData(restProps));
@@ -442,9 +443,9 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
     dispatch(
       getDetailedTimeSheetData({
         periodWeek:
-          selectedPeriodWeek.startDate.format("DD MMM") +
+          selectedPeriodWeek.startDate.format(DATE_FORMAT) +
           " - " +
-          selectedPeriodWeek.endDate.format("DD MMM"),
+          selectedPeriodWeek.endDate.format(DATE_FORMAT),
         employeeId: selectedEmpId,
         projectId: null,
         projectManagerId: null,
@@ -469,7 +470,7 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
             </div>
             <div className="namePeriodDiv">
               <div className="namePeriodLabel">Period Week:</div>
-              <div className="namePeriodField">{selectedPeriodWeek.startDate.format("DD MMM") + " - " + selectedPeriodWeek.endDate.format("DD MMM")}</div>
+              <div className="namePeriodField">{selectedPeriodWeek.startDate.format(DATE_FORMAT) + " - " + selectedPeriodWeek.endDate.format(DATE_FORMAT)}</div>
             </div>
           </div>
           <Paper sx={{ width: "100%", overflow: "hidden" }}>

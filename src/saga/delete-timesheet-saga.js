@@ -11,7 +11,7 @@ function* workerDeleteTimeSheetSaga({ payload }) {
     toast.success("Data Deleted", toastOptions)
     yield put(
         getMyTimeSheetData({
-          // periodWeek: periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM'),
+          // periodWeek: periodWeek.startDate.format(DATE_FORMAT) + ' - ' + periodWeek.endDate.format(DATE_FORMAT),
           pageNo: 1,
           pageSize: 10,
           sortDir: "ASC",

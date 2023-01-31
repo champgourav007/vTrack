@@ -14,7 +14,7 @@ import { toastOptions } from "../common/utils/toasterOptions";
 function* workerUpdateTimeSheetSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
-    // yield put(setDetailedTimeSheetData(null));
+    yield put(setDetailedTimeSheetData(null));
     const timesheetPeriodWeek = yield select(state=>
       state.MODULES.timesheetPeriodWeek);
     yield call(updateTimeSheetDetails, payload.data);
@@ -30,7 +30,7 @@ function* workerUpdateTimeSheetSaga({ payload }) {
     else{
       yield put(
           getMyTimeSheetData({
-            // periodWeek: periodWeek.startDate.format('DD MMM') + ' - ' + periodWeek.endDate.format('DD MMM'),
+            // periodWeek: periodWeek.startDate.format(DATE_FORMAT) + ' - ' + periodWeek.endDate.format(DATE_FORMAT),
             pageNo: 1,
             pageSize: 10,
             sortDir: "ASC",
