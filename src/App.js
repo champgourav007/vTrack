@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LoginPage } from "./pages/LoginPage/loginPage";
-import { indexURL, VTrackURL } from "./routes/routes";
+import { indexURL, VTrackURL, dashboardURL } from "./routes/routes";
 import { VTrack } from "./pages/vTrack/VTrack";
 import "./common/fonts/Montserrat/static/Montserrat-Regular.ttf";
 import "./common/fonts/Montserrat/static/Montserrat-Bold.ttf";
@@ -13,6 +13,7 @@ import { useWindowSize } from "./common/hooks";
 import {Settings} from "./components/Settings/settings";
 import { checkMsalExpiration } from "./config/authConfig";
 import { useEffect } from "react";
+import { Dashboard } from "./pages/Dashboard/dashboard";
 
 function App() {
   
@@ -26,6 +27,7 @@ function App() {
       <Routes>
         <Route path={VTrackURL + "/:moduleName"} element={<VTrack />}></Route>
         <Route path={VTrackURL} element={<VTrack />}></Route>
+        <Route path={dashboardURL} element={<Dashboard/>}></Route>
         <Route path={indexURL} element={<LoginPage />}></Route>
       </Routes>
     </BrowserRouter>

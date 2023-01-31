@@ -97,3 +97,16 @@
   justify-content: center;
   flex-direction: column;
 }
+
+.dashboardPage-text{
+  font-size: 4rem;
+  font-family: "Montserrat-Medium";
+  font-weight: 400;
+  color: #1773bc;
+}
+
+.logout-icon{
+  height:3.5rem !important;
+  width:3rem !important;
+  color: #ff4d4d !important;
+}

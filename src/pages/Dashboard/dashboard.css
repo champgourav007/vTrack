@@ -34,12 +34,13 @@
 
 .individualItemImg {
   cursor: pointer;
-  height: 12rem;
-  width: 12rem;
+  height: 3.5rem;
+  width: 3.5rem;
 }
 
 .allItemsWrapper {
   display: flex;
+  flex-wrap: wrap;
   gap: 5rem;
   padding: 2.5rem;
   background: #FFFFFF;
@@ -51,4 +52,30 @@
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
+}
+
+.individualImgcontainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 9.81rem;
+  width: 9.81rem;
+  box-shadow: 0px 0px 0.31rem rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  border-radius: 0.62rem;
+}
+
+.headingText{
+  
+  font-family: 'Montserrat';
+font-style: normal;
+font-weight: 600;
+font-size: 1.75rem;
+line-height: 2.12rem;
+
+color: #1773BC;
+}
+
+.removeUnderline{
+  text-decoration: none;
 }
