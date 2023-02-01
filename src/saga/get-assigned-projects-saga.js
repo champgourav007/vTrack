@@ -1,4 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
+import { DATE_FORMAT } from "../common/constants/extra-constants";
 import { getAssignedProjectsDetails } from "../http/requests/dropdown";
 import {
   DropdownType,
@@ -6,10 +7,10 @@ import {
   setVtrackLoader
 } from "../redux/actions";
 
-function* workerAssignedProjectsSaga() {
+function* workerAssignedProjectsSaga({ payload }) {
   try {
     yield put(setVtrackLoader(true));
-    const assignedProjectsDetails = yield call(getAssignedProjectsDetails);
+    const assignedProjectsDetails = yield call(getAssignedProjectsDetails,payload);
     yield put(setAssignedProjects(assignedProjectsDetails));
     yield put(setVtrackLoader(false));
   } catch (err) {

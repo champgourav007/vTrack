@@ -73,9 +73,10 @@ export const setAllProjectsData = (data) =>
     payload: data,
   });
 
-export const getAssignedProjects = () => 
+export const getAssignedProjects = (data) => 
   ({
     type: DropdownType.GET_ASSIGNED_PROJECTS_DATA,
+    payload: data
   });
 
 export const setAssignedProjects = (data) => 

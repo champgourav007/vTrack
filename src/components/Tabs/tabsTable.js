@@ -301,7 +301,12 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
               })
             );
           }
-          dispatch(getAssignedProjects());
+          let startDate = moment(periodWeek.startDate);
+          let endDate = moment(periodWeek.endDate);
+          dispatch(getAssignedProjects({
+            startDate: moment(startDate).format("YYYY-MM-DDT00:00:00"),
+            endDate: moment(endDate).format("YYYY-MM-DDT00:00:00")
+          }));
           setSelectedPriodWeek(periodWeek);
           dispatch(
             setTimeSheetPeriodWeek(
@@ -476,7 +481,12 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       dispatch(getListItems());
     }
     if (headingName === Modules.TIMESHEET || headingName === Modules.PROJECT_MANAGEMENT && projectManagementData === null) {
-      dispatch(getAssignedProjects());
+      let startDate = moment(selectedPeriodWeek.startDate);
+      let endDate = moment(selectedPeriodWeek.endDate);
+      dispatch(getAssignedProjects({
+            startDate: moment(startDate).format("YYYY-MM-DDT00:00:00"),
+            endDate: moment(endDate).format("YYYY-MM-DDT00:00:00")
+          }));
     }
     if(headingName === Modules.TIMESHEET && tabName !== 'MY TIMESHEET'){
       if(selectedProjectId){
