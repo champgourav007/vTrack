@@ -23,7 +23,9 @@ import { getRolesSaga } from "./get-user-roles-setting-saga";
 import { myTimeSheetSaga } from "./my-timesheet-saga";
 import { projectAdminSaga } from "./project-admin-saga";
 import { projectAllocationSaga } from "./project-allocation-saga";
+import { saveClientAdminFileSaga } from "./save-client-admin-file-saga";
 import { saveClientAdminSaga } from "./save-client-admin-saga";
+import { saveProjectAdminFileSaga } from "./save-project-admin-file-saga";
 import { saveProjectAdminSaga } from "./save-project-admin-saga";
 import { saveProjectManagementSaga } from "./save-project-management-data";
 import { saveTimeSheetPeriodSaga } from "./save-timesheet-period-saga";
@@ -80,6 +82,8 @@ export function* rootSaga() {
     fork(assignedProjectsSaga),
     fork(detailedTimeSheetSaga),
     fork(timeSheetReporteeSaga),
-    fork(getTimesheetProjectsSaga)
+    fork(getTimesheetProjectsSaga),
+    fork(saveClientAdminFileSaga),
+    fork(saveProjectAdminFileSaga)
   ]);
 }

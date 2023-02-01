@@ -3,6 +3,7 @@ export const ProjectAdminType = {
     GET_PROJECT_ADMIN_DATA: 'GET_PROJECT_ADMIN_DATA',
     SET_PROJECT_ADMIN_DATA: 'SET_PROJECT_ADMIN_DATA',
     SAVE_PROJECT_ADMIN_DATA: 'SAVE_PROJECT_ADMIN_DATA',
+    SAVE_PROJECT_ADMIN_FILE_DATA: 'SAVE_PROJECT_ADMIN_FILE_DATA',
     UPDATE_PROJECT_ADMIN_DATA: 'UPDATE_PROJECT_ADMIN_DATA',
     DELETE_PROJECT_ADMIN_DATA: 'DELETE_PROJECT_ADMIN_DATA',
   }
@@ -34,6 +35,12 @@ export const ProjectAdminType = {
   export const updateProjectAdminData = (data) => 
   ({
     type: ProjectAdminType.UPDATE_PROJECT_ADMIN_DATA,
+    payload: { data },
+  });
+
+  export const postProjectAdminFile = (data) => 
+  ({
+    type: ProjectAdminType.SAVE_PROJECT_ADMIN_FILE_DATA,
     payload: { data },
   });
   
