@@ -25,7 +25,7 @@ export function setExpirationTimeout (
     instance.loginRedirect(request)
       .catch((error) => {
         console.error(error);
-        window.location('/vTrack');
+        window.location.reload(true);
       });
     return;
   }
