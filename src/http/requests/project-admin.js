@@ -1,5 +1,5 @@
 import { HttpMethod } from "../../common/constants/http-requests";
-import { httpRequest } from "../../common/utils/http-request";
+import { httpRequest, httpRequestForFile } from "../../common/utils/http-request";
 import { PROJECT_ADMIN_API } from "../api";
 
 export const getProjectAdminDetails = (pageNo, pageSize, sortDir, sortBy, searchData) =>
@@ -26,4 +26,11 @@ export const deleteProjectAdminDetails = (projectId) =>
   httpRequest({
     url: `${PROJECT_ADMIN_API}/${projectId}/delete-project`,
     method: HttpMethod.DELETE,
+  });
+
+export const postProjectAdminFile = (data) =>
+  httpRequestForFile({
+    url: `${PROJECT_ADMIN_API}/upload-sow?projectId=${data.id}&projectName=${data.name}`,
+    method: HttpMethod.POST,
+    data: data.data
   });

@@ -45,3 +45,31 @@ export const httpRequest = async (
     return Promise.reject(response);
   }
 };
+
+export const httpRequestForFile = async (
+  options,
+) => {
+  try {
+    const accessToken = getLocalStorageItem(ACCESS_TOKEN);
+
+    const authorization = accessToken ? `Bearer ${accessToken}` : '';
+    const isOcpApimTrace = false;
+    const headers = {
+      'x-correlation-id': v4(),
+      ...(isOcpApimTrace && { 'Ocp-Apim-Trace': 'True' }),
+      Authorization: authorization,
+      "Content-Type": "multipart/form-data"
+    };
+    const response = await axios({
+      ...options,
+      params: options.params,
+      headers: headers,
+    });
+
+    return response.data;
+  } catch (error) {
+    const { response } = error;
+
+    return Promise.reject(response);
+  }
+};

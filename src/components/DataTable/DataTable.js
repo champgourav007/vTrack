@@ -43,12 +43,14 @@ import {
   deleteProjectAdminData,
   getProjectAdminData,
   getProjectAllocationData,
+  postProjectAdminFile,
   saveProjectAdminData,
   updateProjectAdminData
 } from "../../redux/actions";
 import {
   deleteClientAdminData,
   getClientAdminData,
+  postClientAdminFile,
   saveClientAdminData,
   updateClientAdminData
 } from "../../redux/actions/client-admin";
@@ -131,29 +133,18 @@ export const DataTable = ({
     return 'Are you sure you want to Delete?';
   }
 
-  const getClientAdminORProjectAdminData = () => {
-    if(headingName === Modules.CLIENT_ADMIN) {
-      dispatch(
-        getClientAdminData({
-          pageNo: 1,
-          pageSize: 10,
-          sortBy: "clientName",
-          sortDir: "ASC",
-          searchData: searchData,
-        })
-      )
-    } else if(headingName === Modules.PROJECT_ADMIN) {
-      dispatch(
-        getProjectAdminData({
-          pageNo: 1,
-          pageSize: 10,
-          sortBy: "projectName",
-          sortDir: "ASC",
-          searchData: searchData,
-        })
-      )
+  const getClientAdminORProjectAdminData = (file, id, name, headingName) => {
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      let URL = "";
+      if (headingName === Modules.CLIENT_ADMIN) 
+        dispatch(postClientAdminFile({ id: id, name: name, data: formData }))
+      else if (headingName === Modules.PROJECT_ADMIN)
+        dispatch(postProjectAdminFile({ id: id, name: name, data: formData }))
     }
-  }  
+  };
+
   const filterNamesHandler = (e, col) => 
   {
     if(col === "employeeName")
@@ -1100,15 +1091,12 @@ export const DataTable = ({
                                           accept="*"
                                           type="file"
                                           onChange={(e) => {
-                                            fileHandler(
+                                            getClientAdminORProjectAdminData(
                                               e.target.files[0],
                                               row.clientId,
                                               row.clientName,
                                               headingName
                                             )
-                                            setTimeout(() => {
-                                              getClientAdminORProjectAdminData()
-                                            }, [1000])
                                           }
                                           }
                                         />
@@ -1119,15 +1107,12 @@ export const DataTable = ({
                                           accept="*"
                                           type="file"
                                           onChange={(e) => {
-                                            fileHandler(
+                                            getClientAdminORProjectAdminData(
                                               e.target.files[0],
                                               row.projectId,
                                               row.projectName,
                                               headingName
                                             )
-                                            setTimeout(() => {
-                                              getClientAdminORProjectAdminData()
-                                            }, [1000])
                                           }
                                           }
                                         />

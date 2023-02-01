@@ -1,5 +1,5 @@
 import { HttpMethod } from "../../common/constants/http-requests";
-import { httpRequest } from "../../common/utils/http-request";
+import { httpRequest, httpRequestForFile } from "../../common/utils/http-request";
 import { CLIENT_API } from "../api";
 
 export const getClientAdminDetails = (pageNo, pageSize, sortDir, sortBy, searchData) =>
@@ -26,4 +26,11 @@ export const deleteClientAdminDetails = (clientId) =>
   httpRequest({
     url: `${CLIENT_API}/${clientId}/delete-client`,
     method: HttpMethod.DELETE,
+  });
+
+export const postClientAdminFile = (data) =>
+  httpRequestForFile({
+    url: `${CLIENT_API}/upload-msa?clientId=${data.id}&clientName=${data.name}`,
+    method: HttpMethod.POST,
+    data: data.data
   });
