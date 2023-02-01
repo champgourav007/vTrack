@@ -180,7 +180,7 @@ export function Settings() {
           <input
             className="searchBox"
             type="search"
-            placeholder="Search by Emp Name"
+            placeholder="Search by Employee Name"
             onChange={setSearchDataHelper}
           />
         </div>

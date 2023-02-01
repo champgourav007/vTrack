@@ -48,7 +48,7 @@ export const TopBar = () => {
           </div>
           <div className="mainText">{props.mainText}</div>
           </> :
-          <div className="dashboardPage-text">Dashboard</div>
+          <div className="dashboardPage-text"></div>
         }
         </div>
         <div className="topbar-right">

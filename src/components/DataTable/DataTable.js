@@ -708,7 +708,7 @@ export const DataTable = ({
     } else if (getTypeofColumn(col.id, headingName) === "select") {
       return (
         <TableCell key={col.id} style={{ maxWidth: col.maxWidth ? col.maxWidth : 'auto' }}>
-        <FormControl fullWidth>
+        <FormControl fullWidth required={col.isRequired}>
           <InputLabel className="select-label" id={`label-for-${col.id}`}>{getLabel(col.id, headingName)}</InputLabel>
           <Select
             id="outlined-select-currency"

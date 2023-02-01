@@ -614,7 +614,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                 </TextField>
                 <TextField
                   select
-                  label={"Emp"}
+                  label={"Employee Name"}
                   value={selectedEmployee.employeeName ? selectedEmployee.employeeName : ""}
                   sx={{
                     minWidth: '15rem',
