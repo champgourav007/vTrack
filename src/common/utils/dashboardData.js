@@ -45,7 +45,7 @@ export const vTools = [
     image: vTrackLogo,
     color: "#1773BC",
     hoveredImg: whiteVTrackLogo,
-    link: "https://vtrack-web.azurewebsites.net/vTrack/",
+    link: "/vTrack",
   },
   {
     name: "Flourish",
