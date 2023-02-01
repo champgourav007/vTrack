@@ -703,6 +703,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         headingName={headingName}
         tabName={tabName}
         setColumns={setColumns}
+        setRows={setRows}
         totalRecord={totalRecord}
         isAddButtonClicked={isAddButtonClicked}
         setIsAddButtonClicked={setIsAddButtonClicked}

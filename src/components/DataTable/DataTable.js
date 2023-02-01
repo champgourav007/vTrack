@@ -59,6 +59,7 @@ import Loader from "../Loader";
 import "./DataTable.css";
 import { TimeSheetDetailView } from "../TimeSheetDetailView/timeSheetDetailView";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -85,6 +86,7 @@ export const DataTable = ({
   rows,
   columns,
   setColumns,
+  setRows,
   totalRecord,
   isAddButtonClicked,
   setIsAddButtonClicked,
@@ -96,7 +98,7 @@ export const DataTable = ({
   selectedPeriodWeek,
   projectId
 }) => {
-  const { clientsData, allTasks, listItems, assignedProjects } =
+  const { clientsData, allTasks, listItems, assignedProjects, clientAdminData, projectAdminData } =
     useSelector(({ MODULES }) => MODULES);
 
   const { allUserDetails } = useSelector(({ USER }) => USER);
@@ -129,6 +131,29 @@ export const DataTable = ({
     return 'Are you sure you want to Delete?';
   }
 
+  const getClientAdminORProjectAdminData = () => {
+    if(headingName === Modules.CLIENT_ADMIN) {
+      dispatch(
+        getClientAdminData({
+          pageNo: 1,
+          pageSize: 10,
+          sortBy: "clientName",
+          sortDir: "ASC",
+          searchData: searchData,
+        })
+      )
+    } else if(headingName === Modules.PROJECT_ADMIN) {
+      dispatch(
+        getProjectAdminData({
+          pageNo: 1,
+          pageSize: 10,
+          sortBy: "projectName",
+          sortDir: "ASC",
+          searchData: searchData,
+        })
+      )
+    }
+  }  
   const filterNamesHandler = (e, col) => 
   {
     if(col === "employeeName")
@@ -938,6 +963,17 @@ export const DataTable = ({
     }
   }, [dialogDeleteButtonClicked]);
 
+  useEffect(() => {
+    // For Download Button
+    if(clientAdminData) {
+      setColumns(clientAdminData)
+      setRows(clientAdminData)
+    } else if(projectAdminData) {
+      setColumns(projectAdminData)
+      setRows(projectAdminData)
+    }
+  }, [clientAdminData, projectAdminData]);
+
   React.useEffect(() => {
     if (selectedPeriodWeek) {
       setNewRowAdded(initialData(headingName, selectedPeriodWeek));
@@ -1059,13 +1095,17 @@ export const DataTable = ({
                                           hidden
                                           accept="*"
                                           type="file"
-                                          onChange={(e) =>
+                                          onChange={(e) => {
                                             fileHandler(
                                               e.target.files[0],
                                               row.clientId,
                                               row.clientName,
                                               headingName
                                             )
+                                            setTimeout(() => {
+                                              getClientAdminORProjectAdminData()
+                                            }, [1000])
+                                          }
                                           }
                                         />
                                       )}
@@ -1074,13 +1114,17 @@ export const DataTable = ({
                                           hidden
                                           accept="*"
                                           type="file"
-                                          onChange={(e) =>
+                                          onChange={(e) => {
                                             fileHandler(
                                               e.target.files[0],
                                               row.projectId,
                                               row.projectName,
                                               headingName
                                             )
+                                            setTimeout(() => {
+                                              getClientAdminORProjectAdminData()
+                                            }, [1000])
+                                          }
                                           }
                                         />
                                       )}
