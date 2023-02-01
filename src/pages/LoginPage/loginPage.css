@@ -68,6 +68,7 @@
     font-size: 2rem;
     line-height: 2.5rem;
     padding: 0.5rem 2rem;
+    cursor: pointer;
 }
 
 .login-logo {
