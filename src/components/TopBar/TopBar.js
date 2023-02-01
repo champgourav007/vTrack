@@ -24,7 +24,6 @@ export const TopBar = () => {
   }, []);
 
   const routeParams = useParams();
-  console.log(routeParams);
 
   useEffect(() => {
     if (userData && userData.data) {

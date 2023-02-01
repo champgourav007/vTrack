@@ -16,7 +16,6 @@ export const useAzureADAuth = () => {
     instance
       .loginPopup(loginRequest)
       .then((e) => {
-        console.log(e);
         setLocalStorageItem(ACCESS_TOKEN, e.accessToken);
         sessionStorage.setItem("userInformation", JSON.stringify(e));
         cookies.set('userInformation', e.accessToken, { path: '/'});
