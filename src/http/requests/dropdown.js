@@ -38,10 +38,10 @@ export const projectTasksDetails = () =>
     method: HttpMethod.GET,
   });
 
-export const getAssignedProjectsDetails = () => 
-  httpRequest({
-    url: `${DROPDOWN}/get-projects-assigned-to-user`,
-    method: HttpMethod.GET,
+export const getAssignedProjectsDetails = (payload) => 
+httpRequest({
+  url: `${DROPDOWN}/get-projects-assigned-to-user?startDate=${payload.startDate}&endDate=${payload.endDate}`,
+  method: HttpMethod.GET,
   });
 
 export const getReportees = (projectId) => {

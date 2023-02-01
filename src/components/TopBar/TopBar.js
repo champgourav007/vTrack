@@ -68,7 +68,7 @@ export const TopBar = () => {
               <div className="user-role">{activeUserRole ? activeUserRole : ''}</div>
             </div>
             {routeParams.moduleName ? "" : 
-            <div>
+            <div style={{cursor:"pointer"}}>
                 <Tooltip title="Logout">
               <LogoutRoundedIcon
                   className="logout-icon"
