@@ -11,8 +11,8 @@ function* workerSaveProjectAdminFileSaga({ payload }) {
     toast.success("Data Saved", toastOptions)
     yield put(
       getProjectAdminData({
-        pageNo: 1,
-        pageSize: 10,
+        pageNo: payload.data.pageNo+1,
+        pageSize: payload.data.rows,
         sortDir: "ASC",
         sortBy: "projectName",
         searchData: ''
