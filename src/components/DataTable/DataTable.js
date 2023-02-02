@@ -186,7 +186,6 @@ export const DataTable = ({
           i.lastName?.toLowerCase().includes(e.toLowerCase()) ||
           i.email?.toLowerCase().includes(e.toLowerCase())
           ))})
-
       }
   }
 
