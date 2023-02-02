@@ -955,6 +955,7 @@ export const DataTable = ({
     if (dialogDeleteButtonClicked) {
       deleteButtonClicked(deleteRow);
       setDialogDeleteButtonClicked(false)
+      resetSearchData()
     }
   }, [dialogDeleteButtonClicked]);
 
