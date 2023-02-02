@@ -98,6 +98,16 @@ export const getTypeofColumn = (col, moduleName) => {
   }
 };
 
+export const getisRequiredofColumn = (col, moduleName) => {
+  if (tableColumnsData[moduleName.replace(' ', '')] && tableColumnsData[moduleName.replace(' ', '')].length){
+    for (let column of tableColumnsData[moduleName.replace(' ', '')]) {
+      if (column.id === col) {
+        return column.isRequired;
+      }
+    }
+  }
+}
+
 export const getLabel = (col, moduleName) => {
   if (tableColumnsData[moduleName.replace(' ', '')] && tableColumnsData[moduleName.replace(' ', '')].length) {
     for (let column of tableColumnsData[moduleName.replace(' ', '')]) {
