@@ -11,8 +11,8 @@ function* workerSaveClientAdminFileSaga({ payload }) {
     toast.success("Data Saved", toastOptions)
     yield put(
       getClientAdminData({
-        pageNo: 1,
-        pageSize: 10,
+        pageNo: payload.data.pageNo+1,
+        pageSize: payload.data.rows,
         sortDir: "ASC",
         sortBy: "clientName",
         searchData: ''

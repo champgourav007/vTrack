@@ -202,5 +202,7 @@ export const getTotalHrs = (timesheetData) => {
   for (const data of timesheetData) {
     totalHrs += data.totalHrs;
   }
-  return (Math.round(totalHrs * 100) / 100).toFixed(2);
+  let finalHours=(Math.round(totalHrs * 100) / 100).toFixed(2);
+  if(finalHours.split('.')[1]==="00") finalHours=(Math.round(totalHrs * 100) / 100)
+  return finalHours;
 };

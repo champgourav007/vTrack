@@ -139,9 +139,9 @@ export const DataTable = ({
       formData.append("file", file);
       let URL = "";
       if (headingName === Modules.CLIENT_ADMIN) 
-        dispatch(postClientAdminFile({ id: id, name: name, data: formData }))
+        dispatch(postClientAdminFile({ id: id, name: name, data: formData, pageNo: page, rows: rowsPerPage }))
       else if (headingName === Modules.PROJECT_ADMIN)
-        dispatch(postProjectAdminFile({ id: id, name: name, data: formData }))
+        dispatch(postProjectAdminFile({ id: id, name: name, data: formData, pageNo: page, rows: rowsPerPage }))
     }
   };
 
