@@ -34,6 +34,7 @@ import {
   getApproversWithIds,
   getFullName,
   getLabel,
+  getisRequiredofColumn,
   getTypeofColumn,
   initialSort,
   UniqueIds
@@ -630,6 +631,7 @@ export const DataTable = ({
   };
 
   const createInputField = (col) => {
+    // console.log(col);
     if (col.id === "paymentTerms") {
       return (
         <TableCell key={col.id}>
@@ -708,7 +710,7 @@ export const DataTable = ({
     } else if (getTypeofColumn(col.id, headingName) === "select") {
       return (
         <TableCell key={col.id} style={{ maxWidth: col.maxWidth ? col.maxWidth : 'auto' }}>
-        <FormControl fullWidth required={col.isRequired}>
+        <FormControl fullWidth required={getisRequiredofColumn(col.id, headingName)}>
           <InputLabel className="select-label" id={`label-for-${col.id}`}>{getLabel(col.id, headingName)}</InputLabel>
           <Select
             id="outlined-select-currency"
