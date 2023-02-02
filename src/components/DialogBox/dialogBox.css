@@ -1,0 +1,19 @@
+.title{
+    font-weight: 600 !important;
+    font-size: 2rem !important;
+    line-height: 2.5rem !important;
+    text-align: center;
+}
+.dialogActions{
+    justify-content: flex-end !important;
+    display: flex  !important;
+    flex-direction: row  !important;
+    gap: 1rem  !important;
+    align-items: center  !important;
+}
+.wrapper{
+    padding:3rem 2rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}

@@ -5,8 +5,12 @@
 }
 
 .leftDiv {
-    width: 30%;
+    width: 24%;
     background: #1773BC;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10rem 12rem;
 }
 
 .rightDiv {
@@ -15,35 +19,34 @@
 }
 
 .leftDivText {
-    margin-top: 40%;
-    margin-left: 13.5%;
-    color: #FFFFFF;
+    height: 100%;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .mainHeading {
+
     font-family: 'Montserrat';
     font-style: normal;
     font-weight: 700;
+    font-size: 6rem;
+    line-height: 4.87rem;    
+    color: #1773BC;
+}
+
+.subHeading1 {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 600;
     font-size: 3rem;
-    line-height: 3.6875rem;
-}
-
-.subHeading1 {
-    margin-top: 2.625rem;
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 1.5rem;
-    line-height: 1.8125rem;
-}
-
-.subHeading1 {
-    margin-top: 1.6875rem;
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 1.5rem;
-    line-height: 1.8125rem;
+    line-height: 2.75rem;    
+    color: #6E6F74;
+    
 }
 
 .rightDiv {
@@ -54,11 +57,6 @@
     align-items: center;
 }
 
-.logo {
-    height: 4rem;
-    width: 3rem;
-}
-
 .loginBtn {
     background: #1773BC;
     border-radius: 0.625rem;
@@ -67,7 +65,18 @@
     font-family: 'Montserrat';
     font-style: normal;
     font-weight: 600;
-    font-size: 1.25rem;
-    line-height: 1.5rem;
+    font-size: 2rem;
+    line-height: 2.5rem;
     padding: 0.5rem 2rem;
+    cursor: pointer;
+}
+
+.login-logo {
+    height: 10rem;
+    width: 10rem;
+}
+
+.dashboard-image{
+    height: 50rem;
+    width: 44rem;
 }

@@ -1,0 +1,35 @@
+.sidebar {
+  width: "16%";
+}
+
+.sidebar-dataTable-wrapper {
+  display: "flex";
+  flex-direction: "row";
+}
+
+.mainDiv {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  height: 100vh;
+}
+
+.sidebarContainer{
+  background-color: #1773bc;
+}
+
+.selectedModule {
+  padding: 1.875rem;
+  background-color: #FFFFFF;
+  flex: 1;
+}
+
+.announcementContainer{
+  margin: 0;
+  padding: 0;
+}
+
+.rightContainer {
+  flex: 1;
+  background-color: #FFFFFF;
+}

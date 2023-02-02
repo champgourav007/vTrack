@@ -1,0 +1,38 @@
+.css-heg063-MuiTabs-flexContainer {
+  display: flex;
+  gap: 0.25rem;
+}
+.css-1h9z7r5-MuiButtonBase-root-MuiTab-root {
+  border-radius: 0.375rem 0.375rem 0 0;
+  border-radius: 0.375rem 0.375rem 0 0 !important;
+  background-color: #fafafa !important;
+  font-family: Montserrat;
+  font-style: normal;
+  font-size: 0.875rem;
+  color: #484848;
+}
+.css-1h9z7r5-MuiButtonBase-root-MuiTab-root.Mui-selected {
+  background-color: #1773bc !important;
+  color: #ffffff !important;
+}
+
+.css-19kzrtu {
+  padding: 0 !important;
+}
+
+.tabs-table {
+  font-family: 'Montserrat' !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  font-size: 1.125rem !important;
+  line-height: 1.25rem !important;
+}
+
+.no-data {
+  color: #1773bc;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 18rem;
+}
