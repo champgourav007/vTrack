@@ -41,7 +41,7 @@ export const Dashboard = () => {
         <Sidebar changePage={changePage} pageName="Dashboard" />
       </div> */}
       <div className="rightContainer dashboardRightContainer">
-        <TopBar />
+        <TopBar headingName="Dashboard" />
         <div className="vToolWrapper">
           <div className="wrapperHeading">
             <span style={{ color: "#1773BC" }}>v</span>

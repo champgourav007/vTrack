@@ -8,7 +8,7 @@ import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import { useParams } from "react-router";
 import { Tooltip } from "@mui/material";
 import { useAzureADAuth } from "../../config/use-azure-ad";
-export const TopBar = () => {
+export const TopBar = ({headingName}) => {
   const dispatch = useDispatch();
   const { logoutAzureAD } = useAzureADAuth();
   const { userData } = useSelector(({ USER }) => USER);
@@ -48,7 +48,7 @@ export const TopBar = () => {
           </div>
           <div className="mainText">{props.mainText}</div>
           </> :
-          <div className="dashboardPage-text"></div>
+          <div className="dashboardPage-text">{headingName}</div>
         }
         </div>
         <div className="topbar-right">
