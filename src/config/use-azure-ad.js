@@ -18,6 +18,7 @@ export const useAzureADAuth = () => {
       .then((e) => {
         setLocalStorageItem(ACCESS_TOKEN, e.accessToken);
         sessionStorage.setItem("userInformation", JSON.stringify(e));
+        setLocalStorageItem("userInformation", JSON.stringify(e));
         cookies.set('userInformation', e.accessToken, { path: '/'});
 
         navigate(dashboardURL);

@@ -146,6 +146,18 @@ export const DataTable = ({
     }
   };
 
+  const getValueOfSelect = (id) => {
+    if(id === "projectManagerName"){
+      return getNameAndEmail(newRowAdded["projectManagerId"]);
+    }
+    else if(id === "deliveryOfficer"){
+      return getNameAndEmail(newRowAdded["deliveryOfficerId"]);
+    }
+    else if(id === "businessOwner"){
+      return getNameAndEmail(newRowAdded["businessOwnerId"]);
+    }
+  }
+
   const filterNamesHandler = (e, col) => 
   {
     if(col === "employeeName")
@@ -508,12 +520,12 @@ export const DataTable = ({
         managerTeam.data.map((option) => (
           <MenuItem
             key={option.id}
-            value={getFullName(option.firstName, option.lastName)}
+            value = {`${getFullName(option.firstName, option.lastName)} (${option.email})`}
             onClick={() =>{
               setManagerTeam(allUserDetails)
               setNewRowAdded({
                 ...newRowAdded,
-                [col]: getFullName(option.firstName, option.lastName),
+                [col]: `${getFullName(option.firstName, option.lastName)} (${option.email})`,
                 projectManagerId: option.id,
               })
             }}
@@ -528,12 +540,12 @@ export const DataTable = ({
         ownerTeam.data.map((option) => (
           <MenuItem
             key={option.id}
-            value={getFullName(option.firstName, option.lastName)}
+            value={`${getFullName(option.firstName, option.lastName)} (${option.email})`}
             onClick={() => {
               setOwnerTeam(allUserDetails)
               setNewRowAdded({
                 ...newRowAdded,
-                [col]: getFullName(option.firstName, option.lastName),
+                [col]: `${getFullName(option.firstName, option.lastName)} (${option.email})`,
                 [`${col}Id`]: option.id,
               })
             }}
@@ -548,12 +560,12 @@ export const DataTable = ({
         deliveryOfficerTeam.data.map((option) => (
           <MenuItem
             key={option.id}
-            value={getFullName(option.firstName, option.lastName)}
+            value={`${getFullName(option.firstName, option.lastName)} (${option.email})`}
             onClick={() =>{
               setDeliveryOfficerTeam(allUserDetails)
               setNewRowAdded({
                 ...newRowAdded,
-                [col]: getFullName(option.firstName, option.lastName),
+                [col]: `${getFullName(option.firstName, option.lastName)} (${option.email})`,
                 [`${col}Id`]: option.id,
               })
             }}
@@ -630,7 +642,6 @@ export const DataTable = ({
   };
 
   const createInputField = (col) => {
-    // console.log(col);
     if (col.id === "paymentTerms") {
       return (
         <TableCell key={col.id}>
@@ -707,6 +718,8 @@ export const DataTable = ({
         </TableCell>
       );
     } else if (getTypeofColumn(col.id, headingName) === "select") {
+      const value = getValueOfSelect(col.id);
+      const selectedValue = value ? value : newRowAdded[col.id];
       return (
         <TableCell key={col.id} style={{ maxWidth: col.maxWidth ? col.maxWidth : 'auto' }}>
         <FormControl fullWidth required={getisRequiredofColumn(col.id, headingName)}>
@@ -715,7 +728,7 @@ export const DataTable = ({
             id="outlined-select-currency"
             labelId={`label-for-${col.id}`}
             label={getLabel(col.id, headingName)}
-            value={newRowAdded[col.id]}
+            value={selectedValue}
             required={col.isRequired}
             className={"select-input"}
             autoComplete={false}
@@ -926,6 +939,18 @@ export const DataTable = ({
     return employeeName;
   };
 
+  const getNameAndEmail = (id) => {
+    let managerNameAndEmail = "";
+    allUserDetails &&
+      allUserDetails.data.length &&
+      allUserDetails.data.forEach((user) => {
+        if (user.id === id) {
+          managerNameAndEmail = `${user.firstName} ${user.lastName} (${user.email})`;
+        }
+      });
+    return managerNameAndEmail;
+  }
+
   const dialogBoxHandler = (rowData) => {
     setDeleteRow(rowData);
     setShowDialogBox(true);
@@ -1010,7 +1035,7 @@ export const DataTable = ({
                       >
                         <div className="table-header-cell">
                           <span>{column.label}</span>
-                          {!column.isDate && headingName !== Modules.TIMESHEET && column.id !== 'actions' &&
+                          {!column.isDate && headingName !== Modules.TIMESHEET && column.id !== 'actions' && column.isSort &&
                             <img
                               src={TableArrows}
                               alt=""

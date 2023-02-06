@@ -16,46 +16,47 @@ const cookies = new Cookies();
 
 export const tableColumnsData = {
   'ProjectAdmin': [
-    { id: "projectName", label: "Project Name", minWidth: 100, type: 'textfield', sortDir: '', align: 'left',isRequired: true },
-    { id: "clientName", label: "Client Name", minWidth: 100, type: 'select', sortDir: '', align: 'left',isRequired: true },
-    { id: "type", label: "Type", minWidth: 80, type: 'select', sortDir: '', align: 'left' },
-    { id: "sowStartDate", label: "SOW Start Date", minWidth: 100, type: 'date', sortDir: '', align: 'left' },
-    { id: "sowEndDate", label: "SOW End Date", minWidth: 110, type: 'date', sortDir: '', align: 'left' },
-    { id: 'projectManagerName', label: 'Veersa Project Manager', minWidth: 100, type: 'select', sortDir: '', align: 'left' },
-    {id: 'status', label:'Status', minWidth: 100, type: 'select', align: 'left'},
-    { id: 'approvers', label: 'Approvers', minWidth: 100, maxWidth: 120, type: 'multi-select', sortDir: '', align: 'left' },
-    { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left'}
+    { id: "projectName", label: "Project Name", minWidth: 100, type: 'textfield', sortDir: '', align: 'left',isRequired: true, isSort: true },
+    { id: "clientName", label: "Client Name", minWidth: 100, type: 'select', sortDir: '', align: 'left',isRequired: true, isSort: true },
+    { id: "type", label: "Type", minWidth: 80, type: 'select', sortDir: '', align: 'left', isSort: true },
+    { id: "sowStartDate", label: "SOW Start Date", minWidth: 100, type: 'date', sortDir: '', align: 'left', isSort: true },
+    { id: "sowEndDate", label: "SOW End Date", minWidth: 110, type: 'date', sortDir: '', align: 'left', isSort: true },
+    { id: 'projectManagerName', label: 'Veersa Project Manager', minWidth: 100, type: 'select', sortDir: '', align: 'left', isSort: false },
+    {id: 'status', label:'Status', minWidth: 100, type: 'select', align: 'left', isSort: true },
+    { id: 'approvers', label: 'Approvers', minWidth: 100, maxWidth: 120, type: 'multi-select', sortDir: '', align: 'left', isSort: false },
+    { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left', isSort: false }
   ],
   'ClientAdmin': [
-    { id: "clientName", label: "Client Name", minWidth: 100, type: 'textfield', sortDir: '', align: 'left',isRequired: true },
-    { id: "location", label: "Client Location", minWidth: 80, type: 'select', sortDir: '', align: 'left' },
-    { id: "currency", label: "Currency", minWidth: 80, type: 'select', sortDir: '', align: 'left' },
-    { id: "msaStartDate", label: "MSA Start Date", minWidth: 100, type: 'date', sortDir: '', align: 'left' },
-    { id: "msaEndDate", label: "MSA End Date", minWidth: 110, type: 'date', sortDir: '', align: 'left' },
-    { id: "businessOwner", label: "Veersa Business Owner", minWidth: 100, type: 'select', sortDir: '', align: 'left' },
-    { id: "paymentTerms", label: "Payment Terms", minWidth: 80, type: 'textfield', sortDir: '', align: 'left' },
-    { id: "deliveryOfficer", label: "Veersa Delivery Officer", minWidth: 100, type: 'select', sortDir: '', align: 'left' },
-    { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left' }
+    { id: "clientName", label: "Client Name", minWidth: 100, type: 'textfield', sortDir: '', align: 'left',isRequired: true, isSort: true },
+    { id: "location", label: "Client Location", minWidth: 80, type: 'select', sortDir: '', align: 'left', isSort: true },
+    { id: "currency", label: "Currency", minWidth: 80, type: 'select', sortDir: '', align: 'left', isSort: true },
+    { id: "msaStartDate", label: "MSA Start Date", minWidth: 100, type: 'date', sortDir: '', align: 'left', isSort: true },
+    { id: "msaEndDate", label: "MSA End Date", minWidth: 110, type: 'date', sortDir: '', align: 'left', isSort: true },
+    { id: "businessOwner", label: "Veersa Business Owner", minWidth: 100, type: 'select', sortDir: '', align: 'left', isSort: false },
+    { id: "paymentTerms", label: "Payment Terms", minWidth: 80, type: 'textfield', sortDir: '', align: 'left', isSort: true },
+    { id: "deliveryOfficer", label: "Veersa Delivery Officer", minWidth: 100, type: 'select', sortDir: '', align: 'left', isSort: false },
+    { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left', isSort: false }
   ],
   'ProjectAllocation': [
-    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select',  sortDir: '', align: 'left' },
-    { id: "projectName", label: "Project Name", minWidth: 100, type: 'select', sortDir: '', align: 'left' },
-    { id: "projectManagerName", label: "Project Manager", minWidth: 80, type: 'select', sortDir: '', align: 'left' },
-    { id: "startDate", label: "Start Date", minWidth: 100, type: 'date', sortDir: '', align: 'left' },
-    { id: "endDate", label: "End Date", minWidth: 110, type: 'date', sortDir: '', align: 'left' },
-    { id: 'billStatus', label: 'Bill Status', minWidth: 100, type: 'textfield', sortDir: '', align: 'left' },
+    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select',  sortDir: '', align: 'left', isSort: false },
+    { id: "projectName", label: "Project Name", minWidth: 100, type: 'select', sortDir: '', align: 'left', isSort: true },
+    { id: "projectManagerName", label: "Project Manager", minWidth: 80, type: 'select', sortDir: '', align: 'left', isSort: false },
+    { id: "startDate", label: "Start Date", minWidth: 100, type: 'date', sortDir: '', align: 'left', isSort: true },
+    { id: "endDate", label: "End Date", minWidth: 110, type: 'date', sortDir: '', align: 'left', isSort: true },
+    { id: 'billStatus', label: 'Bill Status', minWidth: 100, type: 'textfield', sortDir: '', align: 'left', isSort: true },
+    { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, type: 'textfield', sortDir: '', align: 'left', isSort: true }
     // { id: 'status', label: 'Status', minWidth: 100, type: 'textfield' }
   ], 
   'ProjectManagement': [
-    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select', sortDir: '', align: 'left' },
-    { id: "site", label: "Offshore/Onshore", minWidth: 110, type: 'select', sortDir: '', align: 'left' },
-    { id: 'startDate', label: 'Start Date', minWidth: 110, type: 'date', sortDir: '', align: 'left' },
-    { id: "endDate", label: "End Date", minWidth: 120, type: 'date', sortDir: '', align: 'left' },
-    { id: 'billRate', label: 'Bill Rate', minWidth: 80, type: 'textfield', sortDir: '', align: 'left' },
-    { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, min:0, max:100, type: 'textfield', fieldType:'number', sortDir: '', align: 'left' },
-    { id: 'billStatus', label: 'Bill Status', minWidth: 80, type: 'select', sortDir: '', align: 'left' },
-    { id: 'costAllocation', label: 'Cost Allocation', minWidth: 100, type: 'textfield', sortDir: '', align: 'left' },
-    { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left'}
+    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select', sortDir: '', align: 'left', isSort: false },
+    { id: "site", label: "Offshore/Onshore", minWidth: 110, type: 'select', sortDir: '', align: 'left', isSort: true },
+    { id: 'startDate', label: 'Start Date', minWidth: 110, type: 'date', sortDir: '', align: 'left', isSort: true },
+    { id: "endDate", label: "End Date", minWidth: 120, type: 'date', sortDir: '', align: 'left', isSort: true },
+    { id: 'billRate', label: 'Bill Rate', minWidth: 80, type: 'textfield', sortDir: '', align: 'left', isSort: true},
+    { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, min:0, max:100, type: 'textfield', fieldType:'number', sortDir: '', align: 'left', isSort: true },
+    { id: 'billStatus', label: 'Bill Status', minWidth: 80, type: 'select', sortDir: '', align: 'left', isSort: true },
+    { id: 'costAllocation', label: 'Cost Allocation', minWidth: 100, type: 'textfield', sortDir: '', align: 'left', isSort: true },
+    { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left', isSort: true}
   ], 
   'Timesheet': [
     { id: "projectName", label: "Project Name", minWidth: 110, type: 'select', isRequired: true },

@@ -9,6 +9,10 @@ import { TabsTable } from "./tabsTable";
 import { useDispatch, useSelector } from "react-redux";
 import { Modules } from "../../common/constants/sidebar";
 import { getMappedProjectManagementData } from "../../redux/actions/project-management";
+// import { withStyles } from "@mui/styles";
+import {TabScrollButton} from "@mui/material";
+import styled from "@emotion/styled";
+import { blue } from "@mui/material/colors";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -52,6 +56,17 @@ export default function BasicTabs(props) {
   const { mappedProjectManagementData  } = useSelector(({ MODULES }) => MODULES);
   let counter = 0, count = 0;
 
+  const MyTabScrollButton = styled(TabScrollButton)({
+    '&.Mui-disabled': {
+        width: 0,
+    },
+    overflow: 'hidden',
+    transition: 'width 0.5s',
+    width: 28,
+    color: '#073044',
+    backgroundColor: '#fafafa'
+  });
+
   const handleChange = (event, newValue) => {
     if(props.headingName === Modules.PROJECT_ALLOCATION){
       if(newValue === 0) setStatus("All");
@@ -91,6 +106,9 @@ export default function BasicTabs(props) {
             value={value}
             onChange={handleChange}
             aria-label="basic tabs example"
+            ScrollButtonComponent={MyTabScrollButton}
+            variant="scrollable"
+            scrollButtons="auto"
           >
             { mappedProjectManagementData && mappedProjectManagementData.map((client) =>
               client.projects.map((project) => {
@@ -104,6 +122,9 @@ export default function BasicTabs(props) {
               value={value}
               onChange={handleChange}
               aria-label="basic tabs example"
+              ScrollButtonComponent={MyTabScrollButton}
+              variant="scrollable"
+              scrollButtons="auto"
             >
               {userData.data.tabs.timeSheet.map((tab, index) => (
                 <Tab key={index} className="tabs-table" label={tab} {...a11yProps(index)} />
@@ -116,6 +137,9 @@ export default function BasicTabs(props) {
             value={value}
             onChange={handleChange}
             aria-label="basic tabs example"
+            ScrollButtonComponent={MyTabScrollButton}
+            variant="scrollable"
+            scrollButtons="auto"
           >
             {userData.data.tabs.projectAllocation.map((tab, index) => (
               <Tab key={index} className="tabs-table" label={tab} {...a11yProps(index)} />

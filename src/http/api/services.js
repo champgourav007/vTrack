@@ -1,4 +1,4 @@
-const BASE_URL = "https://vtrack-api.azurewebsites.net";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export const CLIENT_API = `${BASE_URL}/Client`;
 export const TIMESHEET_API = `${BASE_URL}/Timesheet`;

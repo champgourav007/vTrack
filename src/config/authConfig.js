@@ -35,7 +35,7 @@ export const msalConfig = {
 };
 
 export const loginRequest = {
-  scopes: ["api://9f053c48-5633-4c1f-842c-ded8c193843b/Default.All"],
+  scopes: [process.env.REACT_APP_SCOPES],
 };
 
 export const logoutRequest = (instance) => {
