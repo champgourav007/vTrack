@@ -1267,9 +1267,10 @@ export const DataTable = ({
                                   </div>
                                 </HtmlTooltip>
                               ) :
-                              col.id === 'viewDetails' ? (<IconButton color="primary" onClick={() => handleViewDetails(row['employeeId'])} ><VisibilityIcon /></IconButton>) : (
-                                row[col.id]
-                              )}
+                              col.id === 'viewDetails' ? (<IconButton color="primary" onClick={() => handleViewDetails(row['employeeId'])} ><VisibilityIcon /></IconButton>
+                              ) : 
+                              col.id === 'billAllocation' ? (row[col.id] === 0 ? '-' : row[col.id]) : row[col.id]
+                              }
                           </TableCell>
                         ) : null;
                       })}
