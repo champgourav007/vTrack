@@ -21,6 +21,7 @@ export function setExpirationTimeout (
     removeLocalStorageItem(ACCOUNT);
     removeLocalStorageItem(EXPIRES_ON);
     removeLocalStorageItem(TIME_OF_AUTO_LOGOUT);
+    removeLocalStorageItem("userInformation");
     cookies.remove('userInformation', {path: "/", sameSite: false });
     instance.loginRedirect(request)
       .catch((error) => {

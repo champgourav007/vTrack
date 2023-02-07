@@ -30,11 +30,7 @@ export const Dashboard = () => {
   const navigateHandler = () => {
     navigate(VTrackURL);
   };
-  useEffect(()=>{
-    if(!cookies.get("userInformation")){
-      navigate("/");
-    }
-  })
+
   return (
     <div className="mainDiv">
       {/* <div className="sidebarContainer">
