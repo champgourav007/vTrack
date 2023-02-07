@@ -1,3 +1,4 @@
+import { Modules } from "../common/constants/sidebar";
 import {
   clientAdminImg,
   dashboardImg,
@@ -7,15 +8,24 @@ import {
   timesheetImg,
   vendorAdminImg,
   vendorSowAdminImg,
+  clientAdminBlueIcon,
+  projectAdminBlueIcon,
+  projectAllocationBlueIcon,
+  projectManagementBlueIcon,
+  timeSheetBlueIcon,
+  vendorAdminBlueIcon,
+  vendorSowAdminBlueIcon,  
+  dashboardBlueIcon
 } from "../common/icons";
 
 export const ModuleList = [
-  { name: "Dashboard", img: dashboardImg },
-  { name: "Project Allocation", img: projectAllocationImg },
-  { name: "TimeSheet", img: timesheetImg },
-  { name: "Project Management", img: projectManagementImg },
-  { name: "Client Admin", img: clientAdminImg },
-  { name: "Project Admin", img: projectAdminImg },
-  { name: "Vendor Admin", img: vendorAdminImg },
-  { name: "Vendor SOW Admin", img: vendorSowAdminImg },
+  // { id: "1",key: 'dashboard', name: "Dashboard", img: dashboardImg, imgHover:dashboardBlueIcon },
+  { id: "2",key:'projectAllocation', name: "Project Allocation", img: projectAllocationImg, imgHover:projectAllocationBlueIcon },
+  { id: "3",key:'timeSheet', name: Modules.TIMESHEET, img: timesheetImg, imgHover:timeSheetBlueIcon },
+  { id: "4",key:'projectManagement', name: "Project Management", img: projectManagementImg, imgHover:projectManagementBlueIcon },
+  { id: "5",key:'clientAdmin' ,name: "Client Admin", img: clientAdminImg, imgHover:clientAdminBlueIcon },
+  { id: "6",key:'projectAdmin' , name: "Project Admin", img: projectAdminImg, imgHover:projectAdminBlueIcon },
+  { id: "7",key:'vendorAdmin' , name: "Vendor Admin", img: vendorAdminImg, imgHover:vendorAdminBlueIcon },
+  { id: "8",key:'vendorSOWAdmin' , name: "Vendor SOW Admin", img: vendorSowAdminImg, imgHover:vendorSowAdminBlueIcon },
+  { id: "9",key:'settings' , name: "Settings", img: "", imgHover:"" },
 ];

@@ -1,3 +1,11 @@
+.minWidthClass {
+  min-width: 20rem;
+}
+
+.displayNone {
+  display: none !important;
+}
+
 .sidebarOuterContainer {
   display: flex;
   flex-direction: column;
@@ -5,38 +13,62 @@
   height: 100%;
 }
 
-.veersaLogo {
+.veersaLogoContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 6rem;
+  background-color: #FFFFFF;
+}
+
+.veersaLogo {
+  width: 3.25rem;
+  height: 2.5625rem;
+}
+
+.veersaLogo-collapse {
+  width: 2.5rem;
+  height: 1.8125rem;
 }
 
 .sidebarWrapper {
   padding: 1rem 0;
   background-color: #1773bc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 90%;
 }
 
 .sidebarItems {
   display: flex;
   flex-direction: row;
-  padding: 1rem 0;
+  padding: 1.25rem 1.5rem;
   color: #FFFFFF;
+  cursor: pointer;
+}
+
+.sidebarItemsSelected {
+  display: flex;
+  flex-direction: row;
+  padding: 1.25rem 1.5rem;
+  color: #1773bc;
+  background-color: #FFFFFF;
+  cursor: pointer;
 }
 
 .itemImage {
-  width: 1.125rem;
-  height: 1.125rem;
-  margin-left: 1.5rem;
-  margin-right: 1rem;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .itemName {
   font-family: 'Montserrat';
   font-style: normal;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.25rem;
   line-height: 1.25rem;
+  margin-left: 1rem;
 }
 
 .arrowIcon {
@@ -45,17 +77,25 @@
   margin-left: 1.5rem;
   margin-right: 1rem;
   padding: 1rem 0;
+  cursor:pointer;
 }
 
 .sidebarItems:hover {
   display: flex;
   flex-direction: row;
-  padding: 1rem 0;
+  padding: 1.25rem 1.5rem;
   background-color: #FFFFFF;
   color: #1773bc;
 }
 
 .divider {
-  margin: 1rem 0;
   border: 0.1rem solid #FFFFFF;
+  margin-bottom: 1rem;
+}
+.veersaLogoContainer-collapse{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 6rem;
+  background-color: #1773bc;
 }

@@ -1,3 +1,3 @@
-export const baseURL = "http://localhost:3000";
 export const indexURL = "/";
-export const dashboardURL = "/dashboard";
+export const VTrackURL = "/vTrack";
+export const dashboardURL = "/dashboard"

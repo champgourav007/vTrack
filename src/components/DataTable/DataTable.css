@@ -1,0 +1,194 @@
+.editDeleteIcon {
+  margin: 0.5rem;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+.buttonBackgroundBorder {
+  background-color: transparent;
+  border: none;
+}
+
+#new_row {
+  height: 6rem;
+}
+
+.MuiTableContainer-root ::-webkit-scrollbar,
+.MuiPaper-root ::-webkit-scrollbar {
+  width: 0.625rem !important;
+}
+
+.MuiTableContainer-root ::-webkit-scrollbar-track,
+.MuiPaper-root ::-webkit-scrollbar-track {
+  background: FFFFFF;
+}
+
+.MuiTableContainer-root ::-webkit-scrollbar-thumb,
+.MuiPaper-root ::-webkit-scrollbar-thumb {
+  background: #1773bc;
+  border-radius: 2rem;
+}
+
+.css-jtlhu6-MuiTablePagination-root {
+  border: none;
+}
+
+div .MuiTablePagination-selectIcon {
+  color: #1773bc;
+}
+
+.MuiTablePagination-actions .css-zylse7-MuiButtonBase-root-MuiIconButton-root {
+  color: #1773bc;
+}
+
+td.css-dsuxgy-MuiTableCell-root {
+  /* padding: 0 0.375rem !important; */
+  padding: 1.5rem 0.375rem !important;
+  font-family: "Montserrat";
+  font-size: 1.15rem;
+  line-height: 1.0625rem;
+  font-weight: 600;
+  color: #000000;
+}
+
+th.css-1g0973d-MuiTableCell-root {
+  padding: 0.85rem 0.375rem !important;
+  font-family: "Montserrat";
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.25rem;
+  color: #1773bc;
+  height: 3rem;
+}
+.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
+  height: 3rem;
+}
+
+.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
+  height: 3rem;
+}
+
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
+  top: -0.5rem !important;
+}
+
+.attachmentContainer {
+  display: flex;
+  align-items: center;
+  /* padding: 0.85rem 0.375rem !important; */
+}
+
+.allocation {
+  display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.allocationProgress {
+  width: 2rem !important;
+  margin-left: 1rem !important;
+}
+
+.tableArrows {
+  height: 1.1rem;
+  width: 2.5rem;
+  cursor: pointer;
+}
+
+.month{
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.75rem;
+  line-height: 0.875rem;
+  position: absolute;
+  top: 0.5rem;
+  left: 0.375rem;
+  color: #000000;
+}
+
+.table-header-cell{
+  display: flex;
+  align-items: center;
+}
+
+fieldset{
+  border-color: none !important;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.numberInput input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.numberInput input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.approveRejectIcon{
+  height: 1.25rem;
+  width: 1.25rem;
+  cursor: pointer;
+}
+
+div:has(> .approveRejectIcon){
+  display: flex;
+  gap: 1.5rem;
+}
+
+.rowStatus{
+  font-family: "Montserrat";
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.25rem;
+}
+.timesheetTable .dateHeading:nth-child(9n),.timesheetTable .dateHeading:nth-child(10n){
+  color: rgba(23, 115, 188, 0.5);
+}
+
+.timesheetTable .timeField:nth-child(9n),.timesheetTable .timeField:nth-child(10n){
+  opacity: 0.4;
+}
+
+.MuiInputLabel-asterisk{
+  color: red;
+}
+
+td.css-dsuxgy-MuiTableCell-root{
+  word-break: break-word;
+}
+.subheader{
+  padding: 1rem;
+  line-height: unset !important;
+}
+.subheader-field{
+  width: 100%;
+}
+
+.select-input{
+  width: 100%;
+}
+
+.select-input .MuiSelect-select{
+  padding: 7.5px 14px;
+}
+
+.select-label{
+  line-height: 0.8rem !important;
+}

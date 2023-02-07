@@ -1,0 +1,47 @@
+.announcement-wrapper {
+  display: flex;
+  align-items: center;
+  background: #DCEFFF;
+  height: 2rem;
+}
+
+.announcement-icon {
+  margin-left: 1.125rem;
+  margin-right: 0.5rem;
+}
+
+.announcement-name{
+  font-family: 'Kumbh Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.25rem;
+  color: #073044;
+}
+
+.announcement-text{
+  font-family: 'Kumbh Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.0625rem;
+  color: #073044;
+}
+
+.announcement-text > span{
+  margin-left: 1rem;
+}
+
+.button-text{
+  font-family: 'Kumbh Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1rem;
+  text-decoration-line: underline;
+  color: #1773BC;
+}
+
+.read-more{
+  margin-left: auto;
+}
