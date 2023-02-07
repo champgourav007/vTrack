@@ -63,6 +63,7 @@ import "./DataTable.css";
 import { TimeSheetDetailView } from "../TimeSheetDetailView/timeSheetDetailView";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -99,7 +100,9 @@ export const DataTable = ({
   resetSearchData,
   projectStatus,
   selectedPeriodWeek,
-  projectId
+  projectId,
+  rowToBeUpdated,
+  setRowToBeUpdated
 }) => {
   const { clientsData, allTasks, listItems, assignedProjects, clientAdminData, projectAdminData } =
     useSelector(({ MODULES }) => MODULES);
@@ -111,7 +114,6 @@ export const DataTable = ({
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [newRowAdded, setNewRowAdded] = useState(initialData(headingName, selectedPeriodWeek));
   const [sortBy, setSortBy] = useState(initialSort[headingName]);
-  const [rowToBeUpdated, setRowToBeUpdated] = useState({});
   const [fileState, setFileState] = useState("");
   const [showDialogBox, setShowDialogBox] = useState(false);
   const [deleteRow, setDeleteRow] = useState();
@@ -876,6 +878,13 @@ export const DataTable = ({
     }
   };
 
+  const handleCopy = (id) => {
+    let idx = rows.findIndex(
+      (row) => row[UniqueIds[headingName.replace(" ", "")]] === id
+    );
+    setNewRowAdded(rows[idx]);
+    setIsAddButtonClicked(true);
+  }
   const editButtonClicked = (id) => {
     let idx = rows.findIndex(
       (row) => row[UniqueIds[headingName.replace(" ", "")]] === id
@@ -1088,6 +1097,9 @@ export const DataTable = ({
                           return (
                             <TableCell key={col.id}>
                               <div className="attachmentContainer">
+                                {headingName===Modules.PROJECT_ADMIN && <Tooltip title="Clone">
+                                  <ContentCopyIcon style={{ color: "#1976d2", cursor: "pointer"}} onClick={() => handleCopy(row[UniqueIds[headingName.replace(" ", "")]])} />
+                                </Tooltip>}
                                 {headingName === Modules.CLIENT_ADMIN || headingName === Modules.PROJECT_ADMIN ? (
                                   (headingName === Modules.CLIENT_ADMIN &&
                                     row.msaDocLink) ||

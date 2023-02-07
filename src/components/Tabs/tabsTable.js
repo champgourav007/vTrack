@@ -73,6 +73,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   });
   const [ selectedProject, setSelectedProject ] = useState({});
   const [ selectedEmployee, setSelectedEmployee ] = useState({});
+  const [rowToBeUpdated, setRowToBeUpdated] = useState({});
   const inputRef = useRef("")
 
   useEffect(()=>{
@@ -85,6 +86,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         })
       );
       dispatch(setTimeSheetPeriodWeek(moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().add(7,'days').startOf('week').format(DATE_FORMAT)));  
+      setRowToBeUpdated({});
+      setIsAddButtonClicked(false);
+      setIsEditButtonClicked(false);
     }
     if(headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
       dispatch(
@@ -300,6 +304,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                 endDT: periodWeek.endDate.endOf('isoweek').format(),
               })
             );
+            setRowToBeUpdated({});
+            setIsAddButtonClicked(false);
+            setIsEditButtonClicked(false);
           }
           let startDate = moment(periodWeek.startDate);
           let endDate = moment(periodWeek.endDate);
@@ -726,6 +733,8 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         projectStatus={status}
         selectedPeriodWeek={selectedPeriodWeek}
         projectId={projectId}
+        rowToBeUpdated={rowToBeUpdated}
+        setRowToBeUpdated={setRowToBeUpdated}
       />
       { headingName === Modules.TIMESHEET && tabName === "MY TIMESHEET" && timeSheetData && timeSheetData.length ?
         <div className="totalWorkingHrs">

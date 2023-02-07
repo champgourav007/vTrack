@@ -139,9 +139,9 @@ export const fileHandler = (file, id, name, headingName) => {
     formData.append("file", file);
     let URL = "";
     if (headingName === Modules.CLIENT_ADMIN)
-      URL = `https://vtrack-api.azurewebsites.net/Client/upload-msa?clientId=${id}&clientName=${name}`;
+      URL = `https://vtrack-dev-api.azurewebsites.net/Client/upload-msa?clientId=${id}&clientName=${name}`;
     else if (headingName === Modules.PROJECT_ADMIN)
-      URL = `https://vtrack-api.azurewebsites.net/ProjectAdmin/upload-sow?projectId=${id}&projectName=${name}`;
+      URL = `https://vtrack-dev-api.azurewebsites.net/ProjectAdmin/upload-sow?projectId=${id}&projectName=${name}`;
     axios.post(URL, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
