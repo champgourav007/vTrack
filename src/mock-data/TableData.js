@@ -260,7 +260,7 @@ export const initialData = (headingName ,selectedPeriodWeek) => {
       };
     case Modules.PROJECT_MANAGEMENT:
       return {
-        employeeName: '',
+        employeeName: [],
         endDate: '',
         projectManagerName: '',
         projectName: '',

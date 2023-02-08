@@ -22,7 +22,7 @@ export const tableColumnsData = {
     { id: "sowStartDate", label: "SOW Start Date", minWidth: 100, type: 'date', sortDir: '', align: 'left', isSort: true },
     { id: "sowEndDate", label: "SOW End Date", minWidth: 110, type: 'date', sortDir: '', align: 'left', isSort: true },
     { id: 'projectManagerName', label: 'Veersa Project Manager', minWidth: 100, type: 'select', sortDir: '', align: 'left', isSort: false },
-    {id: 'status', label:'Status', minWidth: 100, type: 'select', align: 'left', isSort: true },
+    {id: 'status', label:'Status', minWidth: 100, type: 'select', align: 'left', isSort: false },
     { id: 'approvers', label: 'Approvers', minWidth: 100, maxWidth: 120, type: 'multi-select', sortDir: '', align: 'left', isSort: false },
     { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left', isSort: false }
   ],
@@ -48,15 +48,15 @@ export const tableColumnsData = {
     // { id: 'status', label: 'Status', minWidth: 100, type: 'textfield' }
   ], 
   'ProjectManagement': [
-    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select', sortDir: '', align: 'left', isSort: false },
-    { id: "site", label: "Offshore/Onshore", minWidth: 110, type: 'select', sortDir: '', align: 'left', isSort: true },
+    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'multi-select', sortDir: '', align: 'left', isSort: false },
+    { id: "site", label: "Offshore/Onshore", minWidth: 110, type: 'select', sortDir: '', align: 'left', isSort: false },
     { id: 'startDate', label: 'Start Date', minWidth: 110, type: 'date', sortDir: '', align: 'left', isSort: true },
     { id: "endDate", label: "End Date", minWidth: 120, type: 'date', sortDir: '', align: 'left', isSort: true },
-    { id: 'billRate', label: 'Bill Rate', minWidth: 80, type: 'textfield', sortDir: '', align: 'left', isSort: true},
-    { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, min:0, max:100, type: 'textfield', fieldType:'number', sortDir: '', align: 'left', isSort: true },
-    { id: 'billStatus', label: 'Bill Status', minWidth: 80, type: 'select', sortDir: '', align: 'left', isSort: true },
-    { id: 'costAllocation', label: 'Cost Allocation', minWidth: 100, type: 'textfield', sortDir: '', align: 'left', isSort: true },
-    { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left', isSort: true}
+    { id: 'billRate', label: 'Bill Rate', minWidth: 80, type: 'textfield', sortDir: '', align: 'left', isSort: false},
+    { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, min:0, max:100, type: 'textfield', fieldType:'number', sortDir: '', align: 'left', isSort: false },
+    { id: 'billStatus', label: 'Bill Status', minWidth: 80, type: 'select', sortDir: '', align: 'left', isSort: false },
+    { id: 'costAllocation', label: 'Cost Allocation', minWidth: 100, type: 'textfield', sortDir: '', align: 'left', isSort: false },
+    { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left', isSort: false}
   ], 
   'Timesheet': [
     { id: "projectName", label: "Project Name", minWidth: 110, type: 'select', isRequired: true },
@@ -181,11 +181,11 @@ export const getFullName = (firstName, lastName) => {
   return fullName;
 };
 
-export const getApprovers = (approvers) => {
+export const getApprovers = (renderValues, id) => {
   let approverList = '';
-  for (let i = 0; i < approvers.length; i++) {
-    approverList += approvers[i].approverName;
-    if (i !== approvers.length - 1) {
+  for (let i = 0; i < renderValues.length; i++) {
+    approverList += id === "approvers" ? renderValues[i].approverName : renderValues[i].employeeName;
+    if (i !== renderValues.length - 1) {
       approverList += ', ';
     }
   }

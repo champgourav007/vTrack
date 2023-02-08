@@ -148,6 +148,18 @@ export const DataTable = ({
     }
   };
 
+  const getCircularProgressColor = (value) => {
+    if(value >= 0 && value <= 30){
+      return {color:"red"};
+    }
+    else if(value >= 31 && value <= 60){
+      return {color:"yellow"};
+    }
+    else{
+      return {color:"green"};
+    }
+  }
+
   const getValueOfSelect = (id) => {
     if(id === "projectManagerName"){
       return getNameAndEmail(newRowAdded["projectManagerId"]);
@@ -454,14 +466,29 @@ export const DataTable = ({
     }
   };
 
-  const handleChange = (event) => {
+  const handleChange = (event, col) => {
     let tempList = event.target.value;
-    let idx = tempList.findIndex(ele => ele.approverId === tempList[tempList.length - 1].approverId);
-    if (idx !== tempList.length - 1) {
-      tempList.pop();
-      tempList.splice(idx, 1);
+    
+    if(col.id === "employeeName"){
+      let employeeIds = [];
+      tempList.forEach((emp) => {
+        employeeIds.push(emp["employeeId"]);
+      })
+      let idx = tempList.findIndex(ele => ele.employeeId === tempList[tempList.length - 1].employeeId);
+      if (idx !== tempList.length - 1) {
+        tempList.pop();
+        tempList.splice(idx, 1);
+      }
+      setNewRowAdded({ ...newRowAdded, employeeName: tempList, employeeId : employeeIds});
     }
-    setNewRowAdded({ ...newRowAdded, approvers: tempList });
+    else if (col.id === "approvers"){
+      let idx = tempList.findIndex(ele => ele.approverId === tempList[tempList.length - 1].approverId);
+      if (idx !== tempList.length - 1) {
+        tempList.pop();
+        tempList.splice(idx, 1);
+      }
+      setNewRowAdded({ ...newRowAdded, approvers: tempList });
+    }
   };
 
   const displayMenuItem = (col) => {
@@ -588,7 +615,7 @@ export const DataTable = ({
               setTeamMembers(allUserDetails)
               setNewRowAdded({
                 ...newRowAdded,
-                [col]: getFullName(option.firstName, option.lastName),
+                [col]: `${getFullName(option.firstName, option.lastName)} (${option.email})`,
                 employeeId: option.id,
               })
             }}
@@ -686,22 +713,36 @@ export const DataTable = ({
         </TableCell>
       );
     } else if (getTypeofColumn(col.id, headingName) === "multi-select") {
+      let values = null;
+      if(typeof newRowAdded[col.id] === typeof ""){
+        newRowAdded["employeeName"] = [{
+          employeeId : newRowAdded["employeeId"],
+          employeeName : newRowAdded["employeeName"]
+        }];
+        newRowAdded["employeeId"] = [newRowAdded["employeeId"]];
+        values = [newRowAdded["employeeName"]]
+      }
+      else{
+        values = newRowAdded[col.id];
+      }
+      
       return (
         <TableCell key={col.id} style={{ maxWidth: col.maxWidth ? col.maxWidth : 'auto' }}>
           <FormControl sx={{ m: 1, width: 120, margin: '0' }}>
-            <InputLabel id="demo-multiple-checkbox-label">Approvers</InputLabel>
+            <InputLabel id="demo-multiple-checkbox-label">{col.label}</InputLabel>
             <Select
               labelId="demo-multiple-checkbox-label"
               id="demo-multiple-checkbox"
               multiple
-              value={newRowAdded[col.id]}
-              onChange={handleChange}
+              value={values}
+              onChange={(e) => handleChange(e, col)}
               required={col.isRequired}
-              input={<OutlinedInput label="Approvers" />}
-              renderValue={() => getApprovers(newRowAdded[col.id])}
+              input={<OutlinedInput label={col.label} />}
+              renderValue={() => getApprovers(values, col.id)}
               MenuProps={MenuProps}
+              disabled={isEditButtonClicked && (col.id === "employeeName" ? true : false)}
             >
-              {(col.id === "approvers") &&
+              {(col.id === "approvers" || col.id === "employeeName") &&
             (
                 <ListSubheader className="subheader">
                 <TextField placeholder="Search Here..." className="subheader-field" onKeyDown={(e) => {
@@ -709,12 +750,19 @@ export const DataTable = ({
                 }} autoFocus={true} onChange={(e) => filterNamesHandler(e.target.value, col.id)} />
               </ListSubheader>
             )}
-              {approversTeam && approversTeam.data.map(user => ({ approverId: user.id, approverName: getFullName(user.firstName, user.lastName), approverEmail: user.email })).map((approver, index) => (
+              {col.id === "approvers" ? (approversTeam && approversTeam.data.map(user => ({ approverId: user.id, approverName: getFullName(user.firstName, user.lastName), approverEmail: user.email })).map((approver, index) => (
                 <MenuItem key={index} value={approver} className="no-left-margin">
-                  <Checkbox checked={newRowAdded[col.id].findIndex(app => app.approverId === approver.approverId) > -1} />
+                  <Checkbox checked={values.findIndex(app => app.approverId === approver.approverId) > -1} />
                   <ListItemText primary={`${approver.approverName} (${approver.approverEmail})`} />
                 </MenuItem>
-              ))}
+              ))) :
+              (teamMembers && teamMembers.data.map(user => ({ employeeId: user.id, employeeName: getFullName(user.firstName, user.lastName), employeeEmail: user.email })).map((employee, index) => (
+                <MenuItem key={index} value={employee} className="no-left-margin">
+                  <Checkbox checked={newRowAdded["employeeName"].findIndex(app => app.employeeId === employee.employeeId) > -1} />
+                  <ListItemText primary={`${employee.employeeName} (${employee.employeeEmail})`} />
+                </MenuItem>
+              )))
+            }
             </Select>
           </FormControl>
         </TableCell>
@@ -1265,6 +1313,7 @@ export const DataTable = ({
                                     className="allocationProgress"
                                     variant="determinate"
                                     value={row[col.id]}
+                                    style = {getCircularProgressColor(row[col.id])}
                                   />
                                 </div>
                                 <div>{row[col.id]}%</div>
@@ -1275,7 +1324,7 @@ export const DataTable = ({
                                   <div
                                     style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
                                   >
-                                    {getApprovers(row[col.id])}
+                                    {getApprovers(row[col.id], col.id)}
                                   </div>
                                 </HtmlTooltip>
                               ) :
