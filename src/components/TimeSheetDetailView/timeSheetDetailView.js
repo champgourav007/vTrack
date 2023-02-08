@@ -378,6 +378,18 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
     };
   }
 
+  const getNameByEmail = (email) => {
+    let name = "";
+    allUserDetails &&
+      allUserDetails.data.length &&
+      allUserDetails.data.forEach((user) => {
+        if (user.email === email) {
+          name = getFullName(user.firstName, user.lastName);
+        }
+      });
+    return name;
+  }
+
   const editButtonClicked = (id) => {
     let idx = rows.findIndex(
       (row) => row[UniqueIds[headingName.replace(" ", "")]] === id
@@ -441,7 +453,7 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
                 dateHour.hours === 0 ? "-" : dateHour.hours;
             });
           } else {
-            rowData[col] = row[col];
+            rowData[col] = col === "approver" ? getNameByEmail(row[col]) : row[col];
           }
         });
         rowsData.push(rowData);
@@ -451,19 +463,20 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
   }, [detailedTimeSheetData]);
 
   useEffect(() => {
-    if (headingName === Modules.TIMESHEET && viewDetails)
-    dispatch(
-      getDetailedTimeSheetData({
-        periodWeek:
-          selectedPeriodWeek.startDate.format(DATE_FORMAT) +
-          " - " +
-          selectedPeriodWeek.endDate.format(DATE_FORMAT),
-        employeeId: selectedEmpId,
-        projectId: null,
-        projectManagerId: null,
-      })
-    );
-  }, [ selectedEmpId, selectedPeriodWeek ]);
+    if (headingName === Modules.TIMESHEET && viewDetails){
+      dispatch(
+        getDetailedTimeSheetData({
+          periodWeek:
+            selectedPeriodWeek.startDate.format(DATE_FORMAT) +
+            " - " +
+            selectedPeriodWeek.endDate.format(DATE_FORMAT),
+          employeeId: selectedEmpId,
+          projectId: null,
+          projectManagerId: null,
+        })
+      );
+    }
+  }, [ selectedEmpId, selectedPeriodWeek, viewDetails ]);
 
   return (
     <>

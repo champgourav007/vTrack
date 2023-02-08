@@ -1,8 +1,8 @@
 import {
   PublicClientApplication, EventType
 } from '@azure/msal-browser';
-import { ACCESS_TOKEN, ACCOUNT, EXPIRES_ON } from '../common/constants/local-storage-keys';
-import { getLocalStorageItem, setLocalStorageItem } from '../common/utils/local-storage';
+import { ACCESS_TOKEN, ACCOUNT, EXPIRES_ON, TIME_OF_AUTO_LOGOUT } from '../common/constants/local-storage-keys';
+import { getLocalStorageItem, removeLocalStorageItem, setLocalStorageItem } from '../common/utils/local-storage';
 import { setExpirationTimeout } from './msal-expiration';
 import Cookies from 'universal-cookie';
 
@@ -70,6 +70,7 @@ msalClient.addEventCallback((message) => {
       resetSilentMode();
       const expiresOnFromResponse = String(data.expiresOn);
       setLocalStorageItem(ACCESS_TOKEN, data.accessToken);
+      sessionStorage.setItem('userInformation', data);
       cookies.set('userInformation', data.accessToken, { path: '/'});
       setLocalStorageItem(ACCOUNT, JSON.stringify(data.account));
       setLocalStorageItem(EXPIRES_ON, expiresOnFromResponse);
@@ -81,6 +82,15 @@ msalClient.addEventCallback((message) => {
     // There is also can be not only InteractionRequiredAuthError but another type of error
     // after which is better to switch to normal flow
     abandonSilentMode();
+  }
+  
+  if(eventType === Event.INITIALIZE_START){
+    removeLocalStorageItem(ACCESS_TOKEN);
+    removeLocalStorageItem(ACCOUNT);
+    removeLocalStorageItem(EXPIRES_ON);
+    removeLocalStorageItem(TIME_OF_AUTO_LOGOUT);
+    removeLocalStorageItem("userInformation");
+    cookies.remove('userInformation', {path: "/", sameSite: false });
   }
 });
 

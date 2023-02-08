@@ -153,7 +153,7 @@ export const DataTable = ({
       return {color:"red"};
     }
     else if(value >= 31 && value <= 60){
-      return {color:"yellow"};
+      return {color:"#daa520"};
     }
     else{
       return {color:"green"};
@@ -441,7 +441,7 @@ export const DataTable = ({
           searchData: searchData,
         })
       );
-    } else if (headingName === Modules.PROJECT_ALLOCATION && assignedProjects === null) {
+    } else if (headingName === Modules.PROJECT_ALLOCATION) {
       dispatch(
         getProjectAllocationData({
           pageNo: page + 1,

@@ -43,8 +43,8 @@ export const tableColumnsData = {
     { id: "projectManagerName", label: "Project Manager", minWidth: 80, type: 'select', sortDir: '', align: 'left', isSort: false },
     { id: "startDate", label: "Start Date", minWidth: 100, type: 'date', sortDir: '', align: 'left', isSort: true },
     { id: "endDate", label: "End Date", minWidth: 110, type: 'date', sortDir: '', align: 'left', isSort: true },
-    { id: 'billStatus', label: 'Bill Status', minWidth: 100, type: 'textfield', sortDir: '', align: 'left', isSort: true },
-    { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, type: 'textfield', sortDir: '', align: 'left', isSort: true }
+    { id: 'billStatus', label: 'Bill Status', minWidth: 100, type: 'textfield', sortDir: '', align: 'left', isSort: false },
+    { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, type: 'textfield', sortDir: '', align: 'left', isSort: false }
     // { id: 'status', label: 'Status', minWidth: 100, type: 'textfield' }
   ], 
   'ProjectManagement': [
