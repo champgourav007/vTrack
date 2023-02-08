@@ -36,6 +36,10 @@ export const VTrack = () => {
     if (!User) navigate("/");
   }, []);
 
+  useEffect(() => {
+    document.title = "vTrack";
+  }, []);
+
   return (
     <>
       <div className="mainDiv">

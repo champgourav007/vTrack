@@ -17,6 +17,10 @@ export const Dashboard = () => {
   const [hoveredItem, setHoveredItem] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    document.title = "Veersa Portal";
+  }, [])
+
   const changePage = (headingName) => {
     setHeadingName(headingName);
   };
@@ -37,7 +41,7 @@ export const Dashboard = () => {
         <Sidebar changePage={changePage} pageName="Dashboard" />
       </div> */}
       <div className="rightContainer dashboardRightContainer">
-        <TopBar headingName="Dashboard" />
+        <TopBar headingName="Veersa Applications" />
         <div className="vToolWrapper">
           <div className="wrapperHeading">
             <span style={{ color: "#1773BC" }}>v</span>

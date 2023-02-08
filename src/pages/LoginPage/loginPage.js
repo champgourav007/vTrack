@@ -16,6 +16,10 @@ export const LoginPage = () => {
   const handleLogin = () => {
     loginAzureADPopup();
   };
+  
+  useEffect(() => {
+    document.title = "Veersa Portal";
+  }, [])
 
   useEffect(() => {
     const accessToken = cookies.get('userInformation');
