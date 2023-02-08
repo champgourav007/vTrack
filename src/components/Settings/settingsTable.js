@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TABLE_HEADERS } from '../../common/constants/setting-table-header'
 import { AddEnableIcon, crossIcon, deleteIcon, editIcon, TableArrows } from '../../common/icons';
 import { getFullName } from '../../common/utils/datatable';
-import { deleteSettingTableData, getSettingTableData, updateSettingTableData } from '../../redux/actions';
+import { deleteSettingTableData, getSettingTableData, setVtrackLoader, updateSettingTableData } from '../../redux/actions';
 import DialogBox from '../DialogBox/dialogBox';
 import './settingTable.css';
 
@@ -68,8 +68,8 @@ export const SettingsTable = ({ rolesData, searchData }) => {
             <Paper sx={{ width: "100%", overflow: "hidden" }}>
             <TableContainer sx={{ maxHeight: "48rem"}}>
                 <Table aria-label="sticky table" size="small">
-                    <TableHead>
-                        <TableRow className='settingTableHeader'>
+                    <TableHead style={{position:"sticky", top:"0", zIndex: 1}}>
+                        <TableRow style={{backgroundColor:"white"}} className='settingTableHeader'>
                             {TABLE_HEADERS.map(
                                 (column) =>
 
@@ -94,6 +94,7 @@ export const SettingsTable = ({ rolesData, searchData }) => {
                             }
                         </TableRow>
                     </TableHead>
+                    {!usersData && <h1 className="no-data">Fetching Users...</h1>}
                     <TableBody className='settingTableBody'>
                         {filteredData && filteredData.map((user) =>
                             <TableRow key={user.userId} className='settingTableHeader'>

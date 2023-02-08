@@ -6,13 +6,15 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import { ModuleList } from "../../mock-data/Sidebar";
 import "./VTrack.css";
 import Cookies from 'universal-cookie';
+import { getLocalStorageItem } from "../../common/utils/local-storage";
+import { ACCESS_TOKEN } from "../../common/constants/local-storage-keys";
 
 export const VTrack = () => {
   const [headingName, setHeadingName] = useState("");
   const navigate = useNavigate();
   const cookies = new Cookies();
   useEffect(()=>{
-    if(!cookies.get("userInformation")){
+    if(!getLocalStorageItem(ACCESS_TOKEN)){
       navigate("/");
     }
   })
@@ -30,10 +32,9 @@ export const VTrack = () => {
   },[userData]);
 
   useEffect(() => {
-    // let User = localStorage.getItem("userInformation");
-    let User = cookies.get("userInformation");
-
-    if (!User) navigate("/");
+    if(!getLocalStorageItem(ACCESS_TOKEN)){
+      navigate("/");
+    }
   }, []);
 
   useEffect(() => {

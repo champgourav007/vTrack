@@ -1,5 +1,5 @@
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { Checkbox, FormControl, InputLabel, ListItemText, ListSubheader, OutlinedInput, Select, styled } from "@mui/material";
+import { Box, Checkbox, FormControl, InputLabel, ListItemText, ListSubheader, OutlinedInput, Select, styled } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
@@ -150,13 +150,25 @@ export const DataTable = ({
 
   const getCircularProgressColor = (value) => {
     if(value >= 0 && value <= 30){
-      return {color:"red"};
+      return {
+        position: 'absolute',
+        left: 0,
+        color:"red",
+      };
     }
     else if(value >= 31 && value <= 60){
-      return {color:"#daa520"};
+      return {
+        position: 'absolute',
+        left: 0,
+        color:"#daa520",
+      };
     }
     else{
-      return {color:"green"};
+      return {
+        position: 'absolute',
+        left: 0,
+        color:"green",
+      };
     }
   }
 
@@ -1073,8 +1085,8 @@ export const DataTable = ({
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: "48rem" }}>
           <Table aria-label="sticky table" size="small">
-            <TableHead>
-              <TableRow>
+            <TableHead style={{position:"sticky", top:"0", zIndex: 1}}>
+              <TableRow style={{backgroundColor:"white"}}>
                 {columns.map(
                   (column) => {
                     if (!column.id) return null;
@@ -1308,14 +1320,25 @@ export const DataTable = ({
                               getEmployeeName(row["employeeId"])
                             ) : col.id.toLowerCase().includes("allocation") && row[col.id] ? (
                               <div className="allocation">
-                                <div>
+                                <Box sx={{ position: 'relative' }}>
                                   <CircularProgress
-                                    className="allocationProgress"
+                                    variant="determinate"
+                                    sx={{
+                                      color: (theme) =>
+                                        theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800],
+                                    }}
+                                    size={20}
+                                    thickness={4}
+                                    value={100}
+                                  />
+                                  <CircularProgress
                                     variant="determinate"
                                     value={row[col.id]}
+                                    thickness={4}
                                     style = {getCircularProgressColor(row[col.id])}
+                                    size = {20}
                                   />
-                                </div>
+                                </Box>
                                 <div>{row[col.id]}%</div>
                               </div>
                             ) : col.id === 'approvers' ?

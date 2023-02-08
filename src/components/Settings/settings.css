@@ -4,6 +4,15 @@
   color: #1773bc;
 }
 
+.no-data {
+  color: #1773bc;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10rem;
+}
+
 .selectUserWrapper {
   display: flex;
 }

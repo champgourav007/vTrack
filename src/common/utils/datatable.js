@@ -44,7 +44,7 @@ export const tableColumnsData = {
     { id: "startDate", label: "Start Date", minWidth: 100, type: 'date', sortDir: '', align: 'left', isSort: true },
     { id: "endDate", label: "End Date", minWidth: 110, type: 'date', sortDir: '', align: 'left', isSort: true },
     { id: 'billStatus', label: 'Bill Status', minWidth: 100, type: 'textfield', sortDir: '', align: 'left', isSort: false },
-    { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, type: 'textfield', sortDir: '', align: 'left', isSort: false }
+    { id: 'billAllocation', label: 'Allocation', minWidth: 100, type: 'textfield', sortDir: '', align: 'left', isSort: false }
     // { id: 'status', label: 'Status', minWidth: 100, type: 'textfield' }
   ], 
   'ProjectManagement': [
@@ -131,8 +131,8 @@ export const getMinWidth = (col, moduleName) => {
 };
 
 export const fileHandler = (file, id, name, headingName) => {
-  // const accessToken = getLocalStorageItem(ACCESS_TOKEN);
-  const accessToken = cookies.get('userInformation');
+  const accessToken = getLocalStorageItem(ACCESS_TOKEN);
+  // const accessToken = cookies.get('userInformation');
 
   if (file) {
     const formData = new FormData();

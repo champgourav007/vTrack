@@ -69,9 +69,8 @@ msalClient.addEventCallback((message) => {
     if (data && data.account) {
       resetSilentMode();
       const expiresOnFromResponse = String(data.expiresOn);
-      setLocalStorageItem(ACCESS_TOKEN, data.accessToken);
       sessionStorage.setItem('userInformation', data);
-      cookies.set('userInformation', data.accessToken, { path: '/'});
+      setLocalStorageItem(ACCESS_TOKEN, data.accessToken);
       setLocalStorageItem(ACCOUNT, JSON.stringify(data.account));
       setLocalStorageItem(EXPIRES_ON, expiresOnFromResponse);
       setExpirationTimeout(msalClient, loginRequest, expiresOnFromResponse);
@@ -82,15 +81,6 @@ msalClient.addEventCallback((message) => {
     // There is also can be not only InteractionRequiredAuthError but another type of error
     // after which is better to switch to normal flow
     abandonSilentMode();
-  }
-  
-  if(eventType === Event.INITIALIZE_START){
-    removeLocalStorageItem(ACCESS_TOKEN);
-    removeLocalStorageItem(ACCOUNT);
-    removeLocalStorageItem(EXPIRES_ON);
-    removeLocalStorageItem(TIME_OF_AUTO_LOGOUT);
-    removeLocalStorageItem("userInformation");
-    cookies.remove('userInformation', {path: "/", sameSite: false });
   }
 });
 

@@ -19,7 +19,6 @@ export const useAzureADAuth = () => {
         setLocalStorageItem(ACCESS_TOKEN, e.accessToken);
         sessionStorage.setItem("userInformation", JSON.stringify(e));
         setLocalStorageItem("userInformation", JSON.stringify(e));
-        cookies.set('userInformation', e.accessToken, { path: '/'});
 
         navigate(dashboardURL);
       })
@@ -29,17 +28,11 @@ export const useAzureADAuth = () => {
   }, [instance]);
 
   const logoutAzureAD = useCallback(() => {
-    removeLocalStorageItem(ACCESS_TOKEN);
-    removeLocalStorageItem(ACCOUNT);
-    removeLocalStorageItem(EXPIRES_ON);
-    removeLocalStorageItem(TIME_OF_AUTO_LOGOUT);
-    removeLocalStorageItem("userInformation");
     instance
-      .logoutPopup(logoutRequest)
-      .then(() => {
-        navigate("/dashboard");
-        cookies.remove('userInformation', {path: "/", sameSite: false });
-        localStorage.removeItem("userInformation");
+    .logoutPopup(logoutRequest)
+    .then(() => {
+      navigate("/dashboard");
+      localStorage.clear();
       })
       .catch((e) => {
         console.log(e);

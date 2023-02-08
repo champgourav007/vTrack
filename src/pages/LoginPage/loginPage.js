@@ -6,6 +6,8 @@ import { dashboardURL } from "../../routes/routes";
 import "./loginPage.css";
 import { dashboardImage } from "../../common/icons";
 import Cookies from 'universal-cookie';
+import { getLocalStorageItem } from "../../common/utils/local-storage";
+import { ACCESS_TOKEN } from "../../common/constants/local-storage-keys";
 
 const cookies = new Cookies();
 
@@ -22,8 +24,9 @@ export const LoginPage = () => {
   }, [])
 
   useEffect(() => {
-    const accessToken = cookies.get('userInformation');
-    if (accessToken) navigate(dashboardURL);
+    if(getLocalStorageItem(ACCESS_TOKEN)){
+      navigate(dashboardURL);
+    }
   }, []);
 
   return (
