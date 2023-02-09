@@ -282,7 +282,8 @@ export const DataTable = ({
         }
       });
       restProps['dateHours'] = [...dateHours];
-      restProps['totalHrs'] = (Math.round(totalHrs * 100) / 100).toFixed(2).toString();
+      restProps['totalHrs'] = (Math.round(totalHrs * 100) / 100).toFixed(2);
+      console.log(restProps['totalHrs']);
       isEditButtonClicked ? dispatch(updateTimeSheetData(restProps)) : dispatch(saveTimeSheetData(restProps));
     }
     setIsAddButtonClicked(false);
@@ -414,7 +415,7 @@ export const DataTable = ({
     if(valuesArray.length !== 1 && valuesArray[1] >= 100){
         toast.info(`You can not enter values after 2 decimal places`);
     }
-    else if(event.target.value !== '' && (event.target.id === 'time' || col === 'billAllocation') && (parseInt(event.target.value) < parseInt(event.target.min) || parseInt(event.target.value) > parseInt(event.target.max))){
+    else if(event.target.value !== '' && (event.target.id === 'time' || col === 'billAllocation') && (parseFloat(event.target.value) < parseFloat(event.target.min) || parseFloat(event.target.value) > parseFloat(event.target.max))){
       toast.info(`Please Enter values between ${event.target.min}-${event.target.max}`);
     }
     else{
@@ -740,7 +741,7 @@ export const DataTable = ({
       
       return (
         <TableCell key={col.id} style={{ maxWidth: col.maxWidth ? col.maxWidth : 'auto' }}>
-          <FormControl sx={{ m: 1, width: 120, margin: '0' }}>
+          <FormControl sx={{ m: 1, width: 120, margin: '0' }} required={col.isRequired}>
             <InputLabel id="demo-multiple-checkbox-label">{col.label}</InputLabel>
             <Select
               labelId="demo-multiple-checkbox-label"
@@ -838,6 +839,7 @@ export const DataTable = ({
                 color="primary"
                 aria-label="upload picture"
                 component="label"
+                className="attachmentIcon"
               >
                 <input
                   hidden
@@ -1167,7 +1169,7 @@ export const DataTable = ({
                             <TableCell key={col.id}>
                               <div className="attachmentContainer">
                                 {(headingName===Modules.PROJECT_ADMIN || headingName===Modules.PROJECT_MANAGEMENT) && <Tooltip title="Clone">
-                                  <ContentCopyIcon style={{ color: "#1976d2", cursor: "pointer"}} onClick={() => handleCopy(row[UniqueIds[headingName.replace(" ", "")]])} />
+                                  <ContentCopyIcon style={{ color: "#1976d2", cursor: "pointer", margin: "0 0.5rem 0 0.5rem"}} onClick={() => handleCopy(row[UniqueIds[headingName.replace(" ", "")]])} />
                                 </Tooltip>}
                                 {headingName === Modules.CLIENT_ADMIN || headingName === Modules.PROJECT_ADMIN ? (
                                   (headingName === Modules.CLIENT_ADMIN &&
@@ -1175,6 +1177,7 @@ export const DataTable = ({
                                     (headingName === Modules.PROJECT_ADMIN &&
                                       row.sowAttachmentLink) ? (
                                     <a
+                                      className="editDeleteIcon downloadIcon"
                                       href={
                                         headingName === Modules.PROJECT_ADMIN
                                           ? row.sowAttachmentLink
@@ -1192,6 +1195,7 @@ export const DataTable = ({
                                       color="primary"
                                       aria-label="upload picture"
                                       component="label"
+                                      className="attachmentIcon"
                                     >
                                       {headingName === Modules.CLIENT_ADMIN && (
                                         <input
@@ -1254,9 +1258,10 @@ export const DataTable = ({
                                   // row.status !== 'Rejected' && 
                                   tabName !== 'PENDING APPROVAL' && tabName !== 'REPORTEES' && (
                                     <Tooltip title="Delete">
+
                                       <img
                                         src={deleteIcon}
-                                        className="editDeleteIcon cursorPointer"
+                                        className="editDeleteIcon cursorPointer deleteIcon"
                                         onClick={() =>
                                           dialogBoxHandler(
                                             row[
