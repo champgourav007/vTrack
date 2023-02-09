@@ -17,12 +17,8 @@ export function setExpirationTimeout (
   const TOKEN_SPARETIME_COEFFICIENT = 0.75;
   const tokenLifeTime = TOKEN_SPARETIME_COEFFICIENT * (+(new Date(expiresOnString)) - Date.now());
   if (tokenLifeTime <= 0) {
-    removeLocalStorageItem(ACCESS_TOKEN);
-    removeLocalStorageItem(ACCOUNT);
-    removeLocalStorageItem(EXPIRES_ON);
-    removeLocalStorageItem(TIME_OF_AUTO_LOGOUT);
-    removeLocalStorageItem("userInformation");
-    cookies.remove('userInformation', {path: "/", sameSite: false });
+    localStorage.clear();
+    sessionStorage.clear();
     instance.loginRedirect(request)
       .catch((error) => {
         console.error(error);

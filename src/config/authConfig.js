@@ -1,8 +1,8 @@
 import {
   PublicClientApplication, EventType
 } from '@azure/msal-browser';
-import { ACCESS_TOKEN, ACCOUNT, EXPIRES_ON } from '../common/constants/local-storage-keys';
-import { getLocalStorageItem, setLocalStorageItem } from '../common/utils/local-storage';
+import { ACCESS_TOKEN, ACCOUNT, EXPIRES_ON, TIME_OF_AUTO_LOGOUT } from '../common/constants/local-storage-keys';
+import { getLocalStorageItem, removeLocalStorageItem, setLocalStorageItem } from '../common/utils/local-storage';
 import { setExpirationTimeout } from './msal-expiration';
 import Cookies from 'universal-cookie';
 
@@ -69,8 +69,8 @@ msalClient.addEventCallback((message) => {
     if (data && data.account) {
       resetSilentMode();
       const expiresOnFromResponse = String(data.expiresOn);
+      sessionStorage.setItem('userInformation', data);
       setLocalStorageItem(ACCESS_TOKEN, data.accessToken);
-      cookies.set('userInformation', data.accessToken, { path: '/'});
       setLocalStorageItem(ACCOUNT, JSON.stringify(data.account));
       setLocalStorageItem(EXPIRES_ON, expiresOnFromResponse);
       setExpirationTimeout(msalClient, loginRequest, expiresOnFromResponse);

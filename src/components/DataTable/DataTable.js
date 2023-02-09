@@ -1,5 +1,5 @@
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { Checkbox, FormControl, InputLabel, ListItemText, ListSubheader, OutlinedInput, Select, styled } from "@mui/material";
+import { Box, Checkbox, FormControl, InputLabel, ListItemText, ListSubheader, OutlinedInput, Select, styled } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
@@ -55,7 +55,7 @@ import {
   saveClientAdminData,
   updateClientAdminData
 } from "../../redux/actions/client-admin";
-import { getProjectManagementData, saveProjectManagementData, updateProjectManagementData } from "../../redux/actions/project-management";
+import { deleteProjectManagementData, getProjectManagementData, saveProjectManagementData, updateProjectManagementData } from "../../redux/actions/project-management";
 import { deleteTimeSheetData, saveTimeSheetData, updateTimeSheetData, updateTimeSheetStatus } from "../../redux/actions/timesheet";
 import DialogBox from "../DialogBox/dialogBox";
 import Loader from "../Loader";
@@ -150,13 +150,25 @@ export const DataTable = ({
 
   const getCircularProgressColor = (value) => {
     if(value >= 0 && value <= 30){
-      return {color:"red"};
+      return {
+        position: 'absolute',
+        left: 0,
+        color:"red",
+      };
     }
     else if(value >= 31 && value <= 60){
-      return {color:"yellow"};
+      return {
+        position: 'absolute',
+        left: 0,
+        color:"#daa520",
+      };
     }
     else{
-      return {color:"green"};
+      return {
+        position: 'absolute',
+        left: 0,
+        color:"green",
+      };
     }
   }
 
@@ -270,7 +282,8 @@ export const DataTable = ({
         }
       });
       restProps['dateHours'] = [...dateHours];
-      restProps['totalHrs'] = (Math.round(totalHrs * 100) / 100).toFixed(2).toString();
+      restProps['totalHrs'] = (Math.round(totalHrs * 100) / 100).toFixed(2);
+      console.log(restProps['totalHrs']);
       isEditButtonClicked ? dispatch(updateTimeSheetData(restProps)) : dispatch(saveTimeSheetData(restProps));
     }
     setIsAddButtonClicked(false);
@@ -402,7 +415,7 @@ export const DataTable = ({
     if(valuesArray.length !== 1 && valuesArray[1] >= 100){
         toast.info(`You can not enter values after 2 decimal places`);
     }
-    else if(event.target.value !== '' && (event.target.id === 'time' || col === 'billAllocation') && (parseInt(event.target.value) < parseInt(event.target.min) || parseInt(event.target.value) > parseInt(event.target.max))){
+    else if(event.target.value !== '' && (event.target.id === 'time' || col === 'billAllocation') && (parseFloat(event.target.value) < parseFloat(event.target.min) || parseFloat(event.target.value) > parseFloat(event.target.max))){
       toast.info(`Please Enter values between ${event.target.min}-${event.target.max}`);
     }
     else{
@@ -441,7 +454,7 @@ export const DataTable = ({
           searchData: searchData,
         })
       );
-    } else if (headingName === Modules.PROJECT_ALLOCATION && assignedProjects === null) {
+    } else if (headingName === Modules.PROJECT_ALLOCATION) {
       dispatch(
         getProjectAllocationData({
           pageNo: page + 1,
@@ -728,7 +741,7 @@ export const DataTable = ({
       
       return (
         <TableCell key={col.id} style={{ maxWidth: col.maxWidth ? col.maxWidth : 'auto' }}>
-          <FormControl sx={{ m: 1, width: 120, margin: '0' }}>
+          <FormControl sx={{ m: 1, width: 120, margin: '0' }} required={col.isRequired}>
             <InputLabel id="demo-multiple-checkbox-label">{col.label}</InputLabel>
             <Select
               labelId="demo-multiple-checkbox-label"
@@ -826,6 +839,7 @@ export const DataTable = ({
                 color="primary"
                 aria-label="upload picture"
                 component="label"
+                className="attachmentIcon"
               >
                 <input
                   hidden
@@ -930,7 +944,11 @@ export const DataTable = ({
     let idx = rows.findIndex(
       (row) => row[UniqueIds[headingName.replace(" ", "")]] === id
     );
-    setNewRowAdded(rows[idx]);
+    if (rows[idx].employeeId) {
+      setNewRowAdded({ ...rows[idx], employeeName: getEmployeeName(rows[idx].employeeId) });
+    } else {
+      setNewRowAdded(rows[idx]);
+    }
     setIsAddButtonClicked(true);
   }
   const editButtonClicked = (id) => {
@@ -980,6 +998,11 @@ export const DataTable = ({
       dispatch(deleteProjectAdminData(id));
     } else if (headingName === Modules.TIMESHEET) {
       dispatch(deleteTimeSheetData(id));
+    } else if (headingName === Modules.PROJECT_MANAGEMENT) {
+      dispatch(deleteProjectManagementData({
+        projectAllocationId: id,
+        projectId: projectId
+      }))
     }
     setDialogDeleteButtonClicked(false);
   };
@@ -1073,8 +1096,8 @@ export const DataTable = ({
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: "48rem" }}>
           <Table aria-label="sticky table" size="small">
-            <TableHead>
-              <TableRow>
+            <TableHead style={{position:"sticky", top:"0", zIndex: 1}}>
+              <TableRow style={{backgroundColor:"white"}}>
                 {columns.map(
                   (column) => {
                     if (!column.id) return null;
@@ -1145,8 +1168,8 @@ export const DataTable = ({
                           return (
                             <TableCell key={col.id}>
                               <div className="attachmentContainer">
-                                {headingName===Modules.PROJECT_ADMIN && <Tooltip title="Clone">
-                                  <ContentCopyIcon style={{ color: "#1976d2", cursor: "pointer"}} onClick={() => handleCopy(row[UniqueIds[headingName.replace(" ", "")]])} />
+                                {(headingName===Modules.PROJECT_ADMIN || headingName===Modules.PROJECT_MANAGEMENT) && <Tooltip title="Clone">
+                                  <ContentCopyIcon style={{ color: "#1976d2", cursor: "pointer", margin: "0 0.5rem 0 0.5rem"}} onClick={() => handleCopy(row[UniqueIds[headingName.replace(" ", "")]])} />
                                 </Tooltip>}
                                 {headingName === Modules.CLIENT_ADMIN || headingName === Modules.PROJECT_ADMIN ? (
                                   (headingName === Modules.CLIENT_ADMIN &&
@@ -1154,6 +1177,7 @@ export const DataTable = ({
                                     (headingName === Modules.PROJECT_ADMIN &&
                                       row.sowAttachmentLink) ? (
                                     <a
+                                      className="editDeleteIcon downloadIcon"
                                       href={
                                         headingName === Modules.PROJECT_ADMIN
                                           ? row.sowAttachmentLink
@@ -1171,6 +1195,7 @@ export const DataTable = ({
                                       color="primary"
                                       aria-label="upload picture"
                                       component="label"
+                                      className="attachmentIcon"
                                     >
                                       {headingName === Modules.CLIENT_ADMIN && (
                                         <input
@@ -1228,15 +1253,15 @@ export const DataTable = ({
                                   </Tooltip>
                                 }
                                 {headingName !== Modules.PROJECT_ALLOCATION &&
-                                  headingName !== Modules.PROJECT_MANAGEMENT &&
                                   row.status !== 'Approved' &&
                                   row.status !== 'Submitted' &&
                                   // row.status !== 'Rejected' && 
                                   tabName !== 'PENDING APPROVAL' && tabName !== 'REPORTEES' && (
                                     <Tooltip title="Delete">
+
                                       <img
                                         src={deleteIcon}
-                                        className="editDeleteIcon cursorPointer"
+                                        className="editDeleteIcon cursorPointer deleteIcon"
                                         onClick={() =>
                                           dialogBoxHandler(
                                             row[
@@ -1308,14 +1333,25 @@ export const DataTable = ({
                               getEmployeeName(row["employeeId"])
                             ) : col.id.toLowerCase().includes("allocation") && row[col.id] ? (
                               <div className="allocation">
-                                <div>
+                                <Box sx={{ position: 'relative' }}>
                                   <CircularProgress
-                                    className="allocationProgress"
+                                    variant="determinate"
+                                    sx={{
+                                      color: (theme) =>
+                                        theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800],
+                                    }}
+                                    size={20}
+                                    thickness={4}
+                                    value={100}
+                                  />
+                                  <CircularProgress
                                     variant="determinate"
                                     value={row[col.id]}
+                                    thickness={4}
                                     style = {getCircularProgressColor(row[col.id])}
+                                    size = {20}
                                   />
-                                </div>
+                                </Box>
                                 <div>{row[col.id]}%</div>
                               </div>
                             ) : col.id === 'approvers' ?

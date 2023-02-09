@@ -43,17 +43,17 @@ export const tableColumnsData = {
     { id: "projectManagerName", label: "Project Manager", minWidth: 80, type: 'select', sortDir: '', align: 'left', isSort: false },
     { id: "startDate", label: "Start Date", minWidth: 100, type: 'date', sortDir: '', align: 'left', isSort: true },
     { id: "endDate", label: "End Date", minWidth: 110, type: 'date', sortDir: '', align: 'left', isSort: true },
-    { id: 'billStatus', label: 'Bill Status', minWidth: 100, type: 'textfield', sortDir: '', align: 'left', isSort: true },
-    { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, type: 'textfield', sortDir: '', align: 'left', isSort: true }
+    { id: 'billStatus', label: 'Bill Status', minWidth: 100, type: 'textfield', sortDir: '', align: 'left', isSort: false },
+    { id: 'billAllocation', label: 'Allocation', minWidth: 100, type: 'textfield', sortDir: '', align: 'left', isSort: false }
     // { id: 'status', label: 'Status', minWidth: 100, type: 'textfield' }
   ], 
   'ProjectManagement': [
-    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'multi-select', sortDir: '', align: 'left', isSort: false },
+    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'multi-select', sortDir: '',isRequired: true, align: 'left', isSort: false },
     { id: "site", label: "Offshore/Onshore", minWidth: 110, type: 'select', sortDir: '', align: 'left', isSort: false },
-    { id: 'startDate', label: 'Start Date', minWidth: 110, type: 'date', sortDir: '', align: 'left', isSort: true },
-    { id: "endDate", label: "End Date", minWidth: 120, type: 'date', sortDir: '', align: 'left', isSort: true },
+    { id: 'startDate', label: 'Start Date', minWidth: 110, type: 'date', sortDir: '',isRequired: true, align: 'left', isSort: true },
+    { id: "endDate", label: "End Date", minWidth: 120, type: 'date', sortDir: '',isRequired: true, align: 'left', isSort: true },
     { id: 'billRate', label: 'Bill Rate', minWidth: 80, type: 'textfield', sortDir: '', align: 'left', isSort: false},
-    { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, min:0, max:100, type: 'textfield', fieldType:'number', sortDir: '', align: 'left', isSort: false },
+    { id: 'billAllocation', label: 'Bill Allocation', minWidth: 100, min:0, max:100, isRequired: true, type: 'textfield', fieldType:'number', sortDir: '', align: 'left', isSort: false },
     { id: 'billStatus', label: 'Bill Status', minWidth: 80, type: 'select', sortDir: '', align: 'left', isSort: false },
     { id: 'costAllocation', label: 'Cost Allocation', minWidth: 100, type: 'textfield', sortDir: '', align: 'left', isSort: false },
     { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', sortDir: '', align: 'left', isSort: false}
@@ -131,8 +131,8 @@ export const getMinWidth = (col, moduleName) => {
 };
 
 export const fileHandler = (file, id, name, headingName) => {
-  // const accessToken = getLocalStorageItem(ACCESS_TOKEN);
-  const accessToken = cookies.get('userInformation');
+  const accessToken = getLocalStorageItem(ACCESS_TOKEN);
+  // const accessToken = cookies.get('userInformation');
 
   if (file) {
     const formData = new FormData();
@@ -211,7 +211,7 @@ export const getApproversWithIds = (approvers) => {
 export const getTotalHrs = (timesheetData) => {
   let totalHrs = 0;
   for (const data of timesheetData) {
-    totalHrs += data.totalHrs;
+    totalHrs += parseFloat(data.totalHrs);
   }
   let finalHours=(Math.round(totalHrs * 100) / 100).toFixed(2);
   if(finalHours.split('.')[1]==="00") finalHours=(Math.round(totalHrs * 100) / 100)

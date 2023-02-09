@@ -9,20 +9,29 @@ import { VTrackURL } from "../../routes/routes";
 import "./dashboard.css";
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import Cookies from 'universal-cookie';
+import Loader from "../../components/Loader";
+import { useSelector } from "react-redux";
+import { getLocalStorageItem } from "../../common/utils/local-storage";
+import { ACCESS_TOKEN } from "../../common/constants/local-storage-keys";
 
 const cookies = new Cookies();
 
 export const Dashboard = () => {
   const [headingName, setHeadingName] = useState("Dashboard");
   const [hoveredItem, setHoveredItem] = useState("");
+  const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Veersa Portal";
+  }, [])
 
   const changePage = (headingName) => {
     setHeadingName(headingName);
   };
 
   useEffect(()=>{
-    if(!cookies.get("userInformation")){
+    if(!getLocalStorageItem(ACCESS_TOKEN)){
       navigate("/");
     }
   })
@@ -32,12 +41,14 @@ export const Dashboard = () => {
   };
 
   return (
+    <>
+    {vTrackLoader && <Loader />}
     <div className="mainDiv">
       {/* <div className="sidebarContainer">
         <Sidebar changePage={changePage} pageName="Dashboard" />
       </div> */}
       <div className="rightContainer dashboardRightContainer">
-        <TopBar headingName="Dashboard" />
+        <TopBar headingName="Veersa Applications" />
         <div className="vToolWrapper">
           <div className="wrapperHeading">
             <span style={{ color: "#1773BC" }}>v</span>
@@ -139,5 +150,6 @@ export const Dashboard = () => {
         </div>
       </div>
     </div>
+  </>
   );
 };

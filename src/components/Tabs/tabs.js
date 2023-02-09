@@ -96,6 +96,23 @@ export default function BasicTabs(props) {
     if((mappedProjectManagementData===null || mappedProjectManagementData.length===0) && props.headingName === Modules.PROJECT_MANAGEMENT) setNoDataFound(true);
     else setNoDataFound(false);
   }, [mappedProjectManagementData, props.headingName])
+
+  let projectsTab = [];
+  let projectsTabs = [];
+  if(mappedProjectManagementData){
+    mappedProjectManagementData.forEach((client) => {
+      client.projects.forEach((project) => {
+        projectsTab.push({
+          projectName : project.projectName,
+          clientName : client.clientName,
+          projectId : project.projectId
+        });
+      });
+    });
+
+    projectsTabs = projectsTab.sort(function(a,b){return (a.projectName).localeCompare(b.projectName)})
+  }
+  
   
   return (
     <Box sx={{ width: "100%" }}>
@@ -110,11 +127,9 @@ export default function BasicTabs(props) {
             variant="scrollable"
             scrollButtons="auto"
           >
-            { mappedProjectManagementData && mappedProjectManagementData.map((client) =>
-              client.projects.map((project) => {
-                return <Tab key={`${client.clientName} / ${project.projectName}`} className="tabs-table" label={`${project.projectName} (${client.clientName})`} {...a11yProps(count++)} />
-              })
-            )}
+            { projectsTabs && projectsTabs.map((project) =>{
+                return <Tab key={`${project.clientName} / ${project.projectName}`} className="tabs-table" label={`${project.projectName} (${project.clientName})`} {...a11yProps(project.projectId)} />
+              })}
           </Tabs> :
         props.headingName === Modules.TIMESHEET ? 
           userData && userData.data.tabs.timeSheet && (
@@ -149,12 +164,11 @@ export default function BasicTabs(props) {
       }
       </Box>
       {props.headingName === Modules.PROJECT_MANAGEMENT ? 
-        mappedProjectManagementData && mappedProjectManagementData.map((client) =>
-        client.projects.map((project) => {
-          return <TabPanel key={`${client.clientName} / ${project.projectName}`} value={value} index={counter++} >
-            <TabsTable headingName={props.headingName} tabName={project} status={status} projectId={project.projectId} />
+        projectsTabs && projectsTabs.map((project) => {
+          return <TabPanel key={`${project.clientName} / ${project.projectName}`} value={value} index={counter++} >
+            <TabsTable headingName={props.headingName} tabName={project.projectName} status={status} projectId={project.projectId} />
           </TabPanel>
-        })) :
+        }) :
       props.headingName === Modules.TIMESHEET ? 
         userData && userData.data.tabs.timeSheet.map((tab, index) => (
           <TabPanel key={index} value={value} index={index}>

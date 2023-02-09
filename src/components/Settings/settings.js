@@ -8,6 +8,7 @@ import {
   getUnregisteredUserDetails,
   getUserRoleData,
   saveUserRoleData,
+  setVtrackLoader,
 } from "../../redux/actions";
 import "./settings.css";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -20,6 +21,7 @@ import Button from "@mui/material/Button";
 import { SettingsTable } from "./settingsTable";
 import { searchIcon } from "../../common/icons";
 import { getFullName } from "../../common/utils/datatable";
+import Loader from "../Loader";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
