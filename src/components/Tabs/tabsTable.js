@@ -525,7 +525,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   return (
     <div className={`tableDiv ${tabName === 'MY TIMESHEET' ? "timesheetTable" : ""}`}>
       <div className="searchHeader">
-        {headingName !== Modules.TIMESHEET && <div className="searchWrapper">
+        {headingName !== Modules.TIMESHEET && headingName !== Modules.PROJECT_MANAGEMENT && <div className="searchWrapper">
           <img src={searchIcon} className="searchIcon" alt="" />
           <input
             className="searchBox"
