@@ -27,4 +27,9 @@ httpRequest({
   url:`${USER_DETAILS}/get-projects-for-pm`,
   method: HttpMethod.GET
 })  
-  
+
+export const deleteProjectManagementDetail = (projectAllocationId) =>
+  httpRequest({
+    url: `${PROJECT_MANAGEMENT_API}/${projectAllocationId}/delete-project-allocation`,
+    method: HttpMethod.DELETE,
+  });

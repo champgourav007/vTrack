@@ -55,7 +55,7 @@ import {
   saveClientAdminData,
   updateClientAdminData
 } from "../../redux/actions/client-admin";
-import { getProjectManagementData, saveProjectManagementData, updateProjectManagementData } from "../../redux/actions/project-management";
+import { deleteProjectManagementData, getProjectManagementData, saveProjectManagementData, updateProjectManagementData } from "../../redux/actions/project-management";
 import { deleteTimeSheetData, saveTimeSheetData, updateTimeSheetData, updateTimeSheetStatus } from "../../redux/actions/timesheet";
 import DialogBox from "../DialogBox/dialogBox";
 import Loader from "../Loader";
@@ -942,7 +942,11 @@ export const DataTable = ({
     let idx = rows.findIndex(
       (row) => row[UniqueIds[headingName.replace(" ", "")]] === id
     );
-    setNewRowAdded(rows[idx]);
+    if (rows[idx].employeeId) {
+      setNewRowAdded({ ...rows[idx], employeeName: getEmployeeName(rows[idx].employeeId) });
+    } else {
+      setNewRowAdded(rows[idx]);
+    }
     setIsAddButtonClicked(true);
   }
   const editButtonClicked = (id) => {
@@ -992,6 +996,11 @@ export const DataTable = ({
       dispatch(deleteProjectAdminData(id));
     } else if (headingName === Modules.TIMESHEET) {
       dispatch(deleteTimeSheetData(id));
+    } else if (headingName === Modules.PROJECT_MANAGEMENT) {
+      dispatch(deleteProjectManagementData({
+        projectAllocationId: id,
+        projectId: projectId
+      }))
     }
     setDialogDeleteButtonClicked(false);
   };
@@ -1157,7 +1166,7 @@ export const DataTable = ({
                           return (
                             <TableCell key={col.id}>
                               <div className="attachmentContainer">
-                                {headingName===Modules.PROJECT_ADMIN && <Tooltip title="Clone">
+                                {(headingName===Modules.PROJECT_ADMIN || headingName===Modules.PROJECT_MANAGEMENT) && <Tooltip title="Clone">
                                   <ContentCopyIcon style={{ color: "#1976d2", cursor: "pointer"}} onClick={() => handleCopy(row[UniqueIds[headingName.replace(" ", "")]])} />
                                 </Tooltip>}
                                 {headingName === Modules.CLIENT_ADMIN || headingName === Modules.PROJECT_ADMIN ? (
@@ -1240,7 +1249,6 @@ export const DataTable = ({
                                   </Tooltip>
                                 }
                                 {headingName !== Modules.PROJECT_ALLOCATION &&
-                                  headingName !== Modules.PROJECT_MANAGEMENT &&
                                   row.status !== 'Approved' &&
                                   row.status !== 'Submitted' &&
                                   // row.status !== 'Rejected' && 

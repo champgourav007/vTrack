@@ -2,6 +2,7 @@ import { all, fork } from "redux-saga/effects";
 import { clientAdminSaga } from "./client-admin-saga";
 import { deleteClientAdminSaga } from "./delete-client-admin-saga";
 import { deleteProjectAdminSaga } from "./delete-project-admin-saga";
+import { deleteProjectManagementData } from "./delete-project-management-data";
 import { deleteSettingTableDataSaga } from "./delete-setting-table-data";
 import { deleteTimeSheetSaga } from "./delete-timesheet-saga";
 import { allProjectsSaga } from "./get-all-projects-saga";
@@ -84,6 +85,7 @@ export function* rootSaga() {
     fork(timeSheetReporteeSaga),
     fork(getTimesheetProjectsSaga),
     fork(saveClientAdminFileSaga),
-    fork(saveProjectAdminFileSaga)
+    fork(saveProjectAdminFileSaga),
+    fork(deleteProjectManagementData)
   ]);
 }
