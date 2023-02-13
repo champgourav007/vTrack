@@ -45,7 +45,11 @@ export const SettingsTable = ({ rolesData, searchData }) => {
         if (usersData) {
             if (searchData) {
                 let tempData = [ ...usersData ];
-                setFilteredData(tempData.filter(data => getFullName(data.firstName, data.lastName).trim().toLowerCase().includes(searchData.trim().toLowerCase())));
+                setFilteredData(tempData.filter(data => 
+                    getFullName(data.firstName, data.lastName).trim().toLowerCase().includes(searchData.trim().toLowerCase())
+                    || 
+                    data.roleName.trim().toLowerCase().includes(searchData.trim().toLowerCase())
+                ));
             } else {
                 setFilteredData(usersData);
             }
