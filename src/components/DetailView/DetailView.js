@@ -19,7 +19,6 @@ import { Box } from "@mui/material";
 
 export const DetailView = ({viewDetails, setViewDetails, selectedEmpId, selectedPeriodWeek, headingName}) => {
   const { clientsData, allTasks, listItems, assignedProjects, detailedTimeSheetData, projectAllocationData } = useSelector(({ MODULES }) => MODULES);
-  console.log(projectAllocationData)
   const { userData, allUserDetails } = useSelector(({ USER }) => USER);
   const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
   const dispatch = useDispatch();

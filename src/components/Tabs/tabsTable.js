@@ -44,6 +44,8 @@ import { Select } from "@mui/material";
 import { CalendarMonth, CalendarMonthRounded, Person } from "@mui/icons-material";
 import { assignedProjectsSaga } from "../../saga/get-assigned-projects-saga";
 import { DATE_FORMAT } from "../../common/constants/extra-constants";
+import ExportExcel from "../ExportExcel";
+import { handleSetRows } from "../../common/utils/tabsTable";
 
 const getPeriods = () => {
   let date = moment().subtract(42, "days");
@@ -209,8 +211,8 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
               arr.splice(i,1);
           }
         }
-        return arr;
-}
+          return arr;
+        }
         if(tabName === 'REPORTEES'){
           removeByAttr(temp, 'id', 'task');
           removeByAttr(temp, 'id', 'projectName');
@@ -252,29 +254,6 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const setTableData = (tableData) => {
     handleSetColumnsData(tableData.data[0]);
     setTotalRecord(tableData.totalCount);
-  };
-
-  const handleSetRows = (tableData) => {
-    let rowsData = [];
-    let rowsToShow = [...tableData];
-    if(tabName === 'PENDING APPROVAL'){
-      rowsToShow = rowsToShow.filter(i => i.status === 'Submitted');
-    }
-    rowsToShow.forEach((row)=>{
-      let rowData = {};
-      Object.keys(row).forEach((col) => {
-        if (col === "dateHours") {
-          row[col].forEach((dateHour) => {
-            rowData[moment(dateHour.date).format("ddd DD")] =
-              dateHour.hours === 0 ? "-" : dateHour.hours;
-          });
-        } else {
-          rowData[col] = row[col];
-        }
-      });
-      rowsData.push(rowData);
-    });
-    setRows([...rowsData]);
   };
 
   const resetSearchData = () => {
@@ -356,7 +335,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     } else if (headingName === Modules.TIMESHEET && timeSheetData && timeSheetData.length) {
       handleSetColumnsData(timeSheetData[0]);
       setTotalRecord(timeSheetData.length);
-      handleSetRows(timeSheetData);
+      setRows(handleSetRows(timeSheetData, tabName));
       setIsAddButtonClicked(false)
     } else if (headingName === Modules.PROJECT_MANAGEMENT && projectManagementData && projectManagementData.totalCount) {
       setTableData(projectManagementData);
@@ -699,6 +678,8 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                 </button>
               </div>
           ) : headingName !== Modules.PROJECT_ALLOCATION ? (
+            <>
+            {headingName===Modules.PROJECT_MANAGEMENT && <ExportExcel data={headingName===Modules.PROJECT_MANAGEMENT ? projectManagementData : []} headingName={headingName} projectId={projectId}/>}
             <button
                 disabled={isAddButtonClicked || isEditButtonClicked}
                 className={
@@ -718,6 +699,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                   Add
                 </div>
               </button>
+            </>
           ) : null
         }
         
