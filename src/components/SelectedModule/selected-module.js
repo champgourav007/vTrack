@@ -13,7 +13,7 @@ export const SelectedModule = ({ headingName }) => {
   useEffect(() => {
     if (headingName === "Dashboard") {
       navigate(VTrackURL);
-    } else {
+    } else if(headingName.length !== 0) {
       let tempRouteName = headingName.replaceAll(' ','');
       navigate(`/vTrack/${tempRouteName}`);
     }

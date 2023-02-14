@@ -16,6 +16,7 @@
 .rightContainer {
   flex: 1;
   background: rgba(23, 115, 188, 0.02);
+  min-width: 0;
 }
 
 .wrapperHeading {
