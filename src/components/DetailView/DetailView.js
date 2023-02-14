@@ -8,14 +8,18 @@ import { toast } from "react-toastify";
 import { DATE_FORMAT } from "../../common/constants/extra-constants";
 import { Modules } from "../../common/constants/sidebar";
 import { AddDisableIcon, AddEnableIcon, crossIcon, editIcon } from "../../common/icons";
-import { getApproversIds, getFullName, getLabel, getTotalHrs, UniqueIds } from "../../common/utils/datatable";
+import { getApproversIds, getFullName, getLabel, getMinWidth, getTotalHrs, UniqueIds } from "../../common/utils/datatable";
 import { dropDownMockData, initialData } from "../../mock-data/TableData";
-import { getDetailedTimeSheetData, saveTimeSheetData, setDetailedTimeSheetData, updateTimeSheetData } from "../../redux/actions";
-import "./timeSheetDetailView.css";
+import { getDetailedTimeSheetData, getProjectAllocationData, saveTimeSheetData, setDetailedTimeSheetData, updateTimeSheetData } from "../../redux/actions";
+import TablePagination from "@mui/material/TablePagination";
+import "./DetailView.css";
+import { getCircularProgressColor } from "../../common/utils/circular-progress-color";
+import CircularProgress from "@mui/material/CircularProgress";
+import { Box } from "@mui/material";
 
-export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId, selectedPeriodWeek}) => {
-  const headingName = Modules.TIMESHEET;
-  const { clientsData, allTasks, listItems, assignedProjects, detailedTimeSheetData } = useSelector(({ MODULES }) => MODULES);
+export const DetailView = ({viewDetails, setViewDetails, selectedEmpId, selectedPeriodWeek, headingName}) => {
+  const { clientsData, allTasks, listItems, assignedProjects, detailedTimeSheetData, projectAllocationData } = useSelector(({ MODULES }) => MODULES);
+  console.log(projectAllocationData)
   const { userData, allUserDetails } = useSelector(({ USER }) => USER);
   const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
   const dispatch = useDispatch();
@@ -25,6 +29,9 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
   const [ rowToBeUpdated, setRowToBeUpdated ] = useState({});
   const [ newRowAdded, setNewRowAdded ] = useState(initialData(headingName,selectedPeriodWeek));
   const [ isEditButtonClicked, setIsEditButtonClicked ] = useState(false);
+  const [count, setCount] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(0);
 
   const handleClose = () => {
     setViewDetails(false);
@@ -416,7 +423,7 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
   };
 
   useEffect(() => {
-    if (detailedTimeSheetData && detailedTimeSheetData.length) {
+    if (headingName===Modules.TIMESHEET && detailedTimeSheetData && detailedTimeSheetData.length) {
       let temp = [ 
         { id: 'projectName', label: 'Project Name', align: 'left', type: 'select', isRequired: true },
         { id: "task", label: "Task", minWidth: 100,maxWidth: 150, type: 'select',isRequired: true },
@@ -459,8 +466,43 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
         rowsData.push(rowData);
       });
       setRows([...rowsData]);
+      setCount(rows.length)
+    } else if (headingName===Modules.PROJECT_MANAGEMENT && projectAllocationData && projectAllocationData.data.length) {
+      setCount(projectAllocationData.totalCount)
+      let temp=[];
+      Object.keys(projectAllocationData.data[0]).forEach((col) => {
+        if (!col.includes('Id') && getLabel(col, "ProjectAllocation") !== '') {
+          temp.push({
+            id: col,
+            label: getLabel(col, "ProjectAllocation"),
+            minWidth: getMinWidth(col, "ProjectAllocation"),
+            sortDir: "DESC",
+            align: "left",
+            isRequired:col.isRequired
+          });
+        } else if (col === 'employeeId') {
+          temp.push({
+            id: 'employeeName',
+            label: getLabel('employeeName', "ProjectAllocation"),
+            minWidth: getMinWidth('employeeName', "ProjectAllocation"),
+            sortDir: "DESC",
+            align: "left",
+          });
+        }
+      })
+      let rowsData=[], rowsToshow=projectAllocationData.data;
+      rowsToshow.forEach((row) => {
+        let rowData = {};
+        Object.keys(row).forEach((col) => {
+          rowData[col] = row[col];
+        })
+        rowsData.push(rowData);
+      })
+      setColumns([...temp]);
+      setRows([...rowsData]);
+      console.log(rows)
     }
-  }, [detailedTimeSheetData]);
+  }, [detailedTimeSheetData, projectAllocationData]);
 
   useEffect(() => {
     if (headingName === Modules.TIMESHEET && viewDetails){
@@ -475,6 +517,18 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
           projectManagerId: null,
         })
       );
+    } else if (headingName === Modules.PROJECT_MANAGEMENT && viewDetails) {
+      dispatch(
+        getProjectAllocationData({
+          pageNo: 1,
+          pageSize: 10,
+          sortBy: "projectName",
+          sortDir: "ASC",
+          searchData: "",
+          status: "Active",
+          employeeID: selectedEmpId
+        })
+      );
     }
   }, [ selectedEmpId, selectedPeriodWeek, viewDetails ]);
 
@@ -486,17 +540,19 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
         open={viewDetails && !vTrackLoader}
         onClose={handleClose}
       >
-        <DialogTitle sx={{ fontSize: '2.25rem', color: '#1773bc' }}>Timesheet Detailed View</DialogTitle>
+        <DialogTitle sx={{ fontSize: '2.25rem', color: '#1773bc' }}>{headingName} Detailed View</DialogTitle>
         <DialogContent>
           <div className="empName-period">
             <div className="namePeriodDiv">
               <div className="namePeriodLabel">Employee Name:</div>
               <div className="namePeriodField">{getEmployeeName(selectedEmpId)}</div>
             </div>
-            <div className="namePeriodDiv">
-              <div className="namePeriodLabel">Period Week:</div>
-              <div className="namePeriodField">{selectedPeriodWeek.startDate.format(DATE_FORMAT) + " - " + selectedPeriodWeek.endDate.format(DATE_FORMAT)}</div>
-            </div>
+            { headingName===Modules.TIMESHEET && 
+              <div className="namePeriodDiv">
+                 <div className="namePeriodLabel">Period Week:</div>
+                 <div className="namePeriodField">{selectedPeriodWeek.startDate.format(DATE_FORMAT) + " - " + selectedPeriodWeek.endDate.format(DATE_FORMAT)}</div>
+              </div>
+            }
           </div>
           <Paper sx={{ width: "100%", overflow: "hidden" }}>
             <TableContainer sx={{ maxHeight: "36rem" }}>
@@ -546,6 +602,32 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
                                   }
                                 />
                               </button>
+                              : col.id==="employeeName" ? getEmployeeName(row["employeeId"]) 
+                              : col.id.toLowerCase().includes("allocation") && row[col.id] ? (
+                                <div className="allocation">
+                                  <Box sx={{ position: 'relative' }}>
+                                    <CircularProgress
+                                      variant="determinate"
+                                      sx={{
+                                        color: (theme) =>
+                                          theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800],
+                                      }}
+                                      size={20}
+                                      thickness={4}
+                                      value={100}
+                                    />
+                                    <CircularProgress
+                                      variant="determinate"
+                                      value={row[col.id]}
+                                      thickness={4}
+                                      style = {getCircularProgressColor(row[col.id])}
+                                      size = {20}
+                                    />
+                                  </Box>
+                                <div>{row[col.id]}%</div>
+                              </div>
+                              )
+                              : col.id==="startDate" || col.id==="endDate" ? row[col.id].split('T')[0]
                               : row[col.id]
                           }
                         </TableCell>
@@ -556,8 +638,17 @@ export const TimeSheetDetailView = ({viewDetails, setViewDetails, selectedEmpId,
                 </TableBody>
               </Table>
             </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 100]}
+              component="div"
+              count={count}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              // onPageChange={handleChangePage}
+              // onRowsPerPageChange={handleChangeRowsPerPage}
+            />
           </Paper>
-          { detailedTimeSheetData && detailedTimeSheetData.length ?
+          { headingName===Modules.TIMESHEET && detailedTimeSheetData && detailedTimeSheetData.length ?
             <div className="totalWorkingHrs">
               {`Total Hours: ${getTotalHrs(detailedTimeSheetData)}`}
             </div> : null

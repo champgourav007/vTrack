@@ -461,6 +461,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
             sortDir: "ASC",
             searchData: searchData,
             status: status,
+            employeeID: null
           })
         );
       break;

@@ -60,10 +60,11 @@ import { deleteTimeSheetData, saveTimeSheetData, updateTimeSheetData, updateTime
 import DialogBox from "../DialogBox/dialogBox";
 import Loader from "../Loader";
 import "./DataTable.css";
-import { TimeSheetDetailView } from "../TimeSheetDetailView/timeSheetDetailView";
+import { DetailView } from "../DetailView/DetailView";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { getCircularProgressColor } from "../../common/utils/circular-progress-color";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -147,30 +148,6 @@ export const DataTable = ({
         dispatch(postProjectAdminFile({ id: id, name: name, data: formData, pageNo: page, rows: rowsPerPage }))
     }
   };
-
-  const getCircularProgressColor = (value) => {
-    if(value >= 0 && value <= 30){
-      return {
-        position: 'absolute',
-        left: 0,
-        color:"red",
-      };
-    }
-    else if(value >= 31 && value <= 60){
-      return {
-        position: 'absolute',
-        left: 0,
-        color:"#daa520",
-      };
-    }
-    else{
-      return {
-        position: 'absolute',
-        left: 0,
-        color:"green",
-      };
-    }
-  }
 
   const getValueOfSelect = (id) => {
     if(id === "projectManagerName"){
@@ -345,7 +322,8 @@ export const DataTable = ({
           sortBy: sortBy,
           sortDir: "ASC",
           searchData: searchData,
-          status: projectStatus
+          status: projectStatus,
+          employeeID: null
         })
       );
     } else if (headingName === Modules.PROJECT_MANAGEMENT) {
@@ -393,7 +371,8 @@ export const DataTable = ({
           sortBy: sortBy,
           sortDir: "ASC",
           searchData: searchData,
-          status: projectStatus
+          status: projectStatus,
+          employeeID: null
         })
       );
     } else if (headingName === Modules.PROJECT_MANAGEMENT) {
@@ -462,7 +441,8 @@ export const DataTable = ({
           sortBy: colName,
           sortDir: sortDirection,
           searchData: searchData,
-          status: projectStatus
+          status: projectStatus,
+          employeeID: null
         })
       );
     } else if (headingName === Modules.PROJECT_MANAGEMENT) {
@@ -1085,7 +1065,7 @@ export const DataTable = ({
   return (
     <>
       {vTrackLoader && <Loader />}
-      <TimeSheetDetailView viewDetails={viewDetails} setViewDetails={setViewDetails} selectedEmpId={selectedEmpId} selectedPeriodWeek={selectedPeriodWeek} />
+      <DetailView viewDetails={viewDetails} setViewDetails={setViewDetails} selectedEmpId={selectedEmpId} selectedPeriodWeek={selectedPeriodWeek} headingName={headingName}/>
       {showDialogBox && (
         <DialogBox
           setShowDialogBox={setShowDialogBox}
@@ -1168,6 +1148,7 @@ export const DataTable = ({
                           return (
                             <TableCell key={col.id}>
                               <div className="attachmentContainer">
+                                {headingName===Modules.PROJECT_MANAGEMENT && <IconButton color="primary" onClick={() => handleViewDetails(row['employeeId'])} ><VisibilityIcon /></IconButton>}
                                 {(headingName===Modules.PROJECT_ADMIN || headingName===Modules.PROJECT_MANAGEMENT) && <Tooltip title="Clone">
                                   <ContentCopyIcon style={{ color: "#1976d2", cursor: "pointer", margin: "0 0.5rem 0 0.5rem"}} onClick={() => handleCopy(row[UniqueIds[headingName.replace(" ", "")]])} />
                                 </Tooltip>}
