@@ -536,7 +536,7 @@ export const DetailView = ({viewDetails, setViewDetails, selectedEmpId, selected
     <Dialog
         fullWidth={true}
         maxWidth='lg'
-        open={viewDetails && !vTrackLoader}
+        open={!vTrackLoader && viewDetails}
         onClose={handleClose}
       >
         <DialogTitle sx={{ fontSize: '2.25rem', color: '#1773bc' }}>{headingName} Detailed View</DialogTitle>

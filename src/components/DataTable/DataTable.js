@@ -47,6 +47,7 @@ import {
   getProjectAllocationData,
   postProjectAdminFile,
   saveProjectAdminData,
+  setVtrackLoader,
   updateProjectAdminData
 } from "../../redux/actions";
 import {
@@ -1018,6 +1019,7 @@ export const DataTable = ({
   const handleViewDetails = (empId) => {
     setViewDetails(true);
     setSelectedEmpId(empId);
+    setVtrackLoader(true);
   };
 
   React.useEffect(() => {

@@ -29,7 +29,6 @@ export default function ExportExcel({ data, headingName, projectId }) {
                 })
             );
         }
-        // exportToExcel(rows, headingName);
     }
 
     const getEmployeeName = (id) => {
@@ -56,9 +55,8 @@ export default function ExportExcel({ data, headingName, projectId }) {
                     })
                 })
                 res.push(tmp)
-                // console.log(tmp)
             })
-            exportToExcel(res, headingName);   
+            exportToExcel(res, arr[0].projectName + "-" + headingName);
         }
         setFlag(false);
     }, [projectManagementData])
