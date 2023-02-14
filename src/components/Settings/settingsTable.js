@@ -7,6 +7,7 @@ import { getFullName } from '../../common/utils/datatable';
 import { deleteSettingTableData, getSettingTableData, setVtrackLoader, updateSettingTableData } from '../../redux/actions';
 import DialogBox from '../DialogBox/dialogBox';
 import './settingTable.css';
+import TableLoader from '../TableLoader';
 
 export const SettingsTable = ({ rolesData, searchData }) => {
     const usersData = useSelector(({ MODULES }) => MODULES.settingTableData);
@@ -69,6 +70,8 @@ export const SettingsTable = ({ rolesData, searchData }) => {
                     setDialogDeleteButtonClicked={setDialogDeleteButtonClicked}
                 />
             )}
+            {!usersData && <TableLoader />}
+            {usersData &&
             <Paper sx={{ width: "100%", overflow: "hidden" }}>
             <TableContainer sx={{ maxHeight: "48rem"}}>
                 <Table aria-label="sticky table" size="small">
@@ -98,7 +101,6 @@ export const SettingsTable = ({ rolesData, searchData }) => {
                             }
                         </TableRow>
                     </TableHead>
-                    {!usersData && <h1 className="no-data">Fetching Users...</h1>}
                     <TableBody className='settingTableBody'>
                         {filteredData && filteredData.map((user) =>
                             <TableRow key={user.userId} className='settingTableHeader'>
@@ -178,7 +180,7 @@ export const SettingsTable = ({ rolesData, searchData }) => {
 
                 </Table>
             </TableContainer>
-            </Paper>
+            </Paper>}
 
         </>
     )

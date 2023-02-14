@@ -54,6 +54,7 @@ export default function BasicTabs(props) {
   const [status, setStatus] = React.useState("All")
   const [noDataFound, setNoDataFound] = React.useState(false)
   const { mappedProjectManagementData  } = useSelector(({ MODULES }) => MODULES);
+  const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
   let counter = 0, count = 0;
 
   const MyTabScrollButton = styled(TabScrollButton)({
@@ -116,7 +117,7 @@ export default function BasicTabs(props) {
   
   return (
     <Box sx={{ width: "100%" }}>
-      {noDataFound && props.headingName===Modules.PROJECT_MANAGEMENT && <h1 className="no-data">Currently you are not Project Manager in any Project. </h1>}
+      {!vTrackLoader && noDataFound && props.headingName===Modules.PROJECT_MANAGEMENT && <h1 className="no-data">Currently you are not Project Manager in any Project. </h1>}
       <Box>
         {props.headingName === Modules.PROJECT_MANAGEMENT ? 
           <Tabs

@@ -236,6 +236,7 @@ export const DataTable = ({
         dispatch(saveProjectAdminData({ ...newRowAdded, projectApprovers: approverIds }));
       } else if (headingName === Modules.PROJECT_MANAGEMENT) {
         dispatch(saveProjectManagementData({ ...newRowAdded, projectId: projectId }));
+        setTeamMembers(allUserDetails);
       }
     }
     else {
@@ -300,6 +301,7 @@ export const DataTable = ({
     }
     setRowToBeUpdated({});
     setNewRowAdded(initialData(headingName, selectedPeriodWeek));
+    setTeamMembers(allUserDetails);
   };
 
   const dateCalc = (newValue, col) => {
@@ -989,6 +991,7 @@ export const DataTable = ({
     setOwnerTeam(allUserDetails);
     setManagerTeam(allUserDetails);
     setApproversTeam(allUserDetails);
+    setTeamMembers(allUserDetails);
   };
 
   const deleteButtonClicked = (id) => {
@@ -1134,6 +1137,13 @@ export const DataTable = ({
               </TableRow>
             </TableHead>
             <TableBody>
+              {/* {(!rows.length) &&  (
+                <TableRow>
+                  <TableCell colspan="100%">
+                    <TableLoader/>
+                  </TableCell>
+                </TableRow>
+              )} */}
               {isAddButtonClicked && (
                 <TableRow id="new_row">
                   {columns.map((col) => {
