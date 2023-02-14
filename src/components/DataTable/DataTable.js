@@ -325,7 +325,7 @@ export const DataTable = ({
           sortDir: "ASC",
           searchData: searchData,
           status: projectStatus,
-          employeeID: null
+          employeeID: ""
         })
       );
     } else if (headingName === Modules.PROJECT_MANAGEMENT) {
@@ -374,7 +374,7 @@ export const DataTable = ({
           sortDir: "ASC",
           searchData: searchData,
           status: projectStatus,
-          employeeID: null
+          employeeID: ""
         })
       );
     } else if (headingName === Modules.PROJECT_MANAGEMENT) {
@@ -444,7 +444,7 @@ export const DataTable = ({
           sortDir: sortDirection,
           searchData: searchData,
           status: projectStatus,
-          employeeID: null
+          employeeID: ""
         })
       );
     } else if (headingName === Modules.PROJECT_MANAGEMENT) {
