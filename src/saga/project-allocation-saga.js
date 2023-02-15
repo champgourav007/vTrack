@@ -17,7 +17,8 @@ function* workerProjectAllocationSaga({ payload }) {
       payload.sortDir,
       payload.sortBy,
       payload.searchData,
-      payload.status
+      payload.status,
+      payload.employeeID
     );
     yield put(setProjectAllocationData(projectAllocationDetails));
     yield put(setVtrackLoader(false));

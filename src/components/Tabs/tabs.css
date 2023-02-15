@@ -36,3 +36,7 @@
   align-items: center;
   margin-top: 18rem;
 }
+
+.css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper {
+  max-height: 20rem !important;
+}

@@ -82,8 +82,10 @@ import whiteVReward from "./whiteVReward.svg"
 import whiteVTrackLogo from "./whiteVTrackLogo.svg"
 import whiteVTravel from "./whiteVTravel.svg"
 import whiteYammer from "./whiteYammer.svg"
+import excelIcon from "./excel-icon.svg"
 
 export {
+  excelIcon,
   downloadIcon,
   vTrackIcon,
   searchIcon,

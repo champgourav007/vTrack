@@ -182,7 +182,7 @@ export function Settings() {
           <input
             className="searchBox"
             type="search"
-            placeholder="Search by Employee Name"
+            placeholder="Search by Employee or Role"
             onChange={setSearchDataHelper}
           />
         </div>
