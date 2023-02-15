@@ -67,6 +67,7 @@ import { toast } from "react-toastify";
 import { useEffect } from "react";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { getCircularProgressColor } from "../../common/utils/circular-progress-color";
+import ExportExcel from "../ExportExcel";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -105,7 +106,8 @@ export const DataTable = ({
   selectedPeriodWeek,
   projectId,
   rowToBeUpdated,
-  setRowToBeUpdated
+  setRowToBeUpdated,
+  dataForExcel
 }) => {
   const { clientsData, allTasks, listItems, assignedProjects, clientAdminData, projectAdminData } =
     useSelector(({ MODULES }) => MODULES);
@@ -1359,6 +1361,10 @@ export const DataTable = ({
             </TableBody>
           </Table>
         </TableContainer>
+        <div style={{display: 'flex',justifyContent: 'space-between'}}>
+          <div style={{display: 'flex',alignItems: 'center'}}>
+            {headingName===Modules.PROJECT_MANAGEMENT && <ExportExcel data={headingName===Modules.PROJECT_MANAGEMENT ? dataForExcel : []} headingName={headingName} projectId={projectId}/>}
+          </div>
         {headingName !== Modules.TIMESHEET &&
           <TablePagination
             rowsPerPageOptions={[10, 25, 100]}
@@ -1370,6 +1376,7 @@ export const DataTable = ({
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         }
+        </div>
       </Paper>
     </>
   );

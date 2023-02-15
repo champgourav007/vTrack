@@ -7,6 +7,7 @@ import { getFullName, tableColumnsData } from '../common/utils/datatable';
 import Button from "@mui/material/Button";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { excelIcon } from '../common/icons';
+import { Tooltip } from '@mui/material';
 
 export default function ExportExcel({ data, headingName, projectId }) {
     const { projectManagementData } = useSelector(({ MODULES }) => MODULES);
@@ -61,8 +62,10 @@ export default function ExportExcel({ data, headingName, projectId }) {
         setFlag(false);
     }, [projectManagementData])
   return (
-    <a onClick={() => handleClick()} style={{cursor: "pointer"}}>        
-       <img src={excelIcon} />
-    </a>
+    <Tooltip title='Export xls'>
+      <a onClick={() => handleClick()} style={{cursor: "pointer"}}>      
+        <img src={excelIcon} />
+      </a>
+    </Tooltip>
   )
 }

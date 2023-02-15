@@ -679,7 +679,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
               </div>
           ) : headingName !== Modules.PROJECT_ALLOCATION ? (
             <>
-            {headingName===Modules.PROJECT_MANAGEMENT && <ExportExcel data={headingName===Modules.PROJECT_MANAGEMENT ? projectManagementData : []} headingName={headingName} projectId={projectId}/>}
+            {/* {headingName===Modules.PROJECT_MANAGEMENT && <ExportExcel data={headingName===Modules.PROJECT_MANAGEMENT ? projectManagementData : []} headingName={headingName} projectId={projectId}/>} */}
             <button
                 disabled={isAddButtonClicked || isEditButtonClicked}
                 className={
@@ -723,12 +723,14 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         projectId={projectId}
         rowToBeUpdated={rowToBeUpdated}
         setRowToBeUpdated={setRowToBeUpdated}
+        dataForExcel={projectManagementData}
       />
       { headingName === Modules.TIMESHEET && tabName === "MY TIMESHEET" && timeSheetData && timeSheetData.length ?
         <div className="totalWorkingHrs">
           {`Total Hours: ${getTotalHrs(timeSheetData)}`}
         </div> : null
       }
+      {/* {headingName===Modules.PROJECT_MANAGEMENT && <ExportExcel data={headingName===Modules.PROJECT_MANAGEMENT ? projectManagementData : []} headingName={headingName} projectId={projectId}/>} */}
     </div>
   );
 };
