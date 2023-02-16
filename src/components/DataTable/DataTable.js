@@ -1150,8 +1150,10 @@ export const DataTable = ({
                           return (
                             <TableCell key={col.id}>
                               <div className="attachmentContainer">
-                                {headingName===Modules.PROJECT_MANAGEMENT && <IconButton color="primary" onClick={() => handleViewDetails(row['employeeId'])} ><VisibilityIcon /></IconButton>}
-                                {(headingName===Modules.PROJECT_ADMIN || headingName===Modules.PROJECT_MANAGEMENT) && <Tooltip title="Clone">
+                                {headingName===Modules.PROJECT_MANAGEMENT && <Tooltip title={<h2>View Details</h2>}>
+                                    <IconButton color="primary" onClick={() => handleViewDetails(row['employeeId'])} ><VisibilityIcon /></IconButton>
+                                  </Tooltip>}
+                                {(headingName===Modules.PROJECT_ADMIN || headingName===Modules.PROJECT_MANAGEMENT) && <Tooltip title={<h2>Clone</h2>}>
                                   <ContentCopyIcon style={{ color: "#1976d2", cursor: "pointer", margin: "0 0.5rem 0 0.5rem"}} onClick={() => handleCopy(row[UniqueIds[headingName.replace(" ", "")]])} />
                                 </Tooltip>}
                                 {headingName === Modules.CLIENT_ADMIN || headingName === Modules.PROJECT_ADMIN ? (
@@ -1212,7 +1214,7 @@ export const DataTable = ({
                                           }
                                         />
                                       )}
-                                      <Tooltip title="Attachment">
+                                      <Tooltip title={<h2>Attachment</h2>}>
                                         <AttachFileIcon />
                                       </Tooltip>
                                     </IconButton>
@@ -1223,7 +1225,7 @@ export const DataTable = ({
                                   row.status !== 'Approved' &&
                                   row.status !== 'Submitted' &&
                                   // row.status !== 'Rejected' && 
-                                  <Tooltip title="Edit">
+                                  <Tooltip title={<h2>Edit</h2>}>
                                     <button
                                       onClick={() =>
                                         editButtonClicked(row[UniqueIds[headingName.replace(" ", "")]])
@@ -1240,7 +1242,7 @@ export const DataTable = ({
                                   row.status !== 'Submitted' &&
                                   // row.status !== 'Rejected' && 
                                   tabName !== 'PENDING APPROVAL' && tabName !== 'REPORTEES' && (
-                                    <Tooltip title="Delete">
+                                    <Tooltip title={<h2>Delete</h2>}>
 
                                       <img
                                         src={deleteIcon}
@@ -1260,7 +1262,7 @@ export const DataTable = ({
                                   )}
                                 {tabName === 'PENDING APPROVAL' && (
                                   <>
-                                    <Tooltip title="Approve">
+                                    <Tooltip title={<h2>Approve</h2>}>
                                       <img
                                         src={approveIcon}
                                         className="approveRejectIcon"
@@ -1273,7 +1275,7 @@ export const DataTable = ({
                                         alt=""
                                       />
                                     </Tooltip>
-                                    <Tooltip title="Reject">
+                                    <Tooltip title={<h2>Reject</h2>}>
                                       <img
                                         src={rejectIcon}
                                         className="approveRejectIcon"

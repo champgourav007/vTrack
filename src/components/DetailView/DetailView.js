@@ -499,7 +499,6 @@ export const DetailView = ({viewDetails, setViewDetails, selectedEmpId, selected
       })
       setColumns([...temp]);
       setRows([...rowsData]);
-      console.log(rows)
     }
   }, [detailedTimeSheetData, projectAllocationData]);
 

@@ -8,6 +8,8 @@ import Button from "@mui/material/Button";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { excelIcon } from '../common/icons';
 import { Tooltip } from '@mui/material';
+import { toast } from 'react-toastify';
+import { toastOptions } from '../common/utils/toasterOptions';
 
 export default function ExportExcel({ data, headingName, projectId }) {
     const { projectManagementData } = useSelector(({ MODULES }) => MODULES);
@@ -17,6 +19,9 @@ export default function ExportExcel({ data, headingName, projectId }) {
     let count=data?.totalCount;
     let columnData = tableColumnsData[headingName.replace(" ", "")];
     const handleClick = () => {
+        if(data !== null && data.data.length <= 0){
+          toast.info('No Data found, No xls file is created!', toastOptions);
+        }
         setFlag(true);
         if(headingName===Modules.PROJECT_MANAGEMENT) {
             dispatch(
@@ -58,11 +63,12 @@ export default function ExportExcel({ data, headingName, projectId }) {
                 res.push(tmp)
             })
             exportToExcel(res, arr[0].projectName + "-" + headingName);
+            toast.success("xls file is created", toastOptions)
         }
         setFlag(false);
     }, [projectManagementData])
   return (
-    <Tooltip title='Export xls'>
+    <Tooltip title={<h2>Export xls</h2>}>
       <a onClick={() => handleClick()} style={{cursor: "pointer"}}>      
         <img src={excelIcon} />
       </a>

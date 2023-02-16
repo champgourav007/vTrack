@@ -10,9 +10,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Modules } from "../../common/constants/sidebar";
 import { getMappedProjectManagementData } from "../../redux/actions/project-management";
 // import { withStyles } from "@mui/styles";
-import {TabScrollButton} from "@mui/material";
+import {TabScrollButton, Tooltip} from "@mui/material";
 import styled from "@emotion/styled";
 import { blue } from "@mui/material/colors";
+import { pdfIcon } from "../../common/icons";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -149,19 +150,34 @@ export default function BasicTabs(props) {
           ) : 
         props.headingName === Modules.PROJECT_ALLOCATION ? 
         userData && userData.data.tabs.projectAllocation && (
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="basic tabs example"
-            ScrollButtonComponent={MyTabScrollButton}
-            variant="scrollable"
-            scrollButtons="auto"
-          >
-            {userData.data.tabs.projectAllocation.map((tab, index) => (
-              <Tab key={index} className="tabs-table" label={tab} {...a11yProps(index)} />
-            ))}
-          </Tabs>
-        ) : null
+          <>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+              ScrollButtonComponent={MyTabScrollButton}
+              variant="scrollable"
+              scrollButtons="auto"
+            >
+              {userData.data.tabs.projectAllocation.map((tab, index) => (
+                <Tab key={index} className="tabs-table" label={tab} {...a11yProps(index)} />
+              ))}
+            </Tabs>
+            {
+                <Tooltip title={<h2>User Guide for vTrack</h2>}>
+                    <a href="https://www.google.com" style={{textDecoration: 'None'}} target="_blank">
+                      <button className="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary tabs-table css-1h9z7r5-MuiButtonBase-root-MuiTab-root">
+                        <div style={{display: 'flex',alignItems: 'center',gap: '0.5rem'}}>
+                          <p>User Guide</p>
+                            <img src={pdfIcon} />
+                        </div>
+                      </button>
+                    </a>
+                </Tooltip>
+              }
+          </>
+        ) :
+        null
       }
       </Box>
       {props.headingName === Modules.PROJECT_MANAGEMENT ? 

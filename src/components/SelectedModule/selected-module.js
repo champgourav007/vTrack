@@ -7,6 +7,9 @@ import { VTrackURL } from "../../routes/routes";
 import { Settings } from "../Settings/settings";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Modules } from "../../common/constants/sidebar";
+import { pdfIcon } from "../../common/icons";
+import { Tooltip } from "@mui/material";
 
 export const SelectedModule = ({ headingName }) => {
   const navigate = useNavigate();
@@ -24,7 +27,21 @@ export const SelectedModule = ({ headingName }) => {
     <ToastContainer />  
     <div className="mainContainer">
       <TopBar headingName=""/>
-      <div className="heading">{headingName}</div>
+      <div className="heading">
+        {headingName}
+        {headingName === Modules.PROJECT_MANAGEMENT &&
+          <Tooltip title={<h2>Project Manager Guide for vTrack</h2>}>
+              <a href="https://www.google.com" style={{textDecoration: 'None'}} target="_blank">
+                <button className="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary tabs-table css-1h9z7r5-MuiButtonBase-root-MuiTab-root">
+                  <div style={{display: 'flex',alignItems: 'center',gap: '0.5rem'}}>
+                    <p>Project Manager Guide</p>
+                      <img src={pdfIcon} />
+                  </div>
+                </button>
+              </a>
+          </Tooltip>
+        }
+      </div> 
       {headingName === "Settings" ? <Settings/> : <TabsComponent headingName={headingName} />}
     </div>
     </>
