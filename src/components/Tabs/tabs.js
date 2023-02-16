@@ -14,6 +14,7 @@ import {TabScrollButton, Tooltip} from "@mui/material";
 import styled from "@emotion/styled";
 import { blue } from "@mui/material/colors";
 import { pdfIcon } from "../../common/icons";
+import { EMPLOYEE_USER_MANUAL_LINK } from "../../common/constants/extra-constants";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -165,9 +166,9 @@ export default function BasicTabs(props) {
             </Tabs>
             {
                 <Tooltip title={<h2>User Guide for vTrack</h2>}>
-                    <a href="https://www.google.com" style={{textDecoration: 'None'}} target="_blank">
+                    <a href={EMPLOYEE_USER_MANUAL_LINK} style={{textDecoration: 'None'}} target="_blank">
                       <button className="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary tabs-table css-1h9z7r5-MuiButtonBase-root-MuiTab-root">
-                        <div style={{display: 'flex',alignItems: 'center',gap: '0.5rem'}}>
+                        <div style={{display: 'flex',alignItems: 'center'}}>
                           <p>User Guide</p>
                             <img src={pdfIcon} />
                         </div>
