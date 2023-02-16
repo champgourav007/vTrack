@@ -265,7 +265,6 @@ export const DataTable = ({
       });
       restProps['dateHours'] = [...dateHours];
       restProps['totalHrs'] = (Math.round(totalHrs * 100) / 100).toFixed(2);
-      console.log(restProps['totalHrs']);
       isEditButtonClicked ? dispatch(updateTimeSheetData(restProps)) : dispatch(saveTimeSheetData(restProps));
     }
     setIsAddButtonClicked(false);

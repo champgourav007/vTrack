@@ -116,7 +116,6 @@ export default function BasicTabs(props) {
     projectsTabs = projectsTab.sort(function(a,b){return (a.projectName).localeCompare(b.projectName)})
   }
   
-  
   return (
     <Box sx={{ width: "100%" }}>
       {!vTrackLoader && noDataFound && props.headingName===Modules.PROJECT_MANAGEMENT && <h1 className="no-data">Currently you are not Project Manager in any Project. </h1>}
@@ -178,6 +177,19 @@ export default function BasicTabs(props) {
               }
           </>
         ) :
+      props.headingName === Modules.REPORTING ?
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+          ScrollButtonComponent={MyTabScrollButton}
+          variant="scrollable"
+          scrollButtons="auto"
+        >
+          {userData.data.tabs.reporting.map((tab, index) => (
+            <Tab key={index} className="tabs-table" label={tab} {...a11yProps(index)} />
+          ))}
+        </Tabs> : 
         null
       }
       </Box>
@@ -198,7 +210,13 @@ export default function BasicTabs(props) {
           <TabPanel key={index} value={value} index={index}>
             <TabsTable headingName={props.headingName} tabName={tab} status={status} projectId={null}/>
           </TabPanel>
-        )) : 
+        )) :
+      props.headingName === Modules.REPORTING ? 
+        userData && userData.data.tabs.reporting.map((tab, index) => (
+          <TabPanel key={index} value={value} index={index}>
+            <TabsTable headingName={props.headingName} tabName={tab} status={status} projectId={null}/>
+          </TabPanel>
+        )) :
       <TabsTable headingName={props.headingName} tabName='' status={status}  projectId={null}/>
     }
     </Box>

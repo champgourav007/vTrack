@@ -86,6 +86,13 @@ export const tableColumnsData = {
     { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
     { id: "status", label: "Status", minWidth: 60, type: 'empty' },
     { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', align: 'left'}
+  ],
+  'Reporting': [
+    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select'},
+    { id: "projectManagerName", label: "Manager Name", minWidth: 100, type: 'select'},
+    { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
+    { id: "Period Week", label: "Period Week", minWidth: 110, type: 'select'},
+    { id: "status", label: "Status", minWidth: 60, type: 'empty' },
   ]
 };
 
