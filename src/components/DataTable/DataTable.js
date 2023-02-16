@@ -798,7 +798,7 @@ export const DataTable = ({
               value={newRowAdded[col.id]}
               placeholder="Date"
               required={col.isRequired}
-              renderInput={(params) => <TextField {...params} error={false} />}
+              renderInput={(params) => <TextField {...params} error />}
             />
           </LocalizationProvider>
         </TableCell>
