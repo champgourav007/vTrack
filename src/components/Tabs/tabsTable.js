@@ -83,6 +83,11 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const inputRef = useRef("")
 
   useEffect(()=>{
+    dispatch(
+      setTimeSheetPeriodWeek(
+        `${selectedPeriodWeek.startDate.format(DATE_FORMAT)} - ${selectedPeriodWeek.endDate.format(DATE_FORMAT)}`
+      )
+    );
     if(timeSheetData === null && headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
       dispatch(
         saveTimeSheetPeriodData({
@@ -352,7 +357,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           let date = moment(selectedPeriodWeek.startDate);
           if (tabName !== 'REPORTEES')
           for (let i = 0; i < 7; i++) {
-            if(i===0) {              
+            if(i===0 || moment(date).format("DD") == "01") {              
               let tempDate = moment(date).format()
               let month = {
                 isDate: true,
@@ -493,7 +498,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     setIsEditButtonClicked(false);
     if(headingName!==Modules.TIMESHEET){
       dispatch(setSelectedEmployeeId(null));
-      dispatch(setSelectedProjectId(null))
+      dispatch(setSelectedProjectId(null));
     }
   }, [ headingName ]);
 
@@ -562,10 +567,10 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                     onClick={()=>{
                       let sum = 0;
                       rows.forEach(row=>{
-                        if(row.status !== 'Rejected') sum+=parseInt(row.totalHrs);
+                        if(row.status !== 'Rejected') sum+=parseFloat(row.totalHrs).toFixed(2);
                       })
                       if(sum >= 40) dispatch(submitPeriodForApproval());
-                      else toast.error("Total Hours must be greater than or equal to 40", toastOptions);
+                      else toast.info("Total Hours must be greater than or equal to 40", toastOptions);
                     }}
                   >
                     Submit For Approval

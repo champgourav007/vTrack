@@ -14,6 +14,9 @@
   line-height: 2.125rem;
   color: #1773bc;
   margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .tableDiv {

@@ -83,6 +83,7 @@ import whiteVTrackLogo from "./whiteVTrackLogo.svg"
 import whiteVTravel from "./whiteVTravel.svg"
 import whiteYammer from "./whiteYammer.svg"
 import excelIcon from "./excel-icon.svg"
+import pdfIcon from "./pdf-icon.svg"
 
 export {
   excelIcon,
@@ -169,5 +170,6 @@ export {
   whiteVReward,
   whiteVTrackLogo,
   whiteVTravel,
-  whiteYammer
+  whiteYammer,
+  pdfIcon
 };
