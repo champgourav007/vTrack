@@ -87,6 +87,8 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [weekStart, setWeekStart] = useState(null);
+  const [disableDate, setDisableDate] = useState(false);
+  const [disablePeriodWeek, setDisablePeriodWeek] = useState(false);
   const inputRef = useRef("");
   
   const FilterData = () => {
@@ -97,27 +99,38 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
             "& label": {
               lineHeight: '0.8rem'
             }
-          }}>
+          }}
+        >
             <DatePicker
               label="Start Date"
               value={startDate}
               onChange={(newValue) => {
+                setDisablePeriodWeek(true);
                 setStartDate(newValue);
                 setWeekStart(startWeek(newValue));
               }}
               renderInput={(params) => <TextField {...params} />}
+              disabled={disableDate}
             />
             <DatePicker
               label="End Date"
               value={endDate}
               onChange={(newValue) => {
+                setDisablePeriodWeek(true);
                 setEndDate(newValue);
               }}
               renderInput={(params) => <TextField {...params} />}
+              disabled={disableDate}
             />
          </LocalizationProvider>
          <span style={{fontSize: "1.5rem", fontWeight: "600", color: "gray"}}>OR</span>
          {periodWeek(false)}
+         <button style={{ marginLeft: 0 }} className={true ? "addBtn showDataBtn" : "disableAddButton"} onClick={() => {
+          setDisableDate(false);
+          setStartDate(null);
+          setEndDate(null);
+          setDisablePeriodWeek(false);
+         }}>Clear Selection</button>
          <button className="showDataBtn">Show Data</button>
         </>
     )
@@ -130,6 +143,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         defaultValue={periodWeeks[6].startDate.format(DATE_FORMAT) + ' - ' + periodWeeks[6].endDate.format(DATE_FORMAT)}
         sx={{minWidth: '15rem'}}
         className={"select-date"}
+        disabled={headingName===Modules.REPORTING ? disablePeriodWeek : false }
       >{getDateItems(flag)}
       </Select>
     )
@@ -413,7 +427,6 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   };
 
   const periodWeekClickHandler = (fromMyTimeSheet, periodWeek) => {
-    console.log(fromMyTimeSheet, headingName)
     if(headingName === Modules.TIMESHEET) {
       if (fromMyTimeSheet) {
         dispatch(
@@ -445,6 +458,8 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
             periodWeek.endDate.format(DATE_FORMAT)
         )
       );
+    } else if(headingName === Modules.REPORTING) {
+      setDisableDate(true);
     }
   }
   const getDateItems = (fromMyTimeSheet) => {

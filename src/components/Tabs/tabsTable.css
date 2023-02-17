@@ -116,6 +116,7 @@
   color: #ffffff;
   cursor: pointer;
   margin-left: auto;
+  min-width: 15rem;
 }
 
 .addBtn {
@@ -135,10 +136,6 @@
 .pendingApprovalDiv{
   display: flex;
   gap: 1.75rem;
-}
-
-.showDataBtn{
-  min-width: 15rem;
 }
 
 .searchWrapperSpan{
