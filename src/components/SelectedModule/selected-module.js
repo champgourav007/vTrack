@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Modules } from "../../common/constants/sidebar";
 import { pdfIcon } from "../../common/icons";
 import { Tooltip } from "@mui/material";
+import { PROJECT_MANAGER_USER_MANUAL_LINK } from "../../common/constants/extra-constants";
 
 export const SelectedModule = ({ headingName }) => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export const SelectedModule = ({ headingName }) => {
         {headingName}
         {headingName === Modules.PROJECT_MANAGEMENT &&
           <Tooltip title={<h2>Project Manager Guide for vTrack</h2>}>
-              <a href="https://www.google.com" style={{textDecoration: 'None'}} target="_blank">
+              <a href={PROJECT_MANAGER_USER_MANUAL_LINK} style={{textDecoration: 'None'}} target="_blank">
                 <button style={{maxHeight: '3rem', minHeight: '0'}} className="MuiTab-textColorPrimary tabs-table css-1h9z7r5-MuiButtonBase-root-MuiTab-root">
                   <div style={{display: 'flex',alignItems: 'center', gap: '0.5rem'}}>
                     <p>Project Manager Guide</p>

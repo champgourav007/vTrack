@@ -220,13 +220,19 @@ export const getTotalHrs = (timesheetData) => {
 
 export const dateCalc = (newValue, col) => {
   let condition = col==="sowEndDate" || col==="msaEndDate" || col==="endDate" ? true : false;
-  let value = newValue.toISOString();
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = date.getMonth() + 1;
-  let day = date.getDate();
-  let time = condition ? "T23:59:59" : "T00:00:00";
-  month = month<=9 ? '0'+month : month;
-  day = day<=9 ? '0'+day : day;
-  return year + '-' + month + '-' + day + time;
+  try{
+    let value = newValue.toISOString();
+    let date = new Date(value);
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    let time = condition ? "T23:59:59" : "T00:00:00";
+    month = month<=9 ? '0'+month : month;
+    day = day<=9 ? '0'+day : day;
+    return year + '-' + month + '-' + day + time;
+  }
+  catch{
+    console.log("type Error");
+    return
+  }
 }

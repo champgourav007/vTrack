@@ -291,7 +291,7 @@ export const DetailView = ({viewDetails, setViewDetails, selectedEmpId, selected
                 setNewRowAdded({ ...newRowAdded, [col.id]: newValue });
               }}
               placeholder="Date"
-              renderInput={(params) => <TextField {...params} error={false} />}
+              renderInput={(params) => <TextField {...params} error />}
             />
           </LocalizationProvider>
         </TableCell>

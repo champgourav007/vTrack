@@ -567,7 +567,11 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
                     onClick={()=>{
                       let sum = 0;
                       rows.forEach(row=>{
-                        if(row.status !== 'Rejected') sum+=parseFloat(row.totalHrs).toFixed(2);
+                        if(row.status !== 'Rejected') 
+                        {
+                          // sum+=parseFloat(row.totalHrs).toFixed(2);
+                          sum+=parseFloat(row.totalHrs)
+                        }
                       })
                       if(sum >= 40) dispatch(submitPeriodForApproval());
                       else toast.info("Total Hours must be greater than or equal to 40", toastOptions);
