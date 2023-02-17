@@ -167,8 +167,8 @@ export default function BasicTabs(props) {
             {
                 <Tooltip title={<h2>User Guide for vTrack</h2>}>
                     <a href={EMPLOYEE_USER_MANUAL_LINK} style={{textDecoration: 'None'}} target="_blank">
-                      <button className="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary tabs-table css-1h9z7r5-MuiButtonBase-root-MuiTab-root">
-                        <div style={{display: 'flex',alignItems: 'center'}}>
+                      <button style={{ minHeight: '0'}} className="MuiTab-textColorPrimary tabs-table css-1h9z7r5-MuiButtonBase-root-MuiTab-root">
+                        <div style={{display: 'flex',alignItems: 'center', gap: '0.5rem'}}>
                           <p>User Guide</p>
                             <img src={pdfIcon} />
                         </div>
