@@ -237,3 +237,20 @@ export const dateCalc = (newValue, col) => {
   day = day<=9 ? '0'+day : day;
   return year + '-' + month + '-' + day + time;
 }
+
+export const startWeek = (newValue) => {
+  // Sunday = 0, Saturday = 6
+  const correction = {
+    0: 1, 1: 0, 2: -1, 3: -2, 4: -3, 5: -4, 6: -5
+  }
+  let value = newValue.toISOString();
+  let date = new Date(value); 
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let curDate = date.getDate();
+  let day = date.getDay();
+  month = month<=9 ? '0'+month : month;
+  curDate = curDate+correction[day];
+  curDate = curDate<=9 ? '0'+curDate : curDate;
+  return year + '-' + month + '-' + curDate + "T00:00:00";
+}

@@ -10,6 +10,7 @@ import {
   getLabel,
   getMinWidth,
   getTotalHrs,
+  startWeek,
   tableColumnsData,
 } from "../../common/utils/datatable";
 import {
@@ -48,6 +49,7 @@ import { handleSetRows } from "../../common/utils/tabsTable";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { dateCalc } from "../../common/utils/datatable";
 
 const getPeriods = () => {
   let date = moment().subtract(42, "days");
@@ -84,7 +86,8 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const [rowToBeUpdated, setRowToBeUpdated] = useState({});
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const inputRef = useRef("")
+  const [weekStart, setWeekStart] = useState(null);
+  const inputRef = useRef("");
   
   const FilterData = () => {
     return (
@@ -100,7 +103,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
               value={startDate}
               onChange={(newValue) => {
                 setStartDate(newValue);
-                console.log(newValue);
+                setWeekStart(startWeek(newValue));
               }}
               renderInput={(params) => <TextField {...params} />}
             />
@@ -114,20 +117,20 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
             />
          </LocalizationProvider>
          <span style={{fontSize: "1.5rem", fontWeight: "600", color: "gray"}}>OR</span>
-         {periodWeek()}
+         {periodWeek(false)}
          <button className="showDataBtn">Show Data</button>
         </>
     )
   }
 
-  const periodWeek = () => {
+  const periodWeek = (flag) => {
     return (
       <Select
         IconComponent = {CalendarMonthRounded}
         defaultValue={periodWeeks[6].startDate.format(DATE_FORMAT) + ' - ' + periodWeeks[6].endDate.format(DATE_FORMAT)}
         sx={{minWidth: '15rem'}}
         className={"select-date"}
-      >{getDateItems(true)}
+      >{getDateItems(flag)}
       </Select>
     )
   }
@@ -193,7 +196,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
             </MenuItem>
           ))}
         </TextField>
-        {periodWeek()}
+        {periodWeek(false)}
         <button 
           className={"addBtn showDataBtn"}
           onClick={()=>{
@@ -242,7 +245,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
             </div> : null
         }
         <div className="button-flex">
-          {periodWeek()}
+          {periodWeek(true)}
           <button
             disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus !== 'Open'))}
             className={
@@ -409,6 +412,41 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       setSearchData(e.target.value);
   };
 
+  const periodWeekClickHandler = (fromMyTimeSheet, periodWeek) => {
+    console.log(fromMyTimeSheet, headingName)
+    if(headingName === Modules.TIMESHEET) {
+      if (fromMyTimeSheet) {
+        dispatch(
+          saveTimeSheetPeriodData({
+            periodWeek:
+              periodWeek.startDate.format(DATE_FORMAT) +
+              " - " +
+              periodWeek.endDate.format(DATE_FORMAT),
+            startDT: periodWeek.startDate.format(),
+            endDT: periodWeek.endDate.endOf('isoweek').format(),
+          })
+        );
+        setRowToBeUpdated({});
+        setIsAddButtonClicked(false);
+        setIsEditButtonClicked(false);
+      }
+      let startDate = moment(periodWeek.startDate);
+      let endDate = moment(periodWeek.endDate);
+      if(tabName === "MY TIMESHEET")
+        dispatch(getAssignedProjects({
+          startDate: moment(startDate).format("YYYY-MM-DDT00:00:00"),
+          endDate: moment(endDate).format("YYYY-MM-DDT00:00:00")
+        }));
+      setSelectedPriodWeek(periodWeek);
+      dispatch(
+        setTimeSheetPeriodWeek(
+          periodWeek.startDate.format(DATE_FORMAT) +
+            " - " +
+            periodWeek.endDate.format(DATE_FORMAT)
+        )
+      );
+    }
+  }
   const getDateItems = (fromMyTimeSheet) => {
     return periodWeeks.map((periodWeek) => (
       <MenuItem
@@ -417,38 +455,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           " - " +
           periodWeek.endDate.format(DATE_FORMAT)
         }
-        onClick={() => {
-          if (fromMyTimeSheet) {
-            dispatch(
-              saveTimeSheetPeriodData({
-                periodWeek:
-                  periodWeek.startDate.format(DATE_FORMAT) +
-                  " - " +
-                  periodWeek.endDate.format(DATE_FORMAT),
-                startDT: periodWeek.startDate.format(),
-                endDT: periodWeek.endDate.endOf('isoweek').format(),
-              })
-            );
-            setRowToBeUpdated({});
-            setIsAddButtonClicked(false);
-            setIsEditButtonClicked(false);
-          }
-          let startDate = moment(periodWeek.startDate);
-          let endDate = moment(periodWeek.endDate);
-          if(tabName === "MY TIMESHEET")
-            dispatch(getAssignedProjects({
-              startDate: moment(startDate).format("YYYY-MM-DDT00:00:00"),
-              endDate: moment(endDate).format("YYYY-MM-DDT00:00:00")
-            }));
-          setSelectedPriodWeek(periodWeek);
-          dispatch(
-            setTimeSheetPeriodWeek(
-              periodWeek.startDate.format(DATE_FORMAT) +
-                " - " +
-                periodWeek.endDate.format(DATE_FORMAT)
-            )
-          );
-        }}
+        onClick={() => periodWeekClickHandler(fromMyTimeSheet, periodWeek)}
       >
         {periodWeek.startDate.format(DATE_FORMAT) +
           " - " +
