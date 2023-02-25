@@ -1300,7 +1300,7 @@ export const DataTable = ({
                             </TableCell>
                           );
                         }
-                        else if (tabName === "PENDING APPROVAL" && tabName === "REPORTEES" && col.id === 'status') {
+                        else if (tabName === "PENDING APPROVAL" && tabName === "REPORTEES" && headingName !== Modules.REPORTING && col.id === 'status') {
                           return null;
                         }
                         return col.id !==
@@ -1314,7 +1314,7 @@ export const DataTable = ({
                             }}
                           >
                             {col.id === "employeeName" ? (
-                              getEmployeeName(row["employeeId"])
+                              headingName === Modules.REPORTING ? row["employeeName"] : getEmployeeName(row["employeeId"])
                             ) : col.id.toLowerCase().includes("allocation") && row[col.id] ? (
                               <div className="allocation">
                                 <Box sx={{ position: 'relative' }}>
@@ -1364,9 +1364,9 @@ export const DataTable = ({
         </TableContainer>
         <div style={{display: 'flex',justifyContent: 'space-between'}}>
           <div style={{display: 'flex',alignItems: 'center'}}>
-            {headingName===Modules.PROJECT_MANAGEMENT && <ExportExcel data={headingName===Modules.PROJECT_MANAGEMENT ? dataForExcel : []} headingName={headingName} projectId={projectId}/>}
+            {headingName===Modules.PROJECT_MANAGEMENT && <ExportExcel data={headingName===Modules.PROJECT_MANAGEMENT ? dataForExcel : []} headingName={headingName} projectId={projectId} pageNo={page} pageSize={rowsPerPage}/>}
           </div>
-        {headingName !== Modules.TIMESHEET &&
+        {headingName !== Modules.TIMESHEET && headingName !== Modules.REPORTING &&
           <TablePagination
             rowsPerPageOptions={[10, 25, 100]}
             component="div"

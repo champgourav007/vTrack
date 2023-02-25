@@ -50,6 +50,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { dateCalc } from "../../common/utils/datatable";
+import { getTimesheetReports } from "../../redux/actions/reporting";
 
 const getPeriods = () => {
   let date = moment().subtract(42, "days");
@@ -65,7 +66,7 @@ const getPeriods = () => {
 };
 
 export const TabsTable = ({ headingName, tabName, status, projectId }) => {
-  const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData, mappedProjectManagementData, selectedProjectId, reportees } = useSelector(({ MODULES }) => MODULES);
+  const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData, mappedProjectManagementData, selectedProjectId, reportees, reportingData } = useSelector(({ MODULES }) => MODULES);
   const { allUserDetails, userData } = useSelector(({ USER }) => USER);
   const { allTasks, listItems, clientsData, timeSheetProjects } = useSelector(({ MODULES }) => MODULES);
   const dispatch = useDispatch();
@@ -90,7 +91,36 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const [disableDate, setDisableDate] = useState(false);
   const [disablePeriodWeek, setDisablePeriodWeek] = useState(false);
   const inputRef = useRef("");
-  
+
+  const getData = (event) => {
+    if(headingName === Modules.REPORTING){
+      if(disableDate){
+        dispatch(
+          getTimesheetReports({
+            startDate: moment(selectedPeriodWeek.startDate).format("YYYY-MM-DDT00:00:00"),
+            endDate: moment(selectedPeriodWeek.endDate).format("YYYY-MM-DDT00:00:00")
+          })
+        )
+      }
+      else{
+        if(!startDate){
+          toast.info("Please Enter Start Date", toastOptions);
+        }
+        else if(!endDate){
+          toast.info("Please Enter End Date", toastOptions);
+        }
+        else{
+          dispatch(
+            getTimesheetReports({
+              startDate: startDate.format("YYYY-MM-DDT00:00:00"),
+              endDate: endDate.format("YYYY-MM-DDT00:00:00")
+            })
+          )
+        }
+      }
+    }
+  }
+
   const FilterData = () => {
     return (
       <>
@@ -107,7 +137,6 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
               onChange={(newValue) => {
                 setDisablePeriodWeek(true);
                 setStartDate(newValue);
-                setWeekStart(startWeek(newValue));
               }}
               renderInput={(params) => <TextField {...params} />}
               disabled={disableDate}
@@ -125,13 +154,21 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
          </LocalizationProvider>
          <span style={{fontSize: "1.5rem", fontWeight: "600", color: "gray"}}>OR</span>
          {periodWeek(false)}
-         <button style={{ marginLeft: 0 }} className={true ? "addBtn showDataBtn" : "disableAddButton"} onClick={() => {
+         <button style={{ marginLeft: 0 }} className={(disableDate || disablePeriodWeek) ? "addBtn showDataBtn" : "disableAddButton"} onClick={() => {
           setDisableDate(false);
           setStartDate(null);
           setEndDate(null);
           setDisablePeriodWeek(false);
+          setSelectedPriodWeek({
+            startDate : moment().startOf('isoweek'),
+            endDate : moment().day() === 0 ? moment().startOf('week') : moment().add(7,'days').startOf('week')
+          });
          }}>Clear Selection</button>
-         <button className="showDataBtn">Show Data</button>
+         <button 
+         onClick={(event) => getData()} 
+         className={
+          (startDate && endDate && !startDate.isValid() && !endDate.isValid()) ? "disableAddButton" : "showDataBtn"}
+          disabled={startDate && endDate && !startDate.isValid() && !endDate.isValid()}>Show Data</button>
         </>
     )
   }
@@ -140,7 +177,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     return (
       <Select
         IconComponent = {CalendarMonthRounded}
-        defaultValue={periodWeeks[6].startDate.format(DATE_FORMAT) + ' - ' + periodWeeks[6].endDate.format(DATE_FORMAT)}
+        defaultValue={moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().add(7,'days').startOf('week').format(DATE_FORMAT)}
         sx={{minWidth: '15rem'}}
         className={"select-date"}
         disabled={headingName===Modules.REPORTING ? disablePeriodWeek : false }
@@ -422,11 +459,23 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   };
   
   const setSearchDataHelper = (e) => {
-    if (e.target.value.length > 2 || e.target.value.length === 0)
+    if(headingName === Modules.REPORTING){
+      let value = e.target.value.toLowerCase();
+      let searchedData = reportingData.filter((data) =>{
+        if((data.employeeName.toLowerCase()).includes(value)
+         || (data.periodWeek.toLowerCase()).includes(value)){
+          return data;
+        }
+      });
+      setRows(searchedData);
+      return;
+    }
+    if (headingName !== Modules.REPORTING && e.target.value.length > 2 || e.target.value.length === 0)
       setSearchData(e.target.value);
   };
 
   const periodWeekClickHandler = (fromMyTimeSheet, periodWeek) => {
+    setSelectedPriodWeek(periodWeek);
     if(headingName === Modules.TIMESHEET) {
       if (fromMyTimeSheet) {
         dispatch(
@@ -450,7 +499,6 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           startDate: moment(startDate).format("YYYY-MM-DDT00:00:00"),
           endDate: moment(endDate).format("YYYY-MM-DDT00:00:00")
         }));
-      setSelectedPriodWeek(periodWeek);
       dispatch(
         setTimeSheetPeriodWeek(
           periodWeek.startDate.format(DATE_FORMAT) +
@@ -561,6 +609,10 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     } else if (headingName === Modules.PROJECT_MANAGEMENT && projectManagementData && projectManagementData.totalCount) {
       setTableData(projectManagementData);
       setRows(projectManagementData.data);
+    } else if(headingName === Modules.REPORTING && reportingData && reportingData.length) {
+      // setTableData(reportingData);
+      handleSetColumnsData(reportingData[0]);
+      setRows(reportingData);
     } else {
       if (tableColumnsData[headingName.replace(' ', '')]) {
         let temp = [...tableColumnsData[headingName.replace(' ', '')]];
@@ -626,7 +678,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       setRows([]);
       setTotalRecord(0);
     }
-  }, [ clientAdminData, projectAdminData, projectAllocationData, projectManagementData, timeSheetData, headingName ]);
+  }, [ clientAdminData, projectAdminData, projectAllocationData, projectManagementData, timeSheetData, reportingData, headingName ]);
 
   useEffect(() => {
     switch (headingName) {
@@ -677,6 +729,13 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           })
         );
         break;
+      case Modules.REPORTING:
+        dispatch(
+        getTimesheetReports({
+          startDate: moment(selectedPeriodWeek.startDate).format("YYYY-MM-DDT00:00:00"),
+          endDate: moment(selectedPeriodWeek.endDate).format("YYYY-MM-DDT00:00:00")
+        }));
+        break;
       case Modules.TIMESHEET:
         if(tabName !== 'MY TIMESHEET')
           dispatch(getTimesheetProjects());
@@ -726,7 +785,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   return (
     <div className={`tableDiv ${tabName === 'MY TIMESHEET' ? "timesheetTable" : ""}`}>
       <div className="searchHeader">
-        {headingName !== Modules.TIMESHEET && headingName !== Modules.PROJECT_MANAGEMENT && headingName !== Modules.REPORTING && <div className="searchWrapper">
+        {headingName !== Modules.TIMESHEET && headingName !== Modules.PROJECT_MANAGEMENT && <div className="searchWrapper">
           <img src={searchIcon} className="searchIcon" alt="" />
           <input
             className="searchBox"

@@ -9,7 +9,8 @@ export const UniqueIds = {
   ClientAdmin: 'clientId',
   ProjectAllocation: 'projectAllocationId',
   Timesheet: 'timesheetDetailID',
-  ProjectManagement: 'projectAllocationId'
+  ProjectManagement: 'projectAllocationId',
+  Reporting: 'employeeID'
 };
 
 const cookies = new Cookies();
@@ -88,11 +89,11 @@ export const tableColumnsData = {
     { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', align: 'left'}
   ],
   'Reporting': [
-    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select'},
-    { id: "projectManagerName", label: "Manager Name", minWidth: 100, type: 'select'},
-    { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
-    { id: "Period Week", label: "Period Week", minWidth: 110, type: 'select'},
-    { id: "status", label: "Status", minWidth: 60, type: 'empty' },
+    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'textField'},
+    // { id: "projectManagerName", label: "Manager Name", minWidth: 100, type: 'select'},
+    // { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
+    { id: "periodWeek", label: "Period Week", minWidth: 110, type: 'textField'},
+    { id: "status", label: "Status", minWidth: 60, type: 'textField' },
   ]
 };
 
