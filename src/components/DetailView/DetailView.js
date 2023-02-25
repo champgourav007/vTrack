@@ -306,9 +306,7 @@ export const DetailView = ({viewDetails, setViewDetails, selectedEmpId, selected
                   (newRowAdded.projectName==="" || newRowAdded.task==="" || !isDateAdded())
                 )
               ) ? (
-                <button disable className="buttonBackgroundBorder">
                   <img src={AddDisableIcon} className="editDeleteIcon" alt="" />
-                </button>
               ) : (
                 <img
                   src={AddEnableIcon}

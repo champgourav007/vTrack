@@ -265,7 +265,6 @@ export const DataTable = ({
       });
       restProps['dateHours'] = [...dateHours];
       restProps['totalHrs'] = (Math.round(totalHrs * 100) / 100).toFixed(2);
-      console.log(restProps['totalHrs']);
       isEditButtonClicked ? dispatch(updateTimeSheetData(restProps)) : dispatch(saveTimeSheetData(restProps));
     }
     setIsAddButtonClicked(false);
@@ -798,7 +797,7 @@ export const DataTable = ({
               value={newRowAdded[col.id]}
               placeholder="Date"
               required={col.isRequired}
-              renderInput={(params) => <TextField {...params} error />}
+              renderInput={(params) => <TextField {...params} error={false} />}
             />
           </LocalizationProvider>
         </TableCell>
@@ -830,9 +829,7 @@ export const DataTable = ({
                   (newRowAdded.projectName === "" || newRowAdded.task === "" || !isDateAdded())
                 )
               ) ? (
-                <button disable className="buttonBackgroundBorder">
                   <img src={AddDisableIcon} className="editDeleteIcon" alt="" />
-                </button>
               ) : (
                 <img
                   src={AddEnableIcon}
