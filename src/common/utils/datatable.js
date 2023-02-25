@@ -86,6 +86,13 @@ export const tableColumnsData = {
     { id: "totalHrs", label: "Total", minWidth: 60, type: 'empty' },
     { id: "status", label: "Status", minWidth: 60, type: 'empty' },
     { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', align: 'left'}
+  ],
+  'Reporting': [
+    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select'},
+    { id: "projectManagerName", label: "Manager Name", minWidth: 100, type: 'select'},
+    { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
+    { id: "Period Week", label: "Period Week", minWidth: 110, type: 'select'},
+    { id: "status", label: "Status", minWidth: 60, type: 'empty' },
   ]
 };
 
@@ -220,19 +227,30 @@ export const getTotalHrs = (timesheetData) => {
 
 export const dateCalc = (newValue, col) => {
   let condition = col==="sowEndDate" || col==="msaEndDate" || col==="endDate" ? true : false;
-  try{
-    let value = newValue.toISOString();
-    let date = new Date(value);
-    let year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-    let time = condition ? "T23:59:59" : "T00:00:00";
-    month = month<=9 ? '0'+month : month;
-    day = day<=9 ? '0'+day : day;
-    return year + '-' + month + '-' + day + time;
+  let value = newValue.toISOString();
+  let date = new Date(value);
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
+  let time = condition ? "T23:59:59" : "T00:00:00";
+  month = month<=9 ? '0'+month : month;
+  day = day<=9 ? '0'+day : day;
+  return year + '-' + month + '-' + day + time;
+}
+
+export const startWeek = (newValue) => {
+  // Sunday = 0, Saturday = 6
+  const correction = {
+    0: 1, 1: 0, 2: -1, 3: -2, 4: -3, 5: -4, 6: -5
   }
-  catch{
-    console.log("type Error");
-    return
-  }
+  let value = newValue.toISOString();
+  let date = new Date(value); 
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let curDate = date.getDate();
+  let day = date.getDay();
+  month = month<=9 ? '0'+month : month;
+  curDate = curDate+correction[day];
+  curDate = curDate<=9 ? '0'+curDate : curDate;
+  return year + '-' + month + '-' + curDate + "T00:00:00";
 }

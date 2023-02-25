@@ -9,3 +9,4 @@ export const USERS_API = `${BASE_URL}/Users`;
 export const ROLES_API = `${BASE_URL}/UserRoles`;
 export const DROPDOWN = `${BASE_URL}/Dropdown`;
 export const USER_DETAILS = `${BASE_URL}/UserDetails`;
+export const REPORTING_API = `${BASE_URL}/Reporting`;

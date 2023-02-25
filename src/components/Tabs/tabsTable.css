@@ -103,6 +103,22 @@
   color: #193f4b;
 }
 
+.showDataBtn {
+  padding: 0.875rem 2.375rem !important;
+  background: #1773bc;
+  border: 0.0625rem solid #1773bc;
+  border-radius: 0.625rem;
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.25rem;
+  color: #ffffff;
+  cursor: pointer;
+  margin-left: auto;
+  min-width: 15rem;
+}
+
 .addBtn {
   padding: 0.875rem 2.375rem !important;
   background: #1773bc;
@@ -120,10 +136,6 @@
 .pendingApprovalDiv{
   display: flex;
   gap: 1.75rem;
-}
-
-.showDataBtn{
-  min-width: 15rem;
 }
 
 .searchWrapperSpan{
