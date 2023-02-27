@@ -70,7 +70,7 @@ export const DetailView = ({viewDetails, setViewDetails, selectedEmpId, selected
         }
       });
       restProps['dateHours'] = [...dateHours];
-      restProps['totalHrs'] = (Math.round(totalHrs * 100) / 100).toFixed(2).toString();
+      restProps['totalHrs'] = totalHrs.toFixed(2);
       restProps['periodWeek'] = selectedPeriodWeek.startDate.format(DATE_FORMAT) +
       " - " +
       selectedPeriodWeek.endDate.format(DATE_FORMAT);
@@ -634,6 +634,7 @@ export const DetailView = ({viewDetails, setViewDetails, selectedEmpId, selected
                 </TableBody>
               </Table>
             </TableContainer>
+            {headingName === Modules.PROJECT_MANAGEMENT &&
             <TablePagination
               rowsPerPageOptions={[10, 25, 100]}
               component="div"
@@ -642,7 +643,7 @@ export const DetailView = ({viewDetails, setViewDetails, selectedEmpId, selected
               page={page}
               // onPageChange={handleChangePage}
               // onRowsPerPageChange={handleChangeRowsPerPage}
-            />
+            />}
           </Paper>
           { headingName===Modules.TIMESHEET && detailedTimeSheetData && detailedTimeSheetData.length ?
             <div className="totalWorkingHrs">

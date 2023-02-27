@@ -1,6 +1,7 @@
-import { call, put } from "redux-saga/effects";
+import { call, put, takeLatest } from "redux-saga/effects";
+import { getTimesheetReports } from "../http/requests/reporting";
 import { setVtrackLoader } from "../redux/actions";
-import { getTimesheetReports, ReportingType, setTimesheetReports } from "../redux/actions/reporting";
+import { ReportingType, setTimesheetReports } from "../redux/actions/reporting";
 
 function* workerGetTimesheetReports({ payload }){
   try{
@@ -9,12 +10,8 @@ function* workerGetTimesheetReports({ payload }){
       getTimesheetReports,
       payload.startDate,
       payload.endDate,
-      payload.projectId,
       payload.pageNo,
-      payload.pageSize,
-      payload.sortDir,
-      payload.sortBy,
-      payload.searchData);
+      payload.pageSize);
     yield put(setTimesheetReports(timesheetReports));
     yield put(setVtrackLoader(false));
   } catch(err){

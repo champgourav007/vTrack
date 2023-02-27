@@ -19,6 +19,7 @@ import { getReporteesSaga } from "./get-reportees-saga";
 import { getSettingTableDataSaga } from "./get-setting-table-data";
 import { getTimesheetProjectsSaga } from "./get-timesheet-projects";
 import { timeSheetReporteeSaga } from "./get-timesheet-reportee-saga";
+import { getTimesheetReportsSaga } from "./get-timesheet-reports";
 import { getUnRegisteredUsersSaga } from "./get-unregistered-user-details-saga";
 import { getRolesSaga } from "./get-user-roles-setting-saga";
 import { myTimeSheetSaga } from "./my-timesheet-saga";
@@ -86,6 +87,7 @@ export function* rootSaga() {
     fork(getTimesheetProjectsSaga),
     fork(saveClientAdminFileSaga),
     fork(saveProjectAdminFileSaga),
-    fork(deleteProjectManagementData)
+    fork(deleteProjectManagementData),
+    fork(getTimesheetReportsSaga)
   ]);
 }

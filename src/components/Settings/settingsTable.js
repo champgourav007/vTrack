@@ -70,8 +70,6 @@ export const SettingsTable = ({ rolesData, searchData }) => {
                     setDialogDeleteButtonClicked={setDialogDeleteButtonClicked}
                 />
             )}
-            {!usersData && <TableLoader />}
-            {usersData &&
             <Paper sx={{ width: "100%", overflow: "hidden" }}>
             <TableContainer sx={{ maxHeight: "48rem"}}>
                 <Table aria-label="sticky table" size="small">
@@ -101,7 +99,8 @@ export const SettingsTable = ({ rolesData, searchData }) => {
                             }
                         </TableRow>
                     </TableHead>
-                    <TableBody className='settingTableBody'>
+                    {!usersData && <TableLoader />}
+                    {usersData && <TableBody className='settingTableBody'>
                         {filteredData && filteredData.map((user) =>
                             <TableRow key={user.userId} className='settingTableHeader'>
                                 <TableCell align="left">{getFullName(user.firstName, user.lastName)}</TableCell>
@@ -176,11 +175,11 @@ export const SettingsTable = ({ rolesData, searchData }) => {
                             </TableRow>)}
 
 
-                    </TableBody>
+                    </TableBody>}
 
                 </Table>
             </TableContainer>
-            </Paper>}
+            </Paper>
 
         </>
     )

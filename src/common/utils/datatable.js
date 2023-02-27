@@ -9,7 +9,8 @@ export const UniqueIds = {
   ClientAdmin: 'clientId',
   ProjectAllocation: 'projectAllocationId',
   Timesheet: 'timesheetDetailID',
-  ProjectManagement: 'projectAllocationId'
+  ProjectManagement: 'projectAllocationId',
+  Reporting: 'employeeID'
 };
 
 const cookies = new Cookies();
@@ -88,11 +89,11 @@ export const tableColumnsData = {
     { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', align: 'left'}
   ],
   'Reporting': [
-    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'select'},
-    { id: "projectManagerName", label: "Manager Name", minWidth: 100, type: 'select'},
-    { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
-    { id: "Period Week", label: "Period Week", minWidth: 110, type: 'select'},
-    { id: "status", label: "Status", minWidth: 60, type: 'empty' },
+    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'textField'},
+    // { id: "projectManagerName", label: "Manager Name", minWidth: 100, type: 'select'},
+    // { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
+    { id: "periodWeek", label: "Period Week", minWidth: 110, type: 'textField'},
+    { id: "status", label: "Status", minWidth: 60, type: 'textField' },
   ]
 };
 
@@ -220,22 +221,27 @@ export const getTotalHrs = (timesheetData) => {
   for (const data of timesheetData) {
     totalHrs += parseFloat(data.totalHrs);
   }
-  let finalHours=(Math.round(totalHrs * 100) / 100).toFixed(2);
+  let finalHours=totalHrs.toFixed(2);
   if(finalHours.split('.')[1]==="00") finalHours=(Math.round(totalHrs * 100) / 100)
   return finalHours;
 };
 
 export const dateCalc = (newValue, col) => {
-  let condition = col==="sowEndDate" || col==="msaEndDate" || col==="endDate" ? true : false;
-  let value = newValue.toISOString();
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = date.getMonth() + 1;
-  let day = date.getDate();
-  let time = condition ? "T23:59:59" : "T00:00:00";
-  month = month<=9 ? '0'+month : month;
-  day = day<=9 ? '0'+day : day;
-  return year + '-' + month + '-' + day + time;
+  try{
+    let condition = col==="sowEndDate" || col==="msaEndDate" || col==="endDate" ? true : false;
+    let value = newValue.toISOString();
+    let date = new Date(value);
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    let time = condition ? "T23:59:59" : "T00:00:00";
+    month = month<=9 ? '0'+month : month;
+    day = day<=9 ? '0'+day : day;
+    return year + '-' + month + '-' + day + time;
+  }
+  catch{
+    return newValue;
+  }
 }
 
 export const startWeek = (newValue) => {

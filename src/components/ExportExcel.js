@@ -11,7 +11,7 @@ import { Tooltip } from '@mui/material';
 import { toast } from 'react-toastify';
 import { toastOptions } from '../common/utils/toasterOptions';
 
-export default function ExportExcel({ data, headingName, projectId }) {
+export default function ExportExcel({ data, headingName, projectId, pageNo, pageSize }) {
     const { projectManagementData } = useSelector(({ MODULES }) => MODULES);
     const { allUserDetails } = useSelector(({ USER }) => USER);
     const [flag, setFlag]=useState(false);
@@ -23,7 +23,7 @@ export default function ExportExcel({ data, headingName, projectId }) {
           toast.info('No Data found, No xls file is created!', toastOptions);
         }
         setFlag(true);
-        if(headingName===Modules.PROJECT_MANAGEMENT) {
+        if(count !== 0 && headingName===Modules.PROJECT_MANAGEMENT) {
             dispatch(
                 getProjectManagementData({
                   projectId: projectId,
@@ -64,12 +64,22 @@ export default function ExportExcel({ data, headingName, projectId }) {
             })
             exportToExcel(res, arr[0].projectName + "-" + headingName);
             toast.success("xls file is created", toastOptions)
+            dispatch(
+                getProjectManagementData({
+                  projectId: projectId,
+                  pageNo: pageNo + 1,
+                  pageSize: pageSize,
+                  sortBy: "projectName",
+                  sortDir: "ASC",
+                  searchData: "",
+                })
+            );
         }
         setFlag(false);
     }, [projectManagementData])
   return (
     <Tooltip title={<h2>Export xls</h2>}>
-      <a onClick={() => handleClick()} style={{cursor: "pointer"}}>      
+      <a aria-disabled={(data && data.totalCount) ? false : true} onClick={() => handleClick()} style={{cursor: "pointer"}}>      
         <img src={excelIcon} />
       </a>
     </Tooltip>

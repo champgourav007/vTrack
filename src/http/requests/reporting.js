@@ -3,8 +3,8 @@ import { httpRequest } from "../../common/utils/http-request";
 import { REPORTING_API } from "../api";
 
 
-export const getTimesheetReports = (startDate, endDate, projectId, pageNo, pageSize, sortDir, sortBy, searchData) => 
+export const getTimesheetReports = (startDate, endDate, pageNo, pageSize) => 
   httpRequest({
-    url: `${REPORTING_API}/get-timesheet-reports?startDate=${startDate}&endDate=${endDate}projectId=${projectId}&page=${pageNo}&pagesize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}&searchKey=${searchData}`,
+    url: `${REPORTING_API}/get-timesheet-reports?startDate=${startDate}&endDate=${endDate}`,
     method: HttpMethod.GET,
   });
