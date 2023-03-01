@@ -12,6 +12,7 @@ import { allClientsSaga } from "./get-client-saga";
 import { detailedTimeSheetSaga } from "./get-detailed-timesheet-saga";
 import { listItemsSaga } from "./get-list-items-saga";
 import { mappedProjectManagementSaga } from "./get-mapped-project-management-data";
+import { getMissingTimesheetsaga } from "./get-missing-timesheet-saga";
 import { projectManagementSaga } from "./get-project-management-saga";
 import { projectManagersSaga } from "./get-project-managers-saga";
 import { projectTasksSaga } from "./get-project-tasks";
@@ -88,6 +89,7 @@ export function* rootSaga() {
     fork(saveClientAdminFileSaga),
     fork(saveProjectAdminFileSaga),
     fork(deleteProjectManagementData),
-    fork(getTimesheetReportsSaga)
+    fork(getTimesheetReportsSaga),
+    fork(getMissingTimesheetsaga)
   ]);
 }

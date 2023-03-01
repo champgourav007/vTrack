@@ -141,7 +141,7 @@ export const modulesReducer = (state = modulesState, action) => {
         ...state,
         detailedTimeSheetData: action.payload
       }
-    case ReportingType.SET_TIMESHEET_REPORTS:
+    case ReportingType.SET_REPORTING_DATA:
       return{
         ...state,
         reportingData: action.payload

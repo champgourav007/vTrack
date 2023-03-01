@@ -88,15 +88,26 @@ export const tableColumnsData = {
     { id: "status", label: "Status", minWidth: 60, type: 'empty' },
     { id: 'actions', label: 'Actions', minWidth: 100, type: 'action', align: 'left'}
   ],
-  'Reporting': [
+  'MissingTimesheet': [
     { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'textField'},
     // { id: "projectManagerName", label: "Manager Name", minWidth: 100, type: 'select'},
     // { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
     { id: "periodWeek", label: "Period Week", minWidth: 110, type: 'textField'},
     { id: "status", label: "Status", minWidth: 60, type: 'textField' },
+  ],
+  'TimesheetReports': [
+    { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'textField'},
+    { id: "projectManagerName", label: "Manager Name", minWidth: 100, type: 'select'},
+    { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
+    { id: "periodWeek", label: "Period Week", minWidth: 110, type: 'textField'},
+    { id: "status", label: "Status", minWidth: 60, type: 'textField' },
   ]
 };
 
+export function titleCase(st) {
+    return st.toLowerCase().split(" ").reduce( (s, c) =>
+    s +""+(c.charAt(0).toUpperCase() + c.slice(1)), '');
+  }
 export const getTypeofColumn = (col, moduleName) => {
   if (tableColumnsData[moduleName.replace(' ', '')] && tableColumnsData[moduleName.replace(' ', '')].length) {
     for (let column of tableColumnsData[moduleName.replace(' ', '')]) {
@@ -222,7 +233,7 @@ export const getTotalHrs = (timesheetData) => {
     totalHrs += parseFloat(data.totalHrs);
   }
   let finalHours=totalHrs.toFixed(2);
-  if(finalHours.split('.')[1]==="00") finalHours=(Math.round(totalHrs * 100) / 100)
+  if(finalHours.split('.')[1]==="00") finalHours=parseInt(totalHrs);
   return finalHours;
 };
 

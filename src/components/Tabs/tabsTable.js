@@ -12,6 +12,7 @@ import {
   getTotalHrs,
   startWeek,
   tableColumnsData,
+  titleCase,
 } from "../../common/utils/datatable";
 import {
   setTimeSheetData
@@ -37,20 +38,20 @@ import {
   setTimeSheetPeriodWeek,
   submitPeriodForApproval
 } from "../../redux/actions";
-import { getProjectManagementData } from "../../redux/actions/project-management";
+import { getMappedProjectManagementData, getProjectManagementData } from "../../redux/actions/project-management";
 import { DataTable } from "../DataTable/DataTable";
 import { toastOptions } from "../../common/utils/toasterOptions";
 import "./tabsTable.css";
 import { Select } from "@mui/material";
 import { CalendarMonth, CalendarMonthRounded, Person } from "@mui/icons-material";
 import { assignedProjectsSaga } from "../../saga/get-assigned-projects-saga";
-import { DATE_FORMAT } from "../../common/constants/extra-constants";
+import { DATE_FORMAT, DATE_TIME_FORMAT } from "../../common/constants/extra-constants";
 import { handleSetRows } from "../../common/utils/tabsTable";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { dateCalc } from "../../common/utils/datatable";
-import { getTimesheetReports } from "../../redux/actions/reporting";
+import { getMissingTimesheet, getTimesheetReports, setReportingData } from "../../redux/actions/reporting";
 
 const getPeriods = () => {
   let date = moment().subtract(42, "days");
@@ -94,82 +95,201 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
 
   const getData = (event) => {
     if(headingName === Modules.REPORTING){
-      if(disableDate){
-        dispatch(
-          getTimesheetReports({
-            startDate: moment(selectedPeriodWeek.startDate).format("YYYY-MM-DDT00:00:00"),
-            endDate: moment(selectedPeriodWeek.endDate).format("YYYY-MM-DDT00:00:00")
-          })
-        )
+      if(!disableDate && !disablePeriodWeek){
+        toast.info('Please Enter Period Week OR Start and End Date', toastOptions);
+        return;
       }
-      else{
+      if(tabName === "TIMESHEET REPORTS" && !selectedProjectId){
+        toast.info('Please select projects', toastOptions);
+        return;
+      }
+      if(!disableDate){
         if(!startDate){
           toast.info("Please Enter Start Date", toastOptions);
+          return;
         }
         else if(!endDate){
           toast.info("Please Enter End Date", toastOptions);
+          return;
         }
         else{
-          dispatch(
-            getTimesheetReports({
-              startDate: startDate.format("YYYY-MM-DDT00:00:00"),
-              endDate: endDate.format("YYYY-MM-DDT00:00:00")
-            })
-          )
+          if(startDate.isValid() && endDate.isValid()){
+            tabName === 'MISSING TIMESHEET' ?
+            dispatch(
+              getMissingTimesheet({
+                startDate: startDate.format(DATE_TIME_FORMAT),
+                endDate: endDate.format(DATE_TIME_FORMAT)
+              })
+            ) :
+            dispatch(
+              getTimesheetReports({
+                startDate: startDate.format(DATE_TIME_FORMAT),
+                endDate: endDate.format(DATE_TIME_FORMAT),
+                projectId: selectedProjectId
+              })
+            )
+          } else{
+            toast.info('Please Enter Valid Date', toastOptions);
+            return;
+          }
         }
       }
+      if(!disablePeriodWeek){
+        tabName === 'MISSING TIMESHEET' ? dispatch(
+          getMissingTimesheet({
+            startDate: moment(selectedPeriodWeek.startDate).format(DATE_TIME_FORMAT),
+            endDate: moment(selectedPeriodWeek.endDate).format(DATE_TIME_FORMAT)
+          })
+        ) :
+        dispatch(
+          getTimesheetReports({
+            startDate: moment(selectedPeriodWeek.startDate).format(DATE_TIME_FORMAT),
+            endDate: moment(selectedPeriodWeek.endDate).format(DATE_TIME_FORMAT),
+            projectId: selectedProjectId
+          })
+        )
+      }
+      
     }
   }
 
-  const FilterData = () => {
-    return (
+  const projectsDropdown = () =>{
+    let projects = [];
+    if(mappedProjectManagementData){
+    mappedProjectManagementData.forEach((client) => {
+      client.projects.forEach((project) => {
+        projects.push({
+          projectName : project.projectName,
+          projectId : project.projectId
+        });
+      });
+    });
+
+    projects = projects.sort(function(a,b){return (a.projectName).localeCompare(b.projectName)})
+    }
+
+    return(
       <>
-        <LocalizationProvider dateAdapter={AdapterDayjs} sx={{
-            minWidth: '15rem',
+        <TextField
+          select
+          label={"Projects"}
+          value={selectedProject.projectName ? selectedProject.projectName : ''}
+          required
+          sx={{
+            minWidth: '20rem',
+            // maxWidth: '20rem',
+            marginRight: '5rem',
             "& label": {
               lineHeight: '0.8rem'
             }
           }}
         >
-            <DatePicker
-              label="Start Date"
-              value={startDate}
-              onChange={(newValue) => {
-                setDisablePeriodWeek(true);
-                setStartDate(newValue);
-              }}
-              renderInput={(params) => <TextField {...params} />}
-              disabled={disableDate}
-            />
-            <DatePicker
-              label="End Date"
-              value={endDate}
-              onChange={(newValue) => {
-                setDisablePeriodWeek(true);
-                setEndDate(newValue);
-              }}
-              renderInput={(params) => <TextField {...params} />}
-              disabled={disableDate}
-            />
-         </LocalizationProvider>
-         <span style={{fontSize: "1.5rem", fontWeight: "600", color: "gray"}}>OR</span>
-         {periodWeek(false)}
-         <button style={{ marginLeft: 0 }} className={(disableDate || disablePeriodWeek) ? "addBtn showDataBtn" : "disableAddButton"} onClick={() => {
+          {projects && projects.map(option=>
+              <MenuItem
+                key={option.projectId}
+                value={option.projectName}
+                required
+                onClick={() =>{
+                    setSelectedProject({
+                      projectId: option.projectId,projectName: option.projectName
+                    });
+                    dispatch(setSelectedProjectId(option.projectId));
+                  }
+                }
+              >
+                {option.projectName}
+              </MenuItem>
+          )}
+        </TextField>
+      </>
+    )
+  }
+
+  const createStartDateEndDateContainer = () => {
+    return(
+      <LocalizationProvider dateAdapter={AdapterDayjs} sx={{
+              "& label": {
+                lineHeight: '0.8rem'
+              }
+            }}
+          >
+              <DatePicker
+                label="Start Date"
+                value={startDate}
+                onChange={(newValue) => {
+                  setDisablePeriodWeek(true);
+                  setStartDate(newValue);
+                }}
+                renderInput={(params) => <TextField style={{
+                  width: '15rem'
+                }} {...params} />}
+                disabled={disableDate}
+                
+              />
+              <DatePicker
+                label="End Date"
+                value={endDate}
+                onChange={(newValue) => {
+                  setDisablePeriodWeek(true);
+                  setEndDate(newValue);
+                }}
+                renderInput={(params) => <TextField style={{
+                  width: '15rem'
+                }} {...params} />}
+                disabled={disableDate}
+              />
+          </LocalizationProvider>
+    )
+  }
+
+  const createClearAndShowButton = () =>{
+    return(
+      <>
+        <button 
+        onClick={(event) => getData()}
+        className={tabName === 'TIMESHEET REPORTS' ? (selectedProjectId ? "showDataBtn" : "disableAddButton") : "showDataBtn"}
+        >
+          Show Data
+        </button>
+
+        <button style={{ marginLeft: 0 }} className={(disableDate || disablePeriodWeek) ? "addBtn showDataBtn" : "disableAddButton"} onClick={() => {
           setDisableDate(false);
           setStartDate(null);
           setEndDate(null);
           setDisablePeriodWeek(false);
-          setSelectedPriodWeek({
-            startDate : moment().startOf('isoweek'),
-            endDate : moment().day() === 0 ? moment().startOf('week') : moment().add(7,'days').startOf('week')
+          dispatch(setSelectedProjectId(null));
+          setSelectedProject({
+            projectName: null,
+            projectId: null
           });
-         }}>Clear Selection</button>
-         <button 
-         onClick={(event) => getData()} 
-         className={
-          (startDate && endDate && !startDate.isValid() && !endDate.isValid()) ? "disableAddButton" : "showDataBtn"}
-          disabled={startDate && endDate && !startDate.isValid() && !endDate.isValid()}>Show Data</button>
-        </>
+          // setSelectedPriodWeek({
+          //   startDate : moment().startOf('isoweek'),
+          //   endDate : moment().day() === 0 ? moment().startOf('week') : moment().add(7,'days').startOf('week')
+          // });
+        }}
+        >
+          Clear Selection
+        </button>
+      </>
+    )
+  }
+
+  const FilterData = () => {
+    return (
+      <>
+        <div className="filter-container">
+          {tabName === 'TIMESHEET REPORTS' && projectsDropdown()}
+          {periodWeek(true)}
+          <div style={{display: "flex", flexDirection: "column", justifyContent: "space-around"}}>
+            <span style={{fontSize: "1.5rem", fontWeight: "600", color: "gray"}}>OR</span>
+          </div>                            
+          {createStartDateEndDateContainer()}
+          {/* {tabName === 'MISSING TIMESHEET' } */}
+          {createClearAndShowButton()}
+        </div>
+        
+        {(tabName === 'MISSING TIMESHEET') ? createSearchBox("Search") : <></>}
+      </>
     )
   }
 
@@ -334,10 +454,11 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     const temp = [];
     let totalHrs = {};
     let status = {};
-    if (headingName !== Modules.TIMESHEET) {
+    if (headingName !== Modules.TIMESHEET && headingName !== Modules.REPORTING) {
       setColumns(tableColumnsData[headingName.replace(' ', '')]);
-    }
-    else {
+    } else if(headingName === Modules.REPORTING){
+      setColumns(tableColumnsData[titleCase(tabName).replace(' ','')]);
+    } else {
     Object.keys(data).forEach((col) => {
       if (col === "dateHours" && tabName !== 'REPORTEES') {
         data[col].forEach((dateHour, index) => {
@@ -447,6 +568,21 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     }
   };
 
+  const createSearchBox = (placeHolder) => {
+    return(
+      <div className="searchWrapper">
+          <img src={searchIcon} className="searchIcon" alt="" />
+          <input
+            className="searchBox"
+            type="search"
+            placeholder={placeHolder}
+            ref={inputRef}
+            onChange={setSearchDataHelper}
+          />
+      </div>
+    )
+  }
+
   const setTableData = (tableData) => {
     handleSetColumnsData(tableData.data[0]);
     setTotalRecord(tableData.totalCount);
@@ -496,8 +632,8 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       let endDate = moment(periodWeek.endDate);
       if(tabName === "MY TIMESHEET")
         dispatch(getAssignedProjects({
-          startDate: moment(startDate).format("YYYY-MM-DDT00:00:00"),
-          endDate: moment(endDate).format("YYYY-MM-DDT00:00:00")
+          startDate: moment(startDate).format(DATE_TIME_FORMAT),
+          endDate: moment(endDate).format(DATE_TIME_FORMAT)
         }));
       dispatch(
         setTimeSheetPeriodWeek(
@@ -589,7 +725,26 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         );
       }
     }
-  },[headingName,tabName]);
+
+    if(headingName === Modules.REPORTING){
+      if(tabName === 'TIMESHEET REPORTS')
+      {
+        if(selectedProjectId)
+        dispatch(
+          getTimesheetReports({
+            startDate: moment(selectedPeriodWeek.endDate).format(DATE_TIME_FORMAT),
+            endDate: moment(selectedPeriodWeek.endDate).format(DATE_TIME_FORMAT),
+            projectId: selectedProjectId
+          })
+        );
+        dispatch(
+          getMappedProjectManagementData()
+        );
+        setDisableDate(true);
+        setDisablePeriodWeek(false);
+      }
+    }
+  },[tabName]);
 
   useEffect(() => {
     if (headingName === Modules.CLIENT_ADMIN && clientAdminData && clientAdminData.totalCount) {
@@ -610,8 +765,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       setTableData(projectManagementData);
       setRows(projectManagementData.data);
     } else if(headingName === Modules.REPORTING && reportingData && reportingData.length) {
-      // setTableData(reportingData);
-      handleSetColumnsData(reportingData[0]);
+      setColumns(tableColumnsData[titleCase(tabName).replace(' ','')]);
       setRows(reportingData);
     } else {
       if (tableColumnsData[headingName.replace(' ', '')]) {
@@ -672,7 +826,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         else { 
           setColumns([ ...temp ]); 
         }
-      } else {
+      } else if(tableColumnsData[titleCase(tabName).replace(' ','')]) {
+        setColumns(tableColumnsData[titleCase(tabName).replace(' ','')]);
+      } else{
         setColumns([]);
       }
       setRows([]);
@@ -730,11 +886,14 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         );
         break;
       case Modules.REPORTING:
-        dispatch(
-        getTimesheetReports({
-          startDate: moment(selectedPeriodWeek.startDate).format("YYYY-MM-DDT00:00:00"),
-          endDate: moment(selectedPeriodWeek.endDate).format("YYYY-MM-DDT00:00:00")
-        }));
+        if(tabName === 'MISSING TIMESHEET'){
+          dispatch(
+          getMissingTimesheet({
+            startDate: moment(selectedPeriodWeek.startDate).format(DATE_TIME_FORMAT),
+            endDate: moment(selectedPeriodWeek.endDate).format(DATE_TIME_FORMAT)
+          }));
+          setDisableDate(true);
+        }
         break;
       case Modules.TIMESHEET:
         if(tabName !== 'MY TIMESHEET')
@@ -757,8 +916,8 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       let startDate = moment(selectedPeriodWeek.startDate);
       let endDate = moment(selectedPeriodWeek.endDate);
       dispatch(getAssignedProjects({
-            startDate: moment(startDate).format("YYYY-MM-DDT00:00:00"),
-            endDate: moment(endDate).format("YYYY-MM-DDT00:00:00")
+            startDate: moment(startDate).format(DATE_TIME_FORMAT),
+            endDate: moment(endDate).format(DATE_TIME_FORMAT)
           }));
     }
     if(headingName === Modules.TIMESHEET && tabName !== 'MY TIMESHEET'){
@@ -785,18 +944,8 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
 
   return (
     <div className={`tableDiv ${tabName === 'MY TIMESHEET' ? "timesheetTable" : ""}`}>
-      <div className="searchHeader">
-        {headingName !== Modules.TIMESHEET && headingName !== Modules.PROJECT_MANAGEMENT &&  <div className="searchWrapper">
-          <img src={searchIcon} className="searchIcon" alt="" />
-          <input
-            className="searchBox"
-            type="search"
-            placeholder="Search"
-            ref={inputRef}
-            onChange={setSearchDataHelper}
-          />
-        </div>
-        }
+      <div className={headingName === Modules.REPORTING ? "searchHeaderFlex" : "searchHeader" }>
+        {headingName !== Modules.TIMESHEET && headingName !== Modules.PROJECT_MANAGEMENT && headingName !== Modules.REPORTING &&  createSearchBox("Search")}
         {
           headingName === Modules.TIMESHEET ? (
             tabName === 'MY TIMESHEET' ? myTimeSheetTab() : pendingApprovalReportessTab()

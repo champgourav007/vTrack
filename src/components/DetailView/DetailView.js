@@ -70,7 +70,9 @@ export const DetailView = ({viewDetails, setViewDetails, selectedEmpId, selected
         }
       });
       restProps['dateHours'] = [...dateHours];
-      restProps['totalHrs'] = totalHrs.toFixed(2);
+      let finalHours=totalHrs.toFixed(2);
+      if(finalHours.split('.')[1]==="00") finalHours=parseInt(totalHrs);
+      restProps['totalHrs'] = finalHours;
       restProps['periodWeek'] = selectedPeriodWeek.startDate.format(DATE_FORMAT) +
       " - " +
       selectedPeriodWeek.endDate.format(DATE_FORMAT);

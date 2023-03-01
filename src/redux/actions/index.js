@@ -8,3 +8,4 @@ export * from './project-allocation';
 export * from './dropdown';
 export * from './settings';
 export * from './timesheet';
+export * from './reporting';

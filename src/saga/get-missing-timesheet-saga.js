@@ -1,17 +1,16 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { getTimesheetReports } from "../http/requests/reporting";
+import { getMissingTimesheet } from "../http/requests/reporting";
 import { setVtrackLoader } from "../redux/actions";
 import { ReportingType, setReportingData } from "../redux/actions/reporting";
 
-function* workerGetTimesheetReports({ payload }){
+function* workerGetMisingTimesheet({ payload }){
   try{
     yield put(setVtrackLoader(true));
-    const timesheetReports = yield call(
-      getTimesheetReports,
+    const missingTimesheet = yield call(
+      getMissingTimesheet,
       payload.startDate,
-      payload.endDate,
-      payload.projectId);
-    yield put(setReportingData(timesheetReports));
+      payload.endDate);
+    yield put(setReportingData(missingTimesheet));
     yield put(setVtrackLoader(false));
   } catch(err){
     console.log(err);
@@ -19,9 +18,9 @@ function* workerGetTimesheetReports({ payload }){
   }
 }
 
-export function* getTimesheetReportsSaga() {
+export function* getMissingTimesheetsaga() {
   yield takeLatest(
-    ReportingType.GET_TIMESHEET_REPORTS,
-    workerGetTimesheetReports
+    ReportingType.GET_MISSING_TIMESHEET,
+    workerGetMisingTimesheet
   );
 };

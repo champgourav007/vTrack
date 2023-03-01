@@ -175,3 +175,22 @@
   transform: none;
   color: #1773bc;
 }
+
+.filter-container{
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.searchHeaderFlex{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap:0.9rem;
+  margin-bottom: 1rem;
+}
+
+.projects-dropdown{
+  display: flex;
+  gap: 1rem;
+}

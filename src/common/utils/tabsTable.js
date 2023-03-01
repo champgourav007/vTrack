@@ -14,6 +14,13 @@ export const handleSetRows = (tableData, tabName) => {
             rowData[moment(dateHour.date).format("ddd DD")] =
               dateHour.hours === 0 ? "-" : dateHour.hours;
           });
+        } else if(col === 'totalHrs') {
+          let totalHrs = parseFloat(row[col]).toFixed(2);
+          if(totalHrs.toString().split(".")[1] === "00"){
+            totalHrs = parseInt(totalHrs);
+          }
+          rowData[col] = totalHrs;
+          console.log(totalHrs);
         } else {
           rowData[col] = row[col];
         }

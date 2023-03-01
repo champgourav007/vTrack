@@ -264,7 +264,9 @@ export const DataTable = ({
         }
       });
       restProps['dateHours'] = [...dateHours];
-      restProps['totalHrs'] = totalHrs.toFixed(2);
+      let finalHours=totalHrs.toFixed(2);
+      if(finalHours.split('.')[1]==="00") finalHours=parseInt(totalHrs);
+      restProps['totalHrs'] = finalHours;
       isEditButtonClicked ? dispatch(updateTimeSheetData(restProps)) : dispatch(saveTimeSheetData(restProps));
     }
     setIsAddButtonClicked(false);
@@ -983,7 +985,7 @@ export const DataTable = ({
     allUserDetails &&
       allUserDetails.data.length &&
       allUserDetails.data.forEach((user) => {
-        if (user.id === id) {
+        if (user.id.toLowerCase() === id.toLowerCase()) {
           employeeName = getFullName(user.firstName, user.lastName);
         }
       });
@@ -1312,9 +1314,11 @@ export const DataTable = ({
                               whiteSpace: col.maxWidth ? 'nowrap' : 'normal',
                             }}
                           >
-                            {col.id === "employeeName" ? (
-                              headingName === Modules.REPORTING ? row["employeeName"] : getEmployeeName(row["employeeId"])
-                            ) : col.id.toLowerCase().includes("allocation") && row[col.id] ? (
+                            {col.id === "employeeName" ? 
+                              (row["employeeId"] ? getEmployeeName(row["employeeId"]) : getEmployeeName(row["employeeID"])) :
+                             (col.id === "projectManagerName" && headingName === Modules.REPORTING) ? 
+                              getEmployeeName(row["projectManagerID"]) 
+                            : col.id.toLowerCase().includes("allocation") && row[col.id] ? (
                               <div className="allocation">
                                 <Box sx={{ position: 'relative' }}>
                                   <CircularProgress
