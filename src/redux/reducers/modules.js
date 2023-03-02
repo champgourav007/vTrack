@@ -1,5 +1,6 @@
 import { ClientAdminType, DropdownType, ProjectAdminType, ProjectAllocationType, SettingDataType } from "../actions"
 import { ProjectManagementType } from "../actions/project-management";
+import { ReportingType } from "../actions/reporting";
 import { TimeSheetType } from "../actions/timesheet";
 
 export const modulesState = {
@@ -24,7 +25,8 @@ export const modulesState = {
   selectedEmployeeId: null,
   selectedProjectId: null,
   detailedTimeSheetData: null,
-  timeSheetProjects: null
+  timeSheetProjects: null,
+  reportingData: null
 }
 
 export const modulesReducer = (state = modulesState, action) => {
@@ -138,6 +140,11 @@ export const modulesReducer = (state = modulesState, action) => {
       return {
         ...state,
         detailedTimeSheetData: action.payload
+      }
+    case ReportingType.SET_REPORTING_DATA:
+      return{
+        ...state,
+        reportingData: action.payload
       }
     default: return state;
   }

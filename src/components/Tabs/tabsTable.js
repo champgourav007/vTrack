@@ -10,7 +10,9 @@ import {
   getLabel,
   getMinWidth,
   getTotalHrs,
+  startWeek,
   tableColumnsData,
+  titleCase,
 } from "../../common/utils/datatable";
 import {
   setTimeSheetData
@@ -36,16 +38,20 @@ import {
   setTimeSheetPeriodWeek,
   submitPeriodForApproval
 } from "../../redux/actions";
-import { getProjectManagementData } from "../../redux/actions/project-management";
+import { getMappedProjectManagementData, getProjectManagementData } from "../../redux/actions/project-management";
 import { DataTable } from "../DataTable/DataTable";
 import { toastOptions } from "../../common/utils/toasterOptions";
 import "./tabsTable.css";
 import { Select } from "@mui/material";
 import { CalendarMonth, CalendarMonthRounded, Person } from "@mui/icons-material";
 import { assignedProjectsSaga } from "../../saga/get-assigned-projects-saga";
-import { DATE_FORMAT } from "../../common/constants/extra-constants";
-import ExportExcel from "../ExportExcel";
+import { DATE_FORMAT, DATE_TIME_FORMAT } from "../../common/constants/extra-constants";
 import { handleSetRows } from "../../common/utils/tabsTable";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { dateCalc } from "../../common/utils/datatable";
+import { getMissingTimesheet, getTimesheetReports, setReportingData } from "../../redux/actions/reporting";
 
 const getPeriods = () => {
   let date = moment().subtract(42, "days");
@@ -61,7 +67,7 @@ const getPeriods = () => {
 };
 
 export const TabsTable = ({ headingName, tabName, status, projectId }) => {
-  const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData, mappedProjectManagementData, selectedProjectId, reportees } = useSelector(({ MODULES }) => MODULES);
+  const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData, mappedProjectManagementData, selectedProjectId, reportees, reportingData } = useSelector(({ MODULES }) => MODULES);
   const { allUserDetails, userData } = useSelector(({ USER }) => USER);
   const { allTasks, listItems, clientsData, timeSheetProjects } = useSelector(({ MODULES }) => MODULES);
   const dispatch = useDispatch();
@@ -80,73 +86,379 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const [ selectedProject, setSelectedProject ] = useState({});
   const [ selectedEmployee, setSelectedEmployee ] = useState({});
   const [rowToBeUpdated, setRowToBeUpdated] = useState({});
-  const inputRef = useRef("")
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [weekStart, setWeekStart] = useState(null);
+  const [disableDate, setDisableDate] = useState(false);
+  const [disablePeriodWeek, setDisablePeriodWeek] = useState(false);
+  const inputRef = useRef("");
 
-  useEffect(()=>{
-    dispatch(
-      setTimeSheetPeriodWeek(
-        `${selectedPeriodWeek.startDate.format(DATE_FORMAT)} - ${selectedPeriodWeek.endDate.format(DATE_FORMAT)}`
-      )
-    );
-    if(timeSheetData === null && headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
-      dispatch(
-        saveTimeSheetPeriodData({
-          periodWeek: moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().add(7,'days').startOf('week').format(DATE_FORMAT),
-          startDT: moment().startOf('isoweek').format(),
-          endDT: moment().endOf('isoweek').format(),
-        })
-      );
-      dispatch(setTimeSheetPeriodWeek(moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().add(7,'days').startOf('week').format(DATE_FORMAT)));  
-      setRowToBeUpdated({});
-      setIsAddButtonClicked(false);
-      setIsEditButtonClicked(false);
-    }
-    if(headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
-      dispatch(
-        getMyTimeSheetData({
-          periodWeek:
-            selectedPeriodWeek.startDate.format(DATE_FORMAT) +
-            " - " +
-            selectedPeriodWeek.endDate.format(DATE_FORMAT),
-        })
-      );
-    }
-    else if(headingName === Modules.TIMESHEET){
-      if(tabName === 'REPORTEES'){
-        dispatch(
-          getTimeSheetReportee({
-            periodWeek:
-              selectedPeriodWeek.startDate.format(DATE_FORMAT) +
-              " - " +
-              selectedPeriodWeek.endDate.format(DATE_FORMAT),
-            projectId: "",
-            employeeId: ""
-          })
-        );
+  const getData = (event) => {
+    if(headingName === Modules.REPORTING){
+      if(!disableDate && !disablePeriodWeek){
+        toast.info('Please Enter Period Week OR Start and End Date', toastOptions);
+        return;
       }
-      else{
+      if(tabName === "TIMESHEET REPORTS" && !selectedProjectId){
+        toast.info('Please select projects', toastOptions);
+        return;
+      }
+      if(!disableDate){
+        if(!startDate){
+          toast.info("Please Enter Start Date", toastOptions);
+          return;
+        }
+        else if(!endDate){
+          toast.info("Please Enter End Date", toastOptions);
+          return;
+        }
+        else{
+          if(startDate.isValid() && endDate.isValid()){
+            tabName === 'MISSING TIMESHEET' ?
+            dispatch(
+              getMissingTimesheet({
+                startDate: startDate.format(DATE_TIME_FORMAT),
+                endDate: endDate.format(DATE_TIME_FORMAT)
+              })
+            ) :
+            dispatch(
+              getTimesheetReports({
+                startDate: startDate.format(DATE_TIME_FORMAT),
+                endDate: endDate.format(DATE_TIME_FORMAT),
+                projectId: selectedProjectId
+              })
+            )
+          } else{
+            toast.info('Please Enter Valid Date', toastOptions);
+            return;
+          }
+        }
+      }
+      if(!disablePeriodWeek){
+        tabName === 'MISSING TIMESHEET' ? dispatch(
+          getMissingTimesheet({
+            startDate: moment(selectedPeriodWeek.startDate).format(DATE_TIME_FORMAT),
+            endDate: moment(selectedPeriodWeek.endDate).format(DATE_TIME_FORMAT)
+          })
+        ) :
         dispatch(
-          getTimeSheetData({
-            periodWeek:
-              selectedPeriodWeek.startDate.format(DATE_FORMAT) +
-              " - " +
-              selectedPeriodWeek.endDate.format(DATE_FORMAT),
-            employeeId: null,
+          getTimesheetReports({
+            startDate: moment(selectedPeriodWeek.startDate).format(DATE_TIME_FORMAT),
+            endDate: moment(selectedPeriodWeek.endDate).format(DATE_TIME_FORMAT),
+            projectId: selectedProjectId
+          })
+        )
+      }
+      
+    }
+  }
+
+  const projectsDropdown = () =>{
+    let projects = [];
+    if(mappedProjectManagementData){
+    mappedProjectManagementData.forEach((client) => {
+      client.projects.forEach((project) => {
+        projects.push({
+          projectName : project.projectName,
+          projectId : project.projectId
+        });
+      });
+    });
+
+    projects = projects.sort(function(a,b){return (a.projectName).localeCompare(b.projectName)})
+    }
+
+    return(
+      <>
+        <TextField
+          select
+          label={"Projects"}
+          value={selectedProject.projectName ? selectedProject.projectName : ''}
+          required
+          sx={{
+            minWidth: '20rem',
+            // maxWidth: '20rem',
+            marginRight: '5rem',
+            "& label": {
+              lineHeight: '0.8rem'
+            }
+          }}
+        >
+          {projects && projects.map(option=>
+              <MenuItem
+                key={option.projectId}
+                value={option.projectName}
+                required
+                onClick={() =>{
+                    setSelectedProject({
+                      projectId: option.projectId,projectName: option.projectName
+                    });
+                    dispatch(setSelectedProjectId(option.projectId));
+                  }
+                }
+              >
+                {option.projectName}
+              </MenuItem>
+          )}
+        </TextField>
+      </>
+    )
+  }
+
+  const createStartDateEndDateContainer = () => {
+    return(
+      <LocalizationProvider dateAdapter={AdapterDayjs} sx={{
+              "& label": {
+                lineHeight: '0.8rem'
+              }
+            }}
+          >
+              <DatePicker
+                label="Start Date"
+                value={startDate}
+                onChange={(newValue) => {
+                  setDisablePeriodWeek(true);
+                  setStartDate(newValue);
+                }}
+                renderInput={(params) => <TextField style={{
+                  width: '15rem'
+                }} {...params} />}
+                disabled={disableDate}
+                
+              />
+              <DatePicker
+                label="End Date"
+                value={endDate}
+                onChange={(newValue) => {
+                  setDisablePeriodWeek(true);
+                  setEndDate(newValue);
+                }}
+                renderInput={(params) => <TextField style={{
+                  width: '15rem'
+                }} {...params} />}
+                disabled={disableDate}
+              />
+          </LocalizationProvider>
+    )
+  }
+
+  const createClearAndShowButton = () =>{
+    return(
+      <>
+        <button 
+        onClick={(event) => getData()}
+        className={tabName === 'TIMESHEET REPORTS' ? (selectedProjectId ? "showDataBtn" : "disableAddButton") : "showDataBtn"}
+        >
+          Show Data
+        </button>
+
+        <button style={{ marginLeft: 0 }} className={(disableDate || disablePeriodWeek) ? "addBtn showDataBtn" : "disableAddButton"} onClick={() => {
+          setDisableDate(false);
+          setStartDate(null);
+          setEndDate(null);
+          setDisablePeriodWeek(false);
+          dispatch(setSelectedProjectId(null));
+          setSelectedProject({
+            projectName: null,
             projectId: null
-          })
-        );
-      }
-    }
-  },[headingName,tabName]);
-  
+          });
+          // setSelectedPriodWeek({
+          //   startDate : moment().startOf('isoweek'),
+          //   endDate : moment().day() === 0 ? moment().startOf('week') : moment().add(7,'days').startOf('week')
+          // });
+        }}
+        >
+          Clear Selection
+        </button>
+      </>
+    )
+  }
+
+  const FilterData = () => {
+    return (
+      <>
+        <div className="filter-container">
+          {tabName === 'TIMESHEET REPORTS' && projectsDropdown()}
+          {periodWeek(true)}
+          <div style={{display: "flex", flexDirection: "column", justifyContent: "space-around"}}>
+            <span style={{fontSize: "1.5rem", fontWeight: "600", color: "gray"}}>OR</span>
+          </div>                            
+          {createStartDateEndDateContainer()}
+          {/* {tabName === 'MISSING TIMESHEET' } */}
+          {createClearAndShowButton()}
+        </div>
+        
+        {(tabName === 'MISSING TIMESHEET') ? createSearchBox("Search") : <></>}
+      </>
+    )
+  }
+
+  const periodWeek = (flag) => {
+    return (
+      <Select
+        IconComponent = {CalendarMonthRounded}
+        defaultValue={moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().add(7,'days').startOf('week').format(DATE_FORMAT)}
+        sx={{minWidth: '15rem'}}
+        className={"select-date"}
+        disabled={headingName===Modules.REPORTING ? disablePeriodWeek : false }
+      >{getDateItems(flag)}
+      </Select>
+    )
+  }
+
+  const pendingApprovalReportessTab = () => {
+    return (
+      <div className="pendingApprovalDiv">
+        <TextField
+          select
+          label={"Projects"}
+          value={selectedProject.projectName ? selectedProject.projectName : ""}
+          sx={{
+            minWidth: '15rem',
+            "& label": {
+              lineHeight: '0.8rem'
+            }
+          }}
+        >
+          {timeSheetProjects && timeSheetProjects.map(option=>
+            // data.map((option) => (
+              <MenuItem
+                key={option.id}
+                value={option.name}
+                required
+                onClick={() =>{
+                    setSelectedProject({
+                      projectId: option.id,projectName: option.name
+                    });
+                    dispatch(setSelectedProjectId(option.id));
+                  }
+                }
+              >
+                {option.name}
+              </MenuItem>
+            // ))
+          )}
+        </TextField>
+        <TextField
+          select
+          label={"Employee Name"}
+          value={selectedEmployee.employeeName ? selectedEmployee.employeeName : ""}
+          sx={{
+            minWidth: '15rem',
+            "& label": {
+              lineHeight: '1rem',
+              marginTop: '-0.1rem'
+            }
+          }}
+        >
+          {reportees && reportees.map((option) => (
+            <MenuItem
+              key={option.id}
+              value={`${option.firstName} ${option.lastName}`}
+              onClick={() =>{
+                  setSelectedEmployee({
+                    employeeId: option.id,employeeName: `${option.firstName} ${option.lastName}`
+                  });
+                  dispatch(setSelectedEmployeeId(option.id));
+                }
+              }
+            >
+              {`${option.firstName} ${option.lastName}`}
+            </MenuItem>
+          ))}
+        </TextField>
+        {periodWeek(false)}
+        <button 
+          className={"addBtn showDataBtn"}
+          onClick={()=>{
+            if(tabName === 'REPORTEES'){
+              dispatch(
+                getTimeSheetReportee({
+                  periodWeek: selectedPeriodWeek.startDate.format(DATE_FORMAT) + ' - ' + selectedPeriodWeek.endDate.format(DATE_FORMAT),
+                  projectId: selectedProject.projectId ? selectedProject.projectId : "",
+                  employeeId: selectedEmployee.employeeId ? selectedEmployee.employeeId : ""
+                })
+              );
+            }
+            else{
+              dispatch(
+                getTimeSheetData({
+                  periodWeek: selectedPeriodWeek.startDate.format(DATE_FORMAT) + ' - ' + selectedPeriodWeek.endDate.format(DATE_FORMAT),
+                  employeeId: selectedEmployee.employeeId,
+                  projectId: selectedProject.projectId
+                })
+              );
+            }
+          }}
+        >
+          Show Data
+        </button>
+        <button 
+          className={(selectedEmployee.employeeId || selectedProject.projectId) ? "addBtn showDataBtn" : "disableAddButton"}
+          onClick={()=>{
+            setSelectedEmployee({});
+            dispatch(setSelectedEmployeeId(null));
+            setSelectedProject({});
+            dispatch(setSelectedProjectId(null));
+          }}
+        >
+          Clear Selection
+        </button>
+      </div>
+    )
+  }
+  const myTimeSheetTab = () => {
+    return (
+      <>
+        {(timeSheetData && timeSheetData.length) ?
+            <div className="searchWrapperText">
+              <span className="searchWrapperSpan">Timesheet Period Status : </span>{timeSheetData[0].periodStatus}
+            </div> : null
+        }
+        <div className="button-flex">
+          {periodWeek(true)}
+          <button
+            disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus !== 'Open'))}
+            className={
+              isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus !== 'Open'))
+                ? "disableAddButton"
+                : "addBtn"
+            }
+            onClick={() => setIsAddButtonClicked(true)}
+          >
+              Add
+          </button>
+          <button
+            disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && getTimesheetStatus(timeSheetData))}
+            className={
+              isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && getTimesheetStatus(timeSheetData))
+                ? "disableAddButton"
+                : "addBtn"
+            }
+            onClick={()=>{
+              let sum = 0;
+              rows.forEach(row=>{
+                if(row.status !== 'Rejected') sum+=parseFloat(row.totalHrs);
+              });
+              if(sum.toFixed(2) >= 40) dispatch(submitPeriodForApproval());
+              else toast.info("Total Hours must be greater than or equal to 40", toastOptions);
+            }}
+          >
+            Submit For Approval
+          </button>
+          </div> 
+      </>
+    )
+  }
   const handleSetColumnsData = (data) => {
     const temp = [];
     let totalHrs = {};
     let status = {};
-    if (headingName !== Modules.TIMESHEET) {
+    if (headingName !== Modules.TIMESHEET && headingName !== Modules.REPORTING) {
       setColumns(tableColumnsData[headingName.replace(' ', '')]);
-    }
-    else {
+    } else if(headingName === Modules.REPORTING){
+      setColumns(tableColumnsData[titleCase(tabName).replace(' ','')]);
+    } else {
     Object.keys(data).forEach((col) => {
       if (col === "dateHours" && tabName !== 'REPORTEES') {
         data[col].forEach((dateHour, index) => {
@@ -256,6 +568,21 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     }
   };
 
+  const createSearchBox = (placeHolder) => {
+    return(
+      <div className="searchWrapper">
+          <img src={searchIcon} className="searchIcon" alt="" />
+          <input
+            className="searchBox"
+            type="search"
+            placeholder={placeHolder}
+            ref={inputRef}
+            onChange={setSearchDataHelper}
+          />
+      </div>
+    )
+  }
+
   const setTableData = (tableData) => {
     handleSetColumnsData(tableData.data[0]);
     setTotalRecord(tableData.totalCount);
@@ -268,10 +595,57 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   };
   
   const setSearchDataHelper = (e) => {
-    if (e.target.value.length > 2 || e.target.value.length === 0)
+    if(headingName === Modules.REPORTING){
+      let value = e.target.value.toLowerCase();
+      let searchedData = reportingData.filter((data) =>{
+        if((data.employeeName.toLowerCase()).includes(value)
+         || (data.periodWeek.toLowerCase()).includes(value)){
+          return data;
+        }
+      });
+      setRows(searchedData);
+      return;
+    }
+    if (headingName !== Modules.REPORTING && e.target.value.length > 2 || e.target.value.length === 0)
       setSearchData(e.target.value);
   };
 
+  const periodWeekClickHandler = (fromMyTimeSheet, periodWeek) => {
+    setSelectedPriodWeek(periodWeek);
+    if(headingName === Modules.TIMESHEET) {
+      if (fromMyTimeSheet) {
+        dispatch(
+          saveTimeSheetPeriodData({
+            periodWeek:
+              periodWeek.startDate.format(DATE_FORMAT) +
+              " - " +
+              periodWeek.endDate.format(DATE_FORMAT),
+            startDT: periodWeek.startDate.format(),
+            endDT: periodWeek.endDate.endOf('isoweek').format(),
+          })
+        );
+        setRowToBeUpdated({});
+        setIsAddButtonClicked(false);
+        setIsEditButtonClicked(false);
+      }
+      let startDate = moment(periodWeek.startDate);
+      let endDate = moment(periodWeek.endDate);
+      if(tabName === "MY TIMESHEET")
+        dispatch(getAssignedProjects({
+          startDate: moment(startDate).format(DATE_TIME_FORMAT),
+          endDate: moment(endDate).format(DATE_TIME_FORMAT)
+        }));
+      dispatch(
+        setTimeSheetPeriodWeek(
+          periodWeek.startDate.format(DATE_FORMAT) +
+            " - " +
+            periodWeek.endDate.format(DATE_FORMAT)
+        )
+      );
+    } else if(headingName === Modules.REPORTING) {
+      setDisableDate(true);
+    }
+  }
   const getDateItems = (fromMyTimeSheet) => {
     return periodWeeks.map((periodWeek) => (
       <MenuItem
@@ -280,38 +654,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           " - " +
           periodWeek.endDate.format(DATE_FORMAT)
         }
-        onClick={() => {
-          if (fromMyTimeSheet) {
-            dispatch(
-              saveTimeSheetPeriodData({
-                periodWeek:
-                  periodWeek.startDate.format(DATE_FORMAT) +
-                  " - " +
-                  periodWeek.endDate.format(DATE_FORMAT),
-                startDT: periodWeek.startDate.format(),
-                endDT: periodWeek.endDate.endOf('isoweek').format(),
-              })
-            );
-            setRowToBeUpdated({});
-            setIsAddButtonClicked(false);
-            setIsEditButtonClicked(false);
-          }
-          let startDate = moment(periodWeek.startDate);
-          let endDate = moment(periodWeek.endDate);
-          if(tabName === "MY TIMESHEET")
-            dispatch(getAssignedProjects({
-              startDate: moment(startDate).format("YYYY-MM-DDT00:00:00"),
-              endDate: moment(endDate).format("YYYY-MM-DDT00:00:00")
-            }));
-          setSelectedPriodWeek(periodWeek);
-          dispatch(
-            setTimeSheetPeriodWeek(
-              periodWeek.startDate.format(DATE_FORMAT) +
-                " - " +
-                periodWeek.endDate.format(DATE_FORMAT)
-            )
-          );
-        }}
+        onClick={() => periodWeekClickHandler(fromMyTimeSheet, periodWeek)}
       >
         {periodWeek.startDate.format(DATE_FORMAT) +
           " - " +
@@ -326,6 +669,82 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     }
     return true;
   }
+
+  useEffect(()=>{
+    dispatch(
+      setTimeSheetPeriodWeek(
+        `${selectedPeriodWeek.startDate.format(DATE_FORMAT)} - ${selectedPeriodWeek.endDate.format(DATE_FORMAT)}`
+      )
+    );
+    if(timeSheetData === null && headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
+      dispatch(
+        saveTimeSheetPeriodData({
+          periodWeek: moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().add(7,'days').startOf('week').format(DATE_FORMAT),
+          startDT: moment().startOf('isoweek').format(),
+          endDT: moment().endOf('isoweek').format(),
+        })
+      );
+      dispatch(setTimeSheetPeriodWeek(moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().add(7,'days').startOf('week').format(DATE_FORMAT)));  
+      setRowToBeUpdated({});
+      setIsAddButtonClicked(false);
+      setIsEditButtonClicked(false);
+    }
+    if(headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
+      dispatch(
+        getMyTimeSheetData({
+          periodWeek:
+            selectedPeriodWeek.startDate.format(DATE_FORMAT) +
+            " - " +
+            selectedPeriodWeek.endDate.format(DATE_FORMAT),
+        })
+      );
+    }
+    else if(headingName === Modules.TIMESHEET){
+      if(tabName === 'REPORTEES'){
+        dispatch(
+          getTimeSheetReportee({
+            periodWeek:
+              selectedPeriodWeek.startDate.format(DATE_FORMAT) +
+              " - " +
+              selectedPeriodWeek.endDate.format(DATE_FORMAT),
+            projectId: "",
+            employeeId: ""
+          })
+        );
+      }
+      else{
+        dispatch(
+          getTimeSheetData({
+            periodWeek:
+              selectedPeriodWeek.startDate.format(DATE_FORMAT) +
+              " - " +
+              selectedPeriodWeek.endDate.format(DATE_FORMAT),
+            employeeId: null,
+            projectId: null
+          })
+        );
+      }
+    }
+
+    if(headingName === Modules.REPORTING){
+      if(tabName === 'TIMESHEET REPORTS')
+      {
+        if(selectedProjectId)
+        dispatch(
+          getTimesheetReports({
+            startDate: moment(selectedPeriodWeek.endDate).format(DATE_TIME_FORMAT),
+            endDate: moment(selectedPeriodWeek.endDate).format(DATE_TIME_FORMAT),
+            projectId: selectedProjectId
+          })
+        );
+        dispatch(
+          getMappedProjectManagementData()
+        );
+        setDisableDate(true);
+        setDisablePeriodWeek(false);
+      }
+    }
+  },[tabName]);
 
   useEffect(() => {
     if (headingName === Modules.CLIENT_ADMIN && clientAdminData && clientAdminData.totalCount) {
@@ -345,6 +764,9 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     } else if (headingName === Modules.PROJECT_MANAGEMENT && projectManagementData && projectManagementData.totalCount) {
       setTableData(projectManagementData);
       setRows(projectManagementData.data);
+    } else if(headingName === Modules.REPORTING && reportingData && reportingData.length) {
+      setColumns(tableColumnsData[titleCase(tabName).replace(' ','')]);
+      setRows(reportingData);
     } else {
       if (tableColumnsData[headingName.replace(' ', '')]) {
         let temp = [...tableColumnsData[headingName.replace(' ', '')]];
@@ -404,13 +826,15 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         else { 
           setColumns([ ...temp ]); 
         }
-      } else {
+      } else if(tableColumnsData[titleCase(tabName).replace(' ','')]) {
+        setColumns(tableColumnsData[titleCase(tabName).replace(' ','')]);
+      } else{
         setColumns([]);
       }
       setRows([]);
       setTotalRecord(0);
     }
-  }, [ clientAdminData, projectAdminData, projectAllocationData, projectManagementData, timeSheetData, headingName ]);
+  }, [ clientAdminData, projectAdminData, projectAllocationData, projectManagementData, timeSheetData, reportingData, headingName ]);
 
   useEffect(() => {
     switch (headingName) {
@@ -461,6 +885,16 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
           })
         );
         break;
+      case Modules.REPORTING:
+        if(tabName === 'MISSING TIMESHEET'){
+          dispatch(
+          getMissingTimesheet({
+            startDate: moment(selectedPeriodWeek.startDate).format(DATE_TIME_FORMAT),
+            endDate: moment(selectedPeriodWeek.endDate).format(DATE_TIME_FORMAT)
+          }));
+          setDisableDate(true);
+        }
+        break;
       case Modules.TIMESHEET:
         if(tabName !== 'MY TIMESHEET')
           dispatch(getTimesheetProjects());
@@ -471,6 +905,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   }, [headingName, searchData]);
 
   useEffect(() => {
+    setRows([])
     if (clientsData === null && headingName === Modules.PROJECT_ADMIN) {
       dispatch(getClientsData());
     }
@@ -481,8 +916,8 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
       let startDate = moment(selectedPeriodWeek.startDate);
       let endDate = moment(selectedPeriodWeek.endDate);
       dispatch(getAssignedProjects({
-            startDate: moment(startDate).format("YYYY-MM-DDT00:00:00"),
-            endDate: moment(endDate).format("YYYY-MM-DDT00:00:00")
+            startDate: moment(startDate).format(DATE_TIME_FORMAT),
+            endDate: moment(endDate).format(DATE_TIME_FORMAT)
           }));
     }
     if(headingName === Modules.TIMESHEET && tabName !== 'MY TIMESHEET'){
@@ -509,186 +944,14 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
 
   return (
     <div className={`tableDiv ${tabName === 'MY TIMESHEET' ? "timesheetTable" : ""}`}>
-      <div className="searchHeader">
-        {headingName !== Modules.TIMESHEET && headingName !== Modules.PROJECT_MANAGEMENT && <div className="searchWrapper">
-          <img src={searchIcon} className="searchIcon" alt="" />
-          <input
-            className="searchBox"
-            type="search"
-            placeholder="Search"
-            ref={inputRef}
-            onChange={setSearchDataHelper}
-          />
-        </div>
-        }
+      <div className={headingName === Modules.REPORTING ? "searchHeaderFlex" : "searchHeader" }>
+        {headingName !== Modules.TIMESHEET && headingName !== Modules.PROJECT_MANAGEMENT && headingName !== Modules.REPORTING &&  createSearchBox("Search")}
         {
           headingName === Modules.TIMESHEET ? (
-            tabName === 'MY TIMESHEET' ? 
-              <>
-                {(timeSheetData && timeSheetData.length) ?
-                  <div className="searchWrapperText">
-                    <span className="searchWrapperSpan">Timesheet Period Status : </span>{timeSheetData[0].periodStatus}
-                  </div> : null
-                }
-                <div className="button-flex">
-                <Select
-                  IconComponent = {CalendarMonthRounded}
-                  defaultValue={periodWeeks[6].startDate.format(DATE_FORMAT) + ' - ' + periodWeeks[6].endDate.format(DATE_FORMAT)}
-                  sx={{minWidth: '15rem'}}
-                  className={"select-date"}
-                >{getDateItems(true)}
-                </Select>
-                  {/* <TextField
-                    select
-                    sx={{minWidth: '15rem'}}
-                    
-                    defaultValue={periodWeeks[6].startDate.format(DATE_FORMAT) + ' - ' + periodWeeks[6].endDate.format(DATE_FORMAT)}
-                  >
-                    {getDateItems(true)}
-                  </TextField> */}
-                  <button
-                    disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus !== 'Open'))}
-                    className={
-                      isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && (timeSheetData[0].periodStatus !== 'Open'))
-                        ? "disableAddButton"
-                        : "addBtn"
-                    }
-                    onClick={() => setIsAddButtonClicked(true)}
-                  >
-                      Add
-                  </button>
-                  <button
-                    disabled={isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && getTimesheetStatus(timeSheetData))}
-                    className={
-                      isAddButtonClicked || isEditButtonClicked || (timeSheetData && timeSheetData.length && getTimesheetStatus(timeSheetData))
-                        ? "disableAddButton"
-                        : "addBtn"
-                    }
-                    onClick={()=>{
-                      let sum = 0;
-                      rows.forEach(row=>{
-                        if(row.status !== 'Rejected') 
-                        {
-                          // sum+=parseFloat(row.totalHrs).toFixed(2);
-                          sum+=parseFloat(row.totalHrs)
-                        }
-                      })
-                      if(sum >= 40) dispatch(submitPeriodForApproval());
-                      else toast.info("Total Hours must be greater than or equal to 40", toastOptions);
-                    }}
-                  >
-                    Submit For Approval
-                  </button>
-                </div> 
-              </>
-            :
-              <div className="pendingApprovalDiv">
-                <TextField
-                  select
-                  label={"Projects"}
-                  value={selectedProject.projectName ? selectedProject.projectName : ""}
-                  sx={{
-                    minWidth: '15rem',
-                    "& label": {
-                      lineHeight: '0.8rem'
-                    }
-                  }}
-                >
-                  {timeSheetProjects && timeSheetProjects.map(option=>
-                    // data.map((option) => (
-                      <MenuItem
-                        key={option.id}
-                        value={option.name}
-                        required
-                        onClick={() =>{
-                            setSelectedProject({
-                              projectId: option.id,projectName: option.name
-                            });
-                            dispatch(setSelectedProjectId(option.id));
-                          }
-                        }
-                      >
-                        {option.name}
-                      </MenuItem>
-                    // ))
-                  )}
-                </TextField>
-                <TextField
-                  select
-                  label={"Employee Name"}
-                  value={selectedEmployee.employeeName ? selectedEmployee.employeeName : ""}
-                  sx={{
-                    minWidth: '15rem',
-                    "& label": {
-                      lineHeight: '1rem',
-                      marginTop: '-0.1rem'
-                    }
-                  }}
-                >
-                  {reportees && reportees.map((option) => (
-                    <MenuItem
-                      key={option.id}
-                      value={`${option.firstName} ${option.lastName}`}
-                      onClick={() =>{
-                          setSelectedEmployee({
-                            employeeId: option.id,employeeName: `${option.firstName} ${option.lastName}`
-                          });
-                          dispatch(setSelectedEmployeeId(option.id));
-                        }
-                      }
-                    >
-                      {`${option.firstName} ${option.lastName}`}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <Select
-                  IconComponent = {CalendarMonthRounded}
-                  defaultValue={periodWeeks[6].startDate.format(DATE_FORMAT) + ' - ' + periodWeeks[6].endDate.format(DATE_FORMAT)}
-                  sx={{minWidth: '15rem'}}
-                  className={"select-date"}
-                >
-                  {getDateItems(false)}
-                </Select>
-                <button 
-                  className={"addBtn showDataBtn"}
-                  onClick={()=>{
-                    if(tabName === 'REPORTEES'){
-                      dispatch(
-                        getTimeSheetReportee({
-                          periodWeek: selectedPeriodWeek.startDate.format(DATE_FORMAT) + ' - ' + selectedPeriodWeek.endDate.format(DATE_FORMAT),
-                          projectId: selectedProject.projectId ? selectedProject.projectId : "",
-                          employeeId: selectedEmployee.employeeId ? selectedEmployee.employeeId : ""
-                        })
-                      );
-                    }
-                    else{
-                      dispatch(
-                        getTimeSheetData({
-                          periodWeek: selectedPeriodWeek.startDate.format(DATE_FORMAT) + ' - ' + selectedPeriodWeek.endDate.format(DATE_FORMAT),
-                          employeeId: selectedEmployee.employeeId,
-                          projectId: selectedProject.projectId
-                        })
-                      );
-                    }
-                  }}
-                >
-                  Show Data
-                </button>
-                <button 
-                  className={(selectedEmployee.employeeId || selectedProject.projectId) ? "addBtn showDataBtn" : "disableAddButton"}
-                  onClick={()=>{
-                    setSelectedEmployee({});
-                    dispatch(setSelectedEmployeeId(null));
-                    setSelectedProject({});
-                    dispatch(setSelectedProjectId(null));
-                  }}
-                >
-                  Clear Selection
-                </button>
-              </div>
-          ) : headingName !== Modules.PROJECT_ALLOCATION ? (
+            tabName === 'MY TIMESHEET' ? myTimeSheetTab() : pendingApprovalReportessTab()
+          ) : headingName === Modules.REPORTING ? FilterData()
+          : headingName !== Modules.PROJECT_ALLOCATION ? (
             <>
-            {/* {headingName===Modules.PROJECT_MANAGEMENT && <ExportExcel data={headingName===Modules.PROJECT_MANAGEMENT ? projectManagementData : []} headingName={headingName} projectId={projectId}/>} */}
             <button
                 disabled={isAddButtonClicked || isEditButtonClicked}
                 className={

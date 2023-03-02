@@ -264,8 +264,9 @@ export const DataTable = ({
         }
       });
       restProps['dateHours'] = [...dateHours];
-      restProps['totalHrs'] = (Math.round(totalHrs * 100) / 100).toFixed(2);
-      console.log(restProps['totalHrs']);
+      let finalHours=totalHrs.toFixed(2);
+      if(finalHours.split('.')[1]==="00") finalHours=parseInt(totalHrs);
+      restProps['totalHrs'] = finalHours;
       isEditButtonClicked ? dispatch(updateTimeSheetData(restProps)) : dispatch(saveTimeSheetData(restProps));
     }
     setIsAddButtonClicked(false);
@@ -798,7 +799,7 @@ export const DataTable = ({
               value={newRowAdded[col.id]}
               placeholder="Date"
               required={col.isRequired}
-              renderInput={(params) => <TextField {...params} error />}
+              renderInput={(params) => <TextField {...params} error={false} />}
             />
           </LocalizationProvider>
         </TableCell>
@@ -830,9 +831,7 @@ export const DataTable = ({
                   (newRowAdded.projectName === "" || newRowAdded.task === "" || !isDateAdded())
                 )
               ) ? (
-                <button disable className="buttonBackgroundBorder">
                   <img src={AddDisableIcon} className="editDeleteIcon" alt="" />
-                </button>
               ) : (
                 <img
                   src={AddEnableIcon}
@@ -986,7 +985,7 @@ export const DataTable = ({
     allUserDetails &&
       allUserDetails.data.length &&
       allUserDetails.data.forEach((user) => {
-        if (user.id === id) {
+        if (user.id.toLowerCase() === id.toLowerCase()) {
           employeeName = getFullName(user.firstName, user.lastName);
         }
       });
@@ -1019,9 +1018,9 @@ export const DataTable = ({
   };
 
   const handleViewDetails = (empId) => {
-    setViewDetails(true);
-    setSelectedEmpId(empId);
     setVtrackLoader(true);
+    setSelectedEmpId(empId);
+    setViewDetails(true);
   };
 
   React.useEffect(() => {
@@ -1030,6 +1029,7 @@ export const DataTable = ({
     setSortBy(initialSort[headingName]);
     setPage(0);
     setRowsPerPage(10);
+    setRows([])
   }, [headingName]);
 
   React.useEffect(() => {
@@ -1301,7 +1301,7 @@ export const DataTable = ({
                             </TableCell>
                           );
                         }
-                        else if (tabName === "PENDING APPROVAL" && tabName === "REPORTEES" && col.id === 'status') {
+                        else if (tabName === "PENDING APPROVAL" && tabName === "REPORTEES" && headingName !== Modules.REPORTING && col.id === 'status') {
                           return null;
                         }
                         return col.id !==
@@ -1314,9 +1314,11 @@ export const DataTable = ({
                               whiteSpace: col.maxWidth ? 'nowrap' : 'normal',
                             }}
                           >
-                            {col.id === "employeeName" ? (
-                              getEmployeeName(row["employeeId"])
-                            ) : col.id.toLowerCase().includes("allocation") && row[col.id] ? (
+                            {col.id === "employeeName" ? 
+                              (row["employeeId"] ? getEmployeeName(row["employeeId"]) : getEmployeeName(row["employeeID"])) :
+                             (col.id === "projectManagerName" && headingName === Modules.REPORTING) ? 
+                              getEmployeeName(row["projectManagerID"]) 
+                            : col.id.toLowerCase().includes("allocation") && row[col.id] ? (
                               <div className="allocation">
                                 <Box sx={{ position: 'relative' }}>
                                   <CircularProgress
@@ -1365,9 +1367,9 @@ export const DataTable = ({
         </TableContainer>
         <div style={{display: 'flex',justifyContent: 'space-between'}}>
           <div style={{display: 'flex',alignItems: 'center'}}>
-            {headingName===Modules.PROJECT_MANAGEMENT && <ExportExcel data={headingName===Modules.PROJECT_MANAGEMENT ? dataForExcel : []} headingName={headingName} projectId={projectId}/>}
+            {headingName===Modules.PROJECT_MANAGEMENT && <ExportExcel data={headingName===Modules.PROJECT_MANAGEMENT ? dataForExcel : []} headingName={headingName} projectId={projectId} pageNo={page} pageSize={rowsPerPage}/>}
           </div>
-        {headingName !== Modules.TIMESHEET &&
+        {headingName !== Modules.TIMESHEET && headingName !== Modules.REPORTING &&
           <TablePagination
             rowsPerPageOptions={[10, 25, 100]}
             component="div"
