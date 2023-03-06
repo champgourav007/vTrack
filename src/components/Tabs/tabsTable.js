@@ -81,7 +81,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const periodWeeks = getPeriods();
   const [ selectedPeriodWeek, setSelectedPriodWeek ] = useState({
     startDate : moment().startOf('isoweek'),
-    endDate : moment().day() === 0 ? moment().startOf('week') : moment().add(7,'days').startOf('week')
+    endDate : moment().endOf('isoweek')
   });
   const [ selectedProject, setSelectedProject ] = useState({});
   const [ selectedEmployee, setSelectedEmployee ] = useState({});
@@ -297,7 +297,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     return (
       <Select
         IconComponent = {CalendarMonthRounded}
-        defaultValue={moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().add(7,'days').startOf('week').format(DATE_FORMAT)}
+        defaultValue={moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().endOf('isoweek').format(DATE_FORMAT)}
         sx={{minWidth: '15rem'}}
         className={"select-date"}
         disabled={headingName===Modules.REPORTING ? disablePeriodWeek : false }
@@ -679,12 +679,12 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     if(timeSheetData === null && headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
       dispatch(
         saveTimeSheetPeriodData({
-          periodWeek: moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().add(7,'days').startOf('week').format(DATE_FORMAT),
+          periodWeek: moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().endOf('isoweek').format(DATE_FORMAT),
           startDT: moment().startOf('isoweek').format(),
           endDT: moment().endOf('isoweek').format(),
         })
       );
-      dispatch(setTimeSheetPeriodWeek(moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().add(7,'days').startOf('week').format(DATE_FORMAT)));  
+      dispatch(setTimeSheetPeriodWeek(moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().endOf('isoweek').format(DATE_FORMAT)));  
       setRowToBeUpdated({});
       setIsAddButtonClicked(false);
       setIsEditButtonClicked(false);
