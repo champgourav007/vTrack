@@ -15,6 +15,7 @@ import styled from "@emotion/styled";
 import { blue } from "@mui/material/colors";
 import { pdfIcon } from "../../common/icons";
 import { EMPLOYEE_USER_MANUAL_LINK } from "../../common/constants/extra-constants";
+import { Settings } from "../Settings/settings";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -190,6 +191,19 @@ export default function BasicTabs(props) {
             <Tab key={index} className="tabs-table" label={tab} {...a11yProps(index)} />
           ))}
         </Tabs> : 
+      props.headingName === Modules.SETTINGS ?
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+          ScrollButtonComponent={MyTabScrollButton}
+          variant="scrollable"
+          scrollButtons="auto"
+        >
+          {userData.data.tabs.settings.map((tab, index) => (
+            <Tab key={index} className="tabs-table" label={tab} {...a11yProps(index)} />
+          ))}
+        </Tabs> :
         null
       }
       </Box>
@@ -204,7 +218,7 @@ export default function BasicTabs(props) {
           <TabPanel key={index} value={value} index={index}>
             <TabsTable headingName={props.headingName} tabName={tab} status={status} projectId={null}/>
           </TabPanel>
-        )) : 
+        )) :
       props.headingName === Modules.PROJECT_ALLOCATION ? 
         userData && userData.data.tabs.projectAllocation.map((tab, index) => (
           <TabPanel key={index} value={value} index={index}>
@@ -214,9 +228,15 @@ export default function BasicTabs(props) {
       props.headingName === Modules.REPORTING ? 
         userData && userData.data.tabs.reporting.map((tab, index) => (
           <TabPanel key={index} value={value} index={index}>
-            <TabsTable headingName={props.headingName} tabName={tab} status={status} projectId={null}/>
+            <TabsTable headingName={props.headingName} tabName={tab} status={null} projectId={null}/>
           </TabPanel>
         )) :
+      props.headingName === Modules.SETTINGS ? 
+          (userData && userData.data.tabs.settings.map((tab, index) => (
+          <TabPanel key={index} value={value} status={status} index={index}>
+            <Settings tabName={tab} />
+          </TabPanel>
+          ))) :
       <TabsTable headingName={props.headingName} tabName='' status={status}  projectId={null}/>
     }
     </Box>

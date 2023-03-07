@@ -9,7 +9,7 @@ import { VTrackURL } from "../../routes/routes";
 import "./dashboard.css";
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import Cookies from 'universal-cookie';
-import Loader from "../../components/Loader";
+import Loader from "../../components/Loaders/Loader";
 import { useSelector } from "react-redux";
 import { getLocalStorageItem } from "../../common/utils/local-storage";
 import { ACCESS_TOKEN } from "../../common/constants/local-storage-keys";

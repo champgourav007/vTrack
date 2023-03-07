@@ -530,6 +530,30 @@ export const DetailView = ({viewDetails, setViewDetails, selectedEmpId, selected
     }
   }, [ selectedEmpId, selectedPeriodWeek, viewDetails ]);
 
+  useEffect(() => {
+    if(headingName === Modules.PROJECT_MANAGEMENT){
+      dispatch(
+        getProjectAllocationData({
+          pageNo: page + 1,
+          pageSize: rowsPerPage,
+          sortBy: "projectName",
+          sortDir: "ASC",
+          searchData: "",
+          status: "Active",
+          employeeID: selectedEmpId
+        })
+      )
+    }
+  }, [rowsPerPage, page])
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  }
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(event.target.value);
+  }
+
   return (
     <>
     <Dialog
@@ -643,8 +667,8 @@ export const DetailView = ({viewDetails, setViewDetails, selectedEmpId, selected
               count={count}
               rowsPerPage={rowsPerPage}
               page={page}
-              // onPageChange={handleChangePage}
-              // onRowsPerPageChange={handleChangeRowsPerPage}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
             />}
           </Paper>
           { headingName===Modules.TIMESHEET && detailedTimeSheetData && detailedTimeSheetData.length ?

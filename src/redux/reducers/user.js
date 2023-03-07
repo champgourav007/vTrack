@@ -3,7 +3,8 @@ import { UserType } from "../actions/user";
 export const userState = {
   userData: null,
   allUserDetails: null,
-  unRegisteredUserDetails:null,
+  unRegisteredUserDetails: null,
+  notificationsList: null,
 }
 
 export const userReducer = (state = userState, action) => {
@@ -18,10 +19,15 @@ export const userReducer = (state = userState, action) => {
         ...state,
         allUserDetails: action.payload,
       };
-      case UserType.SET_UNREGISTERED_USER_DETAILS:
+    case UserType.SET_UNREGISTERED_USER_DETAILS:
       return {
         ...state,
         unRegisteredUserDetails: action.payload,
+      };
+    case UserType.SET_NOTIFICATIONS:
+      return {
+        ...state,
+        notificationsList: action.payload,
       };
     default: return state;
   }

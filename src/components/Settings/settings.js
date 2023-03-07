@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
   getAllUserDetails,
+  getNotifications,
   getSettingTableData,
   getUnregisteredUserDetails,
   getUserRoleData,
@@ -21,7 +22,8 @@ import Button from "@mui/material/Button";
 import { SettingsTable } from "./settingsTable";
 import { searchIcon } from "../../common/icons";
 import { getFullName } from "../../common/utils/datatable";
-import Loader from "../Loader";
+import Loader from "../Loaders/Loader";
+import { NotificationTable } from "../Notifications/notificationTable";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -34,7 +36,9 @@ const MenuProps = {
   },
 };
 
-export function Settings() {
+export function Settings({
+  tabName
+}) {
   const [selectedUsers, setSelectedUsers] = React.useState([]);
   const [userData, setUserData] = useState([]);
   const [rolesData, setRolesData] = useState([]);
@@ -99,12 +103,15 @@ export function Settings() {
   }
 
   useEffect(() => {
-    dispatch(getAllUserDetails());
-    dispatch(getUnregisteredUserDetails());
-    dispatch(getUserRoleData());
-    dispatch(getSettingTableData());
-    
-  }, []);
+    if(tabName === 'MANAGE USER ROLE'){
+      dispatch(getAllUserDetails());
+      dispatch(getUnregisteredUserDetails());
+      dispatch(getUserRoleData());
+      dispatch(getSettingTableData());
+    } else if(tabName === 'MANAGE NOTIFICATIONS'){
+      dispatch(getNotifications());
+    }
+  }, [tabName]);
 
   useEffect(() => {
     if (unRegisteredUserDetails) {
@@ -118,79 +125,84 @@ export function Settings() {
     }
   }, [userRole]);
 
-  return (
-    <>
-      <div className="settingsWrapper">
-      <div className="topBar">
-        <div className="selectUserWrapper">
-          <div className="userText">Please Select the User</div>
-          <div>
-            <FormControl sx={{ m: 1, width: 300 }}>
-              <InputLabel id="demo-multiple-checkbox-label">User</InputLabel>
-              <Select
-                labelId="demo-multiple-checkbox-label"
-                id="demo-multiple-checkbox"
-                multiple
-                value={selectedUsers}
-                onChange={handleChange}
-                input={<OutlinedInput label="Select User" />}
-                renderValue={getUsersNames}
-                MenuProps={MenuProps}
-              >
-                {userData.map((user) => (
-                  <MenuItem key={user.id} value={user} className="no-left-margin">
-                    <Checkbox checked={ selectedUsers.findIndex( (person) => person.id === user.id ) > -1 } />
-                    <ListItemText primary={ getFullName(user.firstName, user.lastName) + " (" +user.email + ")" } />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+  if(tabName === 'MANAGE USER ROLE'){
+    return (
+      <>
+        <div className="settingsWrapper">
+        <div className="topBar">
+          <div className="selectUserWrapper">
+            <div className="userText">Please Select the User</div>
+            <div>
+              <FormControl sx={{ m: 1, width: 300 }}>
+                <InputLabel required id="demo-multiple-checkbox-label">User</InputLabel>
+                <Select
+                  labelId="demo-multiple-checkbox-label"
+                  id="demo-multiple-checkbox"
+                  multiple
+                  value={selectedUsers}
+                  onChange={handleChange}
+                  input={<OutlinedInput label="Select User" />}
+                  renderValue={getUsersNames}
+                  MenuProps={MenuProps}
+                >
+                  {userData.map((user) => (
+                    <MenuItem key={user.id} value={user} className="no-left-margin">
+                      <Checkbox checked={ selectedUsers.findIndex( (person) => person.id === user.id ) > -1 } />
+                      <ListItemText primary={ getFullName(user.firstName, user.lastName) + " (" +user.email + ")" } />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+          </div>
+          <div className="selectRolesWrapper">
+            <div className="rolesText">Please Select the Role</div>
+            <div>
+              <FormControl sx={{ m: 1, width: 300 }}>
+                <InputLabel required id="demo-multiple-checkbox-label">Role</InputLabel>
+                <Select
+                  labelId="demo-multiple-checkbox-label"
+                  id="demo-multiple-checkbox"
+                  value={selectedRole}
+                  onChange={(e) => setSelectedRole(e.target.value)}
+                  input={<OutlinedInput label="Select Role" />}
+                  renderValue={() => getRoles()}
+                >
+                  {rolesData.map((roles) => (
+                    <MenuItem key={roles.roleID} value={roles}>
+                      <ListItemText primary={roles.roleName} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+          </div>
+          <div className="buttonClass">
+            <Button variant="contained" disabled={!(selectedUsers && selectedUsers.length && selectedRole)} onClick={submitHandler} 
+              className="addUserBtn">
+              Add Role
+            </Button>
           </div>
         </div>
-        <div className="selectRolesWrapper">
-          <div className="rolesText">Please Select the Role</div>
-          <div>
-            <FormControl sx={{ m: 1, width: 300 }}>
-              <InputLabel id="demo-multiple-checkbox-label">Role</InputLabel>
-              <Select
-                labelId="demo-multiple-checkbox-label"
-                id="demo-multiple-checkbox"
-                value={selectedRole}
-                onChange={(e) => setSelectedRole(e.target.value)}
-                input={<OutlinedInput label="Select Role" />}
-                renderValue={() => getRoles()}
-              >
-                {rolesData.map((roles) => (
-                  <MenuItem key={roles.roleID} value={roles}>
-                    <ListItemText primary={roles.roleName} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+        <div className="searchHeader">
+          <div className="searchWrapper">
+            <img src={searchIcon} className="searchIcon" alt="" />
+            <input
+              className="searchBox"
+              type="search"
+              placeholder="Search by Employee or Role"
+              onChange={setSearchDataHelper}
+            />
           </div>
         </div>
-        <div className="buttonClass">
-          <Button variant="contained" disabled={!(selectedUsers && selectedUsers.length && selectedRole)} onClick={submitHandler} 
-    className="addUserBtn">
-            Add Role
-          </Button>
+        <div className="bottomContainer">
+          <SettingsTable rolesData={rolesData} searchData={searchData} /> 
         </div>
-      </div>
-      <div className="searchHeader">
-        <div className="searchWrapper">
-          <img src={searchIcon} className="searchIcon" alt="" />
-          <input
-            className="searchBox"
-            type="search"
-            placeholder="Search by Employee or Role"
-            onChange={setSearchDataHelper}
-          />
         </div>
-      </div>
-      <div className="bottomContainer">
-        <SettingsTable rolesData={rolesData} searchData={searchData} /> 
-      </div>
-      </div>
-    </> 
-  );
+      </> 
+    )
+  } else {
+    return <NotificationTable />;
+  }
+
 }

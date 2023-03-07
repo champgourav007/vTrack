@@ -20,7 +20,6 @@ export const handleSetRows = (tableData, tabName) => {
             totalHrs = parseInt(totalHrs);
           }
           rowData[col] = totalHrs;
-          console.log(totalHrs);
         } else {
           rowData[col] = row[col];
         }
