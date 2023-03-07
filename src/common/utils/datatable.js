@@ -90,8 +90,6 @@ export const tableColumnsData = {
   ],
   'MissingTimesheet': [
     { id: "employeeName", label: "Employee Name", minWidth: 120, type: 'textField'},
-    // { id: "projectManagerName", label: "Manager Name", minWidth: 100, type: 'select'},
-    // { id: "projectName", label: "Project Name", minWidth: 110, type: 'select' },
     { id: "periodWeek", label: "Period Week", minWidth: 110, type: 'textField'},
     { id: "status", label: "Status", minWidth: 60, type: 'textField' },
   ],

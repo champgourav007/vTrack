@@ -5,6 +5,9 @@ export const UserType = {
   SET_ALL_USER_DETAILS: 'SET_ALL_USER_DETAILS',
   GET_UNREGISTERED_USER_DETAILS: 'GET_UNREGISTERED_USER_DETAILS',
   SET_UNREGISTERED_USER_DETAILS: 'SET_UNREGISTERED_USER_DETAILS',
+  GET_NOTIFICATIONS: 'GET_NOTIFICATIONS',
+  SET_NOTIFICATIONS: 'SET_NOTIFICATIONS',
+  UPDATE_NOTIFICATION: 'UPDATE_NOTIFICATION',
 };
 
 export const getUserDetails = () => 
@@ -39,3 +42,20 @@ export const setUnregisteredUserDetails = (data) =>
   type: UserType.SET_UNREGISTERED_USER_DETAILS,
   payload:data,
 });
+
+export const getNotifications = () => 
+({
+  type: UserType.GET_NOTIFICATIONS,
+})
+
+export const setNotificationsList = (data) =>
+({
+  type: UserType.SET_NOTIFICATIONS,
+  payload: data,
+})
+
+export const updateNotification = (data) =>
+({
+  type: UserType.UPDATE_NOTIFICATION,
+  payload: data,
+})

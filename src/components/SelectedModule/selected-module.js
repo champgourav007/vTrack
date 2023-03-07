@@ -43,7 +43,8 @@ export const SelectedModule = ({ headingName }) => {
           </Tooltip>
         }
       </div> 
-      {headingName === "Settings" ? <Settings/> : <TabsComponent headingName={headingName} />}
+      {/* {headingName === "Settings" ? <Settings/> : <TabsComponent headingName={headingName} />} */}
+      {<TabsComponent headingName={headingName} />}
     </div>
     </>
   );

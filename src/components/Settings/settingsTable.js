@@ -7,7 +7,7 @@ import { getFullName } from '../../common/utils/datatable';
 import { deleteSettingTableData, getSettingTableData, setVtrackLoader, updateSettingTableData } from '../../redux/actions';
 import DialogBox from '../DialogBox/dialogBox';
 import './settingTable.css';
-import TableLoader from '../TableLoader';
+import TableLoader from '../Loaders/TableLoader';
 
 export const SettingsTable = ({ rolesData, searchData }) => {
     const usersData = useSelector(({ MODULES }) => MODULES.settingTableData);
@@ -77,7 +77,6 @@ export const SettingsTable = ({ rolesData, searchData }) => {
                         <TableRow style={{backgroundColor:"white"}} className='settingTableHeader'>
                             {TABLE_HEADERS.map(
                                 (column) =>
-
                                     <TableCell
                                         key={column.id}
                                         align={column.align}

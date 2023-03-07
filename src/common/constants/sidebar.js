@@ -6,5 +6,6 @@ export const Modules = {
     PROJECT_ADMIN: 'Project Admin',
     VENDOR_ADMIN: 'Vendor Admin',
     VENDOR_SOW_ADMIN: 'Vendor SOW Admin',
-    REPORTING: 'Reporting'
+    REPORTING: 'Reporting',
+    SETTINGS: 'Settings'
 };

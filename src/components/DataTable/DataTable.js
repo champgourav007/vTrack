@@ -60,7 +60,7 @@ import {
 import { deleteProjectManagementData, getProjectManagementData, saveProjectManagementData, updateProjectManagementData } from "../../redux/actions/project-management";
 import { deleteTimeSheetData, saveTimeSheetData, updateTimeSheetData, updateTimeSheetStatus } from "../../redux/actions/timesheet";
 import DialogBox from "../DialogBox/dialogBox";
-import Loader from "../Loader";
+import Loader from "../Loaders/Loader";
 import "./DataTable.css";
 import { DetailView } from "../DetailView/DetailView";
 import { toast } from "react-toastify";
@@ -308,7 +308,7 @@ export const DataTable = ({
           searchData: searchData,
         })
       );
-    } else if (headingName === Modules.PROJECT_ALLOCATION && assignedProjects === null) {
+    } else if (headingName === Modules.PROJECT_ALLOCATION) {
       dispatch(
         getProjectAllocationData({
           pageNo: newPage + 1,

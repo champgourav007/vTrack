@@ -13,6 +13,7 @@ import { detailedTimeSheetSaga } from "./get-detailed-timesheet-saga";
 import { listItemsSaga } from "./get-list-items-saga";
 import { mappedProjectManagementSaga } from "./get-mapped-project-management-data";
 import { getMissingTimesheetsaga } from "./get-missing-timesheet-saga";
+import { getNotificationssaga } from "./get-notifications-saga";
 import { projectManagementSaga } from "./get-project-management-saga";
 import { projectManagersSaga } from "./get-project-managers-saga";
 import { projectTasksSaga } from "./get-project-tasks";
@@ -37,6 +38,7 @@ import { saveUserRoleSaga } from "./save-user-roles-setting-saga";
 import { submitPeriodSaga } from "./submit-period-saga";
 import { timeSheetSaga } from "./timesheet-saga";
 import { updateClientAdminSaga } from "./update-client-admin-saga";
+import { updateNotificationsaga } from "./update-notification-saga";
 import { updateProjectAdminSaga } from "./update-project-admin-saga";
 import { updateProjectManagementSaga } from "./update-project-management-saga";
 import { updateSettingTableDataSaga } from "./update-setting-table-user-role";
@@ -90,6 +92,8 @@ export function* rootSaga() {
     fork(saveProjectAdminFileSaga),
     fork(deleteProjectManagementData),
     fork(getTimesheetReportsSaga),
-    fork(getMissingTimesheetsaga)
+    fork(getMissingTimesheetsaga),
+    fork(getNotificationssaga),
+    fork(updateNotificationsaga),
   ]);
 }
