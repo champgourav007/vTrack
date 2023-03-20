@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { getAllUserDetails, getUserDetails } from "../http/requests/user";
-import { setAllUserDetails, setUserDetails, setVtrackLoader, UserType } from "../redux/actions";
+import { setAllUserDetails, setAllUserDetailsDict, setUserDetails, setVtrackLoader, UserType } from "../redux/actions";
 
 function* workerUserSaga() {
   try {
@@ -18,6 +18,11 @@ function* workerAllUserSaga() {
   try {
     yield put(setVtrackLoader(true));
     const userDetails = yield call(getAllUserDetails);
+    let allUserDetails = {}
+    userDetails.forEach(element => {
+      allUserDetails[element.id] = element;
+    });
+    yield put(setAllUserDetailsDict(allUserDetails));
     yield put(setAllUserDetails(userDetails));
     yield put(setVtrackLoader(false));
   } catch (err) {

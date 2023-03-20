@@ -12,7 +12,7 @@ import { pdfIcon } from "../../common/icons";
 import { Tooltip } from "@mui/material";
 import { PROJECT_MANAGER_USER_MANUAL_LINK } from "../../common/constants/extra-constants";
 
-export const SelectedModule = ({ headingName }) => {
+export const SelectedModule = ({ headingName, value, setValue }) => {
   const navigate = useNavigate();
   useEffect(() => {
     if (headingName === "Dashboard") {
@@ -44,7 +44,7 @@ export const SelectedModule = ({ headingName }) => {
         }
       </div> 
       {/* {headingName === "Settings" ? <Settings/> : <TabsComponent headingName={headingName} />} */}
-      {<TabsComponent headingName={headingName} />}
+      {<TabsComponent headingName={headingName} value={value} setValue={setValue} />}
     </div>
     </>
   );

@@ -1,4 +1,4 @@
-import { call, put, select, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest, takeLeading } from "redux-saga/effects";
 import { postTimeSheetPeriod } from "../http/requests/timesheet";
 import { TimeSheetType, getTimeSheetData, setVtrackLoader, setTimeSheetPeriodId, getMyTimeSheetData } from "../redux/actions";
 import { toastOptions } from "../common/utils/toasterOptions";
@@ -25,7 +25,7 @@ function* workerSaveTimeSheetPeriodSaga({ payload }) {
 };
 
 export function* saveTimeSheetPeriodSaga() {
-  yield takeLatest(
+  yield takeLeading(
     TimeSheetType.SAVE_TIMESHEET_PERIOD_DATA,
     workerSaveTimeSheetPeriodSaga
   );

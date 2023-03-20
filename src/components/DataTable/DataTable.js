@@ -112,7 +112,7 @@ export const DataTable = ({
   const { clientsData, allTasks, listItems, assignedProjects, clientAdminData, projectAdminData } =
     useSelector(({ MODULES }) => MODULES);
 
-  const { allUserDetails } = useSelector(({ USER }) => USER);
+  const { allUserDetails, allUserDetailsDict } = useSelector(({ USER }) => USER);
   const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
   const dispatch = useDispatch();
   const [page, setPage] = React.useState(0);
@@ -357,7 +357,7 @@ export const DataTable = ({
           searchData: searchData,
         })
       );
-    } else if (headingName === Modules.PROJECT_ALLOCATION && assignedProjects === null) {
+    } else if (headingName === Modules.PROJECT_ALLOCATION) {
       dispatch(
         getProjectAllocationData({
           pageNo: 1,
@@ -917,7 +917,7 @@ export const DataTable = ({
       (row) => row[UniqueIds[headingName.replace(" ", "")]] === id
     );
     if (rows[idx].employeeId) {
-      setNewRowAdded({ ...rows[idx], employeeName: getEmployeeName(rows[idx].employeeId) });
+      setNewRowAdded({ ...rows[idx], employeeName: "" });
     } else {
       setNewRowAdded(rows[idx]);
     }
@@ -982,25 +982,33 @@ export const DataTable = ({
 
   const getEmployeeName = (id) => {
     let employeeName = "";
-    allUserDetails &&
-      allUserDetails.data.length &&
-      allUserDetails.data.forEach((user) => {
-        if (user.id.toLowerCase() === id.toLowerCase()) {
-          employeeName = getFullName(user.firstName, user.lastName);
-        }
-      });
+    if(id === null){
+      return;
+    }
+
+    if(allUserDetailsDict){
+      let user = allUserDetailsDict[id.toLowerCase()];
+      if(user){
+        employeeName = getFullName(user.firstName, user.lastName);
+      }
+    }
+
+      if(employeeName.length === 0){
+      return null;
+    }
     return employeeName;
   };
 
   const getNameAndEmail = (id) => {
     let managerNameAndEmail = "";
-    allUserDetails &&
-      allUserDetails.data.length &&
-      allUserDetails.data.forEach((user) => {
-        if (user.id === id) {
-          managerNameAndEmail = `${user.firstName} ${user.lastName} (${user.email})`;
-        }
-      });
+
+    if(allUserDetailsDict){
+      let user = allUserDetailsDict[id];
+      if(user){
+        managerNameAndEmail = `${user.firstName} ${user.lastName} (${user.email})`;
+      }
+    }
+
     return managerNameAndEmail;
   }
 
@@ -1124,6 +1132,9 @@ export const DataTable = ({
                 </TableRow>
               )}
               {rows.map((row, rowIdx) => {
+                if(headingName !== Modules.CLIENT_ADMIN && headingName !== Modules.PROJECT_ADMIN && (row["employeeId"] ? getEmployeeName(row["employeeId"]) : getEmployeeName(row["employeeID"])) === null){
+                  return null;
+                }
                 if (
                   rowToBeUpdated[UniqueIds[headingName.replace(" ", "")]] ===
                   row[UniqueIds[headingName.replace(" ", "")]] && tabName !== "REPORTEES"

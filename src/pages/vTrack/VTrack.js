@@ -8,14 +8,17 @@ import "./VTrack.css";
 import Cookies from 'universal-cookie';
 import { getLocalStorageItem } from "../../common/utils/local-storage";
 import { ACCESS_TOKEN } from "../../common/constants/local-storage-keys";
+import { indexURL } from "../../routes/routes";
+import { Modules } from "../../common/constants/sidebar";
 
 export const VTrack = () => {
   const [headingName, setHeadingName] = useState("");
   const navigate = useNavigate();
+  const [value, setValue] = useState(0);
   const cookies = new Cookies();
   useEffect(()=>{
     if(!getLocalStorageItem(ACCESS_TOKEN)){
-      navigate("/");
+      navigate(indexURL);
     }
   })
 
@@ -23,6 +26,11 @@ export const VTrack = () => {
 
   const changePage = (headingName) => {
     setHeadingName(headingName);
+    if(headingName === Modules.PROJECT_ALLOCATION){
+      setValue(1);
+    }else{
+      setValue(0);
+    }
   };
 
   useEffect(()=>{
@@ -49,7 +57,7 @@ export const VTrack = () => {
         </div>
         <div className="rightContainer">
           <div className="selectedModule">
-            <SelectedModule headingName={headingName} />
+            <SelectedModule headingName={headingName} value={value} setValue={setValue} />
           </div>
         </div>
       </div>

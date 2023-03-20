@@ -2,6 +2,7 @@ export const UserType = {
   GET_USER_DETAILS: 'GET_USER_DETAILS',
   SET_USER_DETAILS: 'SET_USER_DETAILS',
   GET_ALL_USER_DETAILS: 'GET_ALL_USER_DETAILS',
+  SET_ALL_USER_DETAILS_DICT: 'SET_ALL_USER_DETAILS_DICT',
   SET_ALL_USER_DETAILS: 'SET_ALL_USER_DETAILS',
   GET_UNREGISTERED_USER_DETAILS: 'GET_UNREGISTERED_USER_DETAILS',
   SET_UNREGISTERED_USER_DETAILS: 'SET_UNREGISTERED_USER_DETAILS',
@@ -31,6 +32,12 @@ export const setAllUserDetails = (data) =>
   type: UserType.SET_ALL_USER_DETAILS,
   payload: { data },
 });
+
+export const setAllUserDetailsDict = (data) =>
+({
+  type : UserType.SET_ALL_USER_DETAILS_DICT,
+  payload: data
+})
 
 export const getUnregisteredUserDetails = () => 
 ({

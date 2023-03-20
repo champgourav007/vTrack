@@ -15,8 +15,6 @@ function* workerSubmitPeriodSaga() {
     yield put(setVtrackLoader(true));
     const timesheetPeriodId = yield select(state=>
         state.MODULES.timesheetPeriodId);
-    // const employeeID = yield select(state=>
-    //     state.USER.userData.data.activeUsers.id);
     const data = yield call(
         submitPeriodForApproval,
         {

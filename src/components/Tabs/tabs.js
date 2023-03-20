@@ -49,12 +49,12 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs(props) {
+export default function BasicTabs({headingName, value, setValue}) {
   const { userData } = useSelector(({ USER }) => USER);
 
   const dispatch = useDispatch();
-  const [value, setValue] = React.useState(0);
-  const [status, setStatus] = React.useState("All")
+  // const [value, setValue] = React.useState(0);
+  const [status, setStatus] = React.useState("Active")
   const [noDataFound, setNoDataFound] = React.useState(false)
   const { mappedProjectManagementData  } = useSelector(({ MODULES }) => MODULES);
   const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
@@ -72,7 +72,7 @@ export default function BasicTabs(props) {
   });
 
   const handleChange = (event, newValue) => {
-    if(props.headingName === Modules.PROJECT_ALLOCATION){
+    if(headingName === Modules.PROJECT_ALLOCATION){
       if(newValue === 0) setStatus("All");
       else if(newValue === 1) setStatus("Active");
       else if(newValue === 2) setStatus("History");
@@ -81,25 +81,25 @@ export default function BasicTabs(props) {
   };
 
   React.useEffect(() => {
-    if(props.headingName === Modules.PROJECT_ALLOCATION){
+    if(headingName === Modules.PROJECT_ALLOCATION){
       setValue(1);
-      setStatus("Active")
+      setStatus("Active");
     }
-    else{
-      setValue(0);
-    }
-  }, [ props.headingName ]);
+    // else{
+    //   setValue(0);
+    // }
+  }, [ headingName ]);
 
   React.useEffect(() => {
-    if(props.headingName === Modules.PROJECT_MANAGEMENT || props.headingName === Modules.TIMESHEET) {
+    if(headingName === Modules.PROJECT_MANAGEMENT || headingName === Modules.TIMESHEET) {
       dispatch(getMappedProjectManagementData());
     }
-  }, [ props.headingName ]);
+  }, [ headingName ]);
 
   React.useEffect(() => {
-    if((mappedProjectManagementData===null || mappedProjectManagementData.length===0) && props.headingName === Modules.PROJECT_MANAGEMENT) setNoDataFound(true);
+    if((mappedProjectManagementData===null || mappedProjectManagementData.length===0) && headingName === Modules.PROJECT_MANAGEMENT) setNoDataFound(true);
     else setNoDataFound(false);
-  }, [mappedProjectManagementData, props.headingName])
+  }, [mappedProjectManagementData, headingName])
 
   let projectsTab = [];
   let projectsTabs = [];
@@ -119,9 +119,9 @@ export default function BasicTabs(props) {
   
   return (
     <Box sx={{ width: "100%" }}>
-      {!vTrackLoader && noDataFound && props.headingName===Modules.PROJECT_MANAGEMENT && <h1 className="no-data">Currently you are not Project Manager in any Project. </h1>}
+      {!vTrackLoader && noDataFound && headingName===Modules.PROJECT_MANAGEMENT && <h1 className="no-data">Currently you are not Project Manager in any Project. </h1>}
       <Box>
-        {props.headingName === Modules.PROJECT_MANAGEMENT ? 
+        {headingName === Modules.PROJECT_MANAGEMENT ? 
           <Tabs
             value={value}
             onChange={handleChange}
@@ -134,7 +134,7 @@ export default function BasicTabs(props) {
                 return <Tab key={`${project.clientName} / ${project.projectName}`} className="tabs-table" label={`${project.projectName} (${project.clientName})`} {...a11yProps(project.projectId)} />
               })}
           </Tabs> :
-        props.headingName === Modules.TIMESHEET ? 
+        headingName === Modules.TIMESHEET ? 
           userData && userData.data.tabs.timeSheet && (
             <Tabs
               value={value}
@@ -149,7 +149,7 @@ export default function BasicTabs(props) {
               ))}
             </Tabs>
           ) : 
-        props.headingName === Modules.PROJECT_ALLOCATION ? 
+        headingName === Modules.PROJECT_ALLOCATION ? 
         userData && userData.data.tabs.projectAllocation && (
           <>
             <Tabs
@@ -178,7 +178,7 @@ export default function BasicTabs(props) {
               }
           </>
         ) :
-      props.headingName === Modules.REPORTING ?
+      headingName === Modules.REPORTING ?
         <Tabs
           value={value}
           onChange={handleChange}
@@ -191,7 +191,7 @@ export default function BasicTabs(props) {
             <Tab key={index} className="tabs-table" label={tab} {...a11yProps(index)} />
           ))}
         </Tabs> : 
-      props.headingName === Modules.SETTINGS ?
+      headingName === Modules.SETTINGS ?
         <Tabs
           value={value}
           onChange={handleChange}
@@ -207,37 +207,37 @@ export default function BasicTabs(props) {
         null
       }
       </Box>
-      {props.headingName === Modules.PROJECT_MANAGEMENT ? 
+      {headingName === Modules.PROJECT_MANAGEMENT ? 
         projectsTabs && projectsTabs.map((project) => {
           return <TabPanel key={`${project.clientName} / ${project.projectName}`} value={value} index={counter++} >
-            <TabsTable headingName={props.headingName} tabName={project.projectName} status={status} projectId={project.projectId} />
+            <TabsTable headingName={headingName} tabName={project.projectName} status={status} projectId={project.projectId} />
           </TabPanel>
         }) :
-      props.headingName === Modules.TIMESHEET ? 
+      headingName === Modules.TIMESHEET ? 
         userData && userData.data.tabs.timeSheet.map((tab, index) => (
           <TabPanel key={index} value={value} index={index}>
-            <TabsTable headingName={props.headingName} tabName={tab} status={status} projectId={null}/>
+            <TabsTable headingName={headingName} tabName={tab} status={status} projectId={null}/>
           </TabPanel>
         )) :
-      props.headingName === Modules.PROJECT_ALLOCATION ? 
+      headingName === Modules.PROJECT_ALLOCATION ? 
         userData && userData.data.tabs.projectAllocation.map((tab, index) => (
           <TabPanel key={index} value={value} index={index}>
-            <TabsTable headingName={props.headingName} tabName={tab} status={status} projectId={null}/>
+            <TabsTable headingName={headingName} tabName={tab} status={status} projectId={null}/>
           </TabPanel>
         )) :
-      props.headingName === Modules.REPORTING ? 
+      headingName === Modules.REPORTING ? 
         userData && userData.data.tabs.reporting.map((tab, index) => (
           <TabPanel key={index} value={value} index={index}>
-            <TabsTable headingName={props.headingName} tabName={tab} status={null} projectId={null}/>
+            <TabsTable headingName={headingName} tabName={tab} status={null} projectId={null}/>
           </TabPanel>
         )) :
-      props.headingName === Modules.SETTINGS ? 
+      headingName === Modules.SETTINGS ? 
           (userData && userData.data.tabs.settings.map((tab, index) => (
           <TabPanel key={index} value={value} status={status} index={index}>
             <Settings tabName={tab} />
           </TabPanel>
           ))) :
-      <TabsTable headingName={props.headingName} tabName='' status={status}  projectId={null}/>
+      <TabsTable headingName={headingName} tabName='' status={status}  projectId={null}/>
     }
     </Box>
   );

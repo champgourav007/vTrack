@@ -63,7 +63,7 @@ export const TopBar = ({headingName}) => {
             </div>
             <div className="userNameRoleWrapper">
               <div className="user-name">
-                {personData.lastName}, {personData.firstName}
+                {personData.lastName} {personData.lastName ? "," : ""} {personData.firstName}
               </div>
               <div className="user-role">{activeUserRole ? activeUserRole : ''}</div>
             </div>
