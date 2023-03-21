@@ -104,6 +104,7 @@
 .buttonClass {
   display: flex;
   align-items: center;
+  margin-bottom: 2rem;
 }
 .addUserBtn{
   display: flex !important;
