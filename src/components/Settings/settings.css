@@ -104,9 +104,28 @@
 .buttonClass {
   display: flex;
   align-items: center;
-  margin-bottom: 2rem;
 }
+
 .addUserBtn{
   display: flex !important;
   padding: .85rem 1.25rem !important;
+}
+
+.searchHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  justify-content: space-between;
+}
+
+.syncText{
+  font-size: 1rem;
+  color: gray;
+}
+
+.syncTextContainer{
+  display: flex;
+  padding: 1rem;
+  gap: 1rem;
 }

@@ -201,23 +201,7 @@ export function Settings({
             </Button>
           </div>
         </div> */}
-       <div className="buttonClass">
-          <Button 
-            variant="contained" 
-            onClick={onClickSyncAzure} 
-            disabled = {vTrackLoader}
-            className="addUserBtn">
-              Sync Azure Data With Database
-          </Button>
-          <div style={{marginLeft: "1rem"}}>
-            <div>
-              {syncedBy && <div>Last Synced By: {syncedBy}</div>}
-            </div>
-            <div>
-              {syncedDate && <div>Last Synced Date: {moment(syncedDate).format("DD-MM-yyyy:hh:mm:ss")}</div>}
-            </div>
-          </div>
-        </div>
+       
         <div className="searchHeader">
           <div className="searchWrapper">
             <img src={searchIcon} className="searchIcon" alt="" />
@@ -227,6 +211,23 @@ export function Settings({
               placeholder="Search by Employee or Role"
               onChange={setSearchDataHelper}
             />
+          </div>
+          <div className="buttonClass">
+            <div className="syncTextContainer">
+              <div className="syncText">
+                {syncedBy && <div>Last Synced By: {syncedBy}</div>}
+              </div>
+              <div className="syncText">
+                {syncedDate && <div>Last Synced Date: {moment(syncedDate).format("DD-MM-yyyy LTS")}</div>}
+              </div>
+            </div>
+            <Button 
+              variant="contained" 
+              onClick={onClickSyncAzure} 
+              disabled = {vTrackLoader}
+              className="addUserBtn">
+                Sync Azure AD With vTrack
+            </Button>
           </div>
         </div>
         <div className="bottomContainer">

@@ -11,6 +11,7 @@ import TableLoader from '../Loaders/TableLoader';
 
 export const SettingsTable = ({ rolesData, searchData }) => {
     const usersData = useSelector(({ MODULES }) => MODULES.settingTableData);
+    const {vTrackLoader} = useSelector(({APP_STATE}) => APP_STATE);
     const [showDialogBox, setShowDialogBox] = useState(false);
     const [editUserRole, setEditUserRole] = useState("");
     const [selectedRole, setSelectedRole] = useState("");
@@ -98,8 +99,8 @@ export const SettingsTable = ({ rolesData, searchData }) => {
                             }
                         </TableRow>
                     </TableHead>
-                    {!usersData && <TableLoader />}
-                    {usersData && <TableBody className='settingTableBody'>
+                    {(!usersData || vTrackLoader) && <TableLoader />}
+                    {(usersData && !vTrackLoader)&& <TableBody className='settingTableBody'>
                         {filteredData && filteredData.map((user) =>
                             <TableRow key={user.userId} className='settingTableHeader'>
                                 <TableCell align="left">{getFullName(user.firstName, user.lastName)}</TableCell>
