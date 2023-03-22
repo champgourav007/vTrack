@@ -10,6 +10,7 @@ import {
   getUserRoleData,
   saveUserRoleData,
   setVtrackLoader,
+  syncAzureData,
 } from "../../redux/actions";
 import "./settings.css";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -24,6 +25,7 @@ import { searchIcon } from "../../common/icons";
 import { getFullName } from "../../common/utils/datatable";
 import Loader from "../Loaders/Loader";
 import { NotificationTable } from "../Notifications/notificationTable";
+import moment from "moment";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -39,14 +41,18 @@ const MenuProps = {
 export function Settings({
   tabName
 }) {
+  const usersData = useSelector(({ MODULES }) => MODULES.settingTableData);
   const [selectedUsers, setSelectedUsers] = React.useState([]);
   const [userData, setUserData] = useState([]);
+  const [syncedBy, setSyncedBy] = useState(null);
+  const [syncedDate, setSyncedDate] = useState(null);
   const [rolesData, setRolesData] = useState([]);
   const [selectedRole, setSelectedRole] = useState("");
   const [searchData, setSearchData] = useState("");
   const dispatch = useDispatch();
   const { unRegisteredUserDetails } = useSelector(({ USER }) => USER);
   const { userRole } = useSelector(({ MODULES }) => MODULES);
+  const {vTrackLoader} = useSelector(({APP_STATE}) => APP_STATE);
 
   const handleChange = (event) => {
     const {
@@ -125,11 +131,22 @@ export function Settings({
     }
   }, [userRole]);
 
+  useEffect(() => {
+    if(usersData && usersData.length){
+      setSyncedDate(usersData[0]["syncedDate"]);
+      setSyncedBy(usersData[0]["syncedBy"]);
+    }
+  }, [usersData])
+
+  const onClickSyncAzure = () =>{
+    dispatch(syncAzureData());
+  }
+
   if(tabName === 'MANAGE USER ROLE'){
     return (
       <>
         <div className="settingsWrapper">
-        <div className="topBar">
+        {/* <div className="topBar">
           <div className="selectUserWrapper">
             <div className="userText">Please Select the User</div>
             <div>
@@ -183,7 +200,8 @@ export function Settings({
               Add Role
             </Button>
           </div>
-        </div>
+        </div> */}
+       
         <div className="searchHeader">
           <div className="searchWrapper">
             <img src={searchIcon} className="searchIcon" alt="" />
@@ -193,6 +211,23 @@ export function Settings({
               placeholder="Search by Employee or Role"
               onChange={setSearchDataHelper}
             />
+          </div>
+          <div className="buttonClass">
+            <div className="syncTextContainer">
+              <div className="syncText">
+                {syncedBy && <div>Last Synced By: {syncedBy}</div>}
+              </div>
+              <div className="syncText">
+                {syncedDate && <div>Last Synced Date: {moment(syncedDate).format("DD-MM-yyyy LTS")}</div>}
+              </div>
+            </div>
+            <Button 
+              variant="contained" 
+              onClick={onClickSyncAzure} 
+              disabled = {vTrackLoader}
+              className="addUserBtn">
+                Sync Azure AD With vTrack
+            </Button>
           </div>
         </div>
         <div className="bottomContainer">

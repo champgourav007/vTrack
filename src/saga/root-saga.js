@@ -36,6 +36,7 @@ import { saveTimeSheetPeriodSaga } from "./save-timesheet-period-saga";
 import { saveTimeSheetSaga } from "./save-timesheet-saga";
 import { saveUserRoleSaga } from "./save-user-roles-setting-saga";
 import { submitPeriodSaga } from "./submit-period-saga";
+import { syncAzureDataSaga } from "./sync-azure-data-saga";
 import { timeSheetSaga } from "./timesheet-saga";
 import { updateClientAdminSaga } from "./update-client-admin-saga";
 import { updateNotificationsaga } from "./update-notification-saga";
@@ -95,5 +96,6 @@ export function* rootSaga() {
     fork(getMissingTimesheetsaga),
     fork(getNotificationssaga),
     fork(updateNotificationsaga),
+    fork(syncAzureDataSaga),
   ]);
 }

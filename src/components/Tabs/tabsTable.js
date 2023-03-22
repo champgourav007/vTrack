@@ -72,6 +72,8 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const { allTasks, listItems, clientsData, timeSheetProjects } = useSelector(({ MODULES }) => MODULES);
   const dispatch = useDispatch();
 
+  const { vTrackLoader } = useSelector(({ APP_STATE }) => APP_STATE);
+
   const [isAddButtonClicked, setIsAddButtonClicked] = useState(false);
   const [isEditButtonClicked, setIsEditButtonClicked] = useState(false);
   const [rows, setRows] = useState([]);
@@ -997,7 +999,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         setRowToBeUpdated={setRowToBeUpdated}
         dataForExcel={projectManagementData}
       />
-      { headingName === Modules.TIMESHEET && tabName === "MY TIMESHEET" && timeSheetData && timeSheetData.length ?
+      { headingName === Modules.TIMESHEET && tabName === "MY TIMESHEET" && timeSheetData && timeSheetData.length && !vTrackLoader && rows.length ?
         <div className="totalWorkingHrs">
           {`Total Hours: ${getTotalHrs(timeSheetData)}`}
         </div> : null

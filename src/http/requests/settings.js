@@ -1,6 +1,6 @@
 import { HttpMethod } from "../../common/constants/http-requests";
 import { httpRequest } from "../../common/utils/http-request";
-import { ROLES_API } from "../api/services";
+import { ROLES_API, USER_DETAILS } from "../api/services";
 
 export const getUserRoles = () =>
   httpRequest({
@@ -26,8 +26,15 @@ export const saveUserRoles = (data) =>
     url: `${ROLES_API}/${userId}/delete-user`,
     method: HttpMethod.DELETE,
   });
+
   export const updateSettingUserRole = (userId, roleId) =>
   httpRequest({
     url: `${ROLES_API}/${userId}/${roleId}/update-user-role`,
     method: HttpMethod.PUT,
   });
+
+  export const syncAzureData = () =>
+  httpRequest({
+    url: `${USER_DETAILS}/sync-users`,
+    method: HttpMethod.GET
+  })

@@ -5,6 +5,7 @@ export const userState = {
   allUserDetails: null,
   unRegisteredUserDetails: null,
   notificationsList: null,
+  allUserDetailsDict: null,
 }
 
 export const userReducer = (state = userState, action) => {
@@ -29,6 +30,11 @@ export const userReducer = (state = userState, action) => {
         ...state,
         notificationsList: action.payload,
       };
+    case UserType.SET_ALL_USER_DETAILS_DICT:
+      return{
+        ...state,
+        allUserDetailsDict: action.payload,
+      }
     default: return state;
   }
 };
