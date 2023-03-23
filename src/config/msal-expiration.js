@@ -19,11 +19,11 @@ export function setExpirationTimeout (
   if (tokenLifeTime <= 0) {
     localStorage.clear();
     sessionStorage.clear();
-    instance.loginRedirect(request)
-      .catch((error) => {
-        console.error(error);
-        window.location.reload(true);
-      });
+    // instance.loginRedirect(request)
+    //   .catch((error) => {
+    //     console.error(error);
+    //     window.location.reload(true);
+    //   });
     return;
   }
   expirationTimeoutId = setTimeout(() => {

@@ -16,6 +16,9 @@ import "./DetailView.css";
 import { getCircularProgressColor } from "../../common/utils/circular-progress-color";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box } from "@mui/material";
+import Loader from "../Loaders/Loader";
+import TableLoader from "../Loaders/TableLoader";
+import CircularLoader from "../Loaders/CircularLoader";
 
 export const DetailView = ({viewDetails, setViewDetails, selectedEmpId, selectedPeriodWeek, headingName}) => {
   const { clientsData, allTasks, listItems, assignedProjects, detailedTimeSheetData, projectAllocationData } = useSelector(({ MODULES }) => MODULES);
@@ -37,6 +40,7 @@ export const DetailView = ({viewDetails, setViewDetails, selectedEmpId, selected
     setIsEditButtonClicked(false);
     setNewRowAdded(initialData(headingName,selectedPeriodWeek));
     setRowToBeUpdated({});
+    setRows([]);
   }
 
   const getEmployeeName = (id) => {
@@ -554,131 +558,138 @@ export const DetailView = ({viewDetails, setViewDetails, selectedEmpId, selected
     setRowsPerPage(event.target.value);
   }
 
+  const detailViewCloseButtonHandler = () => {
+    setViewDetails(false);
+    setRows([]);
+  }
+
   return (
     <>
     <Dialog
         fullWidth={true}
         maxWidth='lg'
-        open={!vTrackLoader && viewDetails}
+        open={viewDetails}
         onClose={handleClose}
       >
-        <DialogTitle sx={{ fontSize: '2.25rem', color: '#1773bc' }}>{headingName} Detailed View</DialogTitle>
-        <DialogContent>
-          <div className="empName-period">
-            <div className="namePeriodDiv">
-              <div className="namePeriodLabel">Employee Name:</div>
-              <div className="namePeriodField">{getEmployeeName(selectedEmpId)}</div>
-            </div>
-            { headingName===Modules.TIMESHEET && 
+          <DialogTitle sx={{ fontSize: '2.25rem', color: '#1773bc' }}>{headingName} Detailed View</DialogTitle>
+          <DialogContent>
+            <div className="empName-period">
               <div className="namePeriodDiv">
-                 <div className="namePeriodLabel">Period Week:</div>
-                 <div className="namePeriodField">{selectedPeriodWeek.startDate.format(DATE_FORMAT) + " - " + selectedPeriodWeek.endDate.format(DATE_FORMAT)}</div>
+                <div className="namePeriodLabel">Employee Name:</div>
+                <div className="namePeriodField">{getEmployeeName(selectedEmpId)}</div>
               </div>
-            }
-          </div>
-          <Paper sx={{ width: "100%", overflow: "hidden" }}>
-            <TableContainer sx={{ maxHeight: "36rem" }}>
-              <Table aria-label="sticky table" size="small">
-                <TableHead>
-                  <TableRow>
-                    { columns.map((column) => {
-                      return <TableCell 
-                        key={column.id} 
-                        align={column.align}
-                        sx={{
-                          backgroundColor: "#1773bc0d",
-                          color: "#1773bc",
-                          fontWeight: 700,
-                        }}
-                      >
-                        {column.label}
-                      </TableCell>
-                    }) }
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows && rows.map((row, rowIdx) => {
-                    if (
-                      rowToBeUpdated[UniqueIds[headingName.replace(" ", "")]] ===
-                      row[UniqueIds[headingName.replace(" ", "")]]
-                    ) {
-                      return (
-                        <TableRow id="new_row" key={rowIdx}>
-                          {columns.map((col) => {
-                            return createInputField(col, headingName, newRowAdded, inputFieldHandler, );
-                          })}
-                        </TableRow>
-                      );
-                    } else {
-                    return <TableRow
-                      hover
-                    >
-                      { columns.map((col, colIdx) => {
-                        return <TableCell key={col.id}>
-                          {
-                            col.id === 'actions' && row.projectManagerID === userData?.data?.activeUsers?.id && row.status !== 'Approved'  ?
-                              <button className="buttonBackgroundBorder cursorPointer">
-                                <img src={editIcon} className="editDeleteIcon" alt="" 
-                                  onClick={() =>
-                                    editButtonClicked(row['timesheetDetailID'])
-                                  }
-                                />
-                              </button>
-                              : col.id==="employeeName" ? getEmployeeName(row["employeeId"]) 
-                              : col.id.toLowerCase().includes("allocation") && row[col.id] ? (
-                                <div className="allocation">
-                                  <Box sx={{ position: 'relative' }}>
-                                    <CircularProgress
-                                      variant="determinate"
-                                      sx={{
-                                        color: (theme) =>
-                                          theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800],
-                                      }}
-                                      size={20}
-                                      thickness={4}
-                                      value={100}
-                                    />
-                                    <CircularProgress
-                                      variant="determinate"
-                                      value={row[col.id]}
-                                      thickness={4}
-                                      style = {getCircularProgressColor(row[col.id])}
-                                      size = {20}
-                                    />
-                                  </Box>
-                                <div>{row[col.id]}%</div>
-                              </div>
-                              )
-                              : col.id==="startDate" || col.id==="endDate" ? row[col.id].split('T')[0]
-                              : row[col.id]
-                          }
+              { headingName===Modules.TIMESHEET && 
+                <div className="namePeriodDiv">
+                  <div className="namePeriodLabel">Period Week:</div>
+                  <div className="namePeriodField">{selectedPeriodWeek.startDate.format(DATE_FORMAT) + " - " + selectedPeriodWeek.endDate.format(DATE_FORMAT)}</div>
+                </div>
+              }
+            </div>
+             {vTrackLoader && <CircularLoader/>}
+            {(rows.length !== 0) && !vTrackLoader && <Paper sx={{ width: "100%", overflow: "hidden" }}>
+              <TableContainer sx={{ maxHeight: "36rem" }}>
+                <Table aria-label="sticky table" size="small">
+                  <TableHead>
+                    <TableRow>
+                      { columns.map((column) => {
+                        return <TableCell 
+                          key={column.id} 
+                          align={column.align}
+                          sx={{
+                            backgroundColor: "#1773bc0d",
+                            color: "#1773bc",
+                            fontWeight: 700,
+                          }}
+                        >
+                          {column.label}
                         </TableCell>
-                      })}
+                      }) }
                     </TableRow>
-                    }
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            {headingName === Modules.PROJECT_MANAGEMENT &&
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 100]}
-              component="div"
-              count={count}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />}
-          </Paper>
-          { headingName===Modules.TIMESHEET && detailedTimeSheetData && detailedTimeSheetData.length ?
-            <div className="totalWorkingHrs">
-              {`Total Hours: ${getTotalHrs(detailedTimeSheetData)}`}
-            </div> : null
-          }
-        </DialogContent>
+                  </TableHead>
+                 
+                  <TableBody>
+                    {rows && rows.map((row, rowIdx) => {
+                      if (
+                        rowToBeUpdated[UniqueIds[headingName.replace(" ", "")]] ===
+                        row[UniqueIds[headingName.replace(" ", "")]]
+                      ) {
+                        return (
+                          <TableRow id="new_row" key={rowIdx}>
+                            {columns.map((col) => {
+                              return createInputField(col, headingName, newRowAdded, inputFieldHandler, );
+                            })}
+                          </TableRow>
+                        );
+                      } else {
+                      return <TableRow
+                        hover
+                      >
+                        { columns.map((col, colIdx) => {
+                          return <TableCell key={col.id}>
+                            {
+                              col.id === 'actions' && row.projectManagerID === userData?.data?.activeUsers?.id && row.status !== 'Approved'  ?
+                                <button className="buttonBackgroundBorder cursorPointer">
+                                  <img src={editIcon} className="editDeleteIcon" alt="" 
+                                    onClick={() =>
+                                      editButtonClicked(row['timesheetDetailID'])
+                                    }
+                                  />
+                                </button>
+                                : col.id==="employeeName" ? getEmployeeName(row["employeeId"]) 
+                                : col.id.toLowerCase().includes("allocation") && row[col.id] ? (
+                                  <div className="allocation">
+                                    <Box sx={{ position: 'relative' }}>
+                                      <CircularProgress
+                                        variant="determinate"
+                                        sx={{
+                                          color: (theme) =>
+                                            theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800],
+                                        }}
+                                        size={20}
+                                        thickness={4}
+                                        value={100}
+                                      />
+                                      <CircularProgress
+                                        variant="determinate"
+                                        value={row[col.id]}
+                                        thickness={4}
+                                        style = {getCircularProgressColor(row[col.id])}
+                                        size = {20}
+                                      />
+                                    </Box>
+                                  <div>{row[col.id]}%</div>
+                                </div>
+                                )
+                                : col.id==="startDate" || col.id==="endDate" ? row[col.id].split('T')[0]
+                                : row[col.id]
+                            }
+                          </TableCell>
+                        })}
+                      </TableRow>
+                      }
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {headingName === Modules.PROJECT_MANAGEMENT &&
+              <TablePagination
+                rowsPerPageOptions={[10, 25, 100]}
+                component="div"
+                count={count}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />}
+            </Paper>}
+            { headingName===Modules.TIMESHEET && detailedTimeSheetData && detailedTimeSheetData.length && !vTrackLoader ?
+              <div className="totalWorkingHrs">
+                {`Total Hours: ${getTotalHrs(detailedTimeSheetData)}`}
+              </div> : null
+            }
+          </DialogContent>
         <DialogActions>
-          <Button variant="contained" onClick={() => setViewDetails(false)} >Close</Button>
+          <Button variant="contained" onClick={() => detailViewCloseButtonHandler()} >Close</Button>
         </DialogActions>
       </Dialog>
       </>
