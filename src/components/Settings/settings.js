@@ -98,9 +98,7 @@ export function Settings({
   };
 
   const setSearchDataHelper = (e) => {
-    if(e.target.value.length > 2 || e.target.value.length === 0) {
       setSearchData(e.target.value)
-    }
   };
 
   const getRoles = () => {
