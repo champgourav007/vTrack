@@ -917,7 +917,7 @@ export const DataTable = ({
       (row) => row[UniqueIds[headingName.replace(" ", "")]] === id
     );
     if (rows[idx].employeeId) {
-      setNewRowAdded({ ...rows[idx], employeeName: "" });
+      setNewRowAdded({ ...rows[idx], employeeName: "", employeeId:  ""});
     } else {
       setNewRowAdded(rows[idx]);
     }
