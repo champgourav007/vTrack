@@ -78,10 +78,10 @@ export default function ExportExcel({ data, headingName, projectId, pageNo, page
         setFlag(false);
     }, [projectManagementData])
   return (
+    <a aria-disabled={(data && data.totalCount) ? false : true} onClick={() => handleClick()} style={{cursor: "pointer"}}>      
     <Tooltip title={<h2>Export xls</h2>}>
-      <a aria-disabled={(data && data.totalCount) ? false : true} onClick={() => handleClick()} style={{cursor: "pointer"}}>      
         <img src={excelIcon} />
-      </a>
     </Tooltip>
+      </a>
   )
 }
