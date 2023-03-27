@@ -27,8 +27,20 @@ export default function Sidebar({ changePage, pageName }) {
   };
 
   useEffect(()=>{
+    let routeName = window.location.pathname.split("/").at(-1);
     if(userData){
-      setSelected(ModuleList.find(e=>e.key===Object.keys(userData.data.tabs)[1]).id);
+      let head = null;
+      Object.keys(userData.data.tabs).forEach((ele) => {
+        console.log(ele.replace(" ", ""));
+        if(ele.toLowerCase() === routeName.toLowerCase()){
+          head = ele;
+        }
+      })
+      if(head !== null){
+        setSelected(ModuleList.find(e=>e.key===head).id);
+      }else{
+        setSelected(ModuleList.find(e=>e.key===Object.keys(userData.data.tabs)[1]).id);
+      }
     }
   },[userData]);
 
@@ -101,22 +113,22 @@ export default function Sidebar({ changePage, pageName }) {
           <div className="divider" />
           <div
             className={
-              selected === "settings" ? 
+              selected === "9" ? 
               `sidebarItemsSelected ${userData?.data?.roleName === "Admin" ? "" : "displayNone"}` : 
               `sidebarItems ${userData?.data?.roleName === "Admin" ? "" : "displayNone"}`
               
             }
             onClick={() => {
               changePage("Settings");
-              setSelected("settings");
+              setSelected("9");
             }}
-            onMouseOver={() => setMouseHover("settings")}
+            onMouseOver={() => setMouseHover("9")}
             onMouseOut={() => setMouseHover("-1")}
           >
             <img
               className="itemImage"
               src={
-                mouseHover === "settings" || selected === "settings"
+                mouseHover === "9" || selected === "9"
                   ? settingBlueIcon
                   : settingsImg
               }
