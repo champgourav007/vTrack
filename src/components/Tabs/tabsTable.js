@@ -66,7 +66,7 @@ const getPeriods = () => {
   return periods;
 };
 
-export const TabsTable = ({ headingName, tabName, status, projectId }) => {
+export const TabsTable = ({ headingName, tabName, status, projectId, queryPeriodWeek }) => {
   const { clientAdminData, projectAdminData, projectAllocationData, timeSheetData, projectManagementData, mappedProjectManagementData, selectedProjectId, reportees, reportingData } = useSelector(({ MODULES }) => MODULES);
   const { allUserDetails, userData } = useSelector(({ USER }) => USER);
   const { allTasks, listItems, clientsData, timeSheetProjects } = useSelector(({ MODULES }) => MODULES);
@@ -81,16 +81,14 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const [totalRecord, setTotalRecord] = useState(0);
   const [searchData, setSearchData] = useState("");
   const periodWeeks = getPeriods();
-  const [ selectedPeriodWeek, setSelectedPriodWeek ] = useState({
-    startDate : moment().startOf('isoweek'),
-    endDate : moment().endOf('isoweek')
-  });
+  const [ selectedPeriodWeek, setSelectedPriodWeek ] = useState(queryPeriodWeek !== null ?  queryPeriodWeek :
+         {startDate : moment().startOf('isoweek'),
+         endDate : moment().endOf('isoweek')});
   const [ selectedProject, setSelectedProject ] = useState({});
   const [ selectedEmployee, setSelectedEmployee ] = useState({});
   const [rowToBeUpdated, setRowToBeUpdated] = useState({});
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [weekStart, setWeekStart] = useState(null);
   const [disableDate, setDisableDate] = useState(false);
   const [disablePeriodWeek, setDisablePeriodWeek] = useState(false);
   const inputRef = useRef("");
@@ -98,7 +96,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
   const getData = (event) => {
     if(headingName === Modules.REPORTING){
       if(!disableDate && !disablePeriodWeek){
-        toast.info('Please Enter Period Week OR Start and End Date', toastOptions);
+        toast.info('Please Select Period Week OR Start and End Date', toastOptions);
         return;
       }
       if(tabName === "TIMESHEET REPORTS" && !selectedProjectId){
@@ -299,7 +297,12 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
     return (
       <Select
         IconComponent = {CalendarMonthRounded}
-        defaultValue={moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().endOf('isoweek').format(DATE_FORMAT)}
+        defaultValue={
+          queryPeriodWeek !== null ? 
+          (queryPeriodWeek.startDate.format(DATE_FORMAT) + ' - ' + queryPeriodWeek.endDate.format(DATE_FORMAT)) 
+          : 
+          (moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().endOf('isoweek').format(DATE_FORMAT))
+        }
         sx={{minWidth: '15rem'}}
         className={"select-date"}
         disabled={headingName===Modules.REPORTING ? disablePeriodWeek : false }
@@ -678,7 +681,7 @@ export const TabsTable = ({ headingName, tabName, status, projectId }) => {
         `${selectedPeriodWeek.startDate.format(DATE_FORMAT)} - ${selectedPeriodWeek.endDate.format(DATE_FORMAT)}`
       )
     );
-    if(timeSheetData === null && headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET'){
+    if(timeSheetData === null && headingName === Modules.TIMESHEET && tabName === 'MY TIMESHEET' && queryPeriodWeek === null){
       dispatch(
         saveTimeSheetPeriodData({
           periodWeek: moment().startOf('isoweek').format(DATE_FORMAT) + ' - ' + moment().endOf('isoweek').format(DATE_FORMAT),

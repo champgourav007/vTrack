@@ -49,7 +49,7 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs({headingName, value, setValue}) {
+export default function BasicTabs({headingName, value, setValue, tabIndex, periodWeek, setTabIndex, setPeriodWeek}) {
   const { userData } = useSelector(({ USER }) => USER);
 
   const dispatch = useDispatch();
@@ -78,6 +78,8 @@ export default function BasicTabs({headingName, value, setValue}) {
       else if(newValue === 2) setStatus("History");
     }
     setValue(newValue);
+    setTabIndex(null);
+    setPeriodWeek(null);
   };
 
   React.useEffect(() => {
@@ -93,6 +95,9 @@ export default function BasicTabs({headingName, value, setValue}) {
   React.useEffect(() => {
     if(headingName === Modules.PROJECT_MANAGEMENT || headingName === Modules.TIMESHEET) {
       dispatch(getMappedProjectManagementData());
+      if(tabIndex !== null && periodWeek !== null){
+        setValue(tabIndex);
+      }
     }
   }, [ headingName ]);
 
@@ -210,25 +215,25 @@ export default function BasicTabs({headingName, value, setValue}) {
       {headingName === Modules.PROJECT_MANAGEMENT ? 
         projectsTabs && projectsTabs.map((project) => {
           return <TabPanel key={`${project.clientName} / ${project.projectName}`} value={value} index={counter++} >
-            <TabsTable headingName={headingName} tabName={project.projectName} status={status} projectId={project.projectId} />
+            <TabsTable headingName={headingName} tabName={project.projectName} status={status} projectId={project.projectId} queryPeriodWeek={null}/>
           </TabPanel>
         }) :
       headingName === Modules.TIMESHEET ? 
         userData && userData.data.tabs.timeSheet.map((tab, index) => (
           <TabPanel key={index} value={value} index={index}>
-            <TabsTable headingName={headingName} tabName={tab} status={status} projectId={null}/>
+            <TabsTable headingName={headingName} tabName={tab} status={status} projectId={null} queryPeriodWeek={periodWeek}/>
           </TabPanel>
         )) :
       headingName === Modules.PROJECT_ALLOCATION ? 
         userData && userData.data.tabs.projectAllocation.map((tab, index) => (
           <TabPanel key={index} value={value} index={index}>
-            <TabsTable headingName={headingName} tabName={tab} status={status} projectId={null}/>
+            <TabsTable headingName={headingName} tabName={tab} status={status} projectId={null} queryPeriodWeek={null}/>
           </TabPanel>
         )) :
       headingName === Modules.REPORTING ? 
         userData && userData.data.tabs.reporting.map((tab, index) => (
           <TabPanel key={index} value={value} index={index}>
-            <TabsTable headingName={headingName} tabName={tab} status={null} projectId={null}/>
+            <TabsTable headingName={headingName} tabName={tab} status={null} projectId={null} queryPeriodWeek={null}/>
           </TabPanel>
         )) :
       headingName === Modules.SETTINGS ? 
@@ -237,7 +242,7 @@ export default function BasicTabs({headingName, value, setValue}) {
             <Settings tabName={tab} />
           </TabPanel>
           ))) :
-      <TabsTable headingName={headingName} tabName='' status={status}  projectId={null}/>
+      <TabsTable headingName={headingName} tabName='' status={status}  projectId={null} queryPeriodWeek={null}/>
     }
     </Box>
   );
