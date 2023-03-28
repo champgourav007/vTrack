@@ -9,7 +9,6 @@ import Cookies from 'universal-cookie';
 let USE_SILENT_MODE = false;
 
 function abandonSilentMode() {
-  console.log('MSAL back to NOT silent SSO'); // TODO: remove after tests
   USE_SILENT_MODE = false;
 }
 

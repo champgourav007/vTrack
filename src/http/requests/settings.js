@@ -38,3 +38,9 @@ export const saveUserRoles = (data) =>
     url: `${USER_DETAILS}/sync-users`,
     method: HttpMethod.GET
   })
+
+  export const updateNotificationForUser = (userId) => 
+  httpRequest({
+    url: `${USER_DETAILS}/${userId}/update-notification-for-user`,
+    method: HttpMethod.PUT
+  })

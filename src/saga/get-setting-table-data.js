@@ -6,7 +6,7 @@ import { setSettingTableData, SettingDataType, setVtrackLoader } from "../redux/
 function* workerGetSettingTableData() {
   try {
     yield put(setVtrackLoader(true));
-    yield put(setSettingTableData(null));
+    // yield put(setSettingTableData(null));
     const userData = yield call(getSettingUserData);
     yield put(setSettingTableData(userData));
     yield put(setVtrackLoader(false));

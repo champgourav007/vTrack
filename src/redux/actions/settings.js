@@ -7,6 +7,7 @@ export const SettingDataType = {
   DELETE_SETTING_TABLE_DATA: 'DELETE_SETTING_TABLE_DATA',
   UPDATE_SETTING_TABLE_DATA: 'UPDATE_SETTING_TABLE_DATA',
   SYNC_AZURE_DATA: 'SYNC_AZURE_DATA',
+  UPDATE_NOTIFICATION_FOR_USER: 'UPDATE_NOTIFICATION_FOR_USER',
 };
 
 export const getUserRoleData = () => ({
@@ -44,4 +45,9 @@ export const updateSettingTableData = (roleId, userId)=>({
 
 export const syncAzureData = ()=>({
   type: SettingDataType.SYNC_AZURE_DATA
+})
+
+export const updateNotificationForUser = (userId)=>({
+  type: SettingDataType.UPDATE_NOTIFICATION_FOR_USER,
+  payload: {userId: userId}
 })

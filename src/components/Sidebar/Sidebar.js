@@ -31,7 +31,6 @@ export default function Sidebar({ changePage, pageName }) {
     if(userData){
       let head = null;
       Object.keys(userData.data.tabs).forEach((ele) => {
-        console.log(ele.replace(" ", ""));
         if(ele.toLowerCase() === routeName.toLowerCase()){
           head = ele;
         }

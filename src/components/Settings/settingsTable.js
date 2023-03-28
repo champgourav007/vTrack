@@ -1,10 +1,10 @@
-import { FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Tooltip } from '@mui/material'
+import { FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Paper, Select, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Tooltip } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { TABLE_HEADERS } from '../../common/constants/setting-table-header'
 import { AddEnableIcon, crossIcon, deleteIcon, editIcon, TableArrows } from '../../common/icons';
 import { getFullName } from '../../common/utils/datatable';
-import { deleteSettingTableData, getSettingTableData, setVtrackLoader, updateSettingTableData } from '../../redux/actions';
+import { deleteSettingTableData, getSettingTableData, setVtrackLoader, updateNotificationForUser, updateSettingTableData } from '../../redux/actions';
 import DialogBox from '../DialogBox/dialogBox';
 import './settingTable.css';
 import TableLoader from '../Loaders/TableLoader';
@@ -19,6 +19,7 @@ export const SettingsTable = ({ rolesData, searchData }) => {
         useState(false);
     const [idToDelete, setIdToDelete] = useState();
     const [ filteredData, setFilteredData ] = useState(null);
+    const [changeNotificationUserId, setChangeNotificationUserId] = useState(0);
     const dispatch = useDispatch();
 
     const handleUserUpdate = (userId) => {
@@ -61,8 +62,15 @@ export const SettingsTable = ({ rolesData, searchData }) => {
     useEffect(() => {
         if (usersData) {
             setFilteredData(usersData);
+            setChangeNotificationUserId(0);
         }
     }, [ usersData ])
+
+    const handleChangeNotificationForUser = (userId) =>{
+        dispatch(updateNotificationForUser(userId));
+        setChangeNotificationUserId(userId);
+    }
+
     return (
         <>
             {showDialogBox && (
@@ -100,7 +108,7 @@ export const SettingsTable = ({ rolesData, searchData }) => {
                         </TableRow>
                     </TableHead>
                     {(!usersData || vTrackLoader) && <TableLoader />}
-                    {(usersData && !vTrackLoader)&& <TableBody className='settingTableBody'>
+                    { (usersData) && <TableBody className='settingTableBody'>
                         {filteredData && filteredData.map((user) =>
                             <TableRow key={user.userId} className='settingTableHeader'>
                                 <TableCell align="left">{getFullName(user.firstName, user.lastName)}</TableCell>
@@ -125,6 +133,15 @@ export const SettingsTable = ({ rolesData, searchData }) => {
                                     </TableCell>)
 
                                     : <TableCell align="left">{user.roleName}</TableCell>}
+                                <TableCell align="left">
+                                  <Switch 
+                                    checked={user.isEmailNotificationOn} 
+                                    onChange={() => handleChangeNotificationForUser(user.userId)}
+                                    disabled={changeNotificationUserId == user.userId}
+                                    value={user.isEmailNotificationOn}
+                                    inputProps={{ 'aria-label': 'controlled' }}
+                                    />
+                                </TableCell>
                                 <TableCell align="left">
                                     {editUserRole === user.userId ?
                                         <div className='actions'>
