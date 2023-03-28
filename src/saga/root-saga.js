@@ -39,6 +39,7 @@ import { submitPeriodSaga } from "./submit-period-saga";
 import { syncAzureDataSaga } from "./sync-azure-data-saga";
 import { timeSheetSaga } from "./timesheet-saga";
 import { updateClientAdminSaga } from "./update-client-admin-saga";
+import { updateNotificationForUserSaga } from "./update-notification-for-user-saga";
 import { updateNotificationsaga } from "./update-notification-saga";
 import { updateProjectAdminSaga } from "./update-project-admin-saga";
 import { updateProjectManagementSaga } from "./update-project-management-saga";
@@ -97,5 +98,6 @@ export function* rootSaga() {
     fork(getNotificationssaga),
     fork(updateNotificationsaga),
     fork(syncAzureDataSaga),
+    fork(updateNotificationForUserSaga),
   ]);
 }

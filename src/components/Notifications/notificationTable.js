@@ -11,20 +11,24 @@ export const NotificationTable = () => {
   const { notificationsList } = useSelector(({ USER }) => USER);
   const { vTrackLoader, tableLoader } = useSelector(({ APP_STATE }) => APP_STATE);
   const [notificationData, setNotificationData] = useState([]);
+  const [changeNotificationId, setChangeNotificationId] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
     if(notificationsList){
       setNotificationData(notificationsList);
+      setChangeNotificationId("");
     }
   }, [notificationsList])
 
-  const handleChange = (event) => {
+  const handleChange = (event) => {;
+    let id = event.target.value
+    setChangeNotificationId(id);
     dispatch(
       updateNotification({
         id: event.target.value
       })
-    )
+      )
   }
 
   return(
@@ -57,7 +61,7 @@ export const NotificationTable = () => {
                   </TableCell>)}
               </TableRow>
             </TableHead>
-            {tableLoader && <Loader />}
+            {tableLoader && <TableLoader />}
             {notificationData && <TableBody className='settingTableBody manageNotifications'>
                         {notificationData.map((data) =>
                             <TableRow key={data.notificationId} className='settingTableHeader'>
@@ -66,10 +70,20 @@ export const NotificationTable = () => {
                                   <Switch 
                                     checked={data.enabled} 
                                     onChange={handleChange} 
+                                    disabled={changeNotificationId == data.notificationId}
                                     value={data.notificationId}
                                     inputProps={{ 'aria-label': 'controlled' }}
                                     />
                                 </TableCell>
+                                {/* <TableCell align="left">
+                                  <Switch 
+                                    checked={data.enabled} 
+                                    onChange={handleChange} 
+                                    disabled={changeNotification}
+                                    value={data.notificationId}
+                                    inputProps={{ 'aria-label': 'controlled' }}
+                                    />
+                                </TableCell> */}
                             </TableRow>)}
                     </TableBody>}
           </Table>
